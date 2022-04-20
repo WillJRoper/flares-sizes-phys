@@ -51,11 +51,11 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', offset=0, goffset=0):
         if s_len is not None:
             for f in data_fields:
                 f_splt = f.split(",")
-
+                print(f_splt)
                 if len(f_splt) > 1:
                     key = tag + '/' + f_splt[0]
                     data[f] = np.array(hf[key].get(f_splt[1]))
-                    print(data[f])
+                    print(key, data[f])
             data["begin"] = np.zeros(len(data["Galaxy,S_len"]),
                                      dtype=np.int64) + offset
             data["begin"][1:] = np.cumsum(data["Galaxy,S_len"])[:-1]
