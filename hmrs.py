@@ -142,7 +142,7 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
     for (igal, b), l in zip(enumerate(data["begin"]), data["Galaxy,S_Length"]):
 
         # Get this galaxy's data
-        app = data["Particle/Apertures/Star,30"][b: b + l][app]
+        app = data["Particle/Apertures/Star,30"][b: b + l]
         cop = data["Galaxy,COP"][igal]
         ms = data["Particle,S_Mass"][b: b + l][app]
         pos = data["Particle,S_Coordinates"][b: b + l, :][app]
