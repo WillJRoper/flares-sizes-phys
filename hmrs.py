@@ -56,13 +56,13 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', offset=0, goffset=0):
                     key = tag + '/' + f_splt[0]
                     data[f] = np.array(hf[key].get(f_splt[1]))
 
-            data["begin"] = np.zeros(len(data["Galaxy/S_len"]),
+            data["begin"] = np.zeros(len(data["Galaxy,S_len"]),
                                      dtype=np.int64) + offset
-            data["begin"][1:] = np.cumsum(data["Galaxy/S_len"])[:-1]
+            data["begin"][1:] = np.cumsum(data["Galaxy,S_len"])[:-1]
 
-            data["gbegin"] = np.zeros(len(data["Galaxy/G_len"]),
+            data["gbegin"] = np.zeros(len(data["Galaxy,G_len"]),
                                       dtype=np.int64) + goffset
-            data["gbegin"][1:] = np.cumsum(data["Galaxy/G_len"])[:-1]
+            data["gbegin"][1:] = np.cumsum(data["Galaxy,G_len"])[:-1]
 
         else:
 
