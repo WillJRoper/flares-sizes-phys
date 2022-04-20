@@ -159,7 +159,7 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
         w[igal] = data["weights"][igal]
 
     # Remove galaxies without stars
-    okinds = mass > 0
+    okinds = np.logical_and(mass > 0, hmrs > 0)
     mass = mass[okinds]
     hmrs = hmrs[okinds]
     w = w[okinds]
