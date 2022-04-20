@@ -158,6 +158,12 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
         hmrs[igal] = hmr
         w[igal] = data["weights"][igal]
 
+    # Remove galaxies without stars
+    okinds = mass > 0
+    mass = mass[okinds]
+    hmrs = hmrs[okinds]
+    w = w[okinds]
+
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
