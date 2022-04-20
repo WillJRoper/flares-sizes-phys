@@ -142,12 +142,12 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
     for (igal, b), l in zip(enumerate(data["begin"]), data["Galaxy,S_Length"]):
 
         # Get this galaxy's data
-        app = data["Particle/Apertures/Star,30"][b: l]
+        app = data["Particle/Apertures/Star,30"][b: b + l]
         cop = data["Galaxy,COP"][igal]
-        ms = data["Particle,S_Mass"][b: l][app]
+        ms = data["Particle,S_Mass"][b: b + l][app]
 
         # Compute particle radii
-        rs = calc_3drad(data["Particle,S_Coordinates"][b: l, :] - cop)
+        rs = calc_3drad(data["Particle,S_Coordinates"][b: b + l, :] - cop)
 
         # Compute HMR
         hmr = calc_light_mass_rad(rs, ms, radii_frac=0.5)
