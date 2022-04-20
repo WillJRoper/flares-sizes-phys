@@ -52,9 +52,16 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', offset=0, goffset=0):
             for f in data_fields:
                 f_splt = f.split(",")
 
+                # Extract this dataset
                 if len(f_splt) > 1:
                     key = tag + '/' + f_splt[0]
-                    data[f] = np.array(hf[key].get(f_splt[1]))
+                    d = np.array(hf[key].get(f_splt[1]))
+
+                    # If it is multidimensional it needs transposing
+                    if len(d.shape) > 1:
+                        data[f] = d.T
+                    else:
+                        data[f] = d
 
             data["begin"] = np.zeros(len(data["Galaxy,S_Length"]),
                                      dtype=np.int64) + offset
