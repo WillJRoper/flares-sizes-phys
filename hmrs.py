@@ -51,11 +51,11 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', offset=0, goffset=0):
         if s_len is not None:
             for f in data_fields:
                 f_splt = f.split(",")
-                print(f_splt)
+
                 if len(f_splt) > 1:
                     key = tag + '/' + f_splt[0]
                     data[f] = np.array(hf[key].get(f_splt[1]))
-                    print(key, data[f])
+                    print(key + "/" + f_splt[1], data[f])
             data["begin"] = np.zeros(len(data["Galaxy,S_length"]),
                                      dtype=np.int64) + offset
             data["begin"][1:] = np.cumsum(data["Galaxy,S_length"])[:-1]
@@ -119,7 +119,7 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
     # Define data fields
     data_fields = ("Particle,S_mass", "Particle,G_mass",
                    "Particle,S_coords", "Particle,G_coords",
-                   "Particle/Apertures/Star,30", "Particle/Apertures/Gas,30"
+                   "Particle/Apertures/Star,30", "Particle/Apertures/Gas,30",
                    "Galaxy,COP", "Galaxy,S_length", "Galaxy,G_length",
                    "Galaxy,grpid", "Galaxy,subgrpid", "begin", "gbegin",)
 
