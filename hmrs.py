@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
-from utils import calc_3drad, calc_light_mass_rad
+from utils import calc_3drad, calc_light_mass_rad, mkdir
 
 os.environ['FLARE'] = '/cosma7/data/dp004/dc-wilk2/flare'
 mpl.use('Agg')
@@ -181,5 +181,5 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
     ax.set_ylabel("$R_{1/2} / [\mathrm{pkpc}]$")
 
     # Save figure
-    Path("/plots/stellar_hmr/").mkdir(parents=True, exist_ok=True)
+    mdkir("/plots/stellar_hmr/")
     fig.savefig("/plots/stellar_hmr/stellar_hmr_%s.png")

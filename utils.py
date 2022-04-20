@@ -1,5 +1,11 @@
+import os
 from scipy.interpolate import interp1d
 import numpy as np
+
+
+def mkdir(path):
+    if not os.path.exists(path):
+        os.mkdir(path)
 
 
 def calc_3drad(poss):
