@@ -48,6 +48,7 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', offset=0, goffset=0):
 
     with h5py.File(sim, 'r') as hf:
         s_len = hf[tag + '/Galaxy'].get('S_Length')
+        print(s_len)
         if s_len is not None:
             for f in data_fields:
                 f_splt = f.split(",")
