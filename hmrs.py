@@ -156,7 +156,7 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
         # Store results
         mass[igal] = np.sum(ms) * 10 ** 10
         hmrs[igal] = hmr
-        w[igal] = data["weights"][b: l][0]
+        w[igal] = data["weights"][igal]
 
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
