@@ -48,7 +48,6 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', offset=0, goffset=0):
 
     with h5py.File(sim, 'r') as hf:
         s_len = hf[tag + '/Galaxy'].get('S_Length')
-        print(s_len)
         if s_len is not None:
             for f in data_fields:
                 f_splt = f.split(",")
@@ -56,7 +55,7 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', offset=0, goffset=0):
                 if len(f_splt) > 1:
                     key = tag + '/' + f_splt[0]
                     data[f] = np.array(hf[key].get(f_splt[1]))
-                    print(key + "/" + f_splt[1], "Length = %d" % len(data[f]))
+
             data["begin"] = np.zeros(len(data["Galaxy,S_Length"]),
                                      dtype=np.int64) + offset
             data["begin"][1:] = np.cumsum(data["Galaxy,S_Length"])[:-1]
@@ -142,6 +141,7 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
         ms = data["Particle,S_Mass"][b: l][app]
 
         # Compute particle radii
+        print(data["Particle,S_Coordinates"].shape)
         rs = calc_3drad(data["Particle,S_Coordinates"][b: l, :] - cop)
 
         # Compute HMR
