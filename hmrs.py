@@ -112,7 +112,6 @@ def get_data(sim, regions, snap, data_fields):
         # Add on new offset
         offset = len(data[data_fields[0]])
         goffset = len(data[data_fields[1]])
-        print(offset, len(data["weights"]))
 
     # Convert lists to arrays
     for key in data:

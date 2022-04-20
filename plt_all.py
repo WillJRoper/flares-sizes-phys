@@ -40,6 +40,7 @@ eagle_snaps = list(snaps)
 
 # Plot EVERYTHING
 for snap in flares_snaps:
+    print("Plotting snap %s" % snap)
     plot_stellar_hmr("FLARES", regions, snap, weight_norm)
 
 # for snap in eagle_snaps:
