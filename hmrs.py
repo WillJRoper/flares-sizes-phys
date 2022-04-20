@@ -181,4 +181,5 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
 
     # Save figure
     mkdir("plots/stellar_hmr/")
-    fig.savefig("plots/stellar_hmr/stellar_hmr_%s.png")
+    fig.savefig("plots/stellar_hmr/stellar_hmr_%s.png" % snap,
+                bbox_inches="tight")
