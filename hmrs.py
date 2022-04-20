@@ -181,5 +181,5 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
     ax.set_ylabel("$R_{1/2} / [\mathrm{pkpc}]$")
 
     # Save figure
-    mdkir("/plots/stellar_hmr/")
+    mkdir("/plots/stellar_hmr/")
     fig.savefig("/plots/stellar_hmr/stellar_hmr_%s.png")
