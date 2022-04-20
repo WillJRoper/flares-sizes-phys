@@ -5,7 +5,7 @@ import numpy as np
 
 def mkdir(path):
     if not os.path.exists(path):
-        os.mkdirs(path)
+        os.makedirs(path)
 
 
 def calc_3drad(poss):
