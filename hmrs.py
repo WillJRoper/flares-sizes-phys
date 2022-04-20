@@ -93,6 +93,7 @@ def get_data(sim, regions, snap, data_fields):
 
         # Combine this region
         for f in data_fields:
+            print(f, reg_data[f].shape)
             data[f].extend(reg_data[f])
 
         # Include this regions weighting
@@ -141,7 +142,6 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
         ms = data["Particle,S_Mass"][b: l][app]
 
         # Compute particle radii
-        print(data["Particle,S_Coordinates"].shape)
         rs = calc_3drad(data["Particle,S_Coordinates"][b: l, :] - cop)
 
         # Compute HMR
