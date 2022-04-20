@@ -57,13 +57,13 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', offset=0, goffset=0):
                     key = tag + '/' + f_splt[0]
                     data[f] = np.array(hf[key].get(f_splt[1]))
                     print(key + "/" + f_splt[1], data[f])
-            data["begin"] = np.zeros(len(data["Galaxy,S_length"]),
+            data["begin"] = np.zeros(len(data["Galaxy,S_Length"]),
                                      dtype=np.int64) + offset
-            data["begin"][1:] = np.cumsum(data["Galaxy,S_length"])[:-1]
+            data["begin"][1:] = np.cumsum(data["Galaxy,S_Length"])[:-1]
 
-            data["gbegin"] = np.zeros(len(data["Galaxy,G_length"]),
+            data["gbegin"] = np.zeros(len(data["Galaxy,G_Length"]),
                                       dtype=np.int64) + goffset
-            data["gbegin"][1:] = np.cumsum(data["Galaxy,G_length"])[:-1]
+            data["gbegin"][1:] = np.cumsum(data["Galaxy,G_Length"])[:-1]
 
         else:
 
@@ -118,11 +118,12 @@ def get_data(sim, regions, snap, data_fields):
 def plot_stellar_hmr(sim, regions, snap, weight_norm):
 
     # Define data fields
-    data_fields = ("Particle,S_mass", "Particle,G_mass",
-                   "Particle,S_coords", "Particle,G_coords",
+    data_fields = ("Particle,S_Mass", "Particle,G_Mass",
+                   "Particle,S_Coordinates", "Particle,G_Coordinates",
                    "Particle/Apertures/Star,30", "Particle/Apertures/Gas,30",
-                   "Galaxy,COP", "Galaxy,S_length", "Galaxy,G_length",
-                   "Galaxy,grpid", "Galaxy,subgrpid", "begin", "gbegin",)
+                   "Galaxy,COP", "Galaxy,S_Length", "Galaxy,G_Length",
+                   "Galaxy,GroupNumber", "Galaxy,SubGroupNumber",
+                   "begin", "gbegin",)
 
     # Get the data
     data = get_data(sim, regions, snap, data_fields)
@@ -138,10 +139,10 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
         # Get this galaxy's data
         app = data["Particle/Apertures/Star,30"][b: l]
         cop = data["Galaxy,COP"][igal]
-        ms = data["Particle,S_mass"][b: l][app]
+        ms = data["Particle,S_Mass"][b: l][app]
 
         # Compute particle radii
-        rs = calc_3drad(data["Particle,S_coords"][b: l, :] - cop)
+        rs = calc_3drad(data["Particle,S_Coordinates"][b: l, :] - cop)
 
         # Compute HMR
         hmr = calc_light_mass_rad(rs, ms, radii_frac=0.5)
