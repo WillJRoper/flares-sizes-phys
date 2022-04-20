@@ -56,7 +56,7 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', offset=0, goffset=0):
                 if len(f_splt) > 1:
                     key = tag + '/' + f_splt[0]
                     data[f] = np.array(hf[key].get(f_splt[1]))
-                    print(key + "/" + f_splt[1], data[f])
+                    print(key + "/" + f_splt[1], "Length = %d" % len(data[f]))
             data["begin"] = np.zeros(len(data["Galaxy,S_Length"]),
                                      dtype=np.int64) + offset
             data["begin"][1:] = np.cumsum(data["Galaxy,S_Length"])[:-1]
@@ -98,10 +98,10 @@ def get_data(sim, regions, snap, data_fields):
 
         # Include this regions weighting
         if sim == "FLARES":
-            data["weights"].extend(np.full(len(data["reg_begin"]),
+            data["weights"].extend(np.full(len(reg_data["begin"]),
                                            weights[int(reg)]))
         else:
-            data["weights"].extend(np.full(len(data["reg_begin"]),
+            data["weights"].extend(np.full(len(reg_data["begin"]),
                                            weights[int(reg)]))
 
         # Add on new offset
