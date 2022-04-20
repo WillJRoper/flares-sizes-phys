@@ -104,16 +104,15 @@ def get_data(sim, regions, snap, data_fields):
 
         # Include this regions weighting
         if sim == "FLARES":
-            data["weights"].extend(np.full(len(reg_data["begin"]),
+            data["weights"].extend(np.full(reg_data["begin"].size,
                                            weights[int(reg)]))
         else:
-            data["weights"].extend(np.full(len(reg_data["begin"]),
-                                           weights[int(reg)]))
+            data["weights"].extend(np.ones(len(reg_data["begin"])))
 
         # Add on new offset
         offset = len(data[data_fields[0]])
         goffset = len(data[data_fields[1]])
-        print(offset)
+        print(offset, len(data["weights"]))
 
     # Convert lists to arrays
     for key in data:
