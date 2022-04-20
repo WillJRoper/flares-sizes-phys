@@ -134,7 +134,7 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
     w = np.zeros(len(data["begin"]))
 
     # Loop over galaxies and calculate stellar HMR
-    for (igal, b), l in zip(enumerate(data["begin"]), data["Galaxy,S_len"]):
+    for (igal, b), l in zip(enumerate(data["begin"]), data["Galaxy,S_Length"]):
 
         # Get this galaxy's data
         app = data["Particle/Apertures/Star,30"][b: l]
