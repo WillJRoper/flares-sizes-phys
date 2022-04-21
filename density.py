@@ -134,7 +134,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     hmrs = np.zeros(len(stellar_data["begin"]))
     mass = np.zeros(len(stellar_data["begin"]))
     den = {key: np.zeros(len(stellar_data["begin"]))
-            for key in [1, 5, 10, 30]}
+            for key in [0.05, 0.1, 0.5, 1, 5, 10, 30]}
     den_hmr = np.zeros(len(stellar_data["begin"]))
     w = np.zeros(len(stellar_data["begin"]))
 
@@ -169,6 +169,9 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
                             stellar_data["Galaxy,S_Length"]):
 
         for r in den:
+
+            if r in [0.05, 0.1, 0.5]:
+                continue
 
             # Get this galaxy's stellar_data for this radii
             app = stellar_data["Particle/Apertures/Star,%d" % r][b: b + l]
