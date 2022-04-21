@@ -81,6 +81,7 @@ def get_data(sim, regions, snap, data_fields):
     data = {k: [] for k in data_fields}
     data["weights"] = []
     data["begin"] = []
+    data["gbegin"] = []
 
     # Initialise particle offsets
     offset = 0
