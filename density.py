@@ -174,7 +174,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
             den[r][igal] = np.sum(ms) * 10 ** 10 / (4 / 3 * np.pi * r**3)
 
     # Remove galaxies without stars
-    okinds = np.ones(den_hmr > 0, hmrs > 0)
+    okinds = np.logical_and(den_hmr > 0, hmrs > 0)
     print("Galaxies before spurious cut: %d" % den_hmr.size)
     den_hmr = den_hmr[okinds]
     hmrs = hmrs[okinds]
