@@ -160,7 +160,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
         mass[igal] = np.sum(ms) * 10 ** 10
         w[igal] = stellar_data["weights"][igal]
 
-        for r in [0.05, 0.1, 0.5]
+        for r in [0.05, 0.1, 0.5]:
             den[r][igal] = (np.sum(ms[rs <= r]) * 10 ** 10
                              / (4 / 3 * np.pi * r**3))
 
