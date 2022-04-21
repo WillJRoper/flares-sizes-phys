@@ -77,7 +77,7 @@ def plot_meidan_stat(xs, ys, w, ax, lab, color, bins=None, ls='-'):
         bin[1:] = high_bins
 
     # Compute binned statistics
-    func = lambda y: weighted_quantile(y, 50, sample_weight=w)
+    func = lambda y: weighted_quantile(y, 0.5, sample_weight=w)
     y_stat, binedges, bin_ind = binned_statistic(xs, ys,
                                                  statistic=func, bins=bin)
 
