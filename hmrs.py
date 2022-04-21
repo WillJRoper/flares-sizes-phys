@@ -64,12 +64,12 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', offset=0, goffset=0):
                         data[f] = d
 
             data["begin"] = np.zeros(len(data["Galaxy,S_Length"]),
-                                     dtype=np.int64) + offset
-            data["begin"][1:] = np.cumsum(data["Galaxy,S_Length"])[:-1]
+                                     dtype=np.int64)
+            data["begin"][1:] = np.cumsum(data["Galaxy,S_Length"])[:-1] + offset
 
             data["gbegin"] = np.zeros(len(data["Galaxy,G_Length"]),
-                                      dtype=np.int64) + goffset
-            data["gbegin"][1:] = np.cumsum(data["Galaxy,G_Length"])[:-1]
+                                      dtype=np.int64)
+            data["gbegin"][1:] = np.cumsum(data["Galaxy,G_Length"])[:-1] + goffset
 
         else:
 
