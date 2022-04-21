@@ -108,10 +108,10 @@ def get_data(sim, regions, snap, data_fields):
 
         # Include this regions weighting
         if sim == "FLARES":
-            data["weights"].extend(np.full(reg_data["begin"].size,
+            data["weights"].extend(np.full(reg_data["Galaxy,S_Length"].size,
                                            weights[int(reg)]))
         else:
-            data["weights"].extend(np.ones(len(reg_data["begin"])))
+            data["weights"].extend(np.ones(len(reg_data["Galaxy,S_Length"])))
 
         # Add on new offset
         offset = len(data[data_fields[0]])
