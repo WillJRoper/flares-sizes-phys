@@ -208,7 +208,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     cbar = fig.colorbar(im)
     cbar.set_label("$\sum w_{i}$")
 
-    ax.legend("best")
+    ax.legend(loc="best")
 
     # Save figure
     mkdir("plots/density/")
@@ -243,7 +243,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     cbar = fig.colorbar(im)
     cbar.set_label("$\sum w_{i}$")
 
-    ax.legend()
+    ax.legend(loc="best")
 
     # Save figure
     mkdir("plots/density/")
