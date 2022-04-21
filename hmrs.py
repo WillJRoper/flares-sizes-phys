@@ -1,11 +1,10 @@
 import os
-from pathlib import Path
 
 import h5py
-import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from utils import calc_3drad, calc_light_mass_rad, mkdir
 
 os.environ['FLARE'] = '/cosma7/data/dp004/dc-wilk2/flare'
@@ -72,7 +71,6 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES'):
 
 
 def get_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
-
     # Load weights
     df = pd.read_csv('../weight_files/weights_grid.txt')
     weights = np.array(df['weights'])
@@ -118,15 +116,14 @@ def get_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
 
 
 def plot_stellar_hmr(sim, regions, snap, weight_norm):
-
     # Define data fields
-    stellar_data_fields = ("Particle,S_Mass", "Particle,S_Coordinates", 
-                           "Particle/Apertures/Star,30", "Galaxy,COP", 
-                           "Galaxy,S_Length", "Galaxy,GroupNumber", 
+    stellar_data_fields = ("Particle,S_Mass", "Particle,S_Coordinates",
+                           "Particle/Apertures/Star,30", "Galaxy,COP",
+                           "Galaxy,S_Length", "Galaxy,GroupNumber",
                            "Galaxy,SubGroupNumber")
 
     # Get the data
-    stellar_data = get_data(sim, regions, snap, stellar_data_fields, 
+    stellar_data = get_data(sim, regions, snap, stellar_data_fields,
                             length_key="Galaxy,S_Length")
 
     # Define arrays to store computations
@@ -135,9 +132,8 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
     w = np.zeros(len(stellar_data["begin"]))
 
     # Loop over galaxies and calculate stellar HMR
-    for (igal, b), l in zip(enumerate(stellar_data["begin"]), 
+    for (igal, b), l in zip(enumerate(stellar_data["begin"]),
                             stellar_data["Galaxy,S_Length"]):
-
         # Get this galaxy's stellar_data
         app = stellar_data["Particle/Apertures/Star,30"][b: b + l]
         cop = stellar_data["Galaxy,COP"][igal]
@@ -169,41 +165,40 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
     ax.loglog()
 
     # Plot stellar_data
-    ax.hexbin(mass, hmrs, gridsize=50,
-              mincnt=np.min(w) - (0.1 * np.min(w)),
-              C=w,
-              reduce_C_function=np.sum, xscale='log', yscale='log',
-              norm=weight_norm, linewidths=0.2, cmap='viridis')
+    im = ax.hexbin(mass, hmrs, gridsize=50,
+                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                   C=w,
+                   reduce_C_function=np.sum, xscale='log', yscale='log',
+                   norm=weight_norm, linewidths=0.2, cmap='viridis')
 
     # Label axes
     ax.set_xlabel("$M_\star / M_\odot$")
     ax.set_ylabel("$R_{1/2} / [\mathrm{pkpc}]$")
-    
-    cbar = fig.colorbar()
+
+    cbar = fig.colorbar(im)
     cbar.set_label("$\sum w_{i}$")
 
     # Save figure
     mkdir("plots/stellar_hmr/")
     fig.savefig("plots/stellar_hmr/stellar_hmr_%s.png" % snap,
                 bbox_inches="tight")
-    
+
 
 def plot_stellar_gas_hmr_comp(sim, regions, snap, weight_norm):
-
     # Define data fields
-    stellar_data_fields = ("Particle,S_Mass", "Particle,S_Coordinates", 
-                           "Particle/Apertures/Star,30", "Galaxy,COP", 
-                           "Galaxy,S_Length", "Galaxy,GroupNumber", 
+    stellar_data_fields = ("Particle,S_Mass", "Particle,S_Coordinates",
+                           "Particle/Apertures/Star,30", "Galaxy,COP",
+                           "Galaxy,S_Length", "Galaxy,GroupNumber",
                            "Galaxy,SubGroupNumber")
-    gas_data_fields = ("Particle,G_Mass", "Particle,G_Coordinates", 
-                       "Particle/Apertures/Gas,30", "Galaxy,COP", 
-                       "Galaxy,G_Length", "Galaxy,GroupNumber", 
+    gas_data_fields = ("Particle,G_Mass", "Particle,G_Coordinates",
+                       "Particle/Apertures/Gas,30", "Galaxy,COP",
+                       "Galaxy,G_Length", "Galaxy,GroupNumber",
                        "Galaxy,SubGroupNumber")
 
     # Get the data
-    stellar_data = get_data(sim, regions, snap, stellar_data_fields, 
+    stellar_data = get_data(sim, regions, snap, stellar_data_fields,
                             length_key="Galaxy,S_Length")
-    gas_data = get_data(sim, regions, snap, gas_data_fields, 
+    gas_data = get_data(sim, regions, snap, gas_data_fields,
                         length_key="Galaxy,G_Length")
 
     # Define arrays to store computations
@@ -212,9 +207,8 @@ def plot_stellar_gas_hmr_comp(sim, regions, snap, weight_norm):
     w = np.zeros(len(stellar_data["begin"]))
 
     # Loop over galaxies and calculate stellar HMR
-    for (igal, b), l in zip(enumerate(stellar_data["begin"]), 
+    for (igal, b), l in zip(enumerate(stellar_data["begin"]),
                             stellar_data["Galaxy,S_Length"]):
-
         # Get this galaxy's stellar_data
         app = stellar_data["Particle/Apertures/Star,30"][b: b + l]
         cop = stellar_data["Galaxy,COP"][igal]
@@ -230,11 +224,10 @@ def plot_stellar_gas_hmr_comp(sim, regions, snap, weight_norm):
         # Store results
         s_hmrs[igal] = hmr
         w[igal] = stellar_data["weights"][igal]
-        
-    # Loop over galaxies and calculate gas HMR
-    for (igal, b), l in zip(enumerate(gas_data["begin"]), 
-                            gas_data["Galaxy,G_Length"]):
 
+    # Loop over galaxies and calculate gas HMR
+    for (igal, b), l in zip(enumerate(gas_data["begin"]),
+                            gas_data["Galaxy,G_Length"]):
         # Get this galaxy's gas_data
         app = gas_data["Particle/Apertures/Gas,30"][b: b + l]
         cop = gas_data["Galaxy,COP"][igal]
@@ -265,17 +258,17 @@ def plot_stellar_gas_hmr_comp(sim, regions, snap, weight_norm):
     ax.loglog()
 
     # Plot stellar_data
-    ax.hexbin(s_hmrs, g_hmrs, gridsize=50,
-              mincnt=np.min(w) - (0.1 * np.min(w)),
-              C=w,
-              reduce_C_function=np.sum, xscale='log', yscale='log',
-              norm=weight_norm, linewidths=0.2, cmap='viridis')
+    im = ax.hexbin(s_hmrs, g_hmrs, gridsize=50,
+                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                   C=w,
+                   reduce_C_function=np.sum, xscale='log', yscale='log',
+                   norm=weight_norm, linewidths=0.2, cmap='viridis')
 
     # Label axes
     ax.set_ylabel("$R_{\mathrm{gas}} / [\mathrm{pkpc}]$")
     ax.set_xlabel("$R_{\star} / [\mathrm{pkpc}]$")
 
-    cbar = fig.colorbar()
+    cbar = fig.colorbar(im)
     cbar.set_label("$\sum w_{i}$")
 
     # Save figure
