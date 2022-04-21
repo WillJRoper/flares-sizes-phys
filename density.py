@@ -180,6 +180,8 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     hmrs = hmrs[okinds]
     mass = mass[okinds]
     w = w[okinds]
+    for r in den:
+        den[r] = den[r][okinds]
     print("Galaxies after spurious cut: %d" % den_hmr.size)
 
     # Set up plot
@@ -196,7 +198,9 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
 
     # Plot weighted medians
     for r in den:
-        plot_meidan_stat(hmrs, den[r], w, ax, "$R=$%.1f" % r,
+        okinds = np.logical_and(den[r] > 0, hmrs > 0)
+        plot_meidan_stat(hmrs[okinds], den[r][okinds], w[okinds],
+                         ax, "R=%.1f" % r,
                          color=None, bins=None, ls='--')
     plot_meidan_stat(hmrs, den_hmr, w, ax, "$R=R_{1/2}$",
                      color=None, bins=None, ls='-')
@@ -231,7 +235,9 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
 
     # Plot weighted medians
     for r in den:
-        plot_meidan_stat(mass, den[r], w, ax, "R=%.1f" % r,
+        okinds = np.logical_and(den[r] > 0, mass > 0)
+        plot_meidan_stat(mass[okinds], den[r][okinds], w[okinds],
+                         ax, "R=%.1f" % r,
                          color=None, bins=None, ls='--')
     plot_meidan_stat(mass, den_hmr, w, ax, "$R=R_{1/2}$",
                      color=None, bins=None, ls='-')
