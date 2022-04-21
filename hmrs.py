@@ -183,6 +183,8 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
     fig.savefig("plots/stellar_hmr/stellar_hmr_%s.png" % snap,
                 bbox_inches="tight")
 
+    plt.close(fig)
+
 
 def plot_stellar_gas_hmr_comp(sim, regions, snap, weight_norm):
     # Define data fields
@@ -275,3 +277,5 @@ def plot_stellar_gas_hmr_comp(sim, regions, snap, weight_norm):
     mkdir("plots/stellar_gas_hmr_comp/")
     fig.savefig("plots/stellar_gas_hmr_comp/stellar_hmr_%s.png" % snap,
                 bbox_inches="tight")
+
+    plt.close(fig)

@@ -132,6 +132,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
 
     # Define arrays to store computations
     hmrs = np.zeros(len(stellar_data["begin"]))
+    mass = np.zeros(len(stellar_data["begin"]))
     den = {key: np.zeros(len(stellar_data["begin"]))
             for key in [1, 5, 10, 30]}
     den_hmr = np.zeros(len(stellar_data["begin"]))
@@ -156,6 +157,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
         den_hmr[igal] = (np.sum(ms[rs <= hmr]) * 10 ** 10
                          / (4 / 3 * np.pi * hmr**3))
         hmrs[igal] = hmr
+        mass[igal] = np.sum(ms) * 10 ** 10
         w[igal] = stellar_data["weights"][igal]
 
     # Loop over galaxies and calculate denisty within radii
@@ -211,3 +213,40 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     mkdir("plots/density/")
     fig.savefig("plots/density/stellar_hmr_%s.png" % snap,
                 bbox_inches="tight")
+
+    plt.close(fig)
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+    ax.loglog()
+
+    # Plot stellar_data
+    im = ax.hexbin(mass, den_hmr, gridsize=50,
+                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                   C=w,
+                   reduce_C_function=np.sum, xscale='log', yscale='log',
+                   norm=weight_norm, linewidths=0.2, cmap='viridis')
+
+    # Plot weighted medians
+    for r in den:
+        plot_meidan_stat(mass, den_hmr, w, ax, "R=%.1f" % r,
+                         color=None, bins=None, ls='--')
+    plot_meidan_stat(mass, den_hmr, w, ax, "R=R_{1/2}",
+                     color=None, bins=None, ls='-')
+
+    # Label axes
+    ax.set_ylabel(r"$\rho_\star / [M_\odot / \mathrm{pkpc}^3]$")
+    ax.set_xlabel("$M_\star / M_\odot$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$\sum w_{i}$")
+
+    ax.legend()
+
+    # Save figure
+    mkdir("plots/density/")
+    fig.savefig("plots/density/stellar_hmr_%s.png" % snap,
+                bbox_inches="tight")
+
+    plt.close(fig)
