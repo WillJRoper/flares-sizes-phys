@@ -5,7 +5,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from utils import calc_3drad, calc_light_mass_rad, mkdir
+from utils import calc_3drad, calc_light_mass_rad, mkdir, plot_meidan_stat
 
 os.environ['FLARE'] = '/cosma7/data/dp004/dc-wilk2/flare'
 mpl.use('Agg')
@@ -115,7 +115,7 @@ def get_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
     return data
 
 
-def plot_stellar_densitys(sim, regions, snap, weight_norm):
+def plot_stellar_density(sim, regions, snap, weight_norm):
 
     # Define data fields
     stellar_data_fields = ("Particle,S_Mass", "Particle,S_Coordinates",
@@ -191,12 +191,21 @@ def plot_stellar_densitys(sim, regions, snap, weight_norm):
                    reduce_C_function=np.sum, xscale='log', yscale='log',
                    norm=weight_norm, linewidths=0.2, cmap='viridis')
 
+    # Plot weighted medians
+    for r in den:
+        plot_meidan_stat(hmrs, den_hmr, w, ax, "R=%.1f" % r,
+                         color=None, bins=None, ls='--')
+    plot_meidan_stat(hmrs, den_hmr, w, ax, "R=R_{1/2}",
+                     color=None, bins=None, ls='-')
+
     # Label axes
     ax.set_ylabel(r"$\rho_\star / [M_\odot / \mathrm{pkpc}^3]$")
     ax.set_xlabel("$R_{1/2} / [\mathrm{pkpc}]$")
 
     cbar = fig.colorbar(im)
     cbar.set_label("$\sum w_{i}$")
+
+    ax.legend()
 
     # Save figure
     mkdir("plots/density/")

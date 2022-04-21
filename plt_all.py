@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib.colors import LogNorm
 
 from hmrs import plot_stellar_hmr, plot_stellar_gas_hmr_comp
+from density import plot_stellar_density
 
 # Define the norm
 weight_norm = LogNorm(vmin=10 ** -4, vmax=1)
@@ -41,6 +42,7 @@ eagle_snaps = list(snaps)
 # Plot EVERYTHING
 for snap in flares_snaps:
     print("Plotting snap %s" % snap)
+    plot_stellar_density("FLARES", regions, snap, weight_norm)
     plot_stellar_hmr("FLARES", regions, snap, weight_norm)
     plot_stellar_gas_hmr_comp("FLARES", regions, snap, weight_norm)
 

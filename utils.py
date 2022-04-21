@@ -1,5 +1,6 @@
 import os
 from scipy.interpolate import interp1d
+from scipy.stats import binned_statistic
 import numpy as np
 
 
@@ -51,3 +52,85 @@ def calc_light_mass_rad(rs, ls, radii_frac=0.5):
     # hmr = interp_rs[new_hmr_ind]
 
     return rs[hmr_ind]
+
+
+def plot_meidan_stat(xs, ys, w, ax, lab, color, bins=None, ls='-'):
+
+    if bins == None:
+        bin = np.logspace(np.log10(xs.min()), np.log10(xs.max()), 20)
+    else:
+        zs = np.float64(xs)
+
+        uniz = np.unique(zs)
+        bin_wids = uniz[1:] - uniz[:-1]
+        low_bins = uniz[:-1] - (bin_wids / 2)
+        high_bins = uniz[:-1] + (bin_wids / 2)
+        low_bins = list(low_bins)
+        high_bins = list(high_bins)
+        low_bins.append(high_bins[-1])
+        high_bins.append(uniz[-1] + 1)
+        low_bins = np.array(low_bins)
+        high_bins = np.array(high_bins)
+
+        bin = np.zeros(uniz.size + 1)
+        bin[:-1] = low_bins
+        bin[1:] = high_bins
+
+    # Compute binned statistics
+    func = lambda y: weighted_quantile(y, 50, sample_weight=w)
+    y_stat, binedges, bin_ind = binned_statistic(xs, ys,
+                                                 statistic=func, bins=bin)
+
+    # Compute bincentres
+    bin_wid = binedges[1] - binedges[0]
+    bin_cents = binedges[1:] - bin_wid / 2
+
+    okinds = np.logical_and(~np.isnan(bin_cents), ~np.isnan(y_stat))
+
+    if color is not None:
+        ax.plot(bin_cents[okinds], y_stat[okinds], color=color,
+                linestyle=ls, label=lab)
+    else:
+        ax.plot(bin_cents[okinds], y_stat[okinds], color=color,
+                linestyle=ls, label=lab)
+
+
+def weighted_quantile(values, quantiles, sample_weight=None,
+                      values_sorted=False, old_style=False):
+    """
+    Taken from From https://stackoverflow.com/a/29677616/1718096
+    Very close to numpy.percentile, but supports weights.
+    NOTE: quantiles should be in [0, 1]!
+    :param values: numpy.array with data
+    :param quantiles: array-like with many quantiles needed
+    :param sample_weight: array-like of the same length as `array`
+    :param values_sorted: bool, if True, then will avoid sorting of
+        initial array
+    :param old_style: if True, will correct output to be consistent
+        with numpy.percentile.
+    :return: numpy.array with computed quantiles.
+    """
+
+    # do some housekeeping
+    values = np.array(values)
+    quantiles = np.array(quantiles)
+    if sample_weight is None:
+        sample_weight = np.ones(len(values))
+    sample_weight = np.array(sample_weight)
+    assert np.all(quantiles >= 0) and np.all(quantiles <= 1), \
+        'quantiles should be in [0, 1]'
+
+    # if not sorted, sort values array
+    if not values_sorted:
+        sorter = np.argsort(values)
+        values = values[sorter]
+        sample_weight = sample_weight[sorter]
+
+    weighted_quantiles = np.cumsum(sample_weight) - 0.5 * sample_weight
+    if old_style:
+        # To be convenient with numpy.percentile
+        weighted_quantiles -= weighted_quantiles[0]
+        weighted_quantiles /= weighted_quantiles[-1]
+    else:
+        weighted_quantiles /= np.sum(sample_weight)
+    return np.interp(quantiles, weighted_quantiles, values)
