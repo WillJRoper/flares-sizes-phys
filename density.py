@@ -196,9 +196,9 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
 
     # Plot weighted medians
     for r in den:
-        plot_meidan_stat(hmrs, den_hmr, w, ax, "R=%.1f" % r,
+        plot_meidan_stat(hmrs, den_hmr, w, ax, "$R=$%.1f" % r,
                          color=None, bins=None, ls='--')
-    plot_meidan_stat(hmrs, den_hmr, w, ax, "R=R_{1/2}",
+    plot_meidan_stat(hmrs, den_hmr, w, ax, "$R=R_{1/2}$",
                      color=None, bins=None, ls='-')
 
     # Label axes
@@ -208,11 +208,11 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     cbar = fig.colorbar(im)
     cbar.set_label("$\sum w_{i}$")
 
-    ax.legend()
+    ax.legend("best")
 
     # Save figure
     mkdir("plots/density/")
-    fig.savefig("plots/density/stellar_hmr_%s.png" % snap,
+    fig.savefig("plots/density/stellar_density_hmr_%s.png" % snap,
                 bbox_inches="tight")
 
     plt.close(fig)
@@ -247,7 +247,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
 
     # Save figure
     mkdir("plots/density/")
-    fig.savefig("plots/density/stellar_hmr_%s.png" % snap,
+    fig.savefig("plots/density/stellar_density_mass_%s.png" % snap,
                 bbox_inches="tight")
 
     plt.close(fig)

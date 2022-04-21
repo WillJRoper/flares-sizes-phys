@@ -275,7 +275,7 @@ def plot_stellar_gas_hmr_comp(sim, regions, snap, weight_norm):
 
     # Save figure
     mkdir("plots/stellar_gas_hmr_comp/")
-    fig.savefig("plots/stellar_gas_hmr_comp/stellar_hmr_%s.png" % snap,
+    fig.savefig("plots/stellar_gas_hmr_comp/stellar_gas_hmr_comp_%s.png" % snap,
                 bbox_inches="tight")
 
     plt.close(fig)
