@@ -98,7 +98,7 @@ def get_data(sim, regions, snap, data_fields):
         # Define galaxy start index arrays
         start_index = np.full(reg_data["Galaxy,S_Length"].size,
                               offset, dtype=int)
-        start_index[1:] = np.cumsum(reg_data["Galaxy,S_Length"][:-1])
+        start_index[1:] += np.cumsum(reg_data["Galaxy,S_Length"][:-1])
         data["begin"].extend(start_index)
 
         start_index = np.full(reg_data["Galaxy,G_Length"].size,
