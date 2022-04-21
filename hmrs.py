@@ -30,7 +30,7 @@ plt.rc('legend', fontsize=SMALL_SIZE)  # legend fontsize
 plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 
-def get_reg_data(ii, tag, data_fields, inp='FLARES', offset=0, goffset=0):
+def get_reg_data(ii, tag, data_fields, inp='FLARES'):
     num = str(ii)
     if inp == 'FLARES':
         if len(num) == 1:
@@ -63,14 +63,6 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', offset=0, goffset=0):
                     else:
                         data[f] = d
 
-            data["begin"] = np.zeros(len(data["Galaxy,S_Length"]),
-                                     dtype=np.int64)
-            data["begin"][1:] = np.cumsum(data["Galaxy,S_Length"])[:-1] + offset
-
-            data["gbegin"] = np.zeros(len(data["Galaxy,G_Length"]),
-                                      dtype=np.int64)
-            data["gbegin"][1:] = np.cumsum(data["Galaxy,G_Length"])[:-1] + goffset
-
         else:
 
             for f in data_fields:
@@ -88,6 +80,7 @@ def get_data(sim, regions, snap, data_fields):
     # Initialise dictionary to store results
     data = {k: [] for k in data_fields}
     data["weights"] = []
+    data["begin"] = []
 
     # Initialise particle offsets
     offset = 0
@@ -95,12 +88,22 @@ def get_data(sim, regions, snap, data_fields):
 
     # Loop over regions and snapshots
     for reg in regions:
-        reg_data = get_reg_data(reg, snap, data_fields, inp=sim,
-                                offset=offset, goffset=goffset)
+        reg_data = get_reg_data(reg, snap, data_fields, inp=sim)
 
         # Combine this region
         for f in data_fields:
             data[f].extend(reg_data[f])
+
+        # Define galaxy start index arrays
+        start_index = np.full(reg_data["Galaxy,S_Length"].size,
+                              offset, dtype=int)
+        start_index[1:] = np.cumsum(reg_data["Galaxy,S_Length"][:-1])
+        data["begin"].extend(start_index)
+
+        start_index = np.full(reg_data["Galaxy,G_Length"].size,
+                              goffset, dtype=int)
+        start_index[1:] = np.cumsum(reg_data["Galaxy,G_Length"][:-1])
+        data["gbegin"].extend(start_index)
 
         # Include this regions weighting
         if sim == "FLARES":
@@ -127,8 +130,7 @@ def plot_stellar_hmr(sim, regions, snap, weight_norm):
                    "Particle,S_Coordinates", "Particle,G_Coordinates",
                    "Particle/Apertures/Star,30", "Particle/Apertures/Gas,30",
                    "Galaxy,COP", "Galaxy,S_Length", "Galaxy,G_Length",
-                   "Galaxy,GroupNumber", "Galaxy,SubGroupNumber",
-                   "begin", "gbegin",)
+                   "Galaxy,GroupNumber", "Galaxy,SubGroupNumber")
 
     # Get the data
     data = get_data(sim, regions, snap, data_fields)
