@@ -2,6 +2,7 @@ import os
 
 import h5py
 import matplotlib as mpl
+import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -116,7 +117,6 @@ def get_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
 
 
 def plot_stellar_density(sim, regions, snap, weight_norm):
-
     # Define data fields
     stellar_data_fields = ("Particle,S_Mass", "Particle,S_Coordinates",
                            "Particle/Apertures/Star,1",
@@ -134,7 +134,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     hmrs = np.zeros(len(stellar_data["begin"]))
     mass = np.zeros(len(stellar_data["begin"]))
     den = {key: np.zeros(len(stellar_data["begin"]))
-            for key in [0.05, 0.1, 0.5, 1, 5, 10, 30]}
+           for key in [0.05, 0.1, 0.5, 1, 5, 10, 30]}
     den_hmr = np.zeros(len(stellar_data["begin"]))
     w = np.zeros(len(stellar_data["begin"]))
 
@@ -155,14 +155,14 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
 
         # Store results
         den_hmr[igal] = (np.sum(ms[rs <= hmr]) * 10 ** 10
-                         / (4 / 3 * np.pi * hmr**3))
+                         / (4 / 3 * np.pi * hmr ** 3))
         hmrs[igal] = hmr
         mass[igal] = np.sum(ms) * 10 ** 10
         w[igal] = stellar_data["weights"][igal]
 
         for r in [0.05, 0.1, 0.5]:
             den[r][igal] = (np.sum(ms[rs <= r]) * 10 ** 10
-                             / (4 / 3 * np.pi * r**3))
+                            / (4 / 3 * np.pi * r ** 3))
 
     # Loop over galaxies and calculate denisty within radii
     for (igal, b), l in zip(enumerate(stellar_data["begin"]),
@@ -178,7 +178,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
             ms = stellar_data["Particle,S_Mass"][b: b + l][app]
 
             # Compute density
-            den[r][igal] = np.sum(ms) * 10 ** 10 / (4 / 3 * np.pi * r**3)
+            den[r][igal] = np.sum(ms) * 10 ** 10 / (4 / 3 * np.pi * r ** 3)
 
     # Remove galaxies without stars
     okinds = np.logical_and(den_hmr > 0, hmrs > 0)
@@ -191,35 +191,63 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
         den[r] = den[r][okinds]
     print("Galaxies after spurious cut: %d" % den_hmr.size)
 
+    # Define how mnay columns
+    ncols = 1 + len(den)
+
     # Set up plot
-    fig = plt.figure(figsize=(3.5, 3.5))
-    ax = fig.add_subplot(111)
-    ax.loglog()
+    fig = plt.figure(figsize=(2.25 * ncols, 2.25))
+    gs = gridspec.GridSpec(3, ncols + 1,
+                           width_ratios=[20, ] * ncols + [1, 1])
+    gs.update(wspace=0.0, hspace=0.0)
+    axes = []
+    cax = fig.add_subplot(gs[:, -1])
+    i = 0
+    while i < ncols:
+        axes.append(fig.add_subplot(gs[0, i]))
+        if i > 0:
+            axes[i].loglog()
+            axes[i].tick_params(axis='y', left=False, right=False,
+                                labelleft=False, labelright=False)
+        i += 1
 
     # Plot stellar_data
-    im = ax.hexbin(hmrs, den_hmr, gridsize=50,
-                   mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w,
-                   reduce_C_function=np.sum, xscale='log', yscale='log',
-                   norm=weight_norm, linewidths=0.2, cmap='viridis')
+    im = axes[0].hexbin(hmrs, den_hmr, gridsize=50,
+                        mincnt=np.min(w) - (0.1 * np.min(w)),
+                        C=w,
+                        reduce_C_function=np.sum, xscale='log', yscale='log',
+                        norm=weight_norm, linewidths=0.2, cmap='viridis')
 
     # Plot weighted medians
-    for r in den:
+    for i, r in enumerate(den):
         okinds = np.logical_and(den[r] > 0, hmrs > 0)
-        plot_meidan_stat(hmrs[okinds], den[r][okinds], w[okinds],
-                         ax, "R=%.2f" % r,
-                         color=None, bins=None, ls='--')
-    plot_meidan_stat(hmrs, den_hmr, w, ax, "$R=R_{1/2}$",
-                     color=None, bins=None, ls='-')
+        axes[i].hexbin(hmrs[okinds], den[r][okinds], gridsize=50,
+                       mincnt=np.min(w[okinds]) - (0.1 * np.min(w)),
+                       C=w[okinds],
+                       reduce_C_function=np.sum, xscale='log', yscale='log',
+                       norm=weight_norm, linewidths=0.2, cmap='viridis')
+        p = plot_meidan_stat(hmrs[okinds], den[r][okinds], w[okinds],
+                             axes[i + 1], "R=%.2f" % r,
+                             color=None, bins=None, ls='--')
+
+    p = plot_meidan_stat(hmrs, den_hmr, w, axes[0], "$R=R_{1/2}$",
+                         color=None, bins=None, ls='-')
+
+    # Set ylims
+    for ax in axes:
+        ax.set_ylim(10**2, 10**17.5)
+    
+    # Set titles
+    axes[0].set_title("$R=R_{1/2}$")
+    for i, r in enumerate(den):
+        axes[i + 1].set_title("R=%.2f" % r)
 
     # Label axes
-    ax.set_ylabel(r"$\rho_\star / [M_\odot / \mathrm{pkpc}^3]$")
-    ax.set_xlabel("$R_{1/2} / [\mathrm{pkpc}]$")
+    axes[0].set_ylabel(r"$\rho_\star / [M_\odot / \mathrm{pkpc}^3]$")
+    for i in range(ncols):
+        axes[i].set_xlabel("$R_{1/2} / [\mathrm{pkpc}]$")
 
-    cbar = fig.colorbar(im)
+    cbar = fig.colorbar(im, cax)
     cbar.set_label("$\sum w_{i}$")
-
-    ax.legend(loc="best")
 
     # Save figure
     mkdir("plots/density/")
@@ -229,34 +257,59 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     plt.close(fig)
 
     # Set up plot
-    fig = plt.figure(figsize=(3.5, 3.5))
-    ax = fig.add_subplot(111)
-    ax.loglog()
+    fig = plt.figure(figsize=(2.25 * ncols, 2.25))
+    gs = gridspec.GridSpec(3, ncols + 1,
+                           width_ratios=[20, ] * ncols + [1, 1])
+    gs.update(wspace=0.0, hspace=0.0)
+    axes = []
+    cax = fig.add_subplot(gs[:, -1])
+    i = 0
+    while i < ncols:
+        axes.append(fig.add_subplot(gs[0, i]))
+        if i > 0:
+            axes[i].loglog()
+            axes[i].tick_params(axis='y', left=False, right=False,
+                                labelleft=False, labelright=False)
+        i += 1
 
     # Plot stellar_data
-    im = ax.hexbin(mass, den_hmr, gridsize=50,
-                   mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w,
-                   reduce_C_function=np.sum, xscale='log', yscale='log',
-                   norm=weight_norm, linewidths=0.2, cmap='viridis')
+    im = axes[0].hexbin(mass, den_hmr, gridsize=50,
+                        mincnt=np.min(w) - (0.1 * np.min(w)),
+                        C=w,
+                        reduce_C_function=np.sum, xscale='log', yscale='log',
+                        norm=weight_norm, linewidths=0.2, cmap='viridis')
 
     # Plot weighted medians
-    for r in den:
+    for i, r in enumerate(den):
         okinds = np.logical_and(den[r] > 0, mass > 0)
-        plot_meidan_stat(mass[okinds], den[r][okinds], w[okinds],
-                         ax, "R=%.2f" % r,
-                         color=None, bins=None, ls='--')
-    plot_meidan_stat(mass, den_hmr, w, ax, "$R=R_{1/2}$",
-                     color=None, bins=None, ls='-')
+        axes[i].hexbin(mass[okinds], den[r][okinds], gridsize=50,
+                       mincnt=np.min(w[okinds]) - (0.1 * np.min(w)),
+                       C=w[okinds],
+                       reduce_C_function=np.sum, xscale='log', yscale='log',
+                       norm=weight_norm, linewidths=0.2, cmap='viridis')
+        p = plot_meidan_stat(mass[okinds], den[r][okinds], w[okinds],
+                             axes[i + 1], "R=%.2f" % r,
+                             color=None, bins=None, ls='--')
+
+    p = plot_meidan_stat(mass, den_hmr, w, axes[0], "$R=R_{1/2}$",
+                         color=None, bins=None, ls='-')
+
+    # Set ylims
+    for ax in axes:
+        ax.set_ylim(10**2, 10**17.5)
+
+    # Set titles
+    axes[0].set_title("$R=R_{1/2}$")
+    for i, r in enumerate(den):
+        axes[i + 1].set_title("R=%.2f" % r)
 
     # Label axes
-    ax.set_ylabel(r"$\rho_\star / [M_\odot / \mathrm{pkpc}^3]$")
-    ax.set_xlabel("$M_\star / M_\odot$")
+    axes[0].set_ylabel(r"$\rho_\star / [M_\odot / \mathrm{pkpc}^3]$")
+    for i in range(ncols):
+        axes[i].set_xlabel("$R_{1/2} / [\mathrm{pkpc}]$")
 
-    cbar = fig.colorbar(im)
+    cbar = fig.colorbar(im, cax)
     cbar.set_label("$\sum w_{i}$")
-
-    ax.legend(loc="best")
 
     # Save figure
     mkdir("plots/density/")

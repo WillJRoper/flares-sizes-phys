@@ -88,11 +88,11 @@ def plot_meidan_stat(xs, ys, w, ax, lab, color, bins=None, ls='-'):
     okinds = np.logical_and(~np.isnan(bin_cents), ~np.isnan(y_stat))
 
     if color is not None:
-        ax.plot(bin_cents[okinds], y_stat[okinds], color=color,
-                linestyle=ls, label=lab)
+        return ax.plot(bin_cents[okinds], y_stat[okinds], color=color,
+                       linestyle=ls, label=lab)
     else:
-        ax.plot(bin_cents[okinds], y_stat[okinds], color=color,
-                linestyle=ls, label=lab)
+        return ax.plot(bin_cents[okinds], y_stat[okinds], color=color,
+                       linestyle=ls, label=lab)
 
 
 def weighted_quantile(values, quantiles, sample_weight=None,
