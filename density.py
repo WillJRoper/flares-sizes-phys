@@ -242,7 +242,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
         axes[i + 1].set_title("R=%.2f" % r)
 
     # Label axes
-    axes[0].set_ylabel(r"$\rho_\star / [M_\odot / \mathrm{pkpc}^3]$")
+    axes[0].set_ylabel(r"$\rho_\star(<R) / [M_\odot / \mathrm{pkpc}^3]$")
     for i in range(ncols):
         axes[i].set_xlabel("$R_{1/2} / [\mathrm{pkpc}]$")
 
@@ -304,9 +304,9 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
         axes[i + 1].set_title("R=%.2f" % r)
 
     # Label axes
-    axes[0].set_ylabel(r"$\rho_\star / [M_\odot / \mathrm{pkpc}^3]$")
+    axes[0].set_ylabel(r"$\rho_\star(<R) / [M_\odot / \mathrm{pkpc}^3]$")
     for i in range(ncols):
-        axes[i].set_xlabel("$R_{1/2} / [\mathrm{pkpc}]$")
+        axes[i].set_xlabel("$M_\star / M_\odot$")
 
     cbar = fig.colorbar(im, cax)
     cbar.set_label("$\sum w_{i}$")
