@@ -196,7 +196,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
 
     # Set up plot
     fig = plt.figure(figsize=(2.25 * ncols, 2.25))
-    gs = gridspec.GridSpec(3, ncols + 1,
+    gs = gridspec.GridSpec(nrows=1, ncols=ncols + 1,
                            width_ratios=[20, ] * ncols + [1, 1])
     gs.update(wspace=0.0, hspace=0.0)
     axes = []
@@ -258,7 +258,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
 
     # Set up plot
     fig = plt.figure(figsize=(2.25 * ncols, 2.25))
-    gs = gridspec.GridSpec(3, ncols + 1,
+    gs = gridspec.GridSpec(nrows=1, ncols=ncols + 1,
                            width_ratios=[20, ] * ncols + [1, 1])
     gs.update(wspace=0.0, hspace=0.0)
     axes = []
