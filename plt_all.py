@@ -42,7 +42,10 @@ eagle_snaps = list(snaps)
 # Plot EVERYTHING
 for snap in flares_snaps:
     print("Plotting snap %s" % snap)
-    plot_stellar_density("FLARES", regions, snap, weight_norm)
+    try:
+        plot_stellar_density("FLARES", regions, snap, weight_norm)
+    except ValueError as e:
+        print("Stellar density:", e)
     plot_stellar_hmr("FLARES", regions, snap, weight_norm)
     plot_stellar_gas_hmr_comp("FLARES", regions, snap, weight_norm)
 
