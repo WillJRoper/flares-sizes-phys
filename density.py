@@ -120,7 +120,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     # Define x and y limits
     hmrlims = (-3.5, 1)
     mlims = (8, 11)
-    denlims = (2, 17.5)
+    denlims = (4, 19.5)
 
     # Define data fields
     stellar_data_fields = ("Particle,S_Mass", "Particle,S_Coordinates",
@@ -139,7 +139,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     hmrs = np.zeros(len(stellar_data["begin"]))
     mass = np.zeros(len(stellar_data["begin"]))
     den = {key: np.zeros(len(stellar_data["begin"]))
-           for key in [0.05, 0.1, 0.5, 1, 5, 10, 30]}
+           for key in [0.05, 0.1, 0.5, 1]}
     den_hmr = np.zeros(len(stellar_data["begin"]))
     w = np.zeros(len(stellar_data["begin"]))
 
@@ -234,12 +234,14 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     # Plot weighted medians
     for i, r in enumerate(den):
         okinds = np.logical_and(den[r] > 0, hmrs > 0)
-        axes[i].hexbin(hmrs[okinds], den[r][okinds], gridsize=50,
-                       mincnt=np.min(w[okinds]) - (0.1 * np.min(w)),
-                       C=w[okinds],
-                       extent=[hmrlims[0], hmrlims[1], denlims[0], denlims[1]],
-                       reduce_C_function=np.sum, xscale='log', yscale='log',
-                       norm=weight_norm, linewidths=0.2, cmap='viridis')
+        axes[i + 1].hexbin(hmrs[okinds], den[r][okinds], gridsize=50,
+                           mincnt=np.min(w[okinds]) - (0.1 * np.min(w)),
+                           C=w[okinds],
+                           extent=[hmrlims[0], hmrlims[1], denlims[0],
+                                   denlims[1]],
+                           reduce_C_function=np.sum, xscale='log',
+                           yscale='log',
+                           norm=weight_norm, linewidths=0.2, cmap='viridis')
         p = plot_meidan_stat(hmrs[okinds], den[r][okinds], w[okinds],
                              axes[i + 1], "R=%.2f" % r,
                              color=None, bins=None, ls='--')
@@ -299,12 +301,13 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     # Plot weighted medians
     for i, r in enumerate(den):
         okinds = np.logical_and(den[r] > 0, mass > 0)
-        axes[i].hexbin(mass[okinds], den[r][okinds], gridsize=50,
-                       mincnt=np.min(w[okinds]) - (0.1 * np.min(w)),
-                       C=w[okinds],
-                       extent=[mlims[0], mlims[1], denlims[0], denlims[1]],
-                       reduce_C_function=np.sum, xscale='log', yscale='log',
-                       norm=weight_norm, linewidths=0.2, cmap='viridis')
+        axes[i + 1].hexbin(mass[okinds], den[r][okinds], gridsize=50,
+                           mincnt=np.min(w[okinds]) - (0.1 * np.min(w)),
+                           C=w[okinds],
+                           extent=[mlims[0], mlims[1], denlims[0], denlims[1]],
+                           reduce_C_function=np.sum, xscale='log',
+                           yscale='log',
+                           norm=weight_norm, linewidths=0.2, cmap='viridis')
         p = plot_meidan_stat(mass[okinds], den[r][okinds], w[okinds],
                              axes[i + 1], "R=%.2f" % r,
                              color=None, bins=None, ls='--')
