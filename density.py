@@ -119,7 +119,7 @@ def get_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
 def plot_stellar_density(sim, regions, snap, weight_norm):
     # Define x and y limits
     hmrlims = (-3.5, 1)
-    mlims = (7, 11)
+    mlims = (8, 11)
     denlims = (2, 17.5)
 
     # Define data fields
@@ -176,6 +176,9 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     # Loop over galaxies and calculate denisty within radii
     for (igal, b), l in zip(enumerate(stellar_data["begin"]),
                             stellar_data["Galaxy,S_Length"]):
+
+        if l < 100:
+            continue
 
         for r in den:
 
