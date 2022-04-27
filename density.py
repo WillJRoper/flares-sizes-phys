@@ -117,6 +117,11 @@ def get_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
 
 
 def plot_stellar_density(sim, regions, snap, weight_norm):
+    # Define x and y limits
+    hmrlims = (10 ** -3.5, 1)
+    mlims = (10 ** 7, 10 ** 11)
+    denlims = (10 ** 2, 10 ** 17.5)
+
     # Define data fields
     stellar_data_fields = ("Particle,S_Mass", "Particle,S_Coordinates",
                            "Particle/Apertures/Star,1",
@@ -223,6 +228,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
         axes[i].hexbin(hmrs[okinds], den[r][okinds], gridsize=50,
                        mincnt=np.min(w[okinds]) - (0.1 * np.min(w)),
                        C=w[okinds],
+                       extent=[hmrlims[0], hmrlims[1], denlims[0], denlims[1]],
                        reduce_C_function=np.sum, xscale='log', yscale='log',
                        norm=weight_norm, linewidths=0.2, cmap='viridis')
         p = plot_meidan_stat(hmrs[okinds], den[r][okinds], w[okinds],
@@ -232,10 +238,11 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     p = plot_meidan_stat(hmrs, den_hmr, w, axes[0], "$R=R_{1/2}$",
                          color=None, bins=None, ls='-')
 
-    # Set ylims
+    # Set lims
     for ax in axes:
-        ax.set_ylim(10**2, 10**17.5)
-    
+        ax.set_ylim(denlims[0], denlims[1])
+        ax.set_xlim(hmrlims[0], hmrlims[1])
+
     # Set titles
     axes[0].set_title("$R=R_{1/2}$")
     for i, r in enumerate(den):
@@ -285,6 +292,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
         axes[i].hexbin(mass[okinds], den[r][okinds], gridsize=50,
                        mincnt=np.min(w[okinds]) - (0.1 * np.min(w)),
                        C=w[okinds],
+                       extent=[mlims[0], mlims[1], denlims[0], denlims[1]],
                        reduce_C_function=np.sum, xscale='log', yscale='log',
                        norm=weight_norm, linewidths=0.2, cmap='viridis')
         p = plot_meidan_stat(mass[okinds], den[r][okinds], w[okinds],
@@ -294,9 +302,10 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     p = plot_meidan_stat(mass, den_hmr, w, axes[0], "$R=R_{1/2}$",
                          color=None, bins=None, ls='-')
 
-    # Set ylims
+    # Set lims
     for ax in axes:
-        ax.set_ylim(10**2, 10**17.5)
+        ax.set_ylim(denlims[0], denlims[1])
+        ax.set_xlim(mlims[0], mlims[1])
 
     # Set titles
     axes[0].set_title("$R=R_{1/2}$")
