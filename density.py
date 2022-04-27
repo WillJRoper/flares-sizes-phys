@@ -146,6 +146,10 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     # Loop over galaxies and calculate stellar HMR and denisty within HMR
     for (igal, b), l in zip(enumerate(stellar_data["begin"]),
                             stellar_data["Galaxy,S_Length"]):
+
+        if l < 100:
+            continue
+
         # Get this galaxy's stellar_data
         app = stellar_data["Particle/Apertures/Star,30"][b: b + l]
         cop = stellar_data["Galaxy,COP"][igal]
