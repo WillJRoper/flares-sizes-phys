@@ -3,6 +3,7 @@ from matplotlib.colors import LogNorm
 
 from hmrs import plot_stellar_hmr, plot_stellar_gas_hmr_comp
 from density import plot_stellar_density
+from utils import get_data
 
 # Define the norm
 weight_norm = LogNorm(vmin=10 ** -4, vmax=1)
@@ -41,13 +42,35 @@ eagle_snaps = list(snaps)
 
 # Plot EVERYTHING
 for snap in flares_snaps:
+
+    # Define data fields
+    stellar_data_fields = ("Particle,S_Mass", "Particle,S_Coordinates",
+                           "Particle/Apertures/Star,1",
+                           "Particle/Apertures/Star,5",
+                           "Particle/Apertures/Star,10",
+                           "Particle/Apertures/Star,30", "Galaxy,COP",
+                           "Galaxy,S_Length", "Galaxy,GroupNumber",
+                           "Galaxy,SubGroupNumber")
+
+    # Define data fields
+    gas_data_fields = ("Particle,G_Mass", "Particle,G_Coordinates",
+                       "Particle/Apertures/Gas,30", "Galaxy,COP",
+                       "Galaxy,G_Length", "Galaxy,GroupNumber",
+                       "Galaxy,SubGroupNumber")
+
+    # Get the data
+    stellar_data = get_data("FLARES", regions, snap, stellar_data_fields,
+                            length_key="Galaxy,S_Length")
+    gas_data = get_data("FLARES", regions, snap, gas_data_fields,
+                        length_key="Galaxy,G_Length")
+
     print("Plotting snap %s" % snap)
     try:
-        plot_stellar_density("FLARES", regions, snap, weight_norm)
+        plot_stellar_density(stellar_data, snap, weight_norm)
     except ValueError as e:
         print("Stellar density:", e)
-    plot_stellar_hmr("FLARES", regions, snap, weight_norm)
-    plot_stellar_gas_hmr_comp("FLARES", regions, snap, weight_norm)
+    plot_stellar_hmr(stellar_data, snap, weight_norm)
+    plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm)
 
 # for snap in eagle_snaps:
 #     plot_stellar_hmr("EAGLE", [0, ], snap, weight_norm)

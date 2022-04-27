@@ -30,110 +30,12 @@ plt.rc('legend', fontsize=SMALL_SIZE)  # legend fontsize
 plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 
-def get_reg_data(ii, tag, data_fields, inp='FLARES'):
-    num = str(ii)
-    if inp == 'FLARES':
-        if len(num) == 1:
-            num = '0' + num
+def plot_stellar_density(stellar_data, snap, weight_norm):
 
-        sim = rF"/cosma7/data/dp004/dc-payy1/my_files/flares_pipeline/data/" \
-              rF"FLARES_{num}_sp_info.hdf5"
-
-    else:
-        sim = rF"/cosma7/data/dp004/dc-payy1/my_files/flares_pipeline/data/" \
-              rF"EAGLE_{inp}_sp_info.hdf5"
-
-    # Initialise dictionary to store data
-    data = {}
-
-    with h5py.File(sim, 'r') as hf:
-        s_len = hf[tag + '/Galaxy'].get('S_Length')
-        if s_len is not None:
-            for f in data_fields:
-                f_splt = f.split(",")
-
-                # Extract this dataset
-                if len(f_splt) > 1:
-                    key = tag + '/' + f_splt[0]
-                    d = np.array(hf[key].get(f_splt[1]))
-
-                    # If it is multidimensional it needs transposing
-                    if len(d.shape) > 1:
-                        data[f] = d.T
-                    else:
-                        data[f] = d
-
-        else:
-
-            for f in data_fields:
-                data[f] = np.array([])
-
-    return data
-
-
-def get_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
-    # Load weights
-    df = pd.read_csv('../weight_files/weights_grid.txt')
-    weights = np.array(df['weights'])
-
-    # Initialise dictionary to store results
-    data = {k: [] for k in data_fields}
-    data["weights"] = []
-    data["begin"] = []
-    data["gbegin"] = []
-
-    # Initialise particle offsets
-    offset = 0
-
-    # Loop over regions and snapshots
-    for reg in regions:
-        reg_data = get_reg_data(reg, snap, data_fields, inp=sim)
-
-        # Combine this region
-        for f in data_fields:
-            data[f].extend(reg_data[f])
-
-        # Define galaxy start index arrays
-        start_index = np.full(reg_data[length_key].size,
-                              offset, dtype=int)
-        start_index[1:] += np.cumsum(reg_data[length_key][:-1])
-        data["begin"].extend(start_index)
-
-        # Include this regions weighting
-        if sim == "FLARES":
-            data["weights"].extend(np.full(reg_data[length_key].size,
-                                           weights[int(reg)]))
-        else:
-            data["weights"].extend(np.ones(len(reg_data[length_key])))
-
-        # Add on new offset
-        offset = len(data[data_fields[0]])
-
-    # Convert lists to arrays
-    for key in data:
-        data[key] = np.array(data[key])
-
-    return data
-
-
-def plot_stellar_density(sim, regions, snap, weight_norm):
     # Define x and y limits
     hmrlims = (-3.5, 1)
     mlims = (8, 11)
     denlims = (4, 19.5)
-
-    # Define data fields
-    stellar_data_fields = ("Particle,S_Mass", "Particle,S_Coordinates",
-                           "Particle/Apertures/Star,1",
-                           "Particle/Apertures/Star,5",
-                           "Particle/Apertures/Star,10",
-                           "Particle/Apertures/Star,30", "Galaxy,COP",
-                           "Galaxy,S_Length", "Galaxy,GroupNumber",
-                           "Galaxy,SubGroupNumber")
-
-    # Get the data
-    stellar_data = get_data(sim, regions, snap, stellar_data_fields,
-                            length_key="Galaxy,S_Length")
 
     # Define arrays to store computations
     hmrs = np.zeros(len(stellar_data["begin"]))
