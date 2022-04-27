@@ -47,7 +47,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm):
         app = stellar_data["Particle/Apertures/Star,30"][b: b + l]
         cop = stellar_data["Galaxy,COP"][igal]
         ms = stellar_data["Particle,S_Mass"][b: b + l][app]
-        pos = stellar_data["Particle,S_Coordinates"][b: b + l, :][app]
+        pos = stellar_data["Particle,S_Coordinates"][b: b + l, :][app] * 10**3
 
         # Compute particle radii
         rs = calc_3drad(pos - cop)
@@ -113,7 +113,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
         app = stellar_data["Particle/Apertures/Star,30"][b: b + l]
         cop = stellar_data["Galaxy,COP"][igal]
         ms = stellar_data["Particle,S_Mass"][b: b + l][app]
-        pos = stellar_data["Particle,S_Coordinates"][b: b + l, :][app]
+        pos = stellar_data["Particle,S_Coordinates"][b: b + l, :][app] * 10**3
 
         # Compute particle radii
         rs = calc_3drad(pos - cop)
@@ -136,7 +136,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
         app = gas_data["Particle/Apertures/Gas,30"][b: b + l]
         cop = gas_data["Galaxy,COP"][igal]
         ms = gas_data["Particle,G_Mass"][b: b + l][app]
-        pos = gas_data["Particle,G_Coordinates"][b: b + l, :][app]
+        pos = gas_data["Particle,G_Coordinates"][b: b + l, :][app] * 10**3
 
         # Compute particle radii
         rs = calc_3drad(pos - cop)

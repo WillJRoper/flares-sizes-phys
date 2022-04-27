@@ -64,7 +64,7 @@ for snap in flares_snaps:
     gas_data = get_data("FLARES", regions, snap, gas_data_fields,
                         length_key="Galaxy,G_Length")
 
-    print("Plotting snap %s" % snap)
+    print("================ Plotting snap %s ================" % snap)
     try:
         plot_stellar_density(stellar_data, snap, weight_norm)
     except ValueError as e:
