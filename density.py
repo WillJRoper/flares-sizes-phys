@@ -118,9 +118,9 @@ def get_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
 
 def plot_stellar_density(sim, regions, snap, weight_norm):
     # Define x and y limits
-    hmrlims = (10 ** -3.5, 1)
-    mlims = (10 ** 7, 10 ** 11)
-    denlims = (10 ** 2, 10 ** 17.5)
+    hmrlims = (-3.5, 1)
+    mlims = (7, 11)
+    denlims = (2, 17.5)
 
     # Define data fields
     stellar_data_fields = ("Particle,S_Mass", "Particle,S_Coordinates",
@@ -219,6 +219,8 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     im = axes[0].hexbin(hmrs, den_hmr, gridsize=50,
                         mincnt=np.min(w) - (0.1 * np.min(w)),
                         C=w,
+                        extent=[hmrlims[0], hmrlims[1], denlims[0],
+                                denlims[1]],
                         reduce_C_function=np.sum, xscale='log', yscale='log',
                         norm=weight_norm, linewidths=0.2, cmap='viridis')
 
@@ -240,8 +242,8 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
 
     # Set lims
     for ax in axes:
-        ax.set_ylim(denlims[0], denlims[1])
-        ax.set_xlim(hmrlims[0], hmrlims[1])
+        ax.set_ylim(10 ** denlims[0], 10 ** denlims[1])
+        ax.set_xlim(10 ** hmrlims[0], 10 ** hmrlims[1])
 
     # Set titles
     axes[0].set_title("$R=R_{1/2}$")
@@ -283,6 +285,7 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
     im = axes[0].hexbin(mass, den_hmr, gridsize=50,
                         mincnt=np.min(w) - (0.1 * np.min(w)),
                         C=w,
+                        extent=[mlims[0], mlims[1], denlims[0], denlims[1]],
                         reduce_C_function=np.sum, xscale='log', yscale='log',
                         norm=weight_norm, linewidths=0.2, cmap='viridis')
 
@@ -304,8 +307,8 @@ def plot_stellar_density(sim, regions, snap, weight_norm):
 
     # Set lims
     for ax in axes:
-        ax.set_ylim(denlims[0], denlims[1])
-        ax.set_xlim(mlims[0], mlims[1])
+        ax.set_ylim(10 ** denlims[0], 10 ** denlims[1])
+        ax.set_xlim(10 ** mlims[0], 10 ** mlims[1])
 
     # Set titles
     axes[0].set_title("$R=R_{1/2}$")
