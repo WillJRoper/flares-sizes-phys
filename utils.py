@@ -169,8 +169,7 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES'):
                     key = tag + '/' + f_splt[0]
                     d = np.array(hf[key].get(f_splt[1]))
 
-                    if f_splt[1].split("_")[1] == "Cordinates" \
-                        or f_splt == "COP":
+                    if "Cordinates" in f_splt[1] or "COP" in f_splt[1]:
                         d *= (1 / (1 + z) * 10**3)
 
                     # If it is multidimensional it needs transposing
