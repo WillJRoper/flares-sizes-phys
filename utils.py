@@ -154,6 +154,10 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES'):
     # Initialise dictionary to store data
     data = {}
 
+    # Get redshift
+    z_str = tag.split('z')[1].split('p')
+    z = float(z_str[0] + '.' + z_str[1])
+
     with h5py.File(sim, 'r') as hf:
         s_len = hf[tag + '/Galaxy'].get('S_Length')
         if s_len is not None:
@@ -164,6 +168,10 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES'):
                 if len(f_splt) > 1:
                     key = tag + '/' + f_splt[0]
                     d = np.array(hf[key].get(f_splt[1]))
+
+                    if f_splt[1].split("_")[1] == "Cordinates"
+                        or f_splt == "COP":
+                        d *= (1 / (1 + z) * 10**3)
 
                     # If it is multidimensional it needs transposing
                     if len(d.shape) > 1:

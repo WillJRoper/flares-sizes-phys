@@ -56,7 +56,7 @@ def plot_stellar_density(stellar_data, snap, weight_norm):
         app = stellar_data["Particle/Apertures/Star,30"][b: b + l]
         cop = stellar_data["Galaxy,COP"][igal]
         ms = stellar_data["Particle,S_Mass"][b: b + l][app]
-        pos = stellar_data["Particle,S_Coordinates"][b: b + l, :][app] * 10**3
+        pos = stellar_data["Particle,S_Coordinates"][b: b + l, :][app] 
 
         # Compute particle radii
         rs = calc_3drad(pos - cop)
