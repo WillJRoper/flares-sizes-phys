@@ -33,7 +33,7 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 def plot_stellar_density(stellar_data, snap, weight_norm):
 
     # Define x and y limits
-    hmrlims = (-3.5, 1)
+    hmrlims = (-1.3, 1.3)
     mlims = (8, 11)
     denlims = (4, 19.5)
 
