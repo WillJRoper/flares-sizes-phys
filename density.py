@@ -330,7 +330,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
     while i < nrows:
         j = 0
         while j < ncols:
-            axes[i, j] = fig.add_subplot(gs[i + 1, j])
+            axes[i, j] = fig.add_subplot(gs[i, j])
             axes[i, j].loglog()
             if j > 0:
                 axes[i, j].tick_params(axis='y', left=False, right=False,
