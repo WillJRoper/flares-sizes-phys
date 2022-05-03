@@ -356,7 +356,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
                                        denlims[0], denlims[1]],
                                reduce_C_function=np.sum, xscale='log',
                                yscale='log',
-                               norssssm=weight_norm, linewidths=0.2,
+                               norm=weight_norm, linewidths=0.2,
                                cmap='viridis')
 
         p = plot_meidan_stat(x[okinds], den_hmr[okinds], w[okinds],
