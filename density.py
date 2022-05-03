@@ -208,9 +208,6 @@ def plot_stellar_density(stellar_data, snap, weight_norm):
                            reduce_C_function=np.sum, xscale='log',
                            yscale='log',
                            norm=weight_norm, linewidths=0.2, cmap='viridis')
-        p = plot_meidan_stat(mass[okinds], den[r][okinds], w[okinds],
-                             axes[i + 1], "R=%.2f" % r,
-                             color=None, bins=None, ls='--')
 
     p = plot_meidan_stat(mass, den_hmr, w, axes[0], "$R=R_{1/2}$",
                          color=None, bins=None, ls='-')
@@ -324,11 +321,11 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
 
     # Set up plot
     fig = plt.figure(figsize=(2.25 * ncols, 2.25 * nrows))
-    gs = gridspec.GridSpec(nrows=nrows + 1, ncols=ncols,
-                           height_ratios=[1] + [20, ] * nrows)
+    gs = gridspec.GridSpec(nrows=nrows, ncols=ncols + 1,
+                           width_ratios=[20, ] * ncols + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
     axes = np.empty((nrows, ncols), dtype=object)
-    cax = fig.add_subplot(gs[0, :])
+    cax = fig.add_subplot(gs[:, -1])
     i = 0
     while i < nrows:
         j = 0
@@ -347,11 +344,38 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
     # Plot stellar_data
     for j, x, x_ex in enumerate(zip([mass, mass_hmr, ages_hmr, met_hmr, hmrs],
                                     [mlims, mlims, age_lims, met_lims, hmrlims]
-                                    )
-                                ):
-        im = axes[0, j].hexbin(x, den_hmr, gridsize=50,
-                               mincnt=np.min(w) - (0.1 * np.min(w)),
-                               C=w,
+                                    )):
+
+        # Define Boolean indices to remove anomalous results
+        okinds = np.logical_and(x > 0, den_hmr > 0)
+        
+        im = axes[0, j].hexbin(x[okinds], den_hmr[okinds], gridsize=50,
+                               mincnt=np.min(w[okinds]) - (0.1 * np.min(w[okinds])),
+                               C=w[okinds],
+                               extent=[x_ex[0], x_ex[1],
+                                       denlims[0], denlims[1]],
+                               reduce_C_function=np.sum, xscale='log',
+                               yscale='log',
+                               norssssm=weight_norm, linewidths=0.2,
+                               cmap='viridis')
+
+        p = plot_meidan_stat(x[okinds], den_hmr[okinds], w[okinds],
+                             axes[0, j], "R=R_{1/2}",
+                             color=None, bins=None, ls='--')
+
+        
+    # Plot weighted medians
+    for i, r in enumerate(den):
+        for j, x, x_ex in enumerate(zip([mass, mass_r[r], ages_r[r], met_r[r], hmrs],
+                                    [mlims, mlims, age_lims, met_lims, hmrlims]
+                                    )):
+
+        # Define Boolean indices to remove anomalous results
+        okinds = np.logical_and(x > 0, den[r] > 0)
+        
+        im = axes[i + 1, j].hexbin(x[okinds], den[r][okinds], gridsize=50,
+                               mincnt=np.min(w[okinds]) - (0.1 * np.min(w[okinds])),
+                               C=w[okinds],
                                extent=[x_ex[0], x_ex[1],
                                        denlims[0], denlims[1]],
                                reduce_C_function=np.sum, xscale='log',
@@ -359,39 +383,28 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
                                norm=weight_norm, linewidths=0.2,
                                cmap='viridis')
 
-    # Plot weighted medians
-    for i, r in enumerate(den):
-        okinds = np.logical_and(den[r] > 0, hmrs > 0)
-        axes[i + 1].hexbin(hmrs[okinds], den[r][okinds], gridsize=50,
-                           mincnt=np.min(w[okinds]) - (0.1 * np.min(w)),
-                           C=w[okinds],
-                           extent=[hmrlims[0], hmrlims[1], denlims[0],
-                                   denlims[1]],
-                           reduce_C_function=np.sum, xscale='log',
-                           yscale='log',
-                           norm=weight_norm, linewidths=0.2, cmap='viridis')
-        p = plot_meidan_stat(hmrs[okinds], den[r][okinds], w[okinds],
-                             axes[i + 1], "R=%.2f" % r,
+        p = plot_meidan_stat(x[okinds], den[r][okinds], w[okinds],
+                             axes[i + 1, j], "R",
                              color=None, bins=None, ls='--')
-
-    p = plot_meidan_stat(hmrs, den_hmr, w, axes[0], "$R=R_{1/2}$",
-                         color=None, bins=None, ls='-')
-
+        
     # Set lims
     for ax in axes:
         ax.set_ylim(10 ** denlims[0], 10 ** denlims[1])
         ax.set_xlim(10 ** hmrlims[0], 10 ** hmrlims[1])
 
-    # Set titles
-    axes[0].set_title("$R=R_{1/2}$")
-    for i, r in enumerate(den):
-        axes[i + 1].set_title("R=%.2f pkpc" % r)
-
     # Label axes
-    axes[0].set_ylabel(r"$\rho_\star(<R) / [M_\odot / \mathrm{pkpc}^3]$")
-    for i in range(ncols):
-        axes[i].set_xlabel("$R_{1/2} / [\mathrm{pkpc}]$")
+    for i, lab in enumerate(["HMR", ] + list(den.keys())):
+        if type(lab) == str:
+            axes[i, 0].set_ylabel(r"$\rho_\star(r<R_{%s}]) / [M_\odot / \mathrm{pkpc}^3]$" % lab)
+        else:
+            axes[i, 0].set_ylabel(r"$\rho_\star(r<R=%.2f / [pkpc]) / [M_\odot / \mathrm{pkpc}^3]$" % lab)
 
+    axes[-1, 0].set_xlabel("$M_{\star}(r<30 / [pkpc]) / M_\odot$")
+    axes[-1, 1].set_xlabel("$M_{\star}(r<R) / M_\odot$")
+    axes[-1, 2].set_xlabel("$T(r<R) / [\mathrm{Myr}]$")
+    axes[-1, 3].set_xlabel("$Z_\star(r<R)$")
+    axes[-1, 4].set_xlabel("$R_{1/2} / [pkpc]$")
+    
     cbar = fig.colorbar(im, cax)
     cbar.set_label("$\sum w_{i}$")
 
