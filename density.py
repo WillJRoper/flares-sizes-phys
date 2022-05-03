@@ -342,7 +342,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
         i += 1
 
     # Plot stellar_data
-    for j, x, x_ex in enumerate(zip([mass, mass_hmr, ages_hmr, met_hmr, hmrs],
+    for j, (x, x_ex) in enumerate(zip([mass, mass_hmr, ages_hmr, met_hmr, hmrs],
                                     [mlims, mlims, age_lims, met_lims, hmrlims]
                                     )):
 
@@ -366,7 +366,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
         
     # Plot weighted medians
     for i, r in enumerate(den):
-        for j, x, x_ex in enumerate(zip([mass, mass_r[r], ages_r[r], met_r[r], hmrs],
+        for j, (x, x_ex) in enumerate(zip([mass, mass_r[r], ages_r[r], met_r[r], hmrs],
                                     [mlims, mlims, age_lims, met_lims, hmrlims]
                                     )):
 
