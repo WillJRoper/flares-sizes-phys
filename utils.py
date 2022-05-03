@@ -203,7 +203,7 @@ def get_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
 
     # Loop over regions and snapshots
     for reg in regions:
-        reg_data = get_reg_data(reg, snap, data_fields, inp=sim, length_key)
+        reg_data = get_reg_data(reg, snap, data_fields, inp=sim, length_key=length_key)
 
         # Combine this region
         for f in data_fields:
