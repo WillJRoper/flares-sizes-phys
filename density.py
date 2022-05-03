@@ -243,8 +243,8 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
     hmrlims = (-1.3, 1.3)
     mlims = (8, 11)
     denlims = (3, 13.5)
-    age_lims = (0.1, 3)
-    met_lims = (0.001, 1)
+    age_lims = (-5, 0)
+    met_lims = (-4, 0.1)
 
     # Define arrays to store computations
     hmrs = np.zeros(len(stellar_data["begin"]))
@@ -308,7 +308,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
     ncols = 5
 
     # Set up plot
-    fig = plt.figure(figsize=(3.3 * ncols, 3.25 * nrows))
+    fig = plt.figure(figsize=(2.5 * ncols, 2.5 * nrows))
     gs = gridspec.GridSpec(nrows=nrows, ncols=ncols + 1,
                            width_ratios=[20, ] * ncols + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
@@ -397,7 +397,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
 
     axes[-1, 0].set_xlabel("$M_{\star}(r<30 / [pkpc]) / M_\odot$")
     axes[-1, 1].set_xlabel("$M_{\star}(r<R) / M_\odot$")
-    axes[-1, 2].set_xlabel("$T(r<R) / [\mathrm{Myr}]$")
+    axes[-1, 2].set_xlabel("$T(r<R) / [\mathrm{Gyr}]$")
     axes[-1, 3].set_xlabel("$Z_\star(r<R)$")
     axes[-1, 4].set_xlabel("$R_{1/2} / [pkpc]$")
     
