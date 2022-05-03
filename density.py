@@ -370,11 +370,11 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
                                     [mlims, mlims, age_lims, met_lims, hmrlims]
                                     )):
 
-        # Define Boolean indices to remove anomalous results
-        okinds = np.logical_and(x > 0, den[r] > 0)
+            # Define Boolean indices to remove anomalous results
+            okinds = np.logical_and(x > 0, den[r] > 0)
         
-        im = axes[i + 1, j].hexbin(x[okinds], den[r][okinds], gridsize=50,
-                               mincnt=np.min(w[okinds]) - (0.1 * np.min(w[okinds])),
+            im = axes[i + 1, j].hexbin(x[okinds], den[r][okinds], gridsize=50,
+                                       mincnt=np.min(w[okinds]) - (0.1 * np.min(w[okinds])),
                                C=w[okinds],
                                extent=[x_ex[0], x_ex[1],
                                        denlims[0], denlims[1]],
@@ -383,9 +383,9 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
                                norm=weight_norm, linewidths=0.2,
                                cmap='viridis')
 
-        p = plot_meidan_stat(x[okinds], den[r][okinds], w[okinds],
-                             axes[i + 1, j], "R",
-                             color=None, bins=None, ls='--')
+            p = plot_meidan_stat(x[okinds], den[r][okinds], w[okinds],
+                                 axes[i + 1, j], "R",
+                                 color=None, bins=None, s='--')
         
     # Set lims
     for ax in axes:
@@ -410,7 +410,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
 
     # Save figure
     mkdir("plots/density/")
-    fig.savefig("plots/density/stellar_density_hmr_%s.png" % snap,
+    fig.savefig("plots/density/stellar_density_grid_hmr_%s.png" % snap,
                 bbox_inches="tight")
 
     plt.close(fig)
