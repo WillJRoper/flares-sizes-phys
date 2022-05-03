@@ -375,9 +375,10 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
                                  color=None, bins=None, ls='--')
         
     # Set lims
-    for ax in axes:
-        ax.set_ylim(10 ** denlims[0], 10 ** denlims[1])
-        ax.set_xlim(10 ** hmrlims[0], 10 ** hmrlims[1])
+    for i in axes.shape[0]:
+        for j in axes.shape[1]:
+            axes[i, j].set_ylim(10 ** denlims[0], 10 ** denlims[1])
+            axes[i, j].set_xlim(10 ** hmrlims[0], 10 ** hmrlims[1])
 
     # Label axes
     for i, lab in enumerate(["HMR", ] + list(den.keys())):
