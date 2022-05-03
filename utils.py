@@ -160,7 +160,7 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', length_key="Galaxy,S_length
 
     with h5py.File(sim, 'r') as hf:
         splt_len_key = length_key.split(",") 
-        s_len = hf[tag + splt_len_key[0]].get(splt_len_key[1])
+        s_len = hf[tag + "/" + splt_len_key[0]].get(splt_len_key[1])
         if s_len is not None:
             for f in data_fields:
                 f_splt = f.split(",")
