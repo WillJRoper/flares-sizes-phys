@@ -138,7 +138,7 @@ def weighted_quantile(values, quantiles, sample_weight=None,
     return np.interp(quantiles, weighted_quantiles, values)
 
 
-def get_reg_data(ii, tag, data_fields, inp='FLARES'):
+def get_reg_data(ii, tag, data_fields, inp='FLARES', length_key="Galaxy,S_length"):
     num = str(ii)
     if inp == 'FLARES':
         if len(num) == 1:
@@ -159,7 +159,8 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES'):
     z = float(z_str[0] + '.' + z_str[1])
 
     with h5py.File(sim, 'r') as hf:
-        s_len = hf[tag + '/Galaxy'].get('S_Length')
+        splt_len_key = length_key.split(",") 
+        s_len = hf[tag + splt_len_key[0]].get(splt_len_key[1])
         if s_len is not None:
             for f in data_fields:
                 f_splt = f.split(",")
@@ -202,7 +203,7 @@ def get_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
 
     # Loop over regions and snapshots
     for reg in regions:
-        reg_data = get_reg_data(reg, snap, data_fields, inp=sim)
+        reg_data = get_reg_data(reg, snap, data_fields, inp=sim, length_key)
 
         # Combine this region
         for f in data_fields:
