@@ -296,10 +296,11 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
         w[igal] = stellar_data["weights"][igal]
 
         for r in [0.05, 0.1, 0.5, 1]:
-            mass_r[r][igal] = np.sum(ms[rs <= r]) * 10 ** 10
-            ages_r[r][igal] = np.average(ages[rs < r], weights=ini_ms[rs < r])
-            met_r[r][igal] = np.average(mets[rs < r], weights=ini_ms[rs < r])
-            den[r][igal] = (mass_r[r][igal] / (4 / 3 * np.pi * r ** 3))
+            if np.sum(ms[rs <= r]) > 0:
+                mass_r[r][igal] = np.sum(ms[rs <= r]) * 10 ** 10
+                ages_r[r][igal] = np.average(ages[rs < r], weights=ini_ms[rs < r])
+                met_r[r][igal] = np.average(mets[rs < r], weights=ini_ms[rs < r])
+                den[r][igal] = (mass_r[r][igal] / (4 / 3 * np.pi * r ** 3))
 
 
     # Define how mnay columns
