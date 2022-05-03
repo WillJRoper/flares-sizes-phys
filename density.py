@@ -308,7 +308,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
     ncols = 5
 
     # Set up plot
-    fig = plt.figure(figsize=(2.25 * ncols, 2.25 * nrows))
+    fig = plt.figure(figsize=(3.3 * ncols, 3.25 * nrows))
     gs = gridspec.GridSpec(nrows=nrows, ncols=ncols + 1,
                            width_ratios=[20, ] * ncols + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
@@ -336,9 +336,12 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
 
         # Define Boolean indices to remove anomalous results
         okinds = np.logical_and(x > 0, den_hmr > 0)
+
+        if x[okinds].size == 0:
+            continue
         
         im = axes[0, j].hexbin(x[okinds], den_hmr[okinds], gridsize=50,
-                               mincnt=np.min(w[okinds]) - (0.1 * np.min(w[okinds])),
+                               mincnt=np.min(w) - (0.1 * np.min(w)),
                                C=w[okinds],
                                extent=[x_ex[0], x_ex[1],
                                        denlims[0], denlims[1]],
@@ -360,9 +363,12 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
 
             # Define Boolean indices to remove anomalous results
             okinds = np.logical_and(x > 0, den[r] > 0)
+
+            if x[okinds].size == 0:
+                continue
         
             im = axes[i + 1, j].hexbin(x[okinds], den[r][okinds], gridsize=50,
-                                       mincnt=np.min(w[okinds]) - (0.1 * np.min(w[okinds])),
+                                       mincnt=np.min(w) - (0.1 * np.min(w)),
                                C=w[okinds],
                                extent=[x_ex[0], x_ex[1],
                                        denlims[0], denlims[1]],
@@ -384,9 +390,9 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
     # Label axes
     for i, lab in enumerate(["HMR", ] + list(den.keys())):
         if type(lab) == str:
-            axes[i, 0].set_ylabel(r"$\rho_\star(r<R_{%s}]) / [M_\odot / \mathrm{pkpc}^3]$" % lab)
+            axes[i, 0].set_ylabel(r"$\rho_\star(r<R_{%s}]) / \frac{M_\odot}{\mathrm{pkpc}^3}$" % lab)
         else:
-            axes[i, 0].set_ylabel(r"$\rho_\star(r<R=%.2f / [pkpc]) / [M_\odot / \mathrm{pkpc}^3]$" % lab)
+            axes[i, 0].set_ylabel(r"$\rho_\star(r<%.2f / pkpc) / \frac{M_\odot}{\mathrm{pkpc}^3}$" % lab)
 
     axes[-1, 0].set_xlabel("$M_{\star}(r<30 / [pkpc]) / M_\odot$")
     axes[-1, 1].set_xlabel("$M_{\star}(r<R) / M_\odot$")
