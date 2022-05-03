@@ -372,7 +372,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
 
             p = plot_meidan_stat(x[okinds], den[r][okinds], w[okinds],
                                  axes[i + 1, j], "R",
-                                 color=None, bins=None, s='--')
+                                 color=None, bins=None, ls='--')
         
     # Set lims
     for ax in axes:
