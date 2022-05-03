@@ -5,6 +5,7 @@ from hmrs import plot_stellar_hmr, plot_stellar_gas_hmr_comp
 from density import plot_stellar_density
 from utils import get_data
 
+
 # Define the norm
 weight_norm = LogNorm(vmin=10 ** -4, vmax=1)
 
@@ -48,7 +49,11 @@ for snap in flares_snaps:
                            "Particle/Apertures/Star,1",
                            "Particle/Apertures/Star,5",
                            "Particle/Apertures/Star,10",
-                           "Particle/Apertures/Star,30", "Galaxy,COP",
+                           "Particle/Apertures/Star,30",
+                           "Particle,S_Age",
+                           "Particle,S_MassInitial",
+                           "Particle,S_Z_smooth",
+                           "Galaxy,COP",
                            "Galaxy,S_Length", "Galaxy,GroupNumber",
                            "Galaxy,SubGroupNumber")
 
