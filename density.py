@@ -242,9 +242,10 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
     # Define x and y limits
     hmrlims = (-1.3, 1.3)
     mlims = (8, 11)
+    mrlims = (6, 11)
     denlims = (3, 13.5)
-    age_lims = (-5, 0)
-    met_lims = (-4, 0.1)
+    age_lims = (-3, 0)
+    met_lims = (-4.5, -1)
 
     # Define arrays to store computations
     hmrs = np.zeros(len(stellar_data["begin"]))
@@ -295,7 +296,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
         mass[igal] = np.sum(ms) * 10 ** 10
         w[igal] = stellar_data["weights"][igal]
 
-        for r in [0.05, 0.1, 0.5, 1]:
+        for r in [0.1, 0.5, 1]:
             if np.sum(ms[rs <= r]) > 0:
                 mass_r[r][igal] = np.sum(ms[rs <= r]) * 10 ** 10
                 ages_r[r][igal] = np.average(ages[rs < r], weights=ini_ms[rs < r])
@@ -393,7 +394,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
         if type(lab) == str:
             axes[i, 0].set_ylabel(r"$\rho_\star(r<R_{%s}]) / \frac{M_\odot}{\mathrm{pkpc}^3}$" % lab)
         else:
-            axes[i, 0].set_ylabel(r"$\rho_\star(r<%.2f / pkpc) / \frac{M_\odot}{\mathrm{pkpc}^3}$" % lab)
+            axes[i, 0].set_ylabel(r"$\rho_\star(r<%.1f / pkpc) / \frac{M_\odot}{\mathrm{pkpc}^3}$" % lab)
 
     axes[-1, 0].set_xlabel("$M_{\star}(r<30 / [pkpc]) / M_\odot$")
     axes[-1, 1].set_xlabel("$M_{\star}(r<R) / M_\odot$")
