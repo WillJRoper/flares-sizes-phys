@@ -243,8 +243,8 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
     hmrlims = (-1.3, 1.3)
     mlims = (8, 11)
     denlims = (3, 13.5)
-    age_lims = (None, None)
-    met_lims = (None, None)
+    age_lims = (0, 500)
+    met_lims = (0, 2)
 
     # Define arrays to store computations
     hmrs = np.zeros(len(stellar_data["begin"]))
