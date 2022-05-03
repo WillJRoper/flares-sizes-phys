@@ -301,19 +301,6 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
             met_r[r][igal] = np.average(mets[rs < r], weights=ini_ms[rs < r])
             den[r][igal] = (mass_r[r][igal] / (4 / 3 * np.pi * r ** 3))
 
-    # Remove galaxies without stars
-    okinds = np.logical_and(den_hmr > 0, hmrs > 0)
-    print("Galaxies before spurious cut: %d" % den_hmr.size)
-    den_hmr = den_hmr[okinds]
-    hmrs = hmrs[okinds]
-    mass = mass[okinds]
-    w = w[okinds]
-    for r in den:
-        den[r] = den[r][okinds]
-        mass_r[r] = mass_r[r][okinds]
-        ages_r[r] = ages_r[r][okinds]
-        met_r[r] = met_r[r][okinds]
-    print("Galaxies after spurious cut: %d" % den_hmr.size)
 
     # Define how mnay columns
     nrows = 1 + len(den)
@@ -343,8 +330,8 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
 
     # Plot stellar_data
     for j, (x, x_ex) in enumerate(zip([mass, mass_hmr, ages_hmr, met_hmr, hmrs],
-                                    [mlims, mlims, age_lims, met_lims, hmrlims]
-                                    )):
+                                      [mlims, mlims, age_lims, met_lims, hmrlims]
+                                     )):
 
         # Define Boolean indices to remove anomalous results
         okinds = np.logical_and(x > 0, den_hmr > 0)
