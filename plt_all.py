@@ -19,11 +19,7 @@ for reg in range(0, 40):
         regions.append(str(reg))
 
 # Define FLARES snapshots
-# flares_snaps = ['000_z015p000', '001_z014p00', '002_z013p000',
-#                 '003_z012p000', '004_z011p000', '005_z010p000',
-#                 '006_z009p000', '007_z008p000', '008_z007p000',
-#                 '009_z006p000', '010_z005p000']
-flares_snaps = ['001_z014p000', '002_z013p000',
+flares_snaps = ['000_z015p000', '001_z014p00', '002_z013p000',
                 '003_z012p000', '004_z011p000', '005_z010p000',
                 '006_z009p000', '007_z008p000', '008_z007p000',
                 '009_z006p000', '010_z005p000']
@@ -79,7 +75,10 @@ for snap in flares_snaps:
         plot_stellar_density(stellar_data, snap, weight_norm)
     except ValueError as e:
         print("Stellar density:", e)
-    plot_stellar_density_grid(stellar_data, snap, weight_norm)
+    try:
+        plot_stellar_density_grid(stellar_data, snap, weight_norm)
+    except ValueError as e:
+        print("Stellar density grid:", e)
     plot_stellar_hmr(stellar_data, snap, weight_norm)
     plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm)
 
