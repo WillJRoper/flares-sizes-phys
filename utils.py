@@ -138,7 +138,7 @@ def weighted_quantile(values, quantiles, sample_weight=None,
     return np.interp(quantiles, weighted_quantiles, values)
 
 
-def get_reg_data(ii, tag, data_fields, inp='FLARES', length_key="Galaxy,S_length"):
+def get_reg_data(ii, tag, data_fields, inp='FLARES', length_key="Galaxy,S_Length"):
     num = str(ii)
     if inp == 'FLARES':
         if len(num) == 1:
