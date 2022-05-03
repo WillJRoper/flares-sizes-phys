@@ -276,8 +276,8 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
         pos = stellar_data["Particle,S_Coordinates"][b: b + l, :][app]
         ini_ms = stellar_data["Particle,S_MassInitial"][b: b + l][app]
         ms = stellar_data["Particle,S_Mass"][b: b + l][app]
-        ages = stellar_data["Particle,S_Age"][b: b + l, :][app]
-        mets = stellar_data["Particle,S_Z_smooth"][b: b + l, :][app]
+        ages = stellar_data["Particle,S_Age"][b: b + l][app]
+        mets = stellar_data["Particle,S_Z_smooth"][b: b + l][app]
 
         # Compute particle radii
         rs = calc_3drad(pos - cop)
