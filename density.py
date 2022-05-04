@@ -330,10 +330,12 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
             j += 1
         i += 1
 
+    # Set list of xs
+    xs = [mass, mass_hmr, ages_hmr, met_hmr, hmrs]
+    x_exs = [mlims, mrlims, age_lims, met_lims, hmrlims]
+
     # Plot stellar_data
-    for j, (x, x_ex) in enumerate(zip([mass, mass_hmr, ages_hmr, met_hmr, hmrs],
-                                      [mlims, mlims, age_lims, met_lims, hmrlims]
-                                     )):
+    for j, (x, x_ex) in enumerate(zip(xs, x_exs)):
 
         # Define Boolean indices to remove anomalous results
         okinds = np.logical_and(x > 0, den_hmr > 0)
@@ -358,9 +360,9 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
         
     # Plot weighted medians
     for i, r in enumerate(den):
-        for j, (x, x_ex) in enumerate(zip([mass, mass_r[r], ages_r[r], met_r[r], hmrs],
-                                    [mlims, mlims, age_lims, met_lims, hmrlims]
-                                    )):
+        # Set xs to loop over
+        xs_r = [mass, mass_r[r], ages_r[r], met_r[r], hmrs]
+        for j, (x, x_ex) in enumerate(zip(xs_r, x_exs)):
 
             # Define Boolean indices to remove anomalous results
             okinds = np.logical_and(x > 0, den[r] > 0)
@@ -392,9 +394,9 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
     # Label axes
     for i, lab in enumerate(["HMR", ] + list(den.keys())):
         if type(lab) == str:
-            axes[i, 0].set_ylabel(r"$\rho_\star(r<R_{%s}]) / \frac{M_\odot}{\mathrm{pkpc}^3}$" % lab)
+            axes[i, 0].set_ylabel(r"$\rho_\star(<R_{%s}]) / M_\odot\mathrm{pkpc}^{-3}$" % lab)
         else:
-            axes[i, 0].set_ylabel(r"$\rho_\star(r<%.1f / pkpc) / \frac{M_\odot}{\mathrm{pkpc}^3}$" % lab)
+            axes[i, 0].set_ylabel(r"$\rho_\star(<R_{%.1f}) / M_\odot\mathrm{pkpc}^{-3}$" % lab)
 
     axes[-1, 0].set_xlabel("$M_{\star}(r<30 / [pkpc]) / M_\odot$")
     axes[-1, 1].set_xlabel("$M_{\star}(r<R) / M_\odot$")
