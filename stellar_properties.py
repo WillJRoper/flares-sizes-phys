@@ -20,7 +20,7 @@ def birth_met(stellar_data, snap, weight_norm):
 
         # Extract galaxy range
         b = stellar_data["begin"][igal]
-        e = b + stellar_data["stride"][igal]
+        e = b + stellar_data["Galaxy,S_Length"][igal]
 
         # Set weights for these particles
         w[b: e] = stellar_data["weights"][igal]
