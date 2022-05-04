@@ -1,6 +1,6 @@
-from flare import plt as flareplt
 import os
 
+from flare import plt as flareplt
 import matplotlib as mpl
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
