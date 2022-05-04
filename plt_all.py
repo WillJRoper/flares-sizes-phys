@@ -82,7 +82,9 @@ for snap in flares_snaps:
         print("Stellar density grid:", e)
     plot_stellar_hmr(stellar_data, snap, weight_norm)
     plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm)
-    birth_met(stellar_data, snap, weight_norm)
+
+# Plot properties that are done at singular redshifts
+birth_met(stellar_data, flares_snaps[-1], weight_norm)
 
 # for snap in eagle_snaps:
 #     plot_stellar_hmr("EAGLE", [0, ], snap, weight_norm)
