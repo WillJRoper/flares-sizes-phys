@@ -255,13 +255,13 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
     ages_hmr = np.zeros(len(stellar_data["begin"]))
     met_hmr = np.zeros(len(stellar_data["begin"]))
     mass_r = {key: np.zeros(len(stellar_data["begin"]))
-              for key in [0.05, 0.1, 0.5, 1]}
+              for key in [0.1, 0.5, 1]}
     ages_r = {key: np.zeros(len(stellar_data["begin"]))
-              for key in [0.05, 0.1, 0.5, 1]}
+              for key in [0.1, 0.5, 1]}
     met_r = {key: np.zeros(len(stellar_data["begin"]))
-             for key in [0.05, 0.1, 0.5, 1]}
+             for key in [0.1, 0.5, 1]}
     den = {key: np.zeros(len(stellar_data["begin"]))
-           for key in [0.05, 0.1, 0.5, 1]}
+           for key in [0.1, 0.5, 1]}
     w = np.zeros(len(stellar_data["begin"]))
 
     # Loop over galaxies and calculate stellar HMR and denisty within HMR
@@ -403,7 +403,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
     axes[-1, 2].set_xlabel("$T(r<R) / [\mathrm{Gyr}]$")
     axes[-1, 3].set_xlabel("$Z_\star(r<R)$")
     axes[-1, 4].set_xlabel("$R_{1/2} / [pkpc]$")
-    
+
     cbar = fig.colorbar(im, cax)
     cbar.set_label("$\sum w_{i}$")
 
