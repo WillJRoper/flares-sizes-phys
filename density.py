@@ -329,7 +329,6 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
         j = 0
         while j < ncols:
             axes[i, j] = fig.add_subplot(gs[i, j])
-            axes[i, j].loglog()
             if j > 0:
                 axes[i, j].tick_params(axis='y', left=False, right=False,
                                        labelleft=False, labelright=False)
@@ -351,8 +350,8 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
 
         if x[okinds].size == 0:
             continue
-        
-        im = axes[0, j].hexbin(x[okinds], den_hmr[okinds], gridsize=50,
+        if j != 0:
+            im = axes[0, j].hexbin(x[okinds], den_hmr[okinds], gridsize=50,
                                mincnt=np.min(w) - (0.1 * np.min(w)),
                                C=w[okinds],
                                extent=[x_ex[0], x_ex[1],
@@ -362,10 +361,22 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
                                norm=weight_norm, linewidths=0.2,
                                cmap='viridis')
 
-        p = plot_meidan_stat(x[okinds], den_hmr[okinds], w[okinds],
+            p = plot_meidan_stat(x[okinds], den_hmr[okinds], w[okinds],
                              axes[0, j], "R=R_{1/2}",
                              color=None, bins=None, ls='--')
+        else:
+            im = axes[i + 1, j].hexbin(x[okinds], den[r][okinds], gridsize=50,
+                                       mincnt=np.min(w) - (0.1 * np.min(w)),
+                               C=w[okinds],
+                               extent=[x_ex[0], x_ex[1],
+                                       denlims[0], denlims[1]],
+                               reduce_C_function=np.sum,
+                               norm=weight_norm, linewidths=0.2,
+                               cmap='viridis')
 
+                p = plot_meidan_stat(x[okinds], den[r][okinds], w[okinds],
+                                 axes[i + 1, j], "R",
+                                 color=None, bins=None, ls='--')
         
     # Plot weighted medians
     for i, r in enumerate(den):
@@ -378,8 +389,9 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
 
             if x[okinds].size == 0:
                 continue
-        
-            im = axes[i + 1, j].hexbin(x[okinds], den[r][okinds], gridsize=50,
+
+            if j != 1:
+                im = axes[i + 1, j].hexbin(x[okinds], den[r][okinds], gridsize=50,
                                        mincnt=np.min(w) - (0.1 * np.min(w)),
                                C=w[okinds],
                                extent=[x_ex[0], x_ex[1],
@@ -389,17 +401,32 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
                                norm=weight_norm, linewidths=0.2,
                                cmap='viridis')
 
-            p = plot_meidan_stat(x[okinds], den[r][okinds], w[okinds],
+                p = plot_meidan_stat(x[okinds], den[r][okinds], w[okinds],
                                  axes[i + 1, j], "R",
                                  color=None, bins=None, ls='--')
-        
+            else:
+                im = axes[i + 1, j].hexbin(x[okinds], den[r][okinds], gridsize=50,
+                                       mincnt=np.min(w) - (0.1 * np.min(w)),
+                               C=w[okinds],
+                               extent=[x_ex[0], x_ex[1],
+                                       denlims[0], denlims[1]],
+                               reduce_C_function=np.sum,
+                               norm=weight_norm, linewidths=0.2,
+                               cmap='viridis')
+
+                p = plot_meidan_stat(x[okinds], den[r][okinds], w[okinds],
+                                 axes[i + 1, j], "R",
+                                 color=None, bins=None, ls='--')
     # Set lims
     for i in range(axes.shape[0]):
         for j, ex in zip(range(axes.shape[1]),
                          [mlims, age_lims, met_lims, hmrlims]):
             axes[i, j].set_ylim(10 ** denlims[0], 10 ** denlims[1])
-            axes[i, j].set_xlim(10 ** ex[0], 10 ** ex[1])
-
+            if j != 1:
+                axes[i, j].set_xlim(10 ** ex[0], 10 ** ex[1])
+            else:
+                axes[i, j].set_xlim(ex[0], ex[1])
+                
     # Label axes
     for i, lab in enumerate(["HMR", ] + list(den.keys())):
         if type(lab) == str:
