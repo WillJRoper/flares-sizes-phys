@@ -408,10 +408,9 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
             axes[i, 0].set_ylabel(r"$\rho_\star(<R_{%.1f}) / M_\odot\mathrm{pkpc}^{-3}$" % lab)
 
     axes[-1, 0].set_xlabel("$M_{\star}(r<30 / [pkpc]) / M_\odot$")
-    axes[-1, 1].set_xlabel("$M_{\star}(r<R) / M_\odot$")
-    axes[-1, 2].set_xlabel("$z_{\mathrm{birth}}$")
-    axes[-1, 3].set_xlabel("$Z_\star(r<R)$")
-    axes[-1, 4].set_xlabel("$R_{1/2} / [pkpc]$")
+    axes[-1, 1].set_xlabel("$z_{\mathrm{birth}}$")
+    axes[-1, 2].set_xlabel("$Z_\star(r<R)$")
+    axes[-1, 3].set_xlabel("$R_{1/2} / [pkpc]$")
 
     cbar = fig.colorbar(im, cax)
     cbar.set_label("$\sum w_{i}$")
