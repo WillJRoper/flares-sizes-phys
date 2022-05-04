@@ -4,6 +4,8 @@ from scipy.stats import binned_statistic
 import numpy as np
 import h5py
 import pandas as pd
+from astropy.cosmology import Planck18 as cosmo, z_at_value
+import astropy.units as u
 
 
 def mkdir(path):
@@ -16,6 +18,25 @@ def calc_3drad(poss):
     rs = np.sqrt(poss[:, 0] ** 2 + poss[:, 1] ** 2 + poss[:, 2] ** 2)
 
     return rs
+
+
+def age2z(age, z):
+
+    # Apply units to age
+    age *= u.Gyr
+
+    # Define Universe age in Gyrs
+    current_age = cosmo.age(z)
+
+    # Universe at which star was born
+    birth_age = current_age - age
+
+    # Compute redshift of birth_age
+    birth_z = np.zeros(age.size)
+    for i in range(birth_z.size):
+        birth_z[i] = z_at_value(cosmo.age, birth_age[i])
+
+    return birth_z
 
 
 def calc_light_mass_rad(rs, ls, radii_frac=0.5):

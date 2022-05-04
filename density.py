@@ -5,7 +5,7 @@ import matplotlib as mpl
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
-from utils import calc_3drad, calc_light_mass_rad, mkdir, plot_meidan_stat
+from utils import calc_3drad, calc_light_mass_rad, mkdir, plot_meidan_stat, age2z
 
 os.environ['FLARE'] = '/cosma7/data/dp004/dc-wilk2/flare'
 mpl.use('Agg')
@@ -239,13 +239,17 @@ def plot_stellar_density(stellar_data, snap, weight_norm):
 
 
 def plot_stellar_density_grid(stellar_data, snap, weight_norm):
+
+    # Define redshift
+    z = float(snap.split("z")[-1].replace("p", "."))
+    
     # Define x and y limits
-    hmrlims = (-1.3, 1.3)
-    mlims = (8, 11)
+    hmrlims = (-1.3, 1.5)
+    mlims = (7.8, 11)
     mrlims = (6, 11)
     denlims = (3, 13.5)
-    age_lims = (-3, 0)
-    met_lims = (-4.5, -1)
+    age_lims = (z, 15)
+    met_lims = (-4.5, -0.9)
 
     # Define arrays to store computations
     hmrs = np.zeros(len(stellar_data["begin"]))
@@ -290,8 +294,11 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
         den_hmr[igal] = (np.sum(ms[rs <= hmr]) * 10 ** 10
                          / (4 / 3 * np.pi * hmr ** 3))
         mass_hmr[igal] = np.sum(ms[rs <= hmr]) * 10 ** 10
-        ages_hmr[igal] = np.average(ages[rs < hmr], weights=ini_ms[rs < hmr])
-        met_hmr[igal] = np.average(mets[rs < hmr], weights=ini_ms[rs < hmr])
+        ages_hmr[igal] = age2z(np.average(ages[rs < hmr],
+                                          weights=ini_ms[rs < hmr]),
+                               z)
+        met_hmr[igal] = np.average(mets[rs < hmr],
+                                   weights=ini_ms[rs < hmr])
         hmrs[igal] = hmr
         mass[igal] = np.sum(ms) * 10 ** 10
         w[igal] = stellar_data["weights"][igal]
@@ -299,14 +306,16 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
         for r in [0.1, 0.5, 1]:
             if np.sum(ms[rs <= r]) > 0:
                 mass_r[r][igal] = np.sum(ms[rs <= r]) * 10 ** 10
-                ages_r[r][igal] = np.average(ages[rs < r], weights=ini_ms[rs < r])
-                met_r[r][igal] = np.average(mets[rs < r], weights=ini_ms[rs < r])
+                ages_r[r][igal] = age2z(np.average(
+                    ages[rs < r], weights=ini_ms[rs < r]), z)
+                met_r[r][igal] = np.average(mets[rs < r],
+                                            weights=ini_ms[rs < r])
                 den[r][igal] = (mass_r[r][igal] / (4 / 3 * np.pi * r ** 3))
 
 
     # Define how mnay columns
     nrows = 1 + len(den)
-    ncols = 5
+    ncols = 4
 
     # Set up plot
     fig = plt.figure(figsize=(2.5 * ncols, 2.5 * nrows))
@@ -331,8 +340,8 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
         i += 1
 
     # Set list of xs
-    xs = [mass, mass_hmr, ages_hmr, met_hmr, hmrs]
-    x_exs = [mlims, mrlims, age_lims, met_lims, hmrlims]
+    xs = [mass, ages_hmr, met_hmr, hmrs]
+    x_exs = [mlims, age_lims, met_lims, hmrlims]
 
     # Plot stellar_data
     for j, (x, x_ex) in enumerate(zip(xs, x_exs)):
@@ -361,7 +370,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
     # Plot weighted medians
     for i, r in enumerate(den):
         # Set xs to loop over
-        xs_r = [mass, mass_r[r], ages_r[r], met_r[r], hmrs]
+        xs_r = [mass, ages_r[r], met_r[r], hmrs]
         for j, (x, x_ex) in enumerate(zip(xs_r, x_exs)):
 
             # Define Boolean indices to remove anomalous results
@@ -387,7 +396,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
     # Set lims
     for i in range(axes.shape[0]):
         for j, ex in zip(range(axes.shape[1]),
-                         [mlims, mlims, age_lims, met_lims, hmrlims]):
+                         [mlims, age_lims, met_lims, hmrlims]):
             axes[i, j].set_ylim(10 ** denlims[0], 10 ** denlims[1])
             axes[i, j].set_xlim(10 ** ex[0], 10 ** ex[1])
 
@@ -400,7 +409,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
 
     axes[-1, 0].set_xlabel("$M_{\star}(r<30 / [pkpc]) / M_\odot$")
     axes[-1, 1].set_xlabel("$M_{\star}(r<R) / M_\odot$")
-    axes[-1, 2].set_xlabel("$T(r<R) / [\mathrm{Gyr}]$")
+    axes[-1, 2].set_xlabel("$z_{\mathrm{birth}}$")
     axes[-1, 3].set_xlabel("$Z_\star(r<R)$")
     axes[-1, 4].set_xlabel("$R_{1/2} / [pkpc]$")
 
