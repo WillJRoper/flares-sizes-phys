@@ -32,7 +32,7 @@ def age2z(age, z):
     birth_age = current_age - age
 
     # Compute redshift of birth_age
-    birth_z = z_at_value(cosmo.age, birth_age)
+    birth_z = z_at_value(cosmo.age, birth_age, zmin=0, zmax=15)
 
     return birth_z
 
