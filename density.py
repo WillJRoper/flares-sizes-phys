@@ -365,7 +365,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
                              axes[0, j], "R=R_{1/2}",
                              color=None, bins=None, ls='--')
         else:
-            im = axes[i + 1, j].hexbin(x[okinds], den[r][okinds], gridsize=50,
+            im = axes[0, j].hexbin(x[okinds], den_hmr[okinds], gridsize=50,
                                        mincnt=np.min(w) - (0.1 * np.min(w)),
                                C=w[okinds],
                                extent=[x_ex[0], x_ex[1],
@@ -374,8 +374,8 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
                                norm=weight_norm, linewidths=0.2,
                                cmap='viridis')
 
-            p = plot_meidan_stat(x[okinds], den[r][okinds], w[okinds],
-                                 axes[i + 1, j], "R",
+            p = plot_meidan_stat(x[okinds], den_hmr[okinds], w[okinds],
+                                 axes[0, j], "R",
                                  color=None, bins=None, ls='--')
         
     # Plot weighted medians
