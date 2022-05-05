@@ -242,13 +242,13 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
 
     # Define redshift
     z = float(snap.split("z")[-1].replace("p", "."))
-    
+
     # Define x and y limits
     hmrlims = (-1.3, 1.5)
     mlims = (7.8, 11)
     mrlims = (6, 11)
     denlims = (3, 13.5)
-    age_lims = (z, 15)
+    age_lims = (1, 100)
     met_lims = (-4.5, -0.9)
 
     # Define arrays to store computations
@@ -294,9 +294,8 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
         den_hmr[igal] = (np.sum(ms[rs <= hmr]) * 10 ** 10
                          / (4 / 3 * np.pi * hmr ** 3))
         mass_hmr[igal] = np.sum(ms[rs <= hmr]) * 10 ** 10
-        ages_hmr[igal] = age2z(np.average(ages[rs < hmr],
-                                          weights=ini_ms[rs < hmr]),
-                               z)
+        ages_hmr[igal] = np.average(ages[rs < hmr],
+                                    weights=ini_ms[rs < hmr]) * 10**3
         met_hmr[igal] = np.average(mets[rs < hmr],
                                    weights=ini_ms[rs < hmr])
         hmrs[igal] = hmr
@@ -306,12 +305,11 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
         for r in [0.1, 0.5, 1]:
             if np.sum(ms[rs <= r]) > 0:
                 mass_r[r][igal] = np.sum(ms[rs <= r]) * 10 ** 10
-                ages_r[r][igal] = age2z(np.average(
-                    ages[rs < r], weights=ini_ms[rs < r]), z)
+                ages_r[r][igal] = np.average(
+                    ages[rs < r], weights=ini_ms[rs < r]) * 10**3
                 met_r[r][igal] = np.average(mets[rs < r],
                                             weights=ini_ms[rs < r])
                 den[r][igal] = (mass_r[r][igal] / (4 / 3 * np.pi * r ** 3))
-
 
     # Define how mnay columns
     nrows = 1 + len(den)
@@ -350,34 +348,34 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
 
         if x[okinds].size == 0:
             continue
-        if j != 0:
+        if j != 1:
             im = axes[0, j].hexbin(x[okinds], den_hmr[okinds], gridsize=50,
-                               mincnt=np.min(w) - (0.1 * np.min(w)),
-                               C=w[okinds],
-                               extent=[x_ex[0], x_ex[1],
-                                       denlims[0], denlims[1]],
-                               reduce_C_function=np.sum, xscale='log',
-                               yscale='log',
-                               norm=weight_norm, linewidths=0.2,
-                               cmap='viridis')
+                                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                                   C=w[okinds],
+                                   extent=[x_ex[0], x_ex[1],
+                                           denlims[0], denlims[1]],
+                                   reduce_C_function=np.sum, xscale='log',
+                                   yscale='log',
+                                   norm=weight_norm, linewidths=0.2,
+                                   cmap='viridis')
 
             p = plot_meidan_stat(x[okinds], den_hmr[okinds], w[okinds],
-                             axes[0, j], "R=R_{1/2}",
-                             color=None, bins=None, ls='--')
+                                 axes[0, j], "R=R_{1/2}",
+                                 color=None, bins=None, ls='--')
         else:
             im = axes[0, j].hexbin(x[okinds], den_hmr[okinds], gridsize=50,
-                                       mincnt=np.min(w) - (0.1 * np.min(w)),
-                               C=w[okinds],
-                               extent=[x_ex[0], x_ex[1],
-                                       denlims[0], denlims[1]],
-                               reduce_C_function=np.sum,
-                               norm=weight_norm, linewidths=0.2,
-                               cmap='viridis')
+                                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                                   C=w[okinds],
+                                   extent=[x_ex[0], x_ex[1],
+                                           denlims[0], denlims[1]],
+                                   reduce_C_function=np.sum,
+                                   norm=weight_norm, linewidths=0.2,
+                                   cmap='viridis')
 
             p = plot_meidan_stat(x[okinds], den_hmr[okinds], w[okinds],
                                  axes[0, j], "R",
                                  color=None, bins=None, ls='--')
-        
+
     # Plot weighted medians
     for i, r in enumerate(den):
         # Set xs to loop over
@@ -392,31 +390,33 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
 
             if j != 1:
                 im = axes[i + 1, j].hexbin(x[okinds], den[r][okinds], gridsize=50,
-                                       mincnt=np.min(w) - (0.1 * np.min(w)),
-                               C=w[okinds],
-                               extent=[x_ex[0], x_ex[1],
-                                       denlims[0], denlims[1]],
-                               reduce_C_function=np.sum, xscale='log',
-                               yscale='log',
-                               norm=weight_norm, linewidths=0.2,
-                               cmap='viridis')
+                                           mincnt=np.min(
+                                               w) - (0.1 * np.min(w)),
+                                           C=w[okinds],
+                                           extent=[x_ex[0], x_ex[1],
+                                                   denlims[0], denlims[1]],
+                                           reduce_C_function=np.sum, xscale='log',
+                                           yscale='log',
+                                           norm=weight_norm, linewidths=0.2,
+                                           cmap='viridis')
 
                 p = plot_meidan_stat(x[okinds], den[r][okinds], w[okinds],
-                                 axes[i + 1, j], "R",
-                                 color=None, bins=None, ls='--')
+                                     axes[i + 1, j], "R",
+                                     color=None, bins=None, ls='--')
             else:
                 im = axes[i + 1, j].hexbin(x[okinds], den[r][okinds], gridsize=50,
-                                       mincnt=np.min(w) - (0.1 * np.min(w)),
-                               C=w[okinds],
-                               extent=[x_ex[0], x_ex[1],
-                                       denlims[0], denlims[1]],
-                               reduce_C_function=np.sum,
-                               norm=weight_norm, linewidths=0.2,
-                               cmap='viridis')
+                                           mincnt=np.min(
+                                               w) - (0.1 * np.min(w)),
+                                           C=w[okinds],
+                                           extent=[x_ex[0], x_ex[1],
+                                                   denlims[0], denlims[1]],
+                                           reduce_C_function=np.sum,
+                                           norm=weight_norm, linewidths=0.2,
+                                           cmap='viridis')
 
                 p = plot_meidan_stat(x[okinds], den[r][okinds], w[okinds],
-                                 axes[i + 1, j], "R",
-                                 color=None, bins=None, ls='--')
+                                     axes[i + 1, j], "R",
+                                     color=None, bins=None, ls='--')
     # Set lims
     for i in range(axes.shape[0]):
         for j, ex in zip(range(axes.shape[1]),
@@ -426,16 +426,18 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
                 axes[i, j].set_xlim(10 ** ex[0], 10 ** ex[1])
             else:
                 axes[i, j].set_xlim(ex[0], ex[1])
-                
+
     # Label axes
     for i, lab in enumerate(["HMR", ] + list(den.keys())):
         if type(lab) == str:
-            axes[i, 0].set_ylabel(r"$\rho_\star(<R_{%s}]) / M_\odot\mathrm{pkpc}^{-3}$" % lab)
+            axes[i, 0].set_ylabel(
+                r"$\rho_\star(<R_{%s}]) / M_\odot\mathrm{pkpc}^{-3}$" % lab)
         else:
-            axes[i, 0].set_ylabel(r"$\rho_\star(<R_{%.1f}) / M_\odot\mathrm{pkpc}^{-3}$" % lab)
+            axes[i, 0].set_ylabel(
+                r"$\rho_\star(<R_{%.1f}) / M_\odot\mathrm{pkpc}^{-3}$" % lab)
 
     axes[-1, 0].set_xlabel("$M_{\star}(r<30 / [pkpc]) / M_\odot$")
-    axes[-1, 1].set_xlabel("$z_{\mathrm{form}}$")
+    axes[-1, 1].set_xlabel("$T_{}$")
     axes[-1, 2].set_xlabel("$Z_\star(r<R)$")
     axes[-1, 3].set_xlabel("$R_{1/2} / [pkpc]$")
 
