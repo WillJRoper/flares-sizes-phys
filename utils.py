@@ -98,7 +98,7 @@ def plot_meidan_stat(xs, ys, w, ax, lab, color, bins=None, ls='-'):
         bin[1:] = high_bins
 
     # Compute binned statistics
-    func = lambda y: weighted_quantile(y, 0.5, sample_weight=w)
+    def func(y): return weighted_quantile(y, 0.5, sample_weight=w)
     y_stat, binedges, bin_ind = binned_statistic(xs, ys,
                                                  statistic=func, bins=bin)
 
@@ -178,7 +178,7 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', length_key="Galaxy,S_Length
     z = float(z_str[0] + '.' + z_str[1])
 
     with h5py.File(sim, 'r') as hf:
-        splt_len_key = length_key.split(",") 
+        splt_len_key = length_key.split(",")
         s_len = hf[tag + "/" + splt_len_key[0]].get(splt_len_key[1])
         if s_len is not None:
             for f in data_fields:
@@ -214,6 +214,7 @@ def get_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
     # Initialise dictionary to store results
     data = {k: [] for k in data_fields}
     data["weights"] = []
+    data["regions"] = []
     data["begin"] = []
     data["gbegin"] = []
 
@@ -222,7 +223,8 @@ def get_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
 
     # Loop over regions and snapshots
     for reg in regions:
-        reg_data = get_reg_data(reg, snap, data_fields, inp=sim, length_key=length_key)
+        reg_data = get_reg_data(reg, snap, data_fields,
+                                inp=sim, length_key=length_key)
 
         # Combine this region
         for f in data_fields:
@@ -236,9 +238,12 @@ def get_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
 
         # Include this regions weighting
         if sim == "FLARES":
+            data["regions"].extend(np.full(reg_data[length_key].size,
+                                           int(reg)))
             data["weights"].extend(np.full(reg_data[length_key].size,
                                            weights[int(reg)]))
         else:
+            data["regions"].extend(np.ones(len(reg_data[length_key])))
             data["weights"].extend(np.ones(len(reg_data[length_key])))
 
         # Add on new offset
@@ -249,4 +254,3 @@ def get_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
         data[key] = np.array(data[key])
 
     return data
-

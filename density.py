@@ -408,7 +408,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
                 r"$\rho_\star(<R_{%.1f}) / M_\odot\mathrm{pkpc}^{-3}$" % lab)
 
     axes[-1, 0].set_xlabel("$M_{\star}(r<30 / [pkpc]) / M_\odot$")
-    axes[-1, 1].set_xlabel("$T_{}$")
+    axes[-1, 1].set_xlabel("$\mathrm{Age} / Myr$")
     axes[-1, 2].set_xlabel("$Z_\star(r<R)$")
     axes[-1, 3].set_xlabel("$R_{1/2} / [pkpc]$")
 

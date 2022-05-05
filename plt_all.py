@@ -4,12 +4,15 @@ from matplotlib.colors import LogNorm
 from hmrs import plot_stellar_hmr, plot_stellar_gas_hmr_comp
 from density import plot_stellar_density
 from density import plot_stellar_density_grid
-from stellar_properties import birth_met
+from stellar_properties import plot_birth_met, plot_birth_den
 from utils import get_data
 
 
 # Define the norm
 weight_norm = LogNorm(vmin=10 ** -4, vmax=1)
+
+# Define raw data path
+path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/G-EAGLE_<reg>/data/"
 
 # Define regions
 regions = []
@@ -55,6 +58,7 @@ for snap in flares_snaps:
                            "Particle,S_Age",
                            "Particle,S_MassInitial",
                            "Particle,S_Z_smooth",
+                           "Particle,S_Index",
                            "Galaxy,COP",
                            "Galaxy,S_Length", "Galaxy,GroupNumber",
                            "Galaxy,SubGroupNumber")
@@ -84,7 +88,7 @@ for snap in flares_snaps:
     plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm)
 
 # Plot properties that are done at singular redshifts
-birth_met(stellar_data, flares_snaps[-1], weight_norm)
-
+plot_birth_met(stellar_data, flares_snaps[-1], weight_norm, path)
+plot_birth_den(stellar_data, flares_snaps[-1], weight_norm, path)
 # for snap in eagle_snaps:
 #     plot_stellar_hmr("EAGLE", [0, ], snap, weight_norm)
