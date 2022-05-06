@@ -60,9 +60,12 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
 
-    im = ax.hexbin(zs, mets, gridsize=50,
+    # Remove anomalous values
+    okinds = np.logical_and(zs > 0, mets > 0)
+
+    im = ax.hexbin(zs[okinds], mets[okinds], gridsize=50,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w,
+                   C=w[okinds],
                    extent=[4.5, 15, -5, 0],
                    reduce_C_function=np.sum, yscale='log',
                    norm=weight_norm, linewidths=0.2,
@@ -140,9 +143,12 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
 
-    im = ax.hexbin(zs, dens, gridsize=50,
+    # Remove anomalous values
+    okinds = np.logical_and(zs > 0, dens > 0)
+
+    im = ax.hexbin(zs[okinds], dens[okinds], gridsize=50,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w,
+                   C=w[okinds],
                    reduce_C_function=np.sum, yscale='log',
                    norm=weight_norm, linewidths=0.2,
                    cmap='viridis')
