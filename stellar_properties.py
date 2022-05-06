@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from flare import plt as flareplt
 from utils import mkdir, plot_meidan_stat, age2z
 
-import eagle_io
+import eagle_IO.eagle_IO as eagle_io
 
 
 def plot_birth_met(stellar_data, snap, weight_norm, path):
