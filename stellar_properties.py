@@ -178,7 +178,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
 def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
 
     # Define redshift bins
-    zbins = list(range(5, 11, 2))
+    zbins = list(range(5, 12.5, 2.5))
     zbins.append(np.inf)
 
     # Define EAGLE subgrid  parameters
@@ -197,7 +197,7 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
 
     # Constants; these could be put in the parameter file but are
     # rarely changed
-    birth_density_bins = np.logspace(-3, 6.8, number_of_bins)
+    birth_density_bins = np.logspace(-2.9, 6.8, number_of_bins)
     metal_mass_fraction_bins = np.logspace(-5.9, 0, number_of_bins)
 
     # Now need to make background grid of f_th.
@@ -323,10 +323,10 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
             ** (star_formation_parameters["slope"])
         ax.plot(sf_threshold_density, metal_mass_fraction_bins,
                 linestyle="dashed", label="SF threshold")
-        ax.text(0.1, 0.9, f'${zbins[i]}<{z}<{zbins[i + 1]}$',
+        ax.text(0.95, 0.9, f'${zbins[i]}<z<{zbins[i + 1]}$',
                 bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
                           alpha=0.8),
-                transform=ax.transAxes, horizontalalignment='left', fontsize=8)
+                transform=ax.transAxes, horizontalalignment='right', fontsize=8)
 
         for ax in axes:
             ax.set_xlim(10**-3, 10**6.8)
