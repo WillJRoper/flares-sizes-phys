@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
+import matplotlib.gridspec as gridspec
 from flare import plt as flareplt
 from utils import mkdir, plot_meidan_stat, age2z
 from unyt import mh, cm, Gyr, g, Msun, Mpc
@@ -284,7 +285,7 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
     ncols = len(zbins) - 1
 
     # Set up plot
-    fig = plt.figure(figsize=(2.5 * ncols, 2.5 * nrows))
+    fig = plt.figure(figsize=(2.5 * ncols, 2.5))
     gs = gridspec.GridSpec(nrows=1, ncols=ncols + 1,
                            width_ratios=[20, ] * ncols + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
@@ -319,8 +320,8 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
         # Add line showing SF law
         sf_threshold_density = star_formation_parameters["threshold_n0"] * \
             (metal_mass_fraction_bins
-             / star_formation_parameters["threshold_Z0"])
-        ** (star_formation_parameters["slope"])
+             / star_formation_parameters["threshold_Z0"]) \
+            ** (star_formation_parameters["slope"])
         ax.plot(sf_threshold_density, metal_mass_fraction_bins,
                 linestyle="dashed", label="SF threshold")
         ax.text(0.1, 0.9, f'${zbins[i]}<{z}<{zbins[i + 1]}$',
@@ -339,7 +340,7 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
     # Label y axis
     axes[0].set_ylabel(r"$\rho_{\mathrm{birth}} / $ \mathrm{cm}^{-3}")
 
-    fig.colorbar(im, cax)
+    fig.colorbar(mappable, cax)
 
     # Save figure
     mkdir("plots/stellar_formprops/")
