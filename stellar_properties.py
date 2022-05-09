@@ -62,13 +62,13 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     ax = fig.add_subplot(111)
 
     # Remove anomalous values
-    okinds = np.logical_and(zs > 0, mets > 0)
+    okinds = np.ones(mets.size, dtype=bool)
 
     im = ax.hexbin(zs[okinds], mets[okinds], gridsize=50,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
                    C=w[okinds],
                    extent=[4.5, 15, -8, 0], norm=LogNorm(),
-                   reduce_C_function=np.sum, yscale='log', linewidths=0.2,
+                   reduce_C_function=np.sum, linewidths=0.2,
                    cmap='viridis')
 
     ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
