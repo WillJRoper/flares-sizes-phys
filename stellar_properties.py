@@ -67,12 +67,13 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
                    mincnt=np.min(w) - (0.1 * np.min(w)),
                    C=w[okinds],
                    extent=[4.5, 15, -8, 0],
-                   reduce_C_function=np.sum, yscale='log',
-                   norm=weight_norm, linewidths=0.2,
+                   reduce_C_function=np.sum, yscale='log', linewidths=0.2,
                    cmap='viridis')
 
     ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")
+
+    fig.colorbar(im)
 
     # Save figure
     mkdir("plots/stellar_evo/")
@@ -150,11 +151,13 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
                    mincnt=np.min(w) - (0.1 * np.min(w)),
                    C=w[okinds],
                    reduce_C_function=np.sum, yscale='log',
-                   norm=weight_norm, linewidths=0.2,
+                   linewidths=0.2,
                    cmap='viridis')
 
     ax.set_ylabel(r"$\rho_{\mathrm{birth}} / $ ???")
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")
+
+    fig.colorbar(im)
 
     # Save figure
     mkdir("plots/stellar_evo/")
