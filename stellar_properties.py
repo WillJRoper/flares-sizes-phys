@@ -51,8 +51,9 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
             aborn = eagle_io.read_array('PARTDATA',
                                         path.replace("<reg>",
                                                      str(reg).zfill(2)),
-                                        snap, noH=True, physicalUnits=True,
+                                        snap,
                                         'PartType4/StellarFormationTime',
+                                        noH=True, physicalUnits=True,
                                         numThreads=8)
             prev_reg = reg
 
@@ -132,8 +133,9 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
             aborn = eagle_io.read_array('PARTDATA',
                                         path.replace("<reg>",
                                                      str(reg).zfill(2)),
-                                        snap, noH=True, physicalUnits=True,
+                                        snap,
                                         'PartType4/StellarFormationTime',
+                                        noH=True, physicalUnits=True,
                                         numThreads=8)
             den_born = (eagle_io.read_array("PARTDATA",
                                             path.replace("<reg>",
@@ -261,8 +263,9 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
             aborn = eagle_io.read_array('PARTDATA',
                                         path.replace("<reg>",
                                                      str(reg).zfill(2)),
-                                        snap, noH=True, physicalUnits=True,
+                                        snap,
                                         'PartType4/StellarFormationTime',
+                                        noH=True, physicalUnits=True,
                                         numThreads=8)
             den_born = (eagle_io.read_array("PARTDATA",
                                             path.replace("<reg>",
