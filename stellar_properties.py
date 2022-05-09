@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm
 from flare import plt as flareplt
 from utils import mkdir, plot_meidan_stat, age2z
 
@@ -66,7 +67,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     im = ax.hexbin(zs[okinds], mets[okinds], gridsize=50,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
                    C=w[okinds],
-                   extent=[4.5, 15, -8, 0],
+                   extent=[4.5, 15, -8, 0], norm=LogNorm(),
                    reduce_C_function=np.sum, yscale='log', linewidths=0.2,
                    cmap='viridis')
 
@@ -149,7 +150,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
 
     im = ax.hexbin(zs[okinds], dens[okinds], gridsize=50,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w[okinds],
+                   C=w[okinds], norm=LogNorm(),
                    reduce_C_function=np.sum, yscale='log',
                    linewidths=0.2,
                    cmap='viridis')
