@@ -70,8 +70,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
     im = ax.hexbin(zs[okinds], mets[okinds], gridsize=50,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w[okinds],
-                   extent=[4.5, 15, 0, 1], norm=LogNorm(),
+                   C=w[okinds], norm=LogNorm(),
                    reduce_C_function=np.sum, linewidths=0.2,
                    cmap='viridis')
 
@@ -165,7 +164,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
                    linewidths=0.2,
                    cmap='viridis')
 
-    ax.set_ylabel(r"$\rho_{\mathrm{birth}} / $ \mathrm{cm}^{-3}")
+    ax.set_ylabel(r"$\rho_{\mathrm{birth}} / \mathrm{cm}^{-3}$")
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")
 
     fig.colorbar(im)
@@ -310,7 +309,7 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
         mappable = ax.pcolormesh(birth_density_bins, metal_mass_fraction_bins,
                                  f_th_grid, vmin=0.3, vmax=3)
 
-        H, _, _ = np.histogram2d(den_born[okinds], mets[okinds],
+        H, _, _ = np.histogram2d(dens[okinds], mets[okinds],
                                  bins=[birth_density_bins,
                                        metal_mass_fraction_bins])
 
@@ -338,7 +337,7 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
         axes[i].set_xlabel(r"$Z_{\mathrm{birth}}$")
 
     # Label y axis
-    axes[0].set_ylabel(r"$\rho_{\mathrm{birth}} / $ \mathrm{cm}^{-3}")
+    axes[0].set_ylabel(r"$\rho_{\mathrm{birth}} / \mathrm{cm}^{-3}$")
 
     fig.colorbar(mappable, cax)
 
