@@ -66,7 +66,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     im = ax.hexbin(zs[okinds], mets[okinds], gridsize=50,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
                    C=w[okinds],
-                   extent=[4.5, 15, -5, 0],
+                   extent=[4.5, 15, -8, 0],
                    reduce_C_function=np.sum, yscale='log',
                    norm=weight_norm, linewidths=0.2,
                    cmap='viridis')
@@ -97,7 +97,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
                                 numThreads=8)
     den_born = eagle_io.read_array("PARTDATA", path.replace("<reg>", "00"),
                                    snap, "PartType4/BirthDensity",
-                                   numthreads=8)
+                                   numThreads=8)
 
     # Extract arrays
     zs = np.zeros(s_inds.size)
