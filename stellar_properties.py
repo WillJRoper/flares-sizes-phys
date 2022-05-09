@@ -133,7 +133,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
                                            path.replace("<reg>",
                                                         str(reg).zfill(2)),
                                            snap, "PartType4/BirthDensity",
-                                           numthreads=8)
+                                           numThreads=8)
             prev_reg = reg
 
         # Get this galaxies data
