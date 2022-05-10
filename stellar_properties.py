@@ -94,7 +94,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
                                 part_ovdens >= ovden_bins[i])
 
         plot_meidan_stat(zs[okinds], mets[okinds], w[okinds], ax,
-                         lab=r"%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
+                         lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
                          % (ovden_bins[i], ovden_bins[i + 1]), color=None)
 
     ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
@@ -212,7 +212,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
                                 okinds)
 
         plot_meidan_stat(zs[okinds], dens[okinds], w[okinds], ax,
-                         lab=r"%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
+                         lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
                          % (ovden_bins[i], ovden_bins[i + 1]), color=None)
 
     ax.set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
