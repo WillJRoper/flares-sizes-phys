@@ -178,7 +178,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
 def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
 
     # Define redshift bins
-    zbins = list(range(5, 12.5, 2.5))
+    zbins = list(np.arange(5, 12.5, 2.5))
     zbins.append(np.inf)
 
     # Define EAGLE subgrid  parameters
