@@ -77,7 +77,7 @@ def calc_light_mass_rad(rs, ls, radii_frac=0.5):
 
 def plot_meidan_stat(xs, ys, w, ax, lab, color, bins=None, ls='-'):
 
-    if bins == None:
+    if bins is None:
         bin = np.logspace(np.log10(xs.min()), np.log10(xs.max()), 20)
     else:
         zs = np.float64(xs)
@@ -98,7 +98,8 @@ def plot_meidan_stat(xs, ys, w, ax, lab, color, bins=None, ls='-'):
         bin[1:] = high_bins
 
     # Compute binned statistics
-    def func(y): return weighted_quantile(y, 0.5, sample_weight=w)
+    def func(y):
+        return weighted_quantile(y, 0.5, sample_weight=w)
     y_stat, binedges, bin_ind = binned_statistic(xs, ys,
                                                  statistic=func, bins=bin)
 

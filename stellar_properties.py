@@ -11,6 +11,9 @@ import eagle_IO.eagle_IO as eagle_io
 
 def plot_birth_met(stellar_data, snap, weight_norm, path):
 
+    # Define overdensity bins in log(1+delta)
+    ovden_bins = np.arange(-0.3, 0.4, 0.1)
+
     # Define redshift
     z = float(snap.split("z")[-1].replace("p", "."))
 
@@ -19,6 +22,11 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
     # Get the region for each galaxy
     regions = stellar_data["regions"]
+
+    # Open region overdensities
+    reg_ovdens = np.loadtxt("/cosma7/data/dp004/dc-rope1/FLARES/"
+                            "flares/region_overdensity.txt",
+                            dtype=float)
 
     # Get the arrays from the raw data files
     aborn = eagle_io.read_array('PARTDATA', path.replace("<reg>", "00"), snap,
@@ -29,6 +37,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     # Extract arrays
     zs = np.zeros(s_inds.size)
     mets = stellar_data["Particle,S_Z_smooth"]
+    part_ovdens = np.zeros(s_inds.size)
     w = np.zeros(s_inds.size)
 
     # Extract weights for each particle
@@ -42,6 +51,9 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
         # Get this galaxies region
         reg = regions[igal]
+
+        # Set this galaxy's region overdensity
+        part_ovdens[b: e] = reg_ovdens[reg]
 
         # Set weights for these particles
         w[b: e] = stellar_data["weights"][igal]
@@ -74,10 +86,24 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
                    reduce_C_function=np.sum, linewidths=0.2,
                    cmap='viridis')
 
+    # Loop over overdensity bins and plot median curves
+    for i in range(ovden_bins[:-1].size):
+
+        # Get boolean indices for this bin
+        okinds = np.logical_and(part_ovdens < ovden_bins[i + 1],
+                                part_ovdens >= ovden_bins[i])
+
+        plot_meidan_stat(zs[okinds], mets[okinds], w[okinds], ax,
+                         lab=r"%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
+                         % (ovden_bins[i], ovden_bins[i + 1]), color=None)
+
     ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")
 
-    fig.colorbar(im)
+    cbar = fig.colorbar(im)
+    cbar.set_label("$\sum w_{i}$")
+
+    ax.legend()
 
     # Save figure
     mkdir("plots/stellar_evo/")
@@ -87,6 +113,9 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
 def plot_birth_den(stellar_data, snap, weight_norm, path):
 
+    # Define overdensity bins in log(1+delta)
+    ovden_bins = np.arange(-0.3, 0.4, 0.1)
+
     # Define redshift
     z = float(snap.split("z")[-1].replace("p", "."))
 
@@ -95,6 +124,11 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
 
     # Get the region for each galaxy
     regions = stellar_data["regions"]
+
+    # Open region overdensities
+    reg_ovdens = np.loadtxt("/cosma7/data/dp004/dc-rope1/FLARES/"
+                            "flares/region_overdensity.txt",
+                            dtype=float)
 
     # Get the arrays from the raw data files
     aborn = eagle_io.read_array('PARTDATA', path.replace("<reg>", "00"), snap,
@@ -111,6 +145,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     zs = np.zeros(s_inds.size)
     dens = np.zeros(s_inds.size)
     w = np.zeros(s_inds.size)
+    part_ovdens = np.zeros(s_inds.size)
 
     # Extract weights for each particle
     prev_reg = 0
@@ -123,6 +158,9 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
 
         # Get this galaxies region
         reg = regions[igal]
+
+        # Set this galaxy's region overdensity
+        part_ovdens[b: e] = reg_ovdens[reg]
 
         # Set weights for these particles
         w[b: e] = stellar_data["weights"][igal]
@@ -164,10 +202,26 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
                    linewidths=0.2,
                    cmap='viridis')
 
-    ax.set_ylabel(r"$\rho_{\mathrm{birth}} / \mathrm{cm}^{-3}$")
+    # Loop over overdensity bins and plot median curves
+    for i in range(ovden_bins[:-1].size):
+
+        # Get boolean indices for this bin
+        okinds = np.logical_and(part_ovdens < ovden_bins[i + 1],
+                                part_ovdens >= ovden_bins[i])
+        okinds = np.logical_and(np.logical_and(zs > 0, dens > 0),
+                                okinds)
+
+        plot_meidan_stat(zs[okinds], dens[okinds], w[okinds], ax,
+                         lab=r"%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
+                         % (ovden_bins[i], ovden_bins[i + 1]), color=None)
+
+    ax.set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")
 
-    fig.colorbar(im)
+    cbar = fig.colorbar(im)
+    cbar.set_label("$\sum w_{i}$")
+
+    ax.legend()
 
     # Save figure
     mkdir("plots/stellar_evo/")
@@ -337,9 +391,10 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
         axes[i].set_xlabel(r"$Z_{\mathrm{birth}}$")
 
     # Label y axis
-    axes[0].set_ylabel(r"$\rho_{\mathrm{birth}} / \mathrm{cm}^{-3}$")
+    axes[0].set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
 
-    fig.colorbar(mappable, cax)
+    cbar = fig.colorbar(mappable, cax)
+    cbar.set_label(r"$f_\mathrm{th}$")
 
     # Save figure
     mkdir("plots/stellar_formprops/")
