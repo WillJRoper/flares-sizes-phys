@@ -77,6 +77,7 @@ for snap in flares_snaps:
                         length_key="Galaxy,G_Length")
 
     print("================ Plotting snap %s ================" % snap)
+    stellar_data = plot_stellar_hmr(stellar_data, snap, weight_norm)
     try:
         plot_stellar_density(stellar_data, snap, weight_norm)
     except ValueError as e:
@@ -85,7 +86,6 @@ for snap in flares_snaps:
         plot_stellar_density_grid(stellar_data, snap, weight_norm)
     except ValueError as e:
         print("Stellar density grid:", e)
-    plot_stellar_hmr(stellar_data, snap, weight_norm)
     plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm)
 
 # Plot properties that are done at singular redshifts

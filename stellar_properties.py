@@ -383,7 +383,7 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
                 transform=ax.transAxes, horizontalalignment='right', fontsize=8)
 
         for ax in axes:
-            ax.set_xlim(10**-3, 10**6.8)
+            ax.set_xlim(10**-2.9, 10**6.8)
             ax.set_ylim(10**-5.9, 10**0)
             for spine in ax.spines.values():
                 spine.set_edgecolor('k')
