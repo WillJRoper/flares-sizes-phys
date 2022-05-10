@@ -181,7 +181,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     ax.loglog()
 
     # Define boolean indices for each population
-    com_pop = den_hmr >= stellar_data["density_lim"]
+    com_pop = s_den_hmr >= stellar_data["density_lim"]
     diff_pop = ~com_pop
 
     # Plot stellar_data
