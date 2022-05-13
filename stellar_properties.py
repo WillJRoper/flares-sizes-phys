@@ -372,7 +372,7 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
 
     im = ax.hexbin(gal_bdens[okinds], gal_bmet[okinds], gridsize=50,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w[okinds], norm=weight_norm,
+                   C=gal_w[okinds], norm=weight_norm,
                    reduce_C_function=np.sum, yscale='log',
                    linewidths=0.2,
                    cmap='viridis')
