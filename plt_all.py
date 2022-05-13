@@ -5,7 +5,7 @@ from hmrs import plot_stellar_hmr, plot_stellar_gas_hmr_comp
 from density import plot_stellar_density
 from density import plot_stellar_density_grid
 from stellar_properties import plot_birth_met, plot_birth_den
-from stellar_properties import plot_birth_den_vs_met
+from stellar_properties import plot_birth_den_vs_met, plot_gal_birth_den_vs_met
 from utils import get_data
 
 
@@ -90,8 +90,10 @@ for snap in flares_snaps:
         stellar_data, gas_data, snap, weight_norm)
 
 # Plot properties that are done at singular redshifts
+stellar_data = plot_birth_den(
+    stellar_data, flares_snaps[-1], weight_norm, path)
 plot_birth_met(stellar_data, flares_snaps[-1], weight_norm, path)
-plot_birth_den(stellar_data, flares_snaps[-1], weight_norm, path)
 plot_birth_den_vs_met(stellar_data, flares_snaps[-1], weight_norm, path)
+plot_gal_birth_den_vs_met(stellar_data, flares_snaps[-1], weight_norm, path)
 # for snap in eagle_snaps:
 #     plot_stellar_hmr("EAGLE", [0, ], snap, weight_norm)

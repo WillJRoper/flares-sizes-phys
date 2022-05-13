@@ -14,64 +14,11 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     # Define overdensity bins in log(1+delta)
     ovden_bins = np.arange(-0.3, 0.4, 0.1)
 
-    # Define redshift
-    z = float(snap.split("z")[-1].replace("p", "."))
-
-    # Get the index for this star particle
-    s_inds = stellar_data["Particle,S_Index"]
-
-    # Get the region for each galaxy
-    regions = stellar_data["regions"]
-
-    # Open region overdensities
-    reg_ovdens = np.loadtxt("/cosma7/data/dp004/dc-rope1/FLARES/"
-                            "flares/region_overdensity.txt",
-                            dtype=float)
-
-    # Get the arrays from the raw data files
-    aborn = eagle_io.read_array('PARTDATA', path.replace("<reg>", "00"), snap,
-                                'PartType4/StellarFormationTime',
-                                noH=True, physicalUnits=True,
-                                numThreads=8)
-
     # Extract arrays
-    zs = np.zeros(s_inds.size)
+    zs = stellar_data["birth_z"]
     mets = stellar_data["Particle,S_Z_smooth"]
-    part_ovdens = np.zeros(s_inds.size)
-    w = np.zeros(s_inds.size)
-
-    # Extract weights for each particle
-    prev_reg = 0
-    for igal in range(stellar_data["begin"].size):
-
-        # Extract galaxy range
-        b = stellar_data["begin"][igal]
-        e = b + stellar_data["Galaxy,S_Length"][igal]
-        this_s_inds = s_inds[b: e]
-
-        # Get this galaxies region
-        reg = regions[igal]
-
-        # Set this galaxy's region overdensity
-        part_ovdens[b: e] = reg_ovdens[reg]
-
-        # Set weights for these particles
-        w[b: e] = stellar_data["weights"][igal]
-
-        # Open a new region file if necessary
-        if reg != prev_reg:
-            # Get the arrays from the raw data files
-            aborn = eagle_io.read_array('PARTDATA',
-                                        path.replace("<reg>",
-                                                     str(reg).zfill(2)),
-                                        snap,
-                                        'PartType4/StellarFormationTime',
-                                        noH=True, physicalUnits=True,
-                                        numThreads=8)
-            prev_reg = reg
-
-        # Get this galaxies data
-        zs[b: e] = 1 / aborn[this_s_inds] - 1
+    w = stellar_data["part_weights"]
+    part_ovdens = stellar_data["part_ovdens"]
 
     # Set up the plot
     fig = plt.figure(figsize=(3.5, 3.5))
@@ -188,6 +135,12 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
         zs[b: e] = 1 / aborn[this_s_inds] - 1
         dens[b: e] = den_born[this_s_inds]
 
+    # Store the data so we doon't have to recalculate it
+    stellar_data["birth_density"] = dens
+    stellar_data["birth_z"] = zs
+    stellar_data["part_ovdens"] = part_ovdens
+    stellar_data["part_weights"] = w
+
     # Set up the plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
@@ -228,6 +181,8 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     fig.savefig("plots/stellar_evo/stellar_birthden_%s.png" % snap,
                 bbox_inches="tight")
 
+    return stellar_data
+
 
 def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
 
@@ -267,72 +222,11 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
         * (birth_density_grid / parameters["n_pivot"]) ** (-parameters["n_n"])
     )
 
-    axlims_x = []
-    axlims_y = []
-
-    # Define redshift
-    z = float(snap.split("z")[-1].replace("p", "."))
-
-    # Get the index for this star particle
-    s_inds = stellar_data["Particle,S_Index"]
-
-    # Get the region for each galaxy
-    regions = stellar_data["regions"]
-
-    # Get the arrays from the raw data files
-    aborn = eagle_io.read_array('PARTDATA', path.replace("<reg>", "00"), snap,
-                                'PartType4/StellarFormationTime',
-                                noH=True, physicalUnits=True,
-                                numThreads=8)
-    den_born = (eagle_io.read_array("PARTDATA", path.replace("<reg>", "00"),
-                                    snap, "PartType4/BirthDensity",
-                                    noH=True, physicalUnits=True,
-                                    numThreads=8) * 10**10
-                * Msun / Mpc ** 3 / mh).to(1 / cm ** 3).value
-
     # Extract arrays
-    zs = np.zeros(s_inds.size)
-    dens = np.zeros(s_inds.size)
+    zs = stellar_data["birth_z"]
+    dens = stellar_data["birth_density"]
     mets = stellar_data["Particle,S_Z_smooth"]
-    w = np.zeros(s_inds.size)
-
-    # Extract weights for each particle
-    prev_reg = 0
-    for igal in range(stellar_data["begin"].size):
-
-        # Extract galaxy range
-        b = stellar_data["begin"][igal]
-        e = b + stellar_data["Galaxy,S_Length"][igal]
-        this_s_inds = s_inds[b: e]
-
-        # Get this galaxies region
-        reg = regions[igal]
-
-        # Set weights for these particles
-        w[b: e] = stellar_data["weights"][igal]
-
-        # Open a new region file if necessary
-        if reg != prev_reg:
-            # Get the arrays from the raw data files
-            aborn = eagle_io.read_array('PARTDATA',
-                                        path.replace("<reg>",
-                                                     str(reg).zfill(2)),
-                                        snap,
-                                        'PartType4/StellarFormationTime',
-                                        noH=True, physicalUnits=True,
-                                        numThreads=8)
-            den_born = (eagle_io.read_array("PARTDATA",
-                                            path.replace("<reg>",
-                                                         str(reg).zfill(2)),
-                                            snap, "PartType4/BirthDensity",
-                                            noH=True, physicalUnits=True,
-                                            numThreads=8) * 10**10
-                        * Msun / Mpc ** 3 / mh).to(1 / cm ** 3).value
-            prev_reg = reg
-
-        # Get this galaxies data
-        zs[b: e] = 1 / aborn[this_s_inds] - 1
-        dens[b: e] = den_born[this_s_inds]
+    w = stellar_data["part_weights"]
 
     # Set up the plot
     ncols = len(zbins) - 1
@@ -388,10 +282,10 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
             for spine in ax.spines.values():
                 spine.set_edgecolor('k')
 
-        axes[i].set_xlabel(r"$Z_{\mathrm{birth}}$")
+        axes[i].set_xlabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
 
     # Label y axis
-    axes[0].set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
+    axes[0].set_ylabel(r"$Z_{\mathrm{birth}}$")
 
     cbar = fig.colorbar(mappable, cax)
     cbar.set_label(r"$f_\mathrm{th}$")
@@ -399,4 +293,97 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
     # Save figure
     mkdir("plots/stellar_formprops/")
     fig.savefig("plots/stellar_formprops/stellar_birthden_vs_met_%s.png" % snap,
+                bbox_inches="tight")
+
+
+def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
+
+    # Define redshift bins
+    zbins = list(np.arange(5, 12.5, 2.5))
+    zbins.append(np.inf)
+
+    # Define EAGLE subgrid  parameters
+    parameters = {"f_th,min": 0.3,
+                  "f_th,max": 3,
+                  "n_Z": 1.0,
+                  "n_n": 1.0,
+                  "Z_pivot": 0.1 * 0.012,
+                  "n_pivot": 0.67}
+
+    star_formation_parameters = {"threshold_Z0": 0.002,
+                                 "threshold_n0": 0.1,
+                                 "slope": -0.64}
+
+    number_of_bins = 128
+
+    # Constants; these could be put in the parameter file but are
+    # rarely changed
+    birth_density_bins = np.logspace(-2.9, 6.8, number_of_bins)
+    metal_mass_fraction_bins = np.logspace(-5.9, 0, number_of_bins)
+
+    # Now need to make background grid of f_th.
+    birth_density_grid, metal_mass_fraction_grid = np.meshgrid(
+        0.5 * (birth_density_bins[1:] + birth_density_bins[:-1]),
+        0.5 * (metal_mass_fraction_bins[1:] + metal_mass_fraction_bins[:-1]))
+
+    f_th_grid = parameters["f_th,min"] + (parameters["f_th,max"]
+                                          - parameters["f_th,min"]) / (
+        1.0
+        + (metal_mass_fraction_grid /
+           parameters["Z_pivot"]) ** parameters["n_Z"]
+        * (birth_density_grid / parameters["n_pivot"]) ** (-parameters["n_n"])
+    )
+
+    # Extract arrays
+    dens = stellar_data["birth_density"]
+    mets = stellar_data["Particle,S_Z_smooth"]
+    w = stellar_data["part_weights"]
+
+    # Define how many galaxies we have
+    ngal = stellar_data["begin"].size
+
+    # Set up arrays to store results
+    gal_bdens = np.zeros(ngal)
+    gal_bmet = np.zeros(ngal)
+    gal_w = np.zeros(ngal)
+
+    # Loop over each galaxy calculating initial mass weighted properties
+    for igal in range(ngal):
+
+        # Extract galaxy range
+        b = stellar_data["begin"][igal]
+        e = b + stellar_data["Galaxy,S_Length"][igal]
+        ini_mass = stellar_data["Particle,S_MassInitial"][b: e]
+
+        # Calculate initial mass weighted properties
+        gal_bdens[igal] = np.average(dens[b: e], weights=ini_mass)
+        gal_bmet[igal] = np.average(mets[b: e], weights=ini_mass)
+        gal_w[igal] = w[b: e][0]
+
+    # Set up the plot
+    ncols = len(zbins) - 1
+
+    # Set up the plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+
+    # Remove anomalous values
+    okinds = np.logical_and(gal_bdens > 0, gal_bmet > 0)
+
+    im = ax.hexbin(gal_bdens[okinds], gal_bmet[okinds], gridsize=50,
+                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                   C=w[okinds], norm=weight_norm,
+                   reduce_C_function=np.sum, yscale='log',
+                   linewidths=0.2,
+                   cmap='viridis')
+
+    ax.set_xlabel(r"$\bar{n_{\mathrm{H}}} / \mathrm{cm}^{-3}$")
+    ax.set_ylabel(r"$\bar{Z}_{\mathrm{birth}}$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$\sum w_{i}$")
+
+    # Save figure
+    mkdir("plots/stellar_formprops/")
+    fig.savefig("plots/stellar_formprops/galaxy_stellar_birthden_%s.png" % snap,
                 bbox_inches="tight")
