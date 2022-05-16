@@ -359,6 +359,8 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
 
         # Calculate initial mass weighted properties
         okinds = np.logical_and(rs != 0, rs < 1.)
+        if np.sum(ini_mass[okinds]) == 0:
+            continue
         gal_bdens[igal] = np.average(
             dens[b: e][okinds], weights=ini_mass[okinds])
         gal_bmet[igal] = np.average(
