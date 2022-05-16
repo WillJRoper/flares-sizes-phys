@@ -72,6 +72,8 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm):
     stellar_data["HMR_Density"] = den_hmr
     stellar_data["density_lim"] = 10 ** 9
     stellar_data["radii"] = radii
+    stellar_data["mass"] = mass
+    stellar_data["weight"] = w
 
     # Remove galaxies without stars
     okinds = np.logical_and(mass > 0, hmrs > 0)
@@ -118,6 +120,59 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm):
     plt.close(fig)
 
     return stellar_data
+
+
+def plot_stellar_hmr_withcut(stellar_data, snap, weight_norm):
+
+    # Define arrays to store computations
+    hmrs = stellar_data["HMRs"]
+    mass = stellar_data["mass"]
+    den_hmr = stellar_data["gal_birth_density"]
+    w = stellar_data["weight"]
+
+    # Remove galaxies without stars
+    okinds = np.logical_and(mass > 0, hmrs > 0)
+    print("Galaxies before spurious cut: %d" % mass.size)
+    mass = mass[okinds]
+    hmrs = hmrs[okinds]
+    den_hmr = den_hmr[okinds]
+    w = w[okinds]
+    print("Galaxies after spurious cut: %d" % mass.size)
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+    ax.loglog()
+
+    # Define boolean indices for each population
+    com_pop = den_hmr >= 10**2
+    diff_pop = ~com_pop
+
+    # Plot stellar_data
+    im = ax.hexbin(mass[com_pop], hmrs[com_pop], gridsize=50,
+                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                   C=w[com_pop],
+                   reduce_C_function=np.sum, xscale='log', yscale='log',
+                   norm=weight_norm, linewidths=0.2, cmap='viridis')
+    ax.hexbin(mass[diff_pop], hmrs[diff_pop], gridsize=50,
+              mincnt=np.min(w) - (0.1 * np.min(w)),
+              C=w[diff_pop],
+              reduce_C_function=np.sum, xscale='log', yscale='log',
+              norm=weight_norm, linewidths=0.2, cmap='Greys')
+
+    # Label axes
+    ax.set_xlabel("$M_\star / M_\odot$")
+    ax.set_ylabel("$R_{1/2} / [\mathrm{pkpc}]$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$\sum w_{i}$")
+
+    # Save figure
+    mkdir("plots/stellar_hmr/")
+    fig.savefig("plots/stellar_hmr/stellar_hmr_%s.png" % snap,
+                bbox_inches="tight")
+
+    plt.close(fig)
 
 
 def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):

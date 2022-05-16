@@ -368,6 +368,9 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
             mets[b: e][okinds], weights=ini_mass[okinds])
         gal_w[igal] = w[b: e][0]
 
+    # Export this data
+    stellar_data["gal_birth_density"] = gal_bdens
+
     # Set up the plot
     ncols = len(zbins) - 1
 
@@ -395,3 +398,5 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
     mkdir("plots/stellar_formprops/")
     fig.savefig("plots/stellar_formprops/galaxy_stellar_birthden_%s.png" % snap,
                 bbox_inches="tight")
+
+    return stellar_data

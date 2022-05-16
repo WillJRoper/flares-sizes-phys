@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib.colors import LogNorm
 
 from hmrs import plot_stellar_hmr, plot_stellar_gas_hmr_comp
+from hmrs import plot_stellar_hmr_withcut
 from density import plot_stellar_density
 from density import plot_stellar_density_grid
 from stellar_properties import plot_birth_met, plot_birth_den
@@ -94,6 +95,8 @@ stellar_data = plot_birth_den(
     stellar_data, flares_snaps[-1], weight_norm, path)
 plot_birth_met(stellar_data, flares_snaps[-1], weight_norm, path)
 plot_birth_den_vs_met(stellar_data, flares_snaps[-1], weight_norm, path)
-plot_gal_birth_den_vs_met(stellar_data, flares_snaps[-1], weight_norm, path)
+stellar_data = plot_gal_birth_den_vs_met(
+    stellar_data, flares_snaps[-1], weight_norm, path)
+plot_stellar_hmr_withcut(stellar_data, flares_snaps[-1], weight_norm)
 # for snap in eagle_snaps:
 #     plot_stellar_hmr("EAGLE", [0, ], snap, weight_norm)
