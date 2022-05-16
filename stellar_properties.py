@@ -338,6 +338,7 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
     dens = stellar_data["birth_density"]
     mets = stellar_data["Particle,S_Z_smooth"]
     w = stellar_data["part_weights"]
+    radii = stellar_data["radii"]
 
     # Define how many galaxies we have
     ngal = stellar_data["begin"].size
@@ -354,10 +355,14 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
         b = stellar_data["begin"][igal]
         e = b + stellar_data["Galaxy,S_Length"][igal]
         ini_mass = stellar_data["Particle,S_MassInitial"][b: e]
+        rs = radii[b: e]
 
         # Calculate initial mass weighted properties
-        gal_bdens[igal] = np.average(dens[b: e], weights=ini_mass)
-        gal_bmet[igal] = np.average(mets[b: e], weights=ini_mass)
+        okinds = np.logical_and(rs != 0, rs < 1.)
+        gal_bdens[igal] = np.average(
+            dens[b: e][okinds], weights=ini_mass[okinds])
+        gal_bmet[igal] = np.average(
+            mets[b: e][okinds], weights=ini_mass[okinds])
         gal_w[igal] = w[b: e][0]
 
     # Set up the plot
@@ -377,8 +382,8 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
                    linewidths=0.2,
                    cmap='viridis')
 
-    ax.set_xlabel(r"$\bar{n_{\mathrm{H}}} / \mathrm{cm}^{-3}$")
-    ax.set_ylabel(r"$\bar{Z_{\mathrm{birth}}}$")
+    ax.set_xlabel(r"$\bar{n}_{\mathrm{H}} / \mathrm{cm}^{-3}$")
+    ax.set_ylabel(r"$\bar{Z}_{\mathrm{birth}}$")
 
     cbar = fig.colorbar(im)
     cbar.set_label("$\sum w_{i}$")

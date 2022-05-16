@@ -36,6 +36,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm):
     mass = np.zeros(len(stellar_data["begin"]))
     den_hmr = np.zeros(len(stellar_data["begin"]))
     w = np.zeros(len(stellar_data["begin"]))
+    radii = np.zeros(len(stellar_data["Particle,S_Mass"]))
 
     # Loop over galaxies and calculate stellar HMR
     for (igal, b), l in zip(enumerate(stellar_data["begin"]),
@@ -52,6 +53,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm):
 
         # Compute particle radii
         rs = calc_3drad(pos - cop)
+        radii[b: b + l] = rs
 
         # Compute HMR
         hmr = calc_light_mass_rad(rs, ms, radii_frac=0.5)
@@ -69,6 +71,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm):
     stellar_data["HMRs"] = hmrs
     stellar_data["HMR_Density"] = den_hmr
     stellar_data["density_lim"] = 10 ** 9
+    stellar_data["radii"] = radii
 
     # Remove galaxies without stars
     okinds = np.logical_and(mass > 0, hmrs > 0)
