@@ -53,7 +53,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm):
 
         # Compute particle radii
         rs = calc_3drad(pos - cop)
-        radii[b: b + l] = rs
+        radii[b: b + l][app] = rs
 
         # Compute HMR
         hmr = calc_light_mass_rad(rs, ms, radii_frac=0.5)
