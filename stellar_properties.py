@@ -355,10 +355,11 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
         b = stellar_data["begin"][igal]
         e = b + stellar_data["Galaxy,S_Length"][igal]
         ini_mass = stellar_data["Particle,S_MassInitial"][b: e]
+        hmr = stellar_data["HMRs"][igal]
         rs = radii[b: e]
 
         # Calculate initial mass weighted properties
-        okinds = np.logical_and(rs != 0, rs < 1.)
+        okinds = np.logical_and(rs != 0, rs <= hmr)
         if np.sum(ini_mass[okinds]) == 0:
             continue
         gal_bdens[igal] = np.average(
