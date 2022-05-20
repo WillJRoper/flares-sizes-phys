@@ -51,8 +51,8 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     cbar.set_label("$\sum w_{i}$")
 
     ax.legend(loc='upper center',
-               bbox_to_anchor=(0.5, -0.35),
-               fancybox=True, ncol=2)
+              bbox_to_anchor=(0.5, -0.35),
+              fancybox=True, ncol=2)
 
     # Save figure
     mkdir("plots/stellar_evo/")
@@ -177,8 +177,8 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     cbar.set_label("$\sum w_{i}$")
 
     ax.legend(loc='upper center',
-               bbox_to_anchor=(0.5, -0.35),
-               fancybox=True, ncol=2)
+              bbox_to_anchor=(0.5, -0.35),
+              fancybox=True, ncol=2)
 
     # Save figure
     mkdir("plots/stellar_evo/")
@@ -282,17 +282,32 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
 
         for ax in axes:
             ax.set_xlim(10**-2.9, 10**6.8)
-            ax.set_ylim(10**-5.9, 10**0)                bbox_inches = "tight")
+            ax.set_ylim(10**-5.9, 10**0)
+            for spine in ax.spines.values():
+                spine.set_edgecolor('k')
+
+        axes[i].set_xlabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
+
+    # Label y axis
+    axes[0].set_ylabel(r"$Z_{\mathrm{birth}}$")
+
+    cbar = fig.colorbar(mappable, cax)
+    cbar.set_label(r"$f_\mathrm{th}$")
+
+    # Save figure
+    mkdir("plots/stellar_formprops/")
+    fig.savefig("plots/stellar_formprops/stellar_birthden_vs_met_%s.png" % snap,
+                bbox_inches="tight")
 
 
 def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
 
     # Define redshift bins
-    zbins=list(np.arange(5, 12.5, 2.5))
+    zbins = list(np.arange(5, 12.5, 2.5))
     zbins.append(np.inf)
 
     # Define EAGLE subgrid  parameters
-    parameters={"f_th,min": 0.3,
+    parameters = {"f_th,min": 0.3,
                   "f_th,max": 3,
                   "n_Z": 1.0,
                   "n_n": 1.0,
@@ -315,7 +330,7 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
         0.5 * (birth_density_bins[1:] + birth_density_bins[:-1]),
         0.5 * (metal_mass_fraction_bins[1:] + metal_mass_fraction_bins[:-1]))
 
-    f_th_grid=parameters["f_th,min"] + (parameters["f_th,max"]
+    f_th_grid = parameters["f_th,min"] + (parameters["f_th,max"]
                                           - parameters["f_th,min"]) / (
         1.0
         + (metal_mass_fraction_grid /
@@ -324,63 +339,63 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
     )
 
     # Extract arrays
-    dens=stellar_data["birth_density"]
-    mets=stellar_data["Particle,S_Z_smooth"]
-    w=stellar_data["part_weights"]
-    radii=stellar_data["radii"]
+    dens = stellar_data["birth_density"]
+    mets = stellar_data["Particle,S_Z_smooth"]
+    w = stellar_data["part_weights"]
+    radii = stellar_data["radii"]
 
     # Define how many galaxies we have
-    ngal=stellar_data["begin"].size
+    ngal = stellar_data["begin"].size
 
     # Set up arrays to store results
-    gal_bdens=np.zeros(ngal)
-    gal_bmet=np.zeros(ngal)
-    gal_w=np.zeros(ngal)
+    gal_bdens = np.zeros(ngal)
+    gal_bmet = np.zeros(ngal)
+    gal_w = np.zeros(ngal)
 
     # Loop over each galaxy calculating initial mass weighted properties
     for igal in range(ngal):
 
         # Extract galaxy range
-        b=stellar_data["begin"][igal]
-        e=b + stellar_data["Galaxy,S_Length"][igal]
-        ini_mass=stellar_data["Particle,S_MassInitial"][b: e]
-        hmr=stellar_data["HMRs"][igal]
-        rs=radii[b: e]
+        b = stellar_data["begin"][igal]
+        e = b + stellar_data["Galaxy,S_Length"][igal]
+        ini_mass = stellar_data["Particle,S_MassInitial"][b: e]
+        hmr = stellar_data["HMRs"][igal]
+        rs = radii[b: e]
 
         # Calculate initial mass weighted properties
-        okinds=np.logical_and(rs != 0, rs <= hmr)
+        okinds = np.logical_and(rs != 0, rs <= hmr)
         if np.sum(ini_mass[okinds]) == 0:
             continue
-        gal_bdens[igal]=np.average(
-            dens[b: e][okinds], weights = ini_mass[okinds])
-        gal_bmet[igal]=np.average(
-            mets[b: e][okinds], weights = ini_mass[okinds])
-        gal_w[igal]=w[b: e][0]
+        gal_bdens[igal] = np.average(
+            dens[b: e][okinds], weights=ini_mass[okinds])
+        gal_bmet[igal] = np.average(
+            mets[b: e][okinds], weights=ini_mass[okinds])
+        gal_w[igal] = w[b: e][0]
 
     # Export this data
-    stellar_data["gal_birth_density"]=gal_bdens
+    stellar_data["gal_birth_density"] = gal_bdens
 
     # Set up the plot
-    ncols=len(zbins) - 1
+    ncols = len(zbins) - 1
 
     # Set up the plot
-    fig=plt.figure(figsize = (3.5, 3.5))
-    ax=fig.add_subplot(111)
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
 
     # Remove anomalous values
-    okinds=np.logical_and(gal_bdens > 0, gal_bmet > 0)
+    okinds = np.logical_and(gal_bdens > 0, gal_bmet > 0)
 
-    im=ax.hexbin(gal_bdens[okinds], gal_bmet[okinds], gridsize = 50,
-                   mincnt = np.min(w) - (0.1 * np.min(w)),
-                   C = gal_w[okinds], norm = weight_norm,
-                   reduce_C_function = np.sum, yscale = 'log', xscale = "log",
-                   linewidths = 0.2,
-                   cmap = 'viridis')
+    im = ax.hexbin(gal_bdens[okinds], gal_bmet[okinds], gridsize=50,
+                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                   C=gal_w[okinds], norm=weight_norm,
+                   reduce_C_function=np.sum, yscale='log', xscale="log",
+                   linewidths=0.2,
+                   cmap='viridis')
 
     ax.set_xlabel(r"$\bar{n}_{\mathrm{H}} / \mathrm{cm}^{-3}$")
     ax.set_ylabel(r"$\bar{Z}_{\mathrm{birth}}$")
 
-    cbar=fig.colorbar(im)
+    cbar = fig.colorbar(im)
     cbar.set_label("$\sum w_{i}$")
 
     # Save figure
