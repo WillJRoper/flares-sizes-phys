@@ -19,9 +19,13 @@ def plot_birth_density_evo():
              "FLARES_00_medFBlim", "FLARES_00_slightFBlim",
              "FLARES_00_instantFB", "FLARES_00_noZSFthresh"]
 
+    # Define physics variations directories
     labels = ["AGNdT9", "REF", "$f_{\mathrm{th, max}}=10$",
               "$f_{\mathrm{th, max}}=6$", "$f_{\mathrm{th, max}}=4$",
               "InstantFB", "$n_{H}^{*}=0$"]
+
+    # Define linestyles
+    linestyles = ["-", "-", "--", "--", "--", "dotted", "dotted"]
 
     # Define snapshot for the root
     snap = "011_z004p770"
@@ -34,7 +38,7 @@ def plot_birth_density_evo():
     ax.semilogy()
 
     # Loop over the variants
-    for t, l in zip(types, labels):
+    for t, l, ls in zip(types, labels, linestyles):
 
         # Get the arrays from the raw data files
         aborn = eagle_io.read_array('PARTDATA', path.replace("<type>", t),
@@ -53,7 +57,7 @@ def plot_birth_density_evo():
 
         # Plot median curves
         plot_meidan_stat(zs, den_born, np.ones(den_born.size), ax,
-                         lab=l, color=None)
+                         lab=l, color=None, ls=ls)
 
     # Label axes
     ax.set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
@@ -79,9 +83,13 @@ def plot_birth_met_evo():
              "FLARES_00_medFBlim", "FLARES_00_slightFBlim",
              "FLARES_00_instantFB", "FLARES_00_noZSFthresh"]
 
+    # Define labels for each
     labels = ["AGNdT9", "REF", "$f_{\mathrm{th, max}}=10$",
               "$f_{\mathrm{th, max}}=6$", "$f_{\mathrm{th, max}}=4$",
               "InstantFB", "$n_{H}^{*}=0$"]
+
+    # Define linestyles
+    linestyles = ["-", "-", "--", "--", "--", "dotted", "dotted"]
 
     # Define snapshot for the root
     snap = "011_z004p770"
@@ -94,7 +102,7 @@ def plot_birth_met_evo():
     ax.semilogy()
 
     # Loop over the variants
-    for t, l in zip(types, labels):
+    for t, l, ls in zip(types, labels, linestyles):
 
         # Get the arrays from the raw data files
         aborn = eagle_io.read_array('PARTDATA', path.replace("<type>", t),
@@ -112,7 +120,7 @@ def plot_birth_met_evo():
 
         # Plot median curves
         plot_meidan_stat(zs, met, np.ones(met.size), ax,
-                         lab=l, color=None)
+                         lab=l, color=None, ls=ls)
 
     # Label axes
     ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
