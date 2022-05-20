@@ -22,7 +22,7 @@ def plot_birth_density_evo():
     # Define physics variations directories
     labels = ["AGNdT9", "REF", "$f_{\mathrm{th, max}}=10$",
               "$f_{\mathrm{th, max}}=6$", "$f_{\mathrm{th, max}}=4$",
-              "InstantFB", "$n_{H}^{*}=0$"]
+              "InstantFB", "$Z^0$"]
 
     # Define linestyles
     linestyles = ["-", "-", "--", "--", "--", "dotted", "dotted"]
@@ -86,7 +86,7 @@ def plot_birth_met_evo():
     # Define labels for each
     labels = ["AGNdT9", "REF", "$f_{\mathrm{th, max}}=10$",
               "$f_{\mathrm{th, max}}=6$", "$f_{\mathrm{th, max}}=4$",
-              "InstantFB", "$n_{H}^{*}=0$"]
+              "InstantFB", "$Z^{0}$"]
 
     # Define linestyles
     linestyles = ["-", "-", "--", "--", "--", "dotted", "dotted"]
@@ -149,7 +149,7 @@ def plot_hmr_phys_comp(snap):
     # Define labels for each
     labels = ["AGNdT9", "REF", "$f_{\mathrm{th, max}}=10$",
               "$f_{\mathrm{th, max}}=6$", "$f_{\mathrm{th, max}}=4$",
-              "InstantFB", "$n_{H}^{*}=0$"]
+              "InstantFB", "$Z^0$"]
 
     # Define linestyles
     linestyles = ["-", "-", "--", "--", "--", "dotted", "dotted"]
