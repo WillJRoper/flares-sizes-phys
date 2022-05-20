@@ -7,6 +7,7 @@ from density import plot_stellar_density
 from density import plot_stellar_density_grid
 from stellar_properties import plot_birth_met, plot_birth_den
 from stellar_properties import plot_birth_den_vs_met, plot_gal_birth_den_vs_met
+from phys_comp import plot_birth_density_evo, plot_birth_met_evo
 from utils import get_data
 
 
@@ -47,6 +48,10 @@ for s in pre_snaps:
     snaps[ind] = s
 
 eagle_snaps = list(snaps)
+
+# Plot the physics variation plots
+plot_birth_density_evo()
+plot_birth_met_evo()
 
 # Plot EVERYTHING
 for snap in flares_snaps:
