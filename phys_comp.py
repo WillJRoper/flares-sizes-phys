@@ -30,6 +30,9 @@ def plot_birth_density_evo():
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
 
+    # Log the y axis
+    ax.semilogy()
+
     # Loop over the variants
     for t, l in zip(types, labels):
 
@@ -86,6 +89,9 @@ def plot_birth_met_evo():
     # Set up the plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
+
+    # Log the y axis
+    ax.semilogy()
 
     # Loop over the variants
     for t, l in zip(types, labels):
