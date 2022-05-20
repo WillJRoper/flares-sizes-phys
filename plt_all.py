@@ -56,7 +56,10 @@ plot_birth_met_evo()
 # Plot EVERYTHING
 for snap in flares_snaps:
 
-    plot_hmr_phys_comp(snap)
+    try:
+        plot_hmr_phys_comp(snap)
+    except ValueError:
+        continue
 
     # Define data fields
     stellar_data_fields = ("Particle,S_Mass", "Particle,S_Coordinates",
