@@ -52,6 +52,7 @@ eagle_snaps = list(snaps)
 # Plot the physics variation plots
 plot_birth_density_evo()
 plot_birth_met_evo()
+plot_hmr_phys_comp(flares_snaps[-1])
 
 # Plot EVERYTHING
 for snap in flares_snaps:
