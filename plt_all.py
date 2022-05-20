@@ -7,7 +7,7 @@ from density import plot_stellar_density
 from density import plot_stellar_density_grid
 from stellar_properties import plot_birth_met, plot_birth_den
 from stellar_properties import plot_birth_den_vs_met, plot_gal_birth_den_vs_met
-from phys_comp import plot_birth_density_evo, plot_birth_met_evo
+from phys_comp import plot_birth_density_evo, plot_birth_met_evo, plot_hmr_phys_comp
 from utils import get_data
 
 
@@ -55,6 +55,8 @@ plot_birth_met_evo()
 
 # Plot EVERYTHING
 for snap in flares_snaps:
+
+    plot_hmr_phys_comp(snap)
 
     # Define data fields
     stellar_data_fields = ("Particle,S_Mass", "Particle,S_Coordinates",
