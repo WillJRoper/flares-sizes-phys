@@ -182,8 +182,8 @@ def plot_hmr_phys_comp(snap):
                          ax, lab=l, color=None, ls=ls)
 
     # Label axes
-    ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
-    ax.set_xlabel(r"$z_{\mathrm{birth}}$")
+    ax.set_ylabel(r"$R_{1/2$")
+    ax.set_xlabel(r"$M_{\star} / M_\odot$")
 
     ax.legend(loc='upper center',
               bbox_to_anchor=(0.5, -0.35),
