@@ -6,7 +6,7 @@ import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
 from utils import calc_3drad, calc_light_mass_rad, mkdir, plot_meidan_stat, age2z
-from unyt import mh, cm, Gyr, g, Msun, Mpc
+from unyt import mh, cm, Gyr, g, Msun, kpc
 
 os.environ['FLARE'] = '/cosma7/data/dp004/dc-wilk2/flare'
 mpl.use('Agg')
@@ -293,7 +293,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
 
         # Store results
         den_hmr[igal] = (np.sum(ms[rs <= hmr]) * 10 ** 10
-                         / (4 / 3 * np.pi * hmr ** 3) * Msun / Mpc ** 3
+                         / (4 / 3 * np.pi * hmr ** 3) * Msun / kpc ** 3
                          / mh).to(1 / cm ** 3).value
         mass_hmr[igal] = np.sum(ms[rs <= hmr]) * 10 ** 10
         ages_hmr[igal] = np.average(ages[rs < hmr],
@@ -312,7 +312,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
                 met_r[r][igal] = np.average(mets[rs < r],
                                             weights=ini_ms[rs < r])
                 den[r][igal] = (mass_r[r][igal] / (4 / 3 * np.pi * r ** 3)
-                                * Msun / Mpc ** 3 / mh).to(1 / cm ** 3).value
+                                * Msun / kpc ** 3 / mh).to(1 / cm ** 3).value
 
     # Define how mnay columns
     nrows = 1 + len(den)
