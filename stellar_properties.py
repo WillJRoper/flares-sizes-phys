@@ -16,20 +16,23 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
     # Extract arrays
     zs = stellar_data["birth_z"]
-    mets = stellar_data["Particle,S_Z_smooth"] + 1
+    mets = stellar_data["Particle,S_Z_smooth"]
     w = stellar_data["part_weights"]
     part_ovdens = stellar_data["part_ovdens"]
 
     # Set up the plot
     fig = plt.figure(figsize=(4, 3.5))
-    ax = fig.add_subplot(111)
+    gs = gridspec.GridSpec(nrows=2, ncols=1, height_ratios=[10, 5])
+    gs.update(wspace=0.0, hspace=0.0)
+    ax = fig.add_subplot(gs[0, 0])
+    ax1. fig.add_subplot(gs[1, 0])
 
     # Remove anomalous values
     okinds = np.ones(mets.size, dtype=bool)
 
     im = ax.hexbin(zs[okinds], mets[okinds], gridsize=50,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w[okinds], norm=LogNorm(), yscale="log",
+                   C=w[okinds], norm=LogNorm(),
                    reduce_C_function=np.sum, linewidths=0.2,
                    cmap='viridis')
 
@@ -40,19 +43,19 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
         okinds = np.logical_and(part_ovdens < ovden_bins[i + 1],
                                 part_ovdens >= ovden_bins[i])
 
-        plot_meidan_stat(zs[okinds], mets[okinds], w[okinds], ax,
+        plot_meidan_stat(zs[okinds], mets[okinds], w[okinds], ax1,
                          lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
                          % (ovden_bins[i], ovden_bins[i + 1]), color=None)
 
-    ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
+    ax.set_ylabel(r"$Z_{\mathrm{birth}} + 1$")
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")
 
     cbar = fig.colorbar(im)
     cbar.set_label("$\sum w_{i}$")
 
-    ax.legend(loc='upper center',
-              bbox_to_anchor=(0.5, -0.2),
-              fancybox=True, ncol=2)
+    ax1.legend(loc='upper center',
+               bbox_to_anchor=(0.5, -0.2),
+               fancybox=True, ncol=2)
 
     # Save figure
     mkdir("plots/stellar_evo/")
