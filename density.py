@@ -402,7 +402,7 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
             axes[i, j].set_xlim(10 ** ex[0], 10 ** ex[1])
 
             # Draw line indicating density cut
-            axes[i, j].axhline(10**2.5. linestyle="dotted", color="k",
+            axes[i, j].axhline(10**2.5, linestyle="dotted", color="k",
                                alpha=0.8)
 
     # Label axes
