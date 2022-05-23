@@ -6,6 +6,7 @@ import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
 from utils import calc_3drad, calc_light_mass_rad, mkdir, plot_meidan_stat, age2z
+from unyt import mh, cm, Gyr, g, Msun, Mpc
 
 os.environ['FLARE'] = '/cosma7/data/dp004/dc-wilk2/flare'
 mpl.use('Agg')
@@ -31,8 +32,8 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 def plot_stellar_density(stellar_data, snap, weight_norm):
     # Define x and y limits
     hmrlims = (-1.3, 1.3)
-    mlims = (8, 11.5)
-    denlims = (3, 13.5)
+    mlims = (8, 12)
+    denlims = (-2, 5)
 
     # Define arrays to store computations
     hmrs = np.zeros(len(stellar_data["begin"]))
@@ -245,9 +246,9 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
 
     # Define x and y limits
     hmrlims = (-1.3, 1.5)
-    mlims = (7.8, 11)
-    mrlims = (6, 11)
-    denlims = (3, 13.5)
+    mlims = (7.8, 12)
+    mrlims = (6, 12)
+    denlims = (-2, 5)
     age_lims = (0, 3)
     met_lims = (-4.5, -0.9)
 
@@ -292,7 +293,8 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
 
         # Store results
         den_hmr[igal] = (np.sum(ms[rs <= hmr]) * 10 ** 10
-                         / (4 / 3 * np.pi * hmr ** 3))
+                         / (4 / 3 * np.pi * hmr ** 3) * Msun / Mpc ** 3
+                         / mh).to(1 / cm ** 3).value
         mass_hmr[igal] = np.sum(ms[rs <= hmr]) * 10 ** 10
         ages_hmr[igal] = np.average(ages[rs < hmr],
                                     weights=ini_ms[rs < hmr]) * 10**3
@@ -309,7 +311,8 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
                     ages[rs < r], weights=ini_ms[rs < r]) * 10**3
                 met_r[r][igal] = np.average(mets[rs < r],
                                             weights=ini_ms[rs < r])
-                den[r][igal] = (mass_r[r][igal] / (4 / 3 * np.pi * r ** 3))
+                den[r][igal] = (mass_r[r][igal] / (4 / 3 * np.pi * r ** 3)
+                                * Msun / Mpc ** 3 / mh).to(1 / cm ** 3).value
 
     # Define how mnay columns
     nrows = 1 + len(den)
@@ -397,6 +400,10 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
             axes[i, j].set_ylim(10 ** denlims[0], 10 ** denlims[1])
 
             axes[i, j].set_xlim(10 ** ex[0], 10 ** ex[1])
+
+            # Draw line indicating density cut
+            axes[i, j].axhline(10**2.5. linestyle="dotted", color="k",
+                               alpha=0.8)
 
     # Label axes
     for i, lab in enumerate(["HMR", ] + list(den.keys())):
