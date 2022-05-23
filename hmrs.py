@@ -145,7 +145,7 @@ def plot_stellar_hmr_withcut(stellar_data, snap, weight_norm):
     ax.loglog()
 
     # Define boolean indices for each population
-    com_pop = den_hmr >= 10**2.2
+    com_pop = den_hmr >= 10**2.5
     diff_pop = ~com_pop
 
     # Plot stellar_data
