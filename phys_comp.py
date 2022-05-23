@@ -64,7 +64,7 @@ def plot_birth_density_evo():
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")
 
     ax.legend(loc='upper center',
-              bbox_to_anchor=(0.5, -0.3),
+              bbox_to_anchor=(0.5, -0.2),
               fancybox=True, ncol=3)
 
     # Save figure
@@ -127,7 +127,7 @@ def plot_birth_met_evo():
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")
 
     ax.legend(loc='upper center',
-              bbox_to_anchor=(0.5, -0.3),
+              bbox_to_anchor=(0.5, -0.2),
               fancybox=True, ncol=3)
 
     # Save figure
@@ -186,7 +186,7 @@ def plot_hmr_phys_comp(snap):
     ax.set_xlabel(r"$M_{\star} / M_\odot$")
 
     ax.legend(loc='upper center',
-              bbox_to_anchor=(0.5, -0.3),
+              bbox_to_anchor=(0.5, -0.2),
               fancybox=True, ncol=3)
 
     # Save figure
@@ -245,7 +245,7 @@ def plot_gashmr_phys_comp(snap):
     ax.set_xlabel(r"$M_{\star} / M_\odot$")
 
     ax.legend(loc='upper center',
-              bbox_to_anchor=(0.5, -0.3),
+              bbox_to_anchor=(0.5, -0.2),
               fancybox=True, ncol=3)
 
     # Save figure

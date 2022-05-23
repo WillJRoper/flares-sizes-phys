@@ -145,7 +145,7 @@ def plot_stellar_hmr_withcut(stellar_data, snap, weight_norm):
     ax.loglog()
 
     # Define boolean indices for each population
-    com_pop = den_hmr >= 10**2
+    com_pop = den_hmr >= 10**2.2
     diff_pop = ~com_pop
 
     # Plot stellar_data
@@ -251,7 +251,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     # Plot stellar_data
     im1 = ax.hexbin(s_hmrs[diff_pop], g_hmrs[diff_pop], gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
-                    C=w[diff_pop],
+                    C=w[diff_pop], extent=[10**-1, 10**1.3, 10**-1, 10**1.3],
                     reduce_C_function=np.sum, xscale='log', yscale='log',
                     norm=weight_norm, linewidths=0.2, cmap='Greys')
 

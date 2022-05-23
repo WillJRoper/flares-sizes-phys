@@ -21,7 +21,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     part_ovdens = stellar_data["part_ovdens"]
 
     # Set up the plot
-    fig = plt.figure(figsize=(3.5, 3.5))
+    fig = plt.figure(figsize=(4, 3.5))
     ax = fig.add_subplot(111)
     ax.semilogy()
 
@@ -52,7 +52,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     cbar.set_label("$\sum w_{i}$")
 
     ax.legend(loc='upper center',
-              bbox_to_anchor=(0.5, -0.3),
+              bbox_to_anchor=(0.5, -0.2),
               fancybox=True, ncol=2)
 
     # Save figure
@@ -145,7 +145,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     stellar_data["part_weights"] = w
 
     # Set up the plot
-    fig = plt.figure(figsize=(3.5, 3.5))
+    fig = plt.figure(figsize=(4, 3.5))
     ax = fig.add_subplot(111)
 
     # Remove anomalous values
@@ -178,7 +178,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     cbar.set_label("$\sum w_{i}$")
 
     ax.legend(loc='upper center',
-              bbox_to_anchor=(0.5, -0.3),
+              bbox_to_anchor=(0.5, -0.2),
               fancybox=True, ncol=2)
 
     # Save figure
