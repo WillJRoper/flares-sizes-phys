@@ -16,20 +16,21 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
     # Extract arrays
     zs = stellar_data["birth_z"]
-    mets = stellar_data["Particle,S_Z_smooth"]
+    mets = stellar_data["Particle,S_Z_smooth"] + 1
     w = stellar_data["part_weights"]
     part_ovdens = stellar_data["part_ovdens"]
 
     # Set up the plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
+    ax.semilogy()
 
     # Remove anomalous values
     okinds = np.ones(mets.size, dtype=bool)
 
     im = ax.hexbin(zs[okinds], mets[okinds], gridsize=50,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w[okinds], norm=LogNorm(),
+                   C=w[okinds], norm=LogNorm(), yscale="log",
                    reduce_C_function=np.sum, linewidths=0.2,
                    cmap='viridis')
 
@@ -51,7 +52,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     cbar.set_label("$\sum w_{i}$")
 
     ax.legend(loc='upper center',
-              bbox_to_anchor=(0.5, -0.35),
+              bbox_to_anchor=(0.5, -0.3),
               fancybox=True, ncol=2)
 
     # Save figure
@@ -177,7 +178,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     cbar.set_label("$\sum w_{i}$")
 
     ax.legend(loc='upper center',
-              bbox_to_anchor=(0.5, -0.35),
+              bbox_to_anchor=(0.5, -0.3),
               fancybox=True, ncol=2)
 
     # Save figure
@@ -383,9 +384,9 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
     ax = fig.add_subplot(111)
 
     # Remove anomalous values
-    okinds = np.logical_and(gal_bdens > 0, gal_bmet > 0)
+    okinds = np.logical_and(gal_bdens > 0, gal_bmet + 1 > 0)
 
-    im = ax.hexbin(gal_bdens[okinds], gal_bmet[okinds], gridsize=50,
+    im = ax.hexbin(gal_bdens[okinds], gal_bmet[okinds] + 1, gridsize=50,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
                    C=gal_w[okinds], norm=weight_norm,
                    reduce_C_function=np.sum, yscale='log', xscale="log",
@@ -393,7 +394,7 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
                    cmap='viridis')
 
     ax.set_xlabel(r"$\bar{n}_{\mathrm{H}} / \mathrm{cm}^{-3}$")
-    ax.set_ylabel(r"$\bar{Z}_{\mathrm{birth}}$")
+    ax.set_ylabel(r"$\bar{Z}_{\mathrm{birth}} + 1$")
 
     cbar = fig.colorbar(im)
     cbar.set_label("$\sum w_{i}$")

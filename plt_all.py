@@ -7,7 +7,8 @@ from density import plot_stellar_density
 from density import plot_stellar_density_grid
 from stellar_properties import plot_birth_met, plot_birth_den
 from stellar_properties import plot_birth_den_vs_met, plot_gal_birth_den_vs_met
-from phys_comp import plot_birth_density_evo, plot_birth_met_evo, plot_hmr_phys_comp
+from phys_comp import plot_birth_density_evo, plot_birth_met_evo
+from phys_comp import plot_hmr_phys_comp, plot_gashmr_phys_comp
 from utils import get_data
 
 
@@ -53,6 +54,7 @@ eagle_snaps = list(snaps)
 plot_birth_density_evo()
 plot_birth_met_evo()
 plot_hmr_phys_comp(flares_snaps[-1])
+plot_gashmr_phys_comp(flares_snaps[-1])
 
 # Plot EVERYTHING
 for snap in flares_snaps:
