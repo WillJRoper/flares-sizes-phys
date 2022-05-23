@@ -25,7 +25,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     gs = gridspec.GridSpec(nrows=2, ncols=1, height_ratios=[10, 5])
     gs.update(wspace=0.0, hspace=0.0)
     ax = fig.add_subplot(gs[0, 0])
-    ax1.fig.add_subplot(gs[1, 0])
+    ax1 = fig.add_subplot(gs[1, 0])
 
     # Remove anomalous values
     okinds = np.ones(mets.size, dtype=bool)
