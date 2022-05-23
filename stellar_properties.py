@@ -23,7 +23,6 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     # Set up the plot
     fig = plt.figure(figsize=(4, 3.5))
     ax = fig.add_subplot(111)
-    ax.semilogy()
 
     # Remove anomalous values
     okinds = np.ones(mets.size, dtype=bool)
