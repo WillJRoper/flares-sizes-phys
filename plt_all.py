@@ -100,8 +100,6 @@ for snap in flares_snaps:
         plot_stellar_density_grid(stellar_data, snap, weight_norm)
     except ValueError as e:
         print("Stellar density grid:", e)
-    gas_data = plot_stellar_gas_hmr_comp(
-        stellar_data, gas_data, snap, weight_norm)
 
 # Plot properties that are done at singular redshifts
 stellar_data = plot_birth_den(
@@ -111,5 +109,7 @@ plot_birth_den_vs_met(stellar_data, flares_snaps[-1], weight_norm, path)
 stellar_data = plot_gal_birth_den_vs_met(
     stellar_data, flares_snaps[-1], weight_norm, path)
 plot_stellar_hmr_withcut(stellar_data, flares_snaps[-1], weight_norm)
+gas_data = plot_stellar_gas_hmr_comp(
+    stellar_data, gas_data, flares_snaps[-1], weight_norm)
 # for snap in eagle_snaps:
 #     plot_stellar_hmr("EAGLE", [0, ], snap, weight_norm)
