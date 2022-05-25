@@ -242,7 +242,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     ncols = 2
     fig = plt.figure(figsize=(2.5 * ncols, 2.5))
     gs = gridspec.GridSpec(nrows=1, ncols=ncols + 1,
-                           width_ratios=[20, ] * ncols + [1, ])
+                           width_ratios=[20, ] * ncols + [1, 1, ])
     gs.update(wspace=0.0, hspace=0.0)
     ax = fig.add_subplot(gs[0])
     ax1 = fig.add_subplot(gs[1])
@@ -266,17 +266,11 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
                     norm=weight_norm, linewidths=0.2, cmap='Greys')
 
     # Plot stellar_data
-    im = ax1.hexbin(m_age[com_pop], g_hmrs[com_pop], gridsize=50,
+    im = ax1.hexbin(s_hmrs, g_hmrs, gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
-                    C=w[com_pop], extent=[-1, 1.3, -1, 1.3],
-                    reduce_C_function=np.sum, xscale='log', yscale='log',
-                    norm=weight_norm, linewidths=0.2, cmap='viridis')
-    # Plot stellar_data
-    im1 = ax1.hexbin(m_age[diff_pop], g_hmrs[diff_pop], gridsize=50,
-                     mincnt=np.min(w) - (0.1 * np.min(w)),
-                     C=w[diff_pop], extent=[-1, 1.3, -1, 1.3],
-                     reduce_C_function=np.sum, xscale='log', yscale='log',
-                     norm=weight_norm, linewidths=0.2, cmap='Greys')
+                    C=m_age, extent=[-1, 1.3, -1, 1.3],
+                    reduce_C_function=np.mean, xscale='log', yscale='log',
+                    linewidths=0.2, cmap='viridis')
 
     # Set axes y lims
     ax.set_ylim(10**-1.1, 10**1.5)
@@ -285,14 +279,14 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     # Label axes
     ax.set_ylabel("$R_{\mathrm{gas}} / [\mathrm{pkpc}]$")
     ax.set_xlabel("$R_{\star} / [\mathrm{pkpc}]$")
-    ax1.set_xlabel("$Age / [\mathrm{Myr}]$")
+    ax1.set_xlabel("$R_{\star} / [\mathrm{pkpc}]$")
 
     # Remove unused axes
     ax1.tick_params("y", left=False, right=False, labelleft=False,
                     labelright=False)
 
     cbar = fig.colorbar(im, cax=cax)
-    cbar.set_label("$\sum w_{i}$")
+    cbar.set_label("$Age / [\mathrm{Myr}]$")
 
     # Save figure
     mkdir("plots/stellar_gas_hmr_comp/")
