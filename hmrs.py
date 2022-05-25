@@ -267,17 +267,21 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
                     norm=weight_norm, linewidths=0.2, cmap='Greys')
 
     # Plot stellar_data
-    im = ax.hexbin(m_age[com_pop], g_hmrs[com_pop], gridsize=50,
-                   mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w[com_pop], extent=[-1, 1.3, -1, 1.3],
-                   reduce_C_function=np.sum, xscale='log', yscale='log',
-                   norm=weight_norm, linewidths=0.2, cmap='viridis')
-    # Plot stellar_data
-    im1 = ax.hexbin(m_age[diff_pop], g_hmrs[diff_pop], gridsize=50,
+    im = ax1.hexbin(m_age[com_pop], g_hmrs[com_pop], gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
-                    C=w[diff_pop], extent=[-1, 1.3, -1, 1.3],
+                    C=w[com_pop], extent=[-1, 1.3, -1, 1.3],
                     reduce_C_function=np.sum, xscale='log', yscale='log',
-                    norm=weight_norm, linewidths=0.2, cmap='Greys')
+                    norm=weight_norm, linewidths=0.2, cmap='viridis')
+    # Plot stellar_data
+    im1 = ax1.hexbin(m_age[diff_pop], g_hmrs[diff_pop], gridsize=50,
+                     mincnt=np.min(w) - (0.1 * np.min(w)),
+                     C=w[diff_pop], extent=[-1, 1.3, -1, 1.3],
+                     reduce_C_function=np.sum, xscale='log', yscale='log',
+                     norm=weight_norm, linewidths=0.2, cmap='Greys')
+
+    # Set axes y lims
+    ax.set_ylim(10**-1.1, 10**1.2)
+    ax1.set_ylim(10**-1.1, 10**1.2)
 
     # Label axes
     ax.set_ylabel("$R_{\mathrm{gas}} / [\mathrm{pkpc}]$")
