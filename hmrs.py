@@ -180,10 +180,9 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
 
     # Define arrays to store computations
     s_hmrs = stellar_data["HMRs"]
-    s_den_hmr = stellar_data["HMR_Density"]
     g_hmrs = np.zeros(len(gas_data["begin"]))
     w = np.zeros(len(stellar_data["begin"]))
-    den_hmr = stellar_data["gal_birth_density"]
+    s_den_hmr = stellar_data["gal_birth_density"]
     m_age = np.zeros(len(stellar_data["begin"]))
 
     # Loop over galaxies and extract their weighting
@@ -280,8 +279,8 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
                      norm=weight_norm, linewidths=0.2, cmap='Greys')
 
     # Set axes y lims
-    ax.set_ylim(10**-1.1, 10**1.2)
-    ax1.set_ylim(10**-1.1, 10**1.2)
+    ax.set_ylim(10**-1.1, 10**1.5)
+    ax1.set_ylim(10**-1.1, 10**1.5)
 
     # Label axes
     ax.set_ylabel("$R_{\mathrm{gas}} / [\mathrm{pkpc}]$")
