@@ -206,7 +206,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
         sl = stellar_data["Galaxy,S_Length"][igal]
 
         # Get this galaxy's gas_data
-        sapp = gas_data["Particle/Apertures/Star,30"][sb: sb + sl]
+        sapp = stellar_data["Particle/Apertures/Star,30"][sb: sb + sl]
         app = gas_data["Particle/Apertures/Gas,30"][b: b + l]
         cop = gas_data["Galaxy,COP"][igal]
         ms = gas_data["Particle,G_Mass"][b: b + l][app]
