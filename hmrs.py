@@ -202,13 +202,17 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
         if l < 100:
             continue
 
+        sb = stellar_data["begin"][igal]
+        sl = stellar_data["Galaxy,S_Length"][igal]
+
         # Get this galaxy's gas_data
+        sapp = gas_data["Particle/Apertures/Star,30"][sb: sb + sl]
         app = gas_data["Particle/Apertures/Gas,30"][b: b + l]
         cop = gas_data["Galaxy,COP"][igal]
         ms = gas_data["Particle,G_Mass"][b: b + l][app]
         pos = gas_data["Particle,G_Coordinates"][b: b + l, :][app]
-        age = stellar_data["Particle,S_Age"][b: b + l][app]
-        ini_ms = stellar_data["Particle,S_MassInitial"][b: b + l][app]
+        age = stellar_data["Particle,S_Age"][sb: sb + sl][sapp]
+        ini_ms = stellar_data["Particle,S_MassInitial"][sb: sb + sl][sapp]
 
         # Compute particle radii
         rs = calc_3drad(pos - cop)
