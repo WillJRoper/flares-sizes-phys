@@ -242,7 +242,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     ncols = 2
     fig = plt.figure(figsize=(2.5 * ncols, 2.5))
     gs = gridspec.GridSpec(nrows=1, ncols=ncols + 1,
-                           width_ratios=[20, ] * ncols + [1, 1, ])
+                           width_ratios=[20, ] * ncols + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
     ax = fig.add_subplot(gs[0])
     ax1 = fig.add_subplot(gs[1])
