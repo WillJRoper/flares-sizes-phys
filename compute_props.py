@@ -199,9 +199,9 @@ def compute_stellar_props(stellar_data, snap, path):
         if np.sum(ini_mass[okinds]) == 0:
             continue
         gal_bdens[igal] = np.average(
-            pdens[b: e][okinds], weights=ini_mass[okinds])
+            pdens[okinds], weights=ini_mass[okinds])
         gal_bmet[igal] = np.average(
-            pmets[b: e][okinds], weights=ini_mass[okinds])
+            pmets[okinds], weights=ini_mass[okinds])
         gal_w[igal] = w[b: e][0]
 
     # Export this data
