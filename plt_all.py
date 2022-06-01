@@ -25,9 +25,10 @@ for reg in range(0, 40):
         regions.append(str(reg))
 
 # Define FLARES snapshots
-flares_snaps = ['003_z012p000', '004_z011p000', '005_z010p000',
-                '006_z009p000', '007_z008p000', '008_z007p000',
-                '009_z006p000', '010_z005p000']
+# flares_snaps = ['003_z012p000', '004_z011p000', '005_z010p000',
+#                 '006_z009p000', '007_z008p000', '008_z007p000',
+#                 '009_z006p000', '010_z005p000']
+flares_snaps = ['009_z006p000', '010_z005p000']
 
 # Define EAGLE snapshots
 pre_snaps = ['000_z020p000', '003_z008p988', '006_z005p971', '009_z004p485',
