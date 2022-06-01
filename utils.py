@@ -207,7 +207,7 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', length_key="Galaxy,S_Length
     return data
 
 
-def get_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
+def get_snap_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
     # Load weights
     df = pd.read_csv('../weight_files/weights_grid.txt')
     weights = np.array(df['weights'])

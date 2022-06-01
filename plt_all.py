@@ -7,7 +7,6 @@ from stellar_properties import plot_birth_met, plot_birth_den
 from stellar_properties import plot_birth_den_vs_met, plot_gal_birth_den_vs_met
 from phys_comp import plot_birth_density_evo, plot_birth_met_evo
 from phys_comp import plot_hmr_phys_comp, plot_gashmr_phys_comp
-from utils import get_data
 from compute_props import get_data
 
 

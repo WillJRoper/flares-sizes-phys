@@ -3,6 +3,7 @@ import h5py
 import eagle_IO.eagle_IO as eagle_io
 from utils import age2z, calc_3drad, calc_light_mass_rad
 from unyt import mh, cm, Gyr, g, Msun, Mpc, kpc
+from utils import get_data
 
 
 def compute_stellar_props(stellar_data, snap, path):
@@ -350,10 +351,10 @@ def get_data(snaps, regions, stellar_data_fields, gas_data_fields, path):
     for snap in snaps:
 
         # Get the data
-        stellar_data = get_data("FLARES", regions, snap, stellar_data_fields,
-                                length_key="Galaxy,S_Length")
-        gas_data = get_data("FLARES", regions, snap, gas_data_fields,
-                            length_key="Galaxy,G_Length")
+        stellar_data = get_snap_data("FLARES", regions, snap, stellar_data_fields,
+                                     length_key="Galaxy,S_Length")
+        gas_data = get_snap_data("FLARES", regions, snap, gas_data_fields,
+                                 length_key="Galaxy,G_Length")
 
         # Compute the derived quantities and store the data
         data["stellar"][snap] = compute_stellar_props(stellar_data, snap, path)
