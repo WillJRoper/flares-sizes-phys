@@ -3,7 +3,7 @@ import h5py
 import eagle_IO.eagle_IO as eagle_io
 from utils import age2z, calc_3drad, calc_light_mass_rad
 from unyt import mh, cm, Gyr, g, Msun, Mpc, kpc
-from utils import get_data
+from utils import get_snap_data
 
 
 def compute_stellar_props(stellar_data, snap, path):
