@@ -2,7 +2,6 @@ import numpy as np
 from matplotlib.colors import LogNorm
 
 from hmrs import plot_stellar_hmr, plot_stellar_gas_hmr_comp
-from density import plot_stellar_density
 from density import plot_stellar_density_grid
 from stellar_properties import plot_birth_met, plot_birth_den
 from stellar_properties import plot_birth_den_vs_met, plot_gal_birth_den_vs_met
