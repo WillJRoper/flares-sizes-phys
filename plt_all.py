@@ -71,7 +71,8 @@ for s in pre_snaps:
 eagle_snaps = list(snaps)
 
 # Get the data we need
-data = get_data(flares_snaps, regions, stellar_data_fields, gas_data_fields)
+data = get_data(flares_snaps, regions, stellar_data_fields, gas_data_fields,
+                path)
 
 # Plot the physics variation plots
 plot_birth_density_evo()
