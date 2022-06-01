@@ -10,6 +10,7 @@ from stellar_properties import plot_birth_den_vs_met, plot_gal_birth_den_vs_met
 from phys_comp import plot_birth_density_evo, plot_birth_met_evo
 from phys_comp import plot_hmr_phys_comp, plot_gashmr_phys_comp
 from utils import get_data
+from compute_props import get_data
 
 
 # Define the norm
@@ -42,6 +43,27 @@ pre_snaps = ['000_z020p000', '003_z008p988', '006_z005p971', '009_z004p485',
              '014_z002p237', '017_z001p487', '020_z000p865', '023_z000p503',
              '026_z000p183']
 
+
+# Define data fields
+stellar_data_fields = ("Particle,S_Mass", "Particle,S_Coordinates",
+                       "Particle/Apertures/Star,1",
+                       "Particle/Apertures/Star,5",
+                       "Particle/Apertures/Star,10",
+                       "Particle/Apertures/Star,30",
+                       "Particle,S_Age",
+                       "Particle,S_MassInitial",
+                       "Particle,S_Z_smooth",
+                       "Particle,S_Index",
+                       "Galaxy,COP",
+                       "Galaxy,S_Length", "Galaxy,GroupNumber",
+                       "Galaxy,SubGroupNumber")
+
+# Define data fields
+gas_data_fields = ("Particle,G_Mass", "Particle,G_Coordinates",
+                   "Particle/Apertures/Gas,30", "Galaxy,COP",
+                   "Galaxy,G_Length", "Galaxy,GroupNumber",
+                   "Galaxy,SubGroupNumber")
+
 # Sort EAGLE snapshots
 snaps = np.zeros(len(pre_snaps), dtype=object)
 for s in pre_snaps:
@@ -50,66 +72,44 @@ for s in pre_snaps:
 
 eagle_snaps = list(snaps)
 
+# Get the data we need
+data = get_data(flares_snaps, regions, stellar_data_fields, gas_data_fields)
+
 # Plot the physics variation plots
 plot_birth_density_evo()
 plot_birth_met_evo()
 plot_hmr_phys_comp(flares_snaps[-1])
 plot_gashmr_phys_comp(flares_snaps[-1])
 
-# Plot EVERYTHING
+# Plot EVERYTHING else
 for snap in flares_snaps:
+
+    print("================ Plotting snap %s ================" % snap)
+
+    data["stellar"][snap]["density_cut"] = 10 ** 2.5
 
     try:
         plot_hmr_phys_comp(snap)
     except ValueError:
         continue
 
-    # Define data fields
-    stellar_data_fields = ("Particle,S_Mass", "Particle,S_Coordinates",
-                           "Particle/Apertures/Star,1",
-                           "Particle/Apertures/Star,5",
-                           "Particle/Apertures/Star,10",
-                           "Particle/Apertures/Star,30",
-                           "Particle,S_Age",
-                           "Particle,S_MassInitial",
-                           "Particle,S_Z_smooth",
-                           "Particle,S_Index",
-                           "Galaxy,COP",
-                           "Galaxy,S_Length", "Galaxy,GroupNumber",
-                           "Galaxy,SubGroupNumber")
-
-    # Define data fields
-    gas_data_fields = ("Particle,G_Mass", "Particle,G_Coordinates",
-                       "Particle/Apertures/Gas,30", "Galaxy,COP",
-                       "Galaxy,G_Length", "Galaxy,GroupNumber",
-                       "Galaxy,SubGroupNumber")
-
-    # Get the data
-    stellar_data = get_data("FLARES", regions, snap, stellar_data_fields,
-                            length_key="Galaxy,S_Length")
-    gas_data = get_data("FLARES", regions, snap, gas_data_fields,
-                        length_key="Galaxy,G_Length")
-
-    print("================ Plotting snap %s ================" % snap)
-    stellar_data = plot_stellar_hmr(stellar_data, snap, weight_norm)
+    plot_stellar_hmr(data["stellar"][snap], snap, weight_norm)
     try:
-        plot_stellar_density(stellar_data, snap, weight_norm)
-    except ValueError as e:
-        print("Stellar density:", e)
-    try:
-        plot_stellar_density_grid(stellar_data, snap, weight_norm)
+        plot_stellar_density_grid(data["stellar"][snap], snap, weight_norm)
     except ValueError as e:
         print("Stellar density grid:", e)
+    plot_stellar_gas_hmr_comp(data["stellar"][snap], data["gas"][snap],
+                              snap, weight_norm)
 
 # Plot properties that are done at singular redshifts
+snap = flares_snaps[-1]
 stellar_data = plot_birth_den(
-    stellar_data, flares_snaps[-1], weight_norm, path)
-plot_birth_met(stellar_data, flares_snaps[-1], weight_norm, path)
-plot_birth_den_vs_met(stellar_data, flares_snaps[-1], weight_norm, path)
+    data["stellar"][snap], snap, weight_norm, path)
+plot_birth_met(data["stellar"][snap], snap, weight_norm, path)
+plot_birth_den_vs_met(data["stellar"][snap], snap, weight_norm, path)
 stellar_data = plot_gal_birth_den_vs_met(
-    stellar_data, flares_snaps[-1], weight_norm, path)
-plot_stellar_hmr_withcut(stellar_data, flares_snaps[-1], weight_norm)
-gas_data = plot_stellar_gas_hmr_comp(
-    stellar_data, gas_data, flares_snaps[-1], weight_norm)
+    data["stellar"][snap], snap, weight_norm, path)
+plot_stellar_hmr_withcut(data["stellar"][snap], snap, weight_norm)
+
 # for snap in eagle_snaps:
 #     plot_stellar_hmr("EAGLE", [0, ], snap, weight_norm)
