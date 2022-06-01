@@ -22,10 +22,12 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
     # Set up the plot
     fig = plt.figure(figsize=(4, 3.5))
-    gs = gridspec.GridSpec(nrows=2, ncols=1, height_ratios=[10, 5])
+    gs = gridspec.GridSpec(nrows=2, ncols=1 + 1,
+                           height_ratios=[10, 5], width_ratios=[20, 1])
     gs.update(wspace=0.0, hspace=0.0)
     ax = fig.add_subplot(gs[0, 0])
     ax1 = fig.add_subplot(gs[1, 0])
+    cax = fig.add_subplot(gs[:, 1])
 
     # Remove anomalous values
     okinds = np.ones(mets.size, dtype=bool)
@@ -50,7 +52,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     ax.set_ylabel(r"$Z_{\mathrm{birth}} + 1$")
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")
 
-    cbar = fig.colorbar(im)
+    cbar = fig.colorbar(im, cax=cax)
     cbar.set_label("$\sum w_{i}$")
 
     ax1.legend(loc='upper center',
