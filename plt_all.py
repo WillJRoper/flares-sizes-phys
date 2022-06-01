@@ -56,6 +56,7 @@ stellar_data_fields = ("Particle,S_Mass", "Particle,S_Coordinates",
 
 # Define data fields
 gas_data_fields = ("Particle,G_Mass", "Particle,G_Coordinates",
+                   "Particle,G_Z_smooth",
                    "Particle/Apertures/Gas,30", "Galaxy,COP",
                    "Galaxy,G_Length", "Galaxy,GroupNumber",
                    "Galaxy,SubGroupNumber")
