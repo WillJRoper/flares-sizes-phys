@@ -221,11 +221,11 @@ def compute_gas_props(gas_data, snap, path):
     w = np.zeros(len(gas_data["begin"]))
     radii = np.zeros(len(gas_data["Particle,G_Mass"]))
     den_r = {key: np.zeros(len(gas_data["begin"]))
-             for key in [0.1, 0.5, 1, "hmr"]}
+             for key in [0.1, 0.5, 1, 30, "hmr"]}
     mass_r = {key: np.zeros(len(gas_data["begin"]))
-              for key in [0.1, 0.5, 1, "hmr"]}
+              for key in [0.1, 0.5, 1, 30,  "hmr"]}
     met_r = {key: np.zeros(len(gas_data["begin"]))
-             for key in [0.1, 0.5, 1, "hmr"]}
+             for key in [0.1, 0.5, 1, 30, "hmr"]}
 
     # Loop over galaxies and calculate properties
     for (igal, b), l in zip(enumerate(gas_data["begin"]),
