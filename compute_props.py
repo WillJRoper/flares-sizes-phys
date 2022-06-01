@@ -226,8 +226,6 @@ def compute_gas_props(gas_data, snap, path):
              for key in [0.1, 0.5, 1, "hmr"]}
     mass_r = {key: np.zeros(len(gas_data["begin"]))
               for key in [0.1, 0.5, 1, "hmr"]}
-    ages_r = {key: np.zeros(len(gas_data["begin"]))
-              for key in [0.1, 0.5, 1, "hmr"]}
     met_r = {key: np.zeros(len(gas_data["begin"]))
              for key in [0.1, 0.5, 1, "hmr"]}
 
@@ -243,7 +241,6 @@ def compute_gas_props(gas_data, snap, path):
         cop = gas_data["Galaxy,COP"][igal]
         pos = gas_data["Particle,G_Coordinates"][b: b + l, :][app]
         ms = gas_data["Particle,G_Mass"][b: b + l][app]
-        ages = gas_data["Particle,G_Age"][b: b + l][app]
         mets = gas_data["Particle,G_Z_smooth"][b: b + l][app]
 
         # Compute particle radii
@@ -257,8 +254,6 @@ def compute_gas_props(gas_data, snap, path):
         den_r["hmr"][igal] = (np.sum(ms[rs <= hmr]) * 10 ** 10
                               / (4 / 3 * np.pi * hmr ** 3))
         mass_r["hmr"][igal] = np.sum(ms[rs <= hmr]) * 10 ** 10
-        ages_r["hmr"][igal] = np.average(ages[rs < hmr],
-                                         weights=ms[rs < hmr]) * 10**3
         met_r["hmr"][igal] = np.average(mets[rs < hmr],
                                         weights=ms[rs < hmr])
 
@@ -266,8 +261,6 @@ def compute_gas_props(gas_data, snap, path):
         for r in [0.1, 0.5, 1]:
             if np.sum(ms[rs <= r]) > 0:
                 mass_r[r][igal] = np.sum(ms[rs <= r]) * 10 ** 10
-                ages_r[r][igal] = np.average(
-                    ages[rs < r], weights=ms[rs < r]) * 10**3
                 met_r[r][igal] = np.average(mets[rs < r],
                                             weights=ms[rs < r])
                 den_r[r][igal] = (mass_r[r][igal] / (4 / 3 * np.pi * r ** 3)
@@ -285,7 +278,6 @@ def compute_gas_props(gas_data, snap, path):
     gas_data["weight"] = w
     gas_data["apertures"] = {}
     gas_data["apertures"]["mass"] = mass_r
-    gas_data["apertures"]["age"] = ages_r
     gas_data["apertures"]["metal"] = met_r
     gas_data["apertures"]["density"] = den_r
 
