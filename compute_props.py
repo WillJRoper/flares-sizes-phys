@@ -191,15 +191,17 @@ def compute_stellar_props(stellar_data, snap, path):
         ini_mass = stellar_data["Particle,S_MassInitial"][b: e][app]
         hmr = stellar_data["HMRs"][igal]
         rs = radii[b: e][app]
+        pdens = dens[b: e][app]
+        pmets = mets[b: e][app]
 
         # Calculate initial mass weighted properties
-        okinds = np.logical_and(rs != 0, rs <= hmr)
+        okinds = rs != 0
         if np.sum(ini_mass[okinds]) == 0:
             continue
         gal_bdens[igal] = np.average(
-            dens[b: e][okinds], weights=ini_mass[okinds])
+            pdens[b: e][okinds], weights=ini_mass[okinds])
         gal_bmet[igal] = np.average(
-            mets[b: e][okinds], weights=ini_mass[okinds])
+            pmets[b: e][okinds], weights=ini_mass[okinds])
         gal_w[igal] = w[b: e][0]
 
     # Export this data
