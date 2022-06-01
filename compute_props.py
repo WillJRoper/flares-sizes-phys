@@ -29,9 +29,6 @@ def compute_stellar_props(stellar_data, snap, path):
     for (igal, b), l in zip(enumerate(stellar_data["begin"]),
                             stellar_data["Galaxy,S_Length"]):
 
-        if l < 100:
-            continue
-
         # Get this galaxy's stellar_data
         app = stellar_data["Particle/Apertures/Star,30"][b: b + l]
         cop = stellar_data["Galaxy,COP"][igal]
@@ -49,13 +46,14 @@ def compute_stellar_props(stellar_data, snap, path):
         hmr = calc_light_mass_rad(rs, ms, radii_frac=0.5)
 
         # Compute stellar density within HMR
-        den_r["hmr"][igal] = (np.sum(ms[rs <= hmr]) * 10 ** 10
-                              / (4 / 3 * np.pi * hmr ** 3))
-        mass_r["hmr"][igal] = np.sum(ms[rs <= hmr]) * 10 ** 10
-        ages_r["hmr"][igal] = np.average(ages[rs < hmr],
-                                         weights=ini_ms[rs < hmr]) * 10**3
-        met_r["hmr"][igal] = np.average(mets[rs < hmr],
-                                        weights=ini_ms[rs < hmr])
+        if np.sum(ms[rs <= hmr]) > 0:
+            den_r["hmr"][igal] = (np.sum(ms[rs <= hmr]) * 10 ** 10
+                                  / (4 / 3 * np.pi * hmr ** 3))
+            mass_r["hmr"][igal] = np.sum(ms[rs <= hmr]) * 10 ** 10
+            ages_r["hmr"][igal] = np.average(ages[rs < hmr],
+                                             weights=ini_ms[rs < hmr]) * 10**3
+            met_r["hmr"][igal] = np.average(mets[rs < hmr],
+                                            weights=ini_ms[rs < hmr])
 
         # Compute aperture quantities
         for r in [0.1, 0.5, 1, 30]:
@@ -233,9 +231,6 @@ def compute_gas_props(gas_data, snap, path):
     for (igal, b), l in zip(enumerate(gas_data["begin"]),
                             gas_data["Galaxy,G_Length"]):
 
-        if l < 100:
-            continue
-
         # Get this galaxy's gas_data
         app = gas_data["Particle/Apertures/Gas,30"][b: b + l]
         cop = gas_data["Galaxy,COP"][igal]
@@ -251,11 +246,12 @@ def compute_gas_props(gas_data, snap, path):
         hmr = calc_light_mass_rad(rs, ms, radii_frac=0.5)
 
         # Compute gas density within HMR
-        den_r["hmr"][igal] = (np.sum(ms[rs <= hmr]) * 10 ** 10
-                              / (4 / 3 * np.pi * hmr ** 3))
-        mass_r["hmr"][igal] = np.sum(ms[rs <= hmr]) * 10 ** 10
-        met_r["hmr"][igal] = np.average(mets[rs < hmr],
-                                        weights=ms[rs < hmr])
+        if np.sum(ms[rs <= hmr]) > 0:
+            den_r["hmr"][igal] = (np.sum(ms[rs <= hmr]) * 10 ** 10
+                                  / (4 / 3 * np.pi * hmr ** 3))
+            mass_r["hmr"][igal] = np.sum(ms[rs <= hmr]) * 10 ** 10
+            met_r["hmr"][igal] = np.average(mets[rs < hmr],
+                                            weights=ms[rs < hmr])
 
         # Compute aperture quantities
         for r in [0.1, 0.5, 1]:
