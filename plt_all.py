@@ -4,7 +4,8 @@ from matplotlib.colors import LogNorm
 from hmrs import plot_stellar_hmr, plot_stellar_gas_hmr_comp
 from density import plot_stellar_density_grid
 from stellar_properties import plot_birth_met, plot_birth_den
-from stellar_properties import plot_birth_den_vs_met, plot_gal_birth_den_vs_met
+from stellar_properties import plot_eagle_birth_den_vs_met
+from stellar_properties import plot_gal_birth_den_vs_met
 from phys_comp import plot_birth_density_evo, plot_birth_met_evo
 from phys_comp import plot_hmr_phys_comp, plot_gashmr_phys_comp
 from compute_props import get_data
@@ -28,7 +29,7 @@ for reg in range(0, 40):
 # flares_snaps = ['003_z012p000', '004_z011p000', '005_z010p000',
 #                 '006_z009p000', '007_z008p000', '008_z007p000',
 #                 '009_z006p000', '010_z005p000']
-flares_snaps = ['009_z006p000', '010_z005p000']
+flares_snaps = ['010_z005p000', ]
 
 # Define EAGLE snapshots
 pre_snaps = ['000_z020p000', '003_z008p988', '006_z005p971', '009_z004p485',
@@ -105,7 +106,7 @@ snap = flares_snaps[-1]
 stellar_data = plot_birth_den(
     data["stellar"][snap], snap, weight_norm, path)
 plot_birth_met(data["stellar"][snap], snap, weight_norm, path)
-plot_birth_den_vs_met(data["stellar"][snap], snap, weight_norm, path)
+plot_eagle_birth_den_vs_met(data["stellar"][snap], snap, weight_norm, path)
 stellar_data = plot_gal_birth_den_vs_met(
     data["stellar"][snap], snap, weight_norm, path)
 
