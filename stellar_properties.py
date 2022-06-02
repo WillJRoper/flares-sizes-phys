@@ -350,7 +350,7 @@ def plot_subgrid_birth_den_vs_met():
 
     # Save figure
     mkdir("plots/stellar_formprops/")
-    fig.savefig("plots/stellar_formprops/stellar_birthden_vs_met_subgrid_%s.png" % snap,
+    fig.savefig("plots/stellar_formprops/stellar_birthden_vs_met_subgrid.png",
                 bbox_inches="tight")
 
 
