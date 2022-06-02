@@ -267,6 +267,86 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
                 bbox_inches="tight")
 
 
+def plot_subgrid_birth_den_vs_met():
+
+    # Set up plot
+    fig = plt.figure(figsize=(2.5, 2.5))
+    ax = fig.add_subplot(111)
+    ax.loglog()
+
+    for fmax in [3, 4, 5, 6]:
+
+        # Define EAGLE subgrid  parameters
+        parameters = {"f_th,min": 0.3,
+                      "f_th,max": fmax,
+                      "n_Z": 1.0,
+                      "n_n": 1.0,
+                      "Z_pivot": 0.1 * 0.012,
+                      "n_pivot": 0.67}
+
+        star_formation_parameters = {"threshold_Z0": 0.002,
+                                     "threshold_n0": 0.1,
+                                     "slope": -0.64}
+
+        number_of_bins = 128
+
+        # Constants; these could be put in the parameter file but are
+        # rarely changed
+        birth_density_bins = np.logspace(-2.9, 6.8, number_of_bins)
+        metal_mass_fraction_bins = np.logspace(-5.9, 0, number_of_bins)
+
+        # Now need to make background grid of f_th.
+        birth_density_grid, metal_mass_fraction_grid = np.meshgrid(
+            0.5 * (birth_density_bins[1:] + birth_density_bins[:-1]),
+            0.5 * (metal_mass_fraction_bins[1:] + metal_mass_fraction_bins[:-1]))
+
+        f_th_grid = parameters["f_th,min"] + (parameters["f_th,max"]
+                                              - parameters["f_th,min"]) / (
+                                                  1.0
+                                                  + (metal_mass_fraction_grid /
+                                                     parameters["Z_pivot"]) ** parameters["n_Z"]
+                                                  * (birth_density_grid / parameters["n_pivot"]) ** (-parameters["n_n"])
+        )
+
+        cs = ax.contour(birth_density_bins, metal_mass_fraction_bins,
+                              f_th_grid, levels=[0.3, fmax, ],
+                              cmap="viridis", vmin=0, vmax=10)
+
+        # Define labels dict
+        fmt = {}
+        for l, s in zip(cs.levels, ["$f_{\mathrm{th,max}}=0.3", "$f_{\mathrm{th,max}}=%.1f" % fmax, ]):
+            fmt[l] = s
+
+       # Label contours
+       ax.clabel(cs, cs.levels, inline=True, fmt=fmt, fontsize=10)
+
+    for slope in [-0.64, 0]:
+
+        star_formation_parameters = {"threshold_Z0": 0.002,
+                                     "threshold_n0": 0.1,
+                                     "slope": slope}
+
+        # Add line showing SF law
+        sf_threshold_density = star_formation_parameters["threshold_n0"] * \
+            (metal_mass_fraction_bins
+             / star_formation_parameters["threshold_Z0"]) \
+            ** (star_formation_parameters["slope"])
+        ax.plot(sf_threshold_density, metal_mass_fraction_bins,
+                linestyle="dashed", label="SF threshold: slope=%.2f" % slope)
+
+    ax.set_xlabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
+
+    # Label y axis
+    ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
+
+    ax.legend()
+
+    # Save figure
+    mkdir("plots/stellar_formprops/")
+    fig.savefig("plots/stellar_formprops/stellar_birthden_vs_met_subgrid_%s.png" % snap,
+                bbox_inches="tight")
+
+
 def plot_eagle_birth_den_vs_met(stellar_data, snap, weight_norm, path):
 
     # Define redshift bins
