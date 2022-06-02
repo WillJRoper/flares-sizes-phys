@@ -32,20 +32,21 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
     # Set up the plotd
     fig = plt.figure(figsize=(4, 3.5))
-    gs = gridspec.GridSpec(nrows=2, ncols=1 + 1,
-                           height_ratios=[10, 5], width_ratios=[20, 1])
-    gs.update(wspace=0.0, hspace=0.0)
-    ax = fig.add_subplot(gs[0, 0])
-    ax1 = fig.add_subplot(gs[1, 0])
-    cax = fig.add_subplot(gs[:, 1])
+    # gs = gridspec.GridSpec(nrows=2, ncols=1 + 1,
+    #                        height_ratios=[10, 5], width_ratios=[20, 1])
+    # gs.update(wspace=0.0, hspace=0.0)
+    # ax = fig.add_subplot(gs[0, 0])
+    # ax1 = fig.add_subplot(gs[1, 0])
+    # cax = fig.add_subplot(gs[:, 1])
+    ax = fig.add_subplot(111)
 
-    im = ax.hexbin(np.concatenate((zs, eagle_zs)),
-                   np.concatenate((mets, eagle_mets)), gridsize=50,
-                   mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=np.concatenate((w, np.ones(eagle_zs.size))),
-                   norm=LogNorm(),
-                   reduce_C_function=np.sum, linewidths=0.2,
-                   cmap='viridis')
+    # im = ax.hexbin(np.concatenate((zs, eagle_zs)),
+    #                np.concatenate((mets, eagle_mets)), gridsize=50,
+    #                mincnt=np.min(w) - (0.1 * np.min(w)),
+    #                C=np.concatenate((w, np.ones(eagle_zs.size))),
+    #                norm=LogNorm(),
+    #                reduce_C_function=np.sum, linewidths=0.2,
+    #                cmap='viridis')
 
     # Loop over overdensity bins and plot median curves
     for i in range(ovden_bins[:-1].size):
@@ -62,15 +63,15 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
                      lab=r"EAGLE REF", color=None)
 
     ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
-    ax1.set_ylabel(r"$Z_{\mathrm{birth}}$")
+    # ax1.set_ylabel(r"$Z_{\mathrm{birth}}$")
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")
 
-    cbar = fig.colorbar(im, cax=cax)
-    cbar.set_label("$\sum w_{i}$")
+    # cbar = fig.colorbar(im, cax=cax)
+    # cbar.set_label("$\sum w_{i}$")
 
-    ax1.legend(loc='upper center',
-               bbox_to_anchor=(0.5, -0.2),
-               fancybox=True, ncol=2)
+    ax.legend(loc='upper center',
+              bbox_to_anchor=(0.5, -0.2),
+              fancybox=True, ncol=2)
 
     # Save figure
     mkdir("plots/stellar_evo/")
@@ -104,20 +105,20 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     fig = plt.figure(figsize=(4, 3.5))
     ax = fig.add_subplot(111)
 
-    # Remove anomalous values
-    okinds = np.logical_and(zs > 0, dens > 0)
-    eagle_okinds = np.logical_and(eagle_zs > 0, eagle_dens > 0)
+    # # Remove anomalous values
+    # okinds = np.logical_and(zs > 0, dens > 0)
+    # eagle_okinds = np.logical_and(eagle_zs > 0, eagle_dens > 0)
 
-    im = ax.hexbin(np.concatenate((zs[okinds], eagle_zs[eagle_okinds])),
-                   np.concatenate((dens[okinds], eagle_dens[eagle_okinds])),
-                   gridsize=50,
-                   mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=np.concatenate((w[okinds],
-                                     np.ones(eagle_aborn[eagle_okinds].size))),
-                   norm=LogNorm(),
-                   reduce_C_function=np.sum, yscale='log',
-                   linewidths=0.2,
-                   cmap='viridis')
+    # im = ax.hexbin(np.concatenate((zs[okinds], eagle_zs[eagle_okinds])),
+    #                np.concatenate((dens[okinds], eagle_dens[eagle_okinds])),
+    #                gridsize=50,
+    #                mincnt=np.min(w) - (0.1 * np.min(w)),
+    #                C=np.concatenate((w[okinds],
+    #                                  np.ones(eagle_aborn[eagle_okinds].size))),
+    #                norm=LogNorm(),
+    #                reduce_C_function=np.sum, yscale='log',
+    #                linewidths=0.2,
+    #                cmap='viridis')
 
     # Loop over overdensity bins and plot median curves
     for i in range(ovden_bins[:-1].size):
@@ -138,8 +139,8 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     ax.set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")
 
-    cbar = fig.colorbar(im)
-    cbar.set_label("$\sum w_{i}$")
+    # cbar = fig.colorbar(im)
+    # cbar.set_label("$\sum w_{i}$")
 
     ax.legend(loc='upper center',
               bbox_to_anchor=(0.5, -0.2),
