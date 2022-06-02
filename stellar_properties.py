@@ -339,6 +339,10 @@ def plot_subgrid_birth_den_vs_met():
     # Label y axis
     ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
 
+    # Set the axis limits
+    ax.set_xlim(10**-2.9, 10**6.8)
+    ax.set_ylim(10**-5.9, 10**0)
+
     ax.legend()
 
     # Save figure
