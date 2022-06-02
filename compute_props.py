@@ -29,6 +29,10 @@ def compute_stellar_props(stellar_data, snap, path):
     for (igal, b), l in zip(enumerate(stellar_data["begin"]),
                             stellar_data["Galaxy,S_Length"]):
 
+        # Skip small galaxies for now
+        if stellar_data["Galaxy,S_Length"][igal] < 100:
+            continue
+
         # Get this galaxy's stellar_data
         app = stellar_data["Particle/Apertures/Star,30"][b: b + l]
         cop = stellar_data["Galaxy,COP"][igal]
@@ -232,6 +236,10 @@ def compute_gas_props(gas_data, snap, path):
     # Loop over galaxies and calculate properties
     for (igal, b), l in zip(enumerate(gas_data["begin"]),
                             gas_data["Galaxy,G_Length"]):
+
+        # Skip small galaxies for now
+        if stellar_data["Galaxy,S_Length"][igal] < 100:
+            continue
 
         # Get this galaxy's gas_data
         app = gas_data["Particle/Apertures/Gas,30"][b: b + l]
