@@ -288,7 +288,7 @@ def plot_subgrid_birth_den_vs_met():
                                      "threshold_n0": 0.1,
                                      "slope": -0.64}
 
-        number_of_bins = 128
+        number_of_bins = 127
 
         # Constants; these could be put in the parameter file but are
         # rarely changed
