@@ -270,7 +270,7 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
 def plot_subgrid_birth_den_vs_met():
 
     # Set up some variables we need
-    fmaxs = [3, 4, 5, 6]
+    fmaxs = [3, 4, 6, 10]
     ncols = len(fmaxs)
 
     # Set up plot
@@ -289,7 +289,7 @@ def plot_subgrid_birth_den_vs_met():
             axes[i].tick_params("y", left=False, right=False, labelleft=False,
                                 labelright=False)
 
-    for i, fmax in enumerate([3, 4, 5, 6]):
+    for i, fmax in enumerate(fmaxs):
 
         # Define EAGLE subgrid  parameters
         parameters = {"f_th,min": 0.3,
@@ -355,7 +355,7 @@ def plot_subgrid_birth_den_vs_met():
     cbar.set_label(r"$f_\mathrm{th}$")
 
     axes[2].legend(loc='upper center',
-                   bbox_to_anchor=(0.5, -0.2),
+                   bbox_to_anchor=(0.25, -0.2),
                    fancybox=True, ncol=2)
 
     # Save figure
