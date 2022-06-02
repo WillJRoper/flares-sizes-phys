@@ -54,6 +54,8 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
         # Get boolean indices for this bin
         okinds = np.logical_and(part_ovdens < ovden_bins[i + 1],
                                 part_ovdens >= ovden_bins[i])
+        okinds = np.logical_and(np.logical_and(zs > 0, mets > 0),
+                                okinds)
 
         plot_meidan_stat(zs[okinds], mets[okinds], w[okinds], ax,
                          lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
@@ -97,7 +99,8 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
                                       numThreads=8)
     eagle_dens = (eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
                                       "PartType4/BirthDensity",
-                                      numThreads=8) * 10**10
+                                      numThreads=8, noH=True,
+                                      physicalUnits=True) * 10**10
                   * Msun / Mpc ** 3 / mh).to(1 / cm ** 3).value
     eagle_zs = 1 / eagle_aborn - 1
 
@@ -419,7 +422,8 @@ def plot_eagle_birth_den_vs_met(stellar_data, snap, weight_norm, path):
                                      numThreads=8)
     eagle_dens = (eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
                                       "PartType4/BirthDensity",
-                                      numThreads=8) * 10**10
+                                      numThreads=8, noH=True,
+                                      physicalUnits=True) * 10**10
                   * Msun / Mpc ** 3 / mh).to(1 / cm ** 3).value
     eagle_w = np.ones(eagle_dens.size)
 
