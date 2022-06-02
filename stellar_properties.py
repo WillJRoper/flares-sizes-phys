@@ -59,7 +59,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
                          lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
                          % (ovden_bins[i], ovden_bins[i + 1]), color=None)
 
-    plot_meidan_stat(eagle_zs, eagle_mets, np.ones(eagle_mets.size), ax1,
+    plot_meidan_stat(eagle_zs, eagle_mets, np.ones(eagle_mets.size), ax,
                      lab=r"EAGLE REF", color=None)
 
     ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
