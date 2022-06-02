@@ -86,7 +86,7 @@ for snap in flares_snaps:
 
     print("================ Plotting snap %s ================" % snap)
 
-    data["stellar"][snap]["density_cut"] = 10 ** 2.5
+    data["stellar"][snap]["density_cut"] = 10 ** 2.0
 
     try:
         plot_hmr_phys_comp(snap)
