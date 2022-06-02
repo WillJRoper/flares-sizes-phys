@@ -120,6 +120,10 @@ def compute_stellar_props(stellar_data, snap, path):
     prev_reg = 0
     for igal in range(stellar_data["begin"].size):
 
+        # Skip small galaxies for now
+        if stellar_data["Galaxy,S_Length"][igal] < 100:
+            continue
+
         if len(aborn) == 0:
             continue
 
@@ -314,6 +318,10 @@ def compute_gas_props(gas_data, stellar_data, snap, path):
     # Extract weights for each particle
     prev_reg = 0
     for igal in range(gas_data["begin"].size):
+
+        # Skip small galaxies for now
+        if stellar_data["Galaxy,S_Length"][igal] < 100:
+            continue
 
         # Extract galaxy range
         b = gas_data["begin"][igal]
