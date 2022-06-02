@@ -355,7 +355,7 @@ def plot_subgrid_birth_den_vs_met():
     cbar.set_label(r"$f_\mathrm{th}$")
 
     axes[2].legend(loc='upper center',
-                   bbox_to_anchor=(0.25, -0.2),
+                   bbox_to_anchor=(0.0, -0.2),
                    fancybox=True, ncol=2)
 
     # Save figure
