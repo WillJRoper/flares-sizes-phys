@@ -269,12 +269,27 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
 
 def plot_subgrid_birth_den_vs_met():
 
-    # Set up plot
-    fig = plt.figure(figsize=(2.5, 2.5))
-    ax = fig.add_subplot(111)
-    ax.loglog()
+    # Set up some variables we need
+    fmaxs = [3, 4, 5, 6]
+    ncols = len(fmaxs)
 
-    for fmax in [3, 4, 5, 6]:
+    # Set up plot
+    fig = plt.figure(figsize=(2.5 * ncols, 2.5))
+    gs = gridspec.GridSpec(nrows=1, ncols=ncols + 1,
+                           width_ratios=[20, ] * ncols + [1, ])
+    gs.update(wspace=0.0, hspace=0.0)
+    axes = []
+    cax = fig.add_subplot(gs[-1])
+
+    for i in range(ncols):
+        axes.append(fig.add_subplot(gs[i]))
+        axes[-1].loglog()
+
+        if i > 0:
+            axes[i].tick_params("y", left=False, right=False, labelleft=False,
+                                labelright=False)
+
+    for i, fmax in enumerate([3, 4, 5, 6]):
 
         # Define EAGLE subgrid  parameters
         parameters = {"f_th,min": 0.3,
@@ -308,45 +323,40 @@ def plot_subgrid_birth_den_vs_met():
                                                   * (birth_density_grid / parameters["n_pivot"]) ** (-parameters["n_n"])
         )
 
-        cs = ax.contour(0.5 * (birth_density_bins[1:]
-                               + birth_density_bins[:-1]),
-                        0.5 * (metal_mass_fraction_bins[1:]
-                               + metal_mass_fraction_bins[:-1]),
-                        f_th_grid, levels=[0.3, fmax, ],
-                        cmap="viridis", vmin=0, vmax=10)
+        mappable = axes[i].pcolormesh(birth_density_bins, metal_mass_fraction_bins,
+                                      f_th_grid, vmin=0.3, vmax=10)
 
-        # Define labels dict
-        fmt = {}
-        for l, s in zip(cs.levels, ["$f_{\mathrm{th,max}}=0.3", "$f_{\mathrm{th,max}}=%.1f" % fmax, ]):
-            fmt[l] = s
+        for slope in [-0.64, 0]:
 
-        # Label contours
-        ax.clabel(cs, cs.levels, inline=True, fmt=fmt, fontsize=10)
+            star_formation_parameters = {"threshold_Z0": 0.002,
+                                         "threshold_n0": 0.1,
+                                         "slope": slope}
 
-    for slope in [-0.64, 0]:
+            # Add line showing SF law
+            sf_threshold_density = star_formation_parameters["threshold_n0"] * \
+                (metal_mass_fraction_bins
+                 / star_formation_parameters["threshold_Z0"]) \
+                ** (star_formation_parameters["slope"])
+            axes[i].plot(sf_threshold_density, metal_mass_fraction_bins,
+                         linestyle="dashed", label="SF threshold: slope=%.2f" % slope)
 
-        star_formation_parameters = {"threshold_Z0": 0.002,
-                                     "threshold_n0": 0.1,
-                                     "slope": slope}
+        axes[i].set_xlabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
 
-        # Add line showing SF law
-        sf_threshold_density = star_formation_parameters["threshold_n0"] * \
-            (metal_mass_fraction_bins
-             / star_formation_parameters["threshold_Z0"]) \
-            ** (star_formation_parameters["slope"])
-        ax.plot(sf_threshold_density, metal_mass_fraction_bins,
-                linestyle="dashed", label="SF threshold: slope=%.2f" % slope)
-
-    ax.set_xlabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
+        for ax in axes:
+            ax.set_xlim(10**-2.9, 10**6.8)
+            ax.set_ylim(10**-5.9, 10**0)
+            for spine in ax.spines.values():
+                spine.set_edgecolor('k')
 
     # Label y axis
-    ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
+    axes[0].set_ylabel(r"$Z_{\mathrm{birth}}$")
 
-    # Set the axis limits
-    ax.set_xlim(10**-2.9, 10**6.8)
-    ax.set_ylim(10**-5.9, 10**0)
+    cbar = fig.colorbar(mappable, cax)
+    cbar.set_label(r"$f_\mathrm{th}$")
 
-    ax.legend()
+    axes[2].legend(loc='upper center',
+                   bbox_to_anchor=(0.5, -0.2),
+                   fancybox=True, ncol=2)
 
     # Save figure
     mkdir("plots/stellar_formprops/")
