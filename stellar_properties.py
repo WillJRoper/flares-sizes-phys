@@ -352,7 +352,7 @@ def plot_subgrid_birth_den_vs_met():
         axes[i].text(0.95, 0.9, r'$f_{\mathrm{th,max}}=%.1f$' % fmax,
                      bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
                                alpha=0.8),
-                     transform=ax.transAxes, horizontalalignment='right', fontsize=8)
+                     transform=axes[i].transAxes, horizontalalignment='right', fontsize=8)
 
     # Label y axis
     axes[0].set_ylabel(r"$Z_{\mathrm{birth}}$")
