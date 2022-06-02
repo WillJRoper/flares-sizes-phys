@@ -190,6 +190,7 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', length_key="Galaxy,S_Length
                     key = tag + '/' + f_splt[0]
                     d = np.array(hf[key].get(f_splt[1]))
 
+                    # Apply conversion from cMpc to pkpc
                     if "Coordinates" in f_splt[1] or "COP" in f_splt[1]:
                         d *= (1 / (1 + z) * 10**3)
 
@@ -217,7 +218,6 @@ def get_snap_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length")
     data["weights"] = []
     data["regions"] = []
     data["begin"] = []
-    data["gbegin"] = []
 
     # Initialise particle offsets
     offset = 0

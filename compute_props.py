@@ -33,8 +33,9 @@ def compute_stellar_props(stellar_data, snap, path):
         app = stellar_data["Particle/Apertures/Star,30"][b: b + l]
         cop = stellar_data["Galaxy,COP"][igal]
         pos = stellar_data["Particle,S_Coordinates"][b: b + l, :][app]
-        ini_ms = stellar_data["Particle,S_MassInitial"][b: b + l][app]
-        ms = stellar_data["Particle,S_Mass"][b: b + l][app]
+        ini_ms = stellar_data["Particle,S_MassInitial"][b: b +
+                                                        l][app] * 10 ** 10
+        ms = stellar_data["Particle,S_Mass"][b: b + l][app] * 10 ** 10
         ages = stellar_data["Particle,S_Age"][b: b + l][app]
         mets = stellar_data["Particle,S_Z_smooth"][b: b + l][app]
 
@@ -47,9 +48,10 @@ def compute_stellar_props(stellar_data, snap, path):
 
         # Compute stellar density within HMR
         if np.sum(ms[rs <= hmr]) > 0:
-            den_r["hmr"][igal] = (np.sum(ms[rs <= hmr]) * 10 ** 10
-                                  / (4 / 3 * np.pi * hmr ** 3))
-            mass_r["hmr"][igal] = np.sum(ms[rs <= hmr]) * 10 ** 10
+            den_r["hmr"][igal] = ((np.sum(ms[rs <= hmr])
+                                   / (4 / 3 * np.pi * hmr ** 3)) * Msun
+                                  / kpc ** 3 / mh).to(1 / cm ** 3).value
+            mass_r["hmr"][igal] = np.sum(ms[rs <= hmr])
             ages_r["hmr"][igal] = np.average(ages[rs < hmr],
                                              weights=ini_ms[rs < hmr]) * 10**3
             met_r["hmr"][igal] = np.average(mets[rs < hmr],
@@ -58,7 +60,7 @@ def compute_stellar_props(stellar_data, snap, path):
         # Compute aperture quantities
         for r in [0.1, 0.5, 1, 30]:
             if np.sum(ms[rs <= r]) > 0:
-                mass_r[r][igal] = np.sum(ms[rs <= r]) * 10 ** 10
+                mass_r[r][igal] = np.sum(ms[rs <= r])
                 ages_r[r][igal] = np.average(
                     ages[rs < r], weights=ini_ms[rs < r]) * 10**3
                 met_r[r][igal] = np.average(mets[rs < r],
@@ -186,7 +188,7 @@ def compute_stellar_props(stellar_data, snap, path):
         b = stellar_data["begin"][igal]
         e = b + stellar_data["Galaxy,S_Length"][igal]
         app = stellar_data["Particle/Apertures/Star,30"][b: e]
-        ini_mass = stellar_data["Particle,S_MassInitial"][b: e][app]
+        ini_mass = stellar_data["Particle,S_MassInitial"][b: e][app] * 10 ** 10
         hmr = stellar_data["HMRs"][igal]
         rs = radii[b: e][app]
         pdens = dens[b: e][app]
@@ -235,7 +237,7 @@ def compute_gas_props(gas_data, snap, path):
         app = gas_data["Particle/Apertures/Gas,30"][b: b + l]
         cop = gas_data["Galaxy,COP"][igal]
         pos = gas_data["Particle,G_Coordinates"][b: b + l, :][app]
-        ms = gas_data["Particle,G_Mass"][b: b + l][app]
+        ms = gas_data["Particle,G_Mass"][b: b + l][app] * 10 ** 10
         mets = gas_data["Particle,G_Z_smooth"][b: b + l][app]
 
         # Compute particle radii
@@ -247,9 +249,10 @@ def compute_gas_props(gas_data, snap, path):
 
         # Compute gas density within HMR
         if np.sum(ms[rs <= hmr]) > 0:
-            den_r["hmr"][igal] = (np.sum(ms[rs <= hmr]) * 10 ** 10
-                                  / (4 / 3 * np.pi * hmr ** 3))
-            mass_r["hmr"][igal] = np.sum(ms[rs <= hmr]) * 10 ** 10
+            den_r["hmr"][igal] = ((np.sum(ms[rs <= hmr])
+                                   / (4 / 3 * np.pi * hmr ** 3)) * Msun
+                                  / kpc ** 3 / mh).to(1 / cm ** 3).value
+            mass_r["hmr"][igal] = np.sum(ms[rs <= hmr])
             met_r["hmr"][igal] = np.average(mets[rs < hmr],
                                             weights=ms[rs < hmr])
 
