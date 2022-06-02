@@ -309,16 +309,16 @@ def plot_subgrid_birth_den_vs_met():
         )
 
         cs = ax.contour(birth_density_bins, metal_mass_fraction_bins,
-                              f_th_grid, levels=[0.3, fmax, ],
-                              cmap="viridis", vmin=0, vmax=10)
+                        f_th_grid, levels=[0.3, fmax, ],
+                        cmap="viridis", vmin=0, vmax=10)
 
         # Define labels dict
         fmt = {}
         for l, s in zip(cs.levels, ["$f_{\mathrm{th,max}}=0.3", "$f_{\mathrm{th,max}}=%.1f" % fmax, ]):
             fmt[l] = s
 
-       # Label contours
-       ax.clabel(cs, cs.levels, inline=True, fmt=fmt, fontsize=10)
+        # Label contours
+        ax.clabel(cs, cs.levels, inline=True, fmt=fmt, fontsize=10)
 
     for slope in [-0.64, 0]:
 
