@@ -269,7 +269,7 @@ def compute_gas_props(gas_data, stellar_data, snap, path):
                                             weights=ms[rs < hmr])
 
         # Compute aperture quantities
-        for r in [0.1, 0.5, 1]:
+        for r in [0.1, 0.5, 1, 30]:
             if np.sum(ms[rs <= r]) > 0:
                 mass_r[r][igal] = np.sum(ms[rs <= r]) * 10 ** 10
                 met_r[r][igal] = np.average(mets[rs < r],
