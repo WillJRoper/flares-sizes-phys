@@ -288,7 +288,7 @@ def plot_subgrid_birth_den_vs_met():
                                      "threshold_n0": 0.1,
                                      "slope": -0.64}
 
-        number_of_bins = 127
+        number_of_bins = 128
 
         # Constants; these could be put in the parameter file but are
         # rarely changed
@@ -308,7 +308,10 @@ def plot_subgrid_birth_den_vs_met():
                                                   * (birth_density_grid / parameters["n_pivot"]) ** (-parameters["n_n"])
         )
 
-        cs = ax.contour(birth_density_bins, metal_mass_fraction_bins,
+        cs = ax.contour(0.5 * (birth_density_bins[1:]
+                               + birth_density_bins[:-1]),
+                        0.5 * (metal_mass_fraction_bins[1:]
+                               + metal_mass_fraction_bins[:-1]),
                         f_th_grid, levels=[0.3, fmax, ],
                         cmap="viridis", vmin=0, vmax=10)
 
