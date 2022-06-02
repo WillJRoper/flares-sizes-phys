@@ -216,7 +216,7 @@ def compute_stellar_props(stellar_data, snap, path):
     return stellar_data
 
 
-def compute_gas_props(gas_data, snap, path):
+def compute_gas_props(gas_data, stellar_data, snap, path):
 
     # Define redshift
     z = float(snap.split("z")[-1].replace("p", "."))
@@ -367,6 +367,7 @@ def get_data(snaps, regions, stellar_data_fields, gas_data_fields, path):
 
         # Compute the derived quantities and store the data
         data["stellar"][snap] = compute_stellar_props(stellar_data, snap, path)
-        data["gas"][snap] = compute_gas_props(gas_data, snap, path)
+        data["gas"][snap] = compute_gas_props(
+            gas_data, stellar_data, snap, path)
 
     return data
