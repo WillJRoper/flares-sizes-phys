@@ -137,7 +137,10 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
                          lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
                          % (ovden_bins[i], ovden_bins[i + 1]), color=None)
 
-    plot_meidan_stat(eagle_zs, eagle_dens, np.ones(eagle_dens.size), ax,
+    okinds = np.logical_and(eagle_zs > 0, eagle_dens > 0)
+
+    plot_meidan_stat(eagle_zs[okinds], eagle_dens[okinds],
+                     np.ones(eagle_dens[okinds].size), ax,
                      lab=r"EAGLE REF", color=None)
 
     ax.set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
@@ -515,7 +518,7 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
     okinds = np.logical_and(gal_bdens > 0, gal_bmet + 1 > 0)
 
     im = ax.hexbin(gal_bdens[okinds], gal_bmet[okinds] + 1, gridsize=50,
-                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                   mincnt=np.min(gal_w) - (0.1 * np.min(gal_w)),
                    C=gal_w[okinds], norm=weight_norm,
                    reduce_C_function=np.sum, yscale='log', xscale="log",
                    linewidths=0.2,
