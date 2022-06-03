@@ -91,7 +91,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     g_hmrs = gas_data["HMRs"]
     w = stellar_data["weight"]
     s_den_hmr = stellar_data["apertures"]["density"]["hmr"]
-    col = gas_data["apertures"]["metal"]["hmr"]
+    col = gas_data["apertures"]["density"]["hmr"]
 
     # Remove galaxies without stars
     okinds = np.logical_and(g_hmrs > 0, s_hmrs > 0)
@@ -104,25 +104,47 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     print("Galaxies after spurious cut: %d" % s_hmrs.size)
 
     # Set up plot
-    fig = plt.figure(figsize=(3.5, 3.5))
-    ax = fig.add_subplot(111)
+    fig = plt.figure(figsize=(2.75, 2.75))
+    gs = gridspec.GridSpec(nrows=2, ncols=ncols + 1,
+                           width_ratios=[20, ] * ncols + [1, ])
+    gs.update(wspace=0.0, hspace=0.0)
+    ax = fig.add_subplot(gs[0, 0])
+    cax = fig.add_subplot(gs[0, 1])
+    ax1 = fig.add_subplot(gs[1, 0])
+    cax1 = fig.add_subplot(gs[1, 1])
+
+    # Remove x axis we don't need
+    ax.tick_params("x", top=False, bottom=False, labeltop=False,
+                   labelbottom=False)
 
     # Plot stellar_data
     im = ax.hexbin(s_hmrs, g_hmrs, gridsize=50,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=col, extent=[-1, 1.3, -1, 1.3],
+                   C=w, extent=[-1, 1.3, -1, 1.3],
                    reduce_C_function=np.mean, xscale='log', yscale='log',
                    linewidths=0.2, cmap='viridis')
+    im1 = ax1.hexbin(s_hmrs, g_hmrs, gridsize=50,
+                     mincnt=np.min(w) - (0.1 * np.min(w)),
+                     C=col, extent=[-1, 1.3, -1, 1.3],
+                     reduce_C_function=np.mean, xscale='log', yscale='log',
+                     linewidths=0.2, cmap='magma')
 
     # Set axes y lims
     ax.set_ylim(10**-1.1, 10**1.5)
+    ax.set_xlim(10**-1.1, 10**1.5)
+    ax1.set_ylim(10**-1.1, 10**1.5)
+    ax1.set_xlim(10**-1.1, 10**1.5)
 
     # Label axes
     ax.set_ylabel("$R_{\mathrm{gas}} / [\mathrm{pkpc}]$")
-    ax.set_xlabel("$R_{\star} / [\mathrm{pkpc}]$")
+    ax1.set_ylabel("$R_{\mathrm{gas}} / [\mathrm{pkpc}]$")
+    ax1.set_xlabel("$R_{\star} / [\mathrm{pkpc}]$")
 
-    cbar = fig.colorbar(im)
-    cbar.set_label("$Age / [\mathrm{Myr}]$")
+    cbar = fig.colorbar(im, cax)
+    cbar.set_label("$\sum w_{i}$")
+
+    cbar = fig.colorbar(im1, cax1)
+    cbar.set_label("$n_H / [\mathrm{cm}^{-3}]$")
 
     # Save figure
     mkdir("plots/stellar_gas_hmr_comp/")
