@@ -73,7 +73,7 @@ def compute_stellar_props(stellar_data, snap, path):
                                   * Msun / kpc ** 3 / mh).to(1 / cm ** 3).value
 
         # Store results
-        mass[igal] = np.sum(ms) * 10 ** 10
+        mass[igal] = np.sum(ms)
         hmrs[igal] = hmr
         w[igal] = stellar_data["weights"][igal]
 
@@ -271,14 +271,14 @@ def compute_gas_props(gas_data, stellar_data, snap, path):
         # Compute aperture quantities
         for r in [0.1, 0.5, 1, 30]:
             if np.sum(ms[rs <= r]) > 0:
-                mass_r[r][igal] = np.sum(ms[rs <= r]) * 10 ** 10
+                mass_r[r][igal] = np.sum(ms[rs <= r])
                 met_r[r][igal] = np.average(mets[rs < r],
                                             weights=ms[rs < r])
                 den_r[r][igal] = (mass_r[r][igal] / (4 / 3 * np.pi * r ** 3)
                                   * Msun / kpc ** 3 / mh).to(1 / cm ** 3).value
 
         # Store results
-        mass[igal] = np.sum(ms) * 10 ** 10
+        mass[igal] = np.sum(ms)
         hmrs[igal] = hmr
         w[igal] = gas_data["weights"][igal]
 
