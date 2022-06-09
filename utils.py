@@ -222,7 +222,9 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', length_key="Galaxy,S_Length
     return data
 
 
-def get_snap_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length"):
+def get_snap_data(sim, regions, snap, data_fields,
+                  length_key="Galaxy,S_Length"):
+
     # Load weights
     df = pd.read_csv('../weight_files/weights_grid.txt')
     weights = np.array(df['weights'])
@@ -269,3 +271,31 @@ def get_snap_data(sim, regions, snap, data_fields, length_key="Galaxy,S_Length")
         data[key] = np.array(data[key])
 
     return data
+
+
+def clean_data(stellar_data, gas_data):
+
+    # Get length array
+    slen = stellar_data["Galaxy,S_Length"]
+    n_gal = slen.size
+
+    # Create boolean mask
+    okinds = slen >= 100
+
+    # Loop over keys and mask necessary arrays
+    for key in stellar_data:
+
+        # Read array
+        arr = stellar_data[key]
+        if arr.size == n_gal:
+            arr = arr[okinds]
+
+    # Loop over keys and mask necessary arrays
+    for key in gas_data:
+
+        # Read array
+        arr = gas_data[key]
+        if arr.size == n_gal:
+            arr = arr[okinds]
+
+    return stellar_data, gas_data
