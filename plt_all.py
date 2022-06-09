@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib.colors import LogNorm
 
-from hmrs import plot_stellar_hmr, plot_stellar_gas_hmr_comp
+from hmrs import plot_stellar_hmr, plot_stellar_gas_hmr_comp, visualise_gas
 from density import plot_stellar_density_grid
 from stellar_properties import plot_birth_met, plot_birth_den
 from stellar_properties import plot_eagle_birth_den_vs_met
@@ -9,14 +9,16 @@ from stellar_properties import plot_gal_birth_den_vs_met
 from stellar_properties import plot_subgrid_birth_den_vs_met
 from phys_comp import plot_birth_density_evo, plot_birth_met_evo
 from phys_comp import plot_hmr_phys_comp, plot_gashmr_phys_comp
+from spatial_dist import sfr_radial_profile
 from compute_props import get_data
 
 
 # Define the norm
 weight_norm = LogNorm(vmin=10 ** -4, vmax=1)
 
-# Define raw data path
+# Define raw data path for FLARES and EAGLE
 path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/G-EAGLE_<reg>/data/"
+eagle_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
 
 # Define regions
 regions = []
@@ -27,10 +29,14 @@ for reg in range(0, 40):
         regions.append(str(reg))
 
 # Define FLARES snapshots
-# flares_snaps = ['003_z012p000', '004_z011p000', '005_z010p000',
-#                 '006_z009p000', '007_z008p000', '008_z007p000',
-#                 '009_z006p000', '010_z005p000']
-flares_snaps = ['010_z005p000', ]
+flares_snaps = ['005_z010p000', '006_z009p000', '007_z008p000', '008_z007p000',
+                '009_z006p000', '010_z005p000']
+
+# Create combined snaps list
+com_snaps = ['005_z010p000', '006_z009p000', '007_z008p000', '008_z007p000',
+             '009_z006p000', '010_z005p000', '010_z003p984', '012_z003p017',
+             '015_z002p012', '019_z001p004', '028_z000p000']
+
 
 # Define EAGLE snapshots
 pre_snaps = ['000_z020p000', '003_z008p988', '006_z005p971', '009_z004p485',
@@ -79,11 +85,22 @@ plot_subgrid_birth_den_vs_met()
 data = get_data(flares_snaps, regions, stellar_data_fields, gas_data_fields,
                 path)
 
+# Make plots that require multiple redshifts
+sfr_radial_profile(data["stellar"], com_snaps, eagle_path)
+
 # Plot the physics variation plots
 plot_birth_density_evo()
 plot_birth_met_evo()
 plot_hmr_phys_comp(flares_snaps[-1])
 plot_gashmr_phys_comp(flares_snaps[-1])
+
+# Plot properties that are done at singular redshifts
+snap = flares_snaps[-1]
+visualise_gas(data["stellar"][snap], data["gas"][snap], snap, path)
+plot_birth_den(data["stellar"][snap], snap, weight_norm, path)
+plot_birth_met(data["stellar"][snap], snap, weight_norm, path)
+plot_eagle_birth_den_vs_met(data["stellar"][snap], snap, weight_norm, path)
+plot_gal_birth_den_vs_met(data["stellar"][snap], snap, weight_norm, path)
 
 # Plot EVERYTHING else
 for snap in flares_snaps:
@@ -104,15 +121,6 @@ for snap in flares_snaps:
         print("Stellar density grid:", e)
     plot_stellar_gas_hmr_comp(data["stellar"][snap], data["gas"][snap],
                               snap, weight_norm)
-
-# Plot properties that are done at singular redshifts
-snap = flares_snaps[-1]
-stellar_data = plot_birth_den(
-    data["stellar"][snap], snap, weight_norm, path)
-plot_birth_met(data["stellar"][snap], snap, weight_norm, path)
-plot_eagle_birth_den_vs_met(data["stellar"][snap], snap, weight_norm, path)
-stellar_data = plot_gal_birth_den_vs_met(
-    data["stellar"][snap], snap, weight_norm, path)
 
 # for snap in eagle_snaps:
 #     plot_stellar_hmr("EAGLE", [0, ], snap, weight_norm)

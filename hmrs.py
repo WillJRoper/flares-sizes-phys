@@ -9,6 +9,7 @@ from matplotlib.colors import LogNorm
 import numpy as np
 import pandas as pd
 from utils import calc_3drad, calc_light_mass_rad, mkdir
+import eagle_IO.eagle_IO as eagle_io
 
 os.environ['FLARE'] = '/cosma7/data/dp004/dc-wilk2/flare'
 mpl.use('Agg')
@@ -121,13 +122,13 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     im = ax.hexbin(s_hmrs, g_hmrs, gridsize=50,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
                    C=w, extent=[-1, 1.3, -1, 1.3],
-                   reduce_C_function=np.mean, xscale='log', yscale='log',
-                   linewidths=0.2, cmap='viridis')
+                   reduce_C_function=np.sum, xscale='log', yscale='log',
+                   linewidths=0.2, cmap='viridis', norm=weight_norm)
     im1 = ax1.hexbin(s_hmrs, g_hmrs, gridsize=50,
                      mincnt=np.min(w) - (0.1 * np.min(w)),
                      C=col, extent=[-1, 1.3, -1, 1.3],
                      reduce_C_function=np.mean, xscale='log', yscale='log',
-                     linewidths=0.2, cmap='magma')
+                     linewidths=0.2, cmap='magma', norm=LogNorm())
 
     # Set axes y lims
     ax.set_ylim(10**-1.1, 10**1.5)
@@ -152,3 +153,240 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
                 bbox_inches="tight")
 
     plt.close(fig)
+
+
+def visualise_gas(stellar_data, gas_data, snap, path):
+
+    # Get redshift
+    z = float(snap.split("z")[-1].replace("p", "."))
+
+    # Define softening length
+    if z <= 2.8:
+        soft = 0.000474390 / 0.6777 * 1e3
+    else:
+        soft = 0.001802390 / (0.6777 * (1 + z)) * 1e3
+
+    # Define image properties
+    res = soft
+    width = 60  # pkpc
+    ndims = (int(np.ceil(width / res)), int(np.ceil(width / res)))
+    width = res * ndims[0]
+    imgrange = (-width / 2, width / 2, -width / 2, width / 2)
+
+    # Get galaxy data
+    regions = stellar_data["regions"]
+    sbegin = stellar_data["begin"]
+    nstar = stellar_data["Galaxy,S_Length"]
+    gbegin = gas_data["begin"]
+    ngas = gas_data["Galaxy,G_Length"]
+    s_hmrs = stellar_data["HMRs"]
+    g_hmrs = gas_data["HMRs"]
+    cops = stellar_data["Galaxy,COP"]
+    star_pos = stellar_data["Particle,S_Coordinates"]
+    gas_pos = gas_data["Particle,G_Coordinates"]
+    star_m = stellar_data["Particle,S_Mass"]
+    gas_m = gas_data["Particle,G_Mass"]
+
+    # Load surroundings data for the first region
+    prev_reg = 0
+    s_star_pos = eagle_io.read_array('PARTDATA', path.replace("<reg>", "00"),
+                                     snap, 'PartType4/Coordinates', noH=True,
+                                     physicalUnits=True,
+                                     numThreads=8) * 10**3
+    s_gas_pos = eagle_io.read_array('PARTDATA', path.replace("<reg>", "00"),
+                                    snap, 'PartType0/Coordinates', noH=True,
+                                    physicalUnits=True,
+                                    numThreads=8) * 10**3
+    s_star_m = eagle_io.read_array('PARTDATA', path.replace("<reg>", "00"),
+                                   snap, 'PartType4/Mass', noH=True,
+                                   physicalUnits=True,
+                                   numThreads=8)
+    s_gas_m = eagle_io.read_array('PARTDATA', path.replace("<reg>", "00"),
+                                  snap, 'PartType0/Mass', noH=True,
+                                  physicalUnits=True,
+                                  numThreads=8)
+
+    # Define the two populations
+    both_compact = np.logical_and(s_hmrs < 1, g_hmrs < 1)
+    extend_gas = np.logical_and(s_hmrs < 1, g_hmrs >= 1)
+
+    # Initialise images
+    compgal_img = np.zeros(ndims)
+    exgal_img = np.zeros(ndims)
+    comp_img = np.zeros(ndims)
+    ex_img = np.zeros(ndims)
+
+    # Loop over galaxies in the both compact population
+    for (ind, b), l in zip(enumerate(gbegin),
+                           ngas):
+
+        if not both_compact[ind]:
+            continue
+
+        # Get galaxy positions and centre on COP
+        this_gas_pos = gas_pos[b: b + l, :] - cops[ind, :]
+
+        # Get the particle masses
+        this_gas_m = gas_m[b: b + l]
+
+        # Create image of particles in galaxy
+        H_gal, _, _, = np.histogram2d(this_gas_pos[:, 0], this_gas_pos[:, 1],
+                                      bins=ndims, range=imgrange,
+                                      weights=this_gas_m)
+
+        # Get this galaxy's region
+        reg = regions[ind]
+
+        # Load the new regions data if we have a new region
+        if reg != prev_reg:
+            prev_reg = reg
+            s_star_pos = eagle_io.read_array('PARTDATA',
+                                             path.replace("<reg>",
+                                                          str(reg).zfill(2)),
+                                             snap, 'PartType4/Coordinates',
+                                             noH=True,
+                                             physicalUnits=True,
+                                             numThreads=8) * 10**3
+            s_gas_pos = eagle_io.read_array('PARTDATA',
+                                            path.replace("<reg>",
+                                                         str(reg).zfill(2)),
+                                            snap, 'PartType0/Coordinates',
+                                            noH=True,
+                                            physicalUnits=True,
+                                            numThreads=8) * 10**3
+            s_star_m = eagle_io.read_array('PARTDATA',
+                                           path.replace("<reg>",
+                                                        str(reg).zfill(2)),
+                                           snap, 'PartType4/Mass', noH=True,
+                                           physicalUnits=True,
+                                           numThreads=8)
+            s_gas_m = eagle_io.read_array('PARTDATA',
+                                          path.replace("<reg>",
+                                                       str(reg).zfill(2)),
+                                          snap, 'PartType0/Mass', noH=True,
+                                          physicalUnits=True,
+                                          numThreads=8)
+
+        # Get surrounding particle positions and masses
+        centred_surrounding_pos = s_gas_pos - cops[ind, :]
+        xokinds = np.logical_and(centred_surrounding_pos[:, 0] <= width / 2,
+                                 centred_surrounding_pos[:, 0] >= -width / 2)
+        yokinds = np.logical_and(centred_surrounding_pos[:, 1] <= width / 2,
+                                 centred_surrounding_pos[:, 1] >= -width / 2)
+        zokinds = np.logical_and(centred_surrounding_pos[:, 2] <= width / 2,
+                                 centred_surrounding_pos[:, 2] >= -width / 2)
+        okinds = np.logical_and(np.logical_and(xokinds, yokinds), zokinds)
+        this_s_gas_pos = centred_surrounding_pos[okinds, :]
+        this_s_gas_m = s_gas_m[okinds]
+
+        # Make the image of the surrounding gas
+        H_s, _, _ = np.histogram2d(this_s_gas_pos[:, 0], this_s_gas_pos[:, 1],
+                                   bins=ndims, range=imgrange,
+                                   weights=this_s_gas_m)
+
+        # Stack images
+        compgal_img += H_gal
+        comp_img += H_s
+
+    # Loop over galaxies in the extended gas population
+    for (ind, b), l in zip(enumerate(gbegin), ngas):
+
+        if not extend_gas[ind]:
+            continue
+
+        # Get galaxy positions and centre on COP
+        this_gas_pos = gas_pos[b: b + l, :] - cops[ind, :]
+
+        # Get the particle masses
+        this_gas_m = gas_m[b: b + l]
+
+        # Create image of particles in galaxy
+        H_gal, _, _, = np.histogram2d(this_gas_pos[:, 0], this_gas_pos[:, 1],
+                                      bins=ndims, range=imgrange,
+                                      weights=this_gas_m)
+
+        # Get this galaxy's region
+        reg = regions[ind]
+
+        # Load the new regions data if we have a new region
+        if reg != prev_reg:
+            prev_reg = reg
+            s_star_pos = eagle_io.read_array('PARTDATA',
+                                             path.replace("<reg>",
+                                                          str(reg).zfill(2)),
+                                             snap, 'PartType4/Coordinates',
+                                             noH=True,
+                                             physicalUnits=True,
+                                             numThreads=8) * 10**3
+            s_gas_pos = eagle_io.read_array('PARTDATA',
+                                            path.replace("<reg>",
+                                                         str(reg).zfill(2)),
+                                            snap, 'PartType0/Coordinates',
+                                            noH=True,
+                                            physicalUnits=True,
+                                            numThreads=8) * 10**3
+            s_star_m = eagle_io.read_array('PARTDATA',
+                                           path.replace("<reg>",
+                                                        str(reg).zfill(2)),
+                                           snap, 'PartType4/Mass', noH=True,
+                                           physicalUnits=True,
+                                           numThreads=8)
+            s_gas_m = eagle_io.read_array('PARTDATA',
+                                          path.replace("<reg>",
+                                                       str(reg).zfill(2)),
+                                          snap, 'PartType0/Mass', noH=True,
+                                          physicalUnits=True,
+                                          numThreads=8)
+
+        # Get surrounding particle positions and masses
+        centred_surrounding_pos = s_gas_pos - cops[ind, :]
+        xokinds = np.logical_and(centred_surrounding_pos[:, 0] <= width / 2,
+                                 centred_surrounding_pos[:, 0] >= -width / 2)
+        yokinds = np.logical_and(centred_surrounding_pos[:, 1] <= width / 2,
+                                 centred_surrounding_pos[:, 1] >= -width / 2)
+        zokinds = np.logical_and(centred_surrounding_pos[:, 2] <= width / 2,
+                                 centred_surrounding_pos[:, 2] >= -width / 2)
+        okinds = np.logical_and(np.logical_and(xokinds, yokinds), zokinds)
+        this_s_gas_pos = centred_surrounding_pos[okinds, :]
+        this_s_gas_m = s_gas_m[okinds]
+
+        # Make the image of the surrounding gas
+        H_s, _, _ = np.histogram2d(this_s_gas_pos[:, 0], this_s_gas_pos[:, 1],
+                                   bins=ndims, range=imgrange,
+                                   weights=this_s_gas_m)
+
+        # Stack images
+        exgal_img += H_gal
+        ex_img += H_s
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5 * 2, 3.5 * 2), dpi=ndims[0])
+    gs = gridspec.GridSpec(nrows=2, ncols=2)
+    gs.update(wspace=0.0, hspace=0.0)
+    ax1 = fig.add_subplot(gs[0, 0])
+    ax2 = fig.add_subplot(gs[0, 1])
+    ax3 = fig.add_subplot(gs[1, 0])
+    ax4 = fig.add_subplot(gs[1, 1])
+
+    # Remove all ticks
+    for ax in [ax1, ax2, ax3, ax4]:
+        ax.tick_params("both", left=False, right=False, top=False,
+                       bottom=False, labelleft=False, labelright=False,
+                       labeltop=False, labelbottom=False)
+
+    # Plot the images
+    ax1.imshow(compgal_img, cmap="plasma")
+    ax2.imshow(exgal_img, cmap="plasma")
+    ax3.imshow(comp_img, cmap="plasma")
+    ax4.imshow(ex_img, cmap="plasma")
+
+    # Label this image grid
+    ax1.set_title("Compact Gas")
+    ax2.set_title("Extended Gas")
+    ax1.set_ylabel("Galaxy")
+    ax3.set_ylabel("Surroundings")
+
+    # Save figure
+    mkdir("plots/images/")
+    fig.savefig("plots/images/gas_dist_stack_%s.png" % snap,
+                bbox_inches="tight")

@@ -62,7 +62,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
                          % (ovden_bins[i], ovden_bins[i + 1]), color=None)
 
     plot_meidan_stat(eagle_zs, eagle_mets, np.ones(eagle_mets.size), ax,
-                     lab=r"EAGLE REF", color=None)
+                     lab=r"EAGLE-AGNdT9", color=None)
 
     ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
     # ax1.set_ylabel(r"$Z_{\mathrm{birth}}$")
@@ -141,7 +141,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
 
     plot_meidan_stat(eagle_zs[okinds], eagle_dens[okinds],
                      np.ones(eagle_dens[okinds].size), ax,
-                     lab=r"EAGLE REF", color=None)
+                     lab=r"EAGLE-AGNdT9", color=None)
 
     ax.set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")
@@ -330,7 +330,7 @@ def plot_subgrid_birth_den_vs_met():
         )
 
         mappable = axes[i].pcolormesh(birth_density_bins, metal_mass_fraction_bins,
-                                      f_th_grid, vmin=0.3, vmax=10)
+                                      f_th_grid, vmin=0.3, vmax=10, norm=LogNorm())
 
         for slope in [-0.64, 0]:
 

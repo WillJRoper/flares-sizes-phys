@@ -8,6 +8,20 @@ from astropy.cosmology import Planck18 as cosmo, z_at_value
 import astropy.units as u
 
 
+def calc_ages(z, a_born):
+    # Convert scale factor into redshift
+    z_born = 1 / a_born - 1
+
+    # Convert to time in Gyrs
+    t = cosmo.age(z)
+    t_born = cosmo.age(z_born)
+
+    # Calculate the VR
+    ages = (t - t_born).to(u.Myr)
+
+    return ages.value
+
+
 def mkdir(path):
     if not os.path.exists(path):
         os.makedirs(path)
