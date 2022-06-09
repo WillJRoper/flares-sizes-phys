@@ -1,6 +1,7 @@
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
-from matplotlib.colors import LogNorm
+from matplotlib.colors import LogNorm, DivergingNorm
 import matplotlib.gridspec as gridspec
 from flare import plt as flareplt
 from utils import mkdir, plot_meidan_stat, age2z
@@ -232,14 +233,14 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
                                 dens > 0)
 
         mappable = ax.pcolormesh(birth_density_bins, metal_mass_fraction_bins,
-                                 f_th_grid, vmin=0.3, vmax=3)
+                                 f_th_grid, vmin=0.3, vmax=3, cmap="inferno")
 
         H, _, _ = np.histogram2d(dens[okinds], mets[okinds],
                                  bins=[birth_density_bins,
                                        metal_mass_fraction_bins])
 
         ax.contour(birth_density_grid, metal_mass_fraction_grid,
-                   H.T, levels=6, cmap="magma")
+                   H.T, levels=6, cmap="viridis")
 
         # Add line showing SF law
         sf_threshold_density = star_formation_parameters["threshold_n0"] * \
@@ -274,6 +275,13 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
 
 
 def plot_subgrid_birth_den_vs_met():
+
+    # Lets define our colormap
+    colors1 = mpl.cm.get_cmap('inferno')(np.linspace(0, 1., 128))
+    colors2 = mpl.cm.get_cmap('plasma_r')(np.linspace(0, 1., 128))
+    colors = zip(np.linspace(0, 0.5, 128), colors1)
+    colors += zip(np.linspace(0.5, 1, 128), colors2)
+    cmap = mpl.colors.LinearSegmentedColormap.from_list('mycmap', colors)
 
     # Set up some variables we need
     fmaxs = [3, 4, 6, 10]
@@ -329,8 +337,13 @@ def plot_subgrid_birth_den_vs_met():
                                                   * (birth_density_grid / parameters["n_pivot"]) ** (-parameters["n_n"])
         )
 
-        mappable = axes[i].pcolormesh(birth_density_bins, metal_mass_fraction_bins,
-                                      f_th_grid, vmin=0.3, vmax=10, norm=LogNorm())
+        mappable = axes[i].pcolormesh(birth_density_bins,
+                                      metal_mass_fraction_bins,
+                                      f_th_grid,
+                                      norm=DivergingNorm(vmin=0.3,
+                                                         vcenter=3,
+                                                         vmax=10)
+                                      )
 
         for slope in [-0.64, 0]:
 
@@ -462,14 +475,14 @@ def plot_eagle_birth_den_vs_met(stellar_data, snap, weight_norm, path):
                                 dens > 0)
 
         mappable = ax.pcolormesh(birth_density_bins, metal_mass_fraction_bins,
-                                 f_th_grid, vmin=0.3, vmax=3)
+                                 f_th_grid, vmin=0.3, vmax=3, cmap="inferno")
 
         H, _, _ = np.histogram2d(dens[okinds], mets[okinds],
                                  bins=[birth_density_bins,
                                        metal_mass_fraction_bins])
 
         ax.contour(birth_density_grid, metal_mass_fraction_grid,
-                   H.T, levels=6, cmap="magma")
+                   H.T, levels=6, cmap="viridis")
 
         # Add line showing SF law
         sf_threshold_density = star_formation_parameters["threshold_n0"] * \

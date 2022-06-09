@@ -352,11 +352,13 @@ def get_data(snaps, regions, stellar_data_fields, gas_data_fields, path):
     for snap in snaps:
 
         # Get the data
-        stellar_data = get_snap_data("FLARES", regions, snap, stellar_data_fields,
+        stellar_data = get_snap_data("FLARES", regions, snap,
+                                     stellar_data_fields,
                                      length_key="Galaxy,S_Length")
         gas_data = get_snap_data("FLARES", regions, snap, gas_data_fields,
                                  length_key="Galaxy,G_Length")
 
+        # Remove galaxies with fewer than 100 particles
         stellar_data, gas_data = clean_data(stellar_data, gas_data)
 
         # Compute the derived quantities and store the data
