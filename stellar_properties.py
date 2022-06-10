@@ -282,7 +282,7 @@ def plot_subgrid_birth_den_vs_met():
     colors_combined = []
     colors_combined.extend(colors1)
     colors_combined.extend(colors2)
-    colors = zip(np.linspace(0, 1.0, 256), colors_combined)
+    colors = list(zip(np.linspace(0, 1.0, 256), colors_combined))
     cmap = mpl.colors.LinearSegmentedColormap.from_list('mycmap', colors)
 
     # Set up some variables we need
