@@ -74,7 +74,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
     ax.legend(loc='upper center',
               bbox_to_anchor=(0.5, -0.2),
-              fancybox=True, ncol=2)p
+              fancybox=True, ncol=2)
 
     # Save figure
     mkdir("plots/stellar_evo/")
