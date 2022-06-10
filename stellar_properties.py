@@ -344,7 +344,8 @@ def plot_subgrid_birth_den_vs_met():
                                       f_th_grid,
                                       norm=TwoSlopeNorm(vmin=0.3,
                                                         vcenter=3,
-                                                        vmax=10)
+                                                        vmax=10),
+                                      cmap=cmap
                                       )
 
         for slope in [-0.64, 0]:
