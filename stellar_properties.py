@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from matplotlib.colors import LogNorm, DivergingNorm
+from matplotlib.colors import LogNorm, TwoSlopeNorm
 import matplotlib.gridspec as gridspec
 from flare import plt as flareplt
 from utils import mkdir, plot_meidan_stat, age2z
@@ -74,7 +74,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
     ax.legend(loc='upper center',
               bbox_to_anchor=(0.5, -0.2),
-              fancybox=True, ncol=2)
+              fancybox=True, ncol=2)p
 
     # Save figure
     mkdir("plots/stellar_evo/")
@@ -340,9 +340,9 @@ def plot_subgrid_birth_den_vs_met():
         mappable = axes[i].pcolormesh(birth_density_bins,
                                       metal_mass_fraction_bins,
                                       f_th_grid,
-                                      norm=DivergingNorm(vmin=0.3,
-                                                         vcenter=3,
-                                                         vmax=10)
+                                      norm=TwoSlopeNorm(vmin=0.3,
+                                                        vcenter=3,
+                                                        vmax=10)
                                       )
 
         for slope in [-0.64, 0]:
