@@ -278,7 +278,7 @@ def plot_subgrid_birth_den_vs_met():
 
     # Lets define our colormap
     colors1 = mpl.cm.get_cmap('inferno')(np.linspace(0, 1., 128))
-    colors2 = mpl.cm.get_cmap('plasma_r')(np.linspace(0, 1., 128))
+    colors2 = mpl.cm.get_cmap('viridis_r')(np.linspace(0, 1., 128))
     colors_combined = []
     colors_combined.extend(colors1)
     colors_combined.extend(colors2)
@@ -379,7 +379,7 @@ def plot_subgrid_birth_den_vs_met():
     # Label y axis
     axes[0].set_ylabel(r"$Z_{\mathrm{birth}}$")
 
-    cbar = fig.colorbar(mappable, cax)
+    cbar = fig.colorbar(mappable, cax, ticks=[0.3, 3, 4, 6, 10])
     cbar.set_label(r"$f_\mathrm{th}$")
 
     axes[2].legend(loc='upper center',
