@@ -85,8 +85,12 @@ plot_subgrid_birth_den_vs_met()
 data = get_data(flares_snaps, regions, stellar_data_fields, gas_data_fields,
                 path)
 
+print("Got all data")
+
 # Make plots that require multiple redshifts
 sfr_radial_profile(data["stellar"], com_snaps, eagle_path)
+
+print("Plotted SFR profiles")
 
 # Plot the physics variation plots
 plot_birth_density_evo()
@@ -94,13 +98,17 @@ plot_birth_met_evo()
 plot_hmr_phys_comp(flares_snaps[-1])
 plot_gashmr_phys_comp(flares_snaps[-1])
 
+print("Plotted Physics variations")
+
 # Plot properties that are done at singular redshifts
 snap = flares_snaps[-1]
 visualise_gas(data["stellar"][snap], data["gas"][snap], snap, path)
+print("Created images")
 plot_birth_den(data["stellar"][snap], snap, weight_norm, path)
 plot_birth_met(data["stellar"][snap], snap, weight_norm, path)
 plot_eagle_birth_den_vs_met(data["stellar"][snap], snap, weight_norm, path)
 plot_gal_birth_den_vs_met(data["stellar"][snap], snap, weight_norm, path)
+print("Plotted stellar formation properties")
 
 # Plot EVERYTHING else
 for snap in flares_snaps:
