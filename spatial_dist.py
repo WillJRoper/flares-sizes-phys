@@ -86,8 +86,17 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
             # Calculate ages
             ages = calc_ages(z, aborn)
 
+            # Remove particles which are too old
+            ages_okinds = ages < 100
+            pos = pos[ages_okinds, :]
+            ages = ages[ages_okinds]
+            ini_ms = ini_ms[ages_okinds]
+            aborn = aborn[ages_okinds]
+            part_subgrp = part_subgrp[ages_okinds]
+            part_grp = part_grp[ages_okinds]
+
             # Loop over particles calculating and normalising radii
-            radii = np.full(aborn.size, -1)
+            radii = np.full(ages.size, -1, dtype=np.float64)
             for ind in range(aborn.size):
 
                 # Get grp and subgrp
@@ -107,8 +116,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                                          + this_pos[2] ** 2) / hmr
 
             # Define boolean arrays for age and the 30 pkpc aperture
-            age_okinds = ages < 100
-            okinds = np.logical_and(radii <= 30, age_okinds)
+            okinds = radii <= 30
 
         else:
 
