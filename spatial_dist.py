@@ -70,9 +70,13 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                                        'Subhalo/GroupNumber', noH=True,
                                        physicalUnits=True,
                                        numThreads=8)
+            nstars = eagle_io.read_array('SUBFIND', eagle_path, snap,
+                                         'Subhalo/SubLengthType', noH=True,
+                                         physicalUnits=True,
+                                         numThreads=8)[:, 4]
 
             # Create look up dictionary for galaxy values
-            d = {"cop": {}, "hmr": {}}
+            d = {"cop": {}, "hmr": {}, "nstar": {}}
             for (ind, grp), subgrp in zip(enumerate(grps), subgrps):
 
                 # Skip particles not in a galaxy
@@ -82,6 +86,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                 # Store values
                 d["cop"][(grp, subgrp)] = cops[ind, :]
                 d["hmr"][(grp, subgrp)] = hmrs[ind]
+                d["nstar"][(grp, subgrp)] = nstars[ind]
 
             # Calculate ages
             ages = calc_ages(z, aborn)
@@ -106,8 +111,9 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                 if (grp, subgrp) in d["hmr"]:
                     hmr = d["hmr"][(grp, subgrp)]
                     cop = d["cop"][(grp, subgrp)]
+                    nstar = d["nstar"][(grp, subgrp)]
 
-                    if hmr == 0:
+                    if hmr == 0 or nstar < 100:
                         continue
 
                     # Centre position
