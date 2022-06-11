@@ -61,7 +61,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
             hmrs = eagle_io.read_array('SUBFIND', eagle_path, snap,
                                        'Subhalo/HalfMassRad', noH=True,
                                        physicalUnits=True,
-                                       numThreads=8) * 10**3
+                                       numThreads=8)[:, 4] * 10**3
             subgrps = eagle_io.read_array('SUBFIND', eagle_path, snap,
                                           'Subhalo/SubGroupNumber', noH=True,
                                           physicalUnits=True,
@@ -102,9 +102,6 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                     this_pos = pos[ind, :] - cop
 
                     # Compute and normalise  radius
-                    print(np.sqrt(this_pos[0] ** 2
-                                  + this_pos[1] ** 2
-                                  + this_pos[2] ** 2) / hmr)
                     radii[ind] = np.sqrt(this_pos[0] ** 2
                                          + this_pos[1] ** 2
                                          + this_pos[2] ** 2) / hmr
