@@ -53,6 +53,10 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                                          'PartType4/InitialMass', noH=True,
                                          physicalUnits=True,
                                          numThreads=8) * 10 ** 10
+            gal_ms = eagle_io.read_array('SUBFIND', eagle_path, snap,
+                                         'Subhalo/ApertureMeasurements/Mass/030kpc', noH=True,
+                                         physicalUnits=True,
+                                         numThreads=8)[:, 4] * 10 ** 10
             pos = eagle_io.read_array('PARTDATA', eagle_path, snap,
                                       'PartType4/Coordinates', noH=True,
                                       physicalUnits=True,
@@ -99,7 +103,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
             part_grp = part_grp[ages_okinds]
 
             # Create look up dictionary for galaxy values
-            d = {"cop": {}, "hmr": {}, "nstar": {}}
+            d = {"cop": {}, "hmr": {}, "nstar": {}, "m": {}}
             for (ind, grp), subgrp in zip(enumerate(grps), subgrps):
 
                 # Skip particles not in a galaxy
@@ -110,6 +114,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                 d["cop"][(grp, subgrp)] = cops[ind, :]
                 d["hmr"][(grp, subgrp)] = hmrs[ind]
                 d["nstar"][(grp, subgrp)] = nstars[ind]
+                d["m"][(grp, subgrp)] = gal_ms[ind]
 
             # Calculate ages
             ages = calc_ages(z, aborn)
@@ -147,6 +152,9 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                                          + this_pos[1] ** 2
                                          + this_pos[2] ** 2)
 
+                    # Normalise mass
+                    ini_ms[ind] /= d["m"][(grp, subgrp)]
+
             # Define boolean arrays for age and the 30 pkpc aperture
             okinds = radii <= 30
 
@@ -160,6 +168,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
             apps = stellar_data[snap]["Particle/Apertures/Star,30"]
             lengths = stellar_data[snap]["Galaxy,S_Length"]
             hmrs = stellar_data[snap]["HMRs"]
+            ms = stellar_data[snap]["Particle,S_Mass"]
 
             # Create boolean array identifying stars born in the last 100 Myrs
             # and are within the 30 pkpc aperture
@@ -176,7 +185,10 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
 
                 # Normalise radii
                 if hmr <= 0:
+                    app = apps[b: b + nstar]
                     radii[b: b + nstar] = -1
+                    gal_m = np.sum(ms[b: b + nstar][app])
+                    ini_ms[b: b + nstar] /= gal_m
 
         # Remove anomalous galaxies (with hmr = 0)
         okinds = np.logical_and(okinds, radii >= 0)
@@ -190,8 +202,8 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
         ax.plot(bin_cents, radial_sfr, color=cmap(norm(z)))
 
     # Label axes
-    ax.set_ylabel("$\mathrm{SFR}_{100} /$ [M_\star / Myr]")
-    ax.set_xlabel("$R / R_{\star, 1/2}$")
+    ax.set_ylabel("$\mathrm{sSFR}_{100} /[\mathrm{M}_\star /$ Myr]")
+    ax.set_xlabel("$R / [pkpc]$")
 
     # Create colorbar
     cb = mpl.colorbar.ColorbarBase(cax, cmap=cmap, norm=norm)

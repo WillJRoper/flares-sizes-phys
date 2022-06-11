@@ -171,7 +171,7 @@ def visualise_gas(stellar_data, gas_data, snap, path):
     width = 60  # pkpc
     ndims = (int(np.ceil(width / res)), int(np.ceil(width / res)))
     width = res * ndims[0]
-    imgrange = (-width / 2, width / 2, -width / 2, width / 2)
+    imgrange = ((-width / 2, width / 2), (-width / 2, width / 2))
 
     # Get galaxy data
     regions = stellar_data["regions"]
