@@ -107,7 +107,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                                          + this_pos[2] ** 2) / hmr
 
             # Define boolean arrays for age and the 30 pkpc aperture
-            age_okinds = np.logical_and(ages < 100)
+            age_okinds = ages < 100
             okinds = np.logical_and(radii <= 30, age_okinds)
 
         else:
@@ -123,7 +123,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
 
             # Create boolean array identifying stars born in the last 100 Myrs
             # and are within the 30 pkpc aperture
-            age_okinds = np.logical_and(ages < 100)
+            age_okinds = ages < 100
             okinds = np.logical_and(apps, age_okinds)
 
             # Loop over galaxies normalising by half mass radius
