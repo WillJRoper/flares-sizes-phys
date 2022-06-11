@@ -73,7 +73,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
 
             # Create look up dictionary for galaxy values
             d = {"cop": {}, "hmr": {}}
-            for (ind, grp), subgrp in zip(enumerate(grps). subgrps):
+            for (ind, grp), subgrp in zip(enumerate(grps), subgrps):
 
                 # Skip particles not in a galaxy
                 if subgrp == 2 ** 30:
