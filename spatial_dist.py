@@ -14,11 +14,11 @@ import eagle_IO.eagle_IO as eagle_io
 def sfr_radial_profile(stellar_data, snaps, eagle_path):
 
     # Define radial bins
-    radial_bins = np.arange(0, 31, 1)
+    radial_bins = np.arange(0, 30.5, 0.5)
     bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
 
     # Define redshift colormap and normalisation
-    cmap = mpl.cm.get_cmap('plasma', len(snaps))
+    cmap = mpl.cm.get_cmap('plasma')
     norm = cm.Normalize(vmin=0, vmax=10)
 
     # Set up plot
@@ -27,6 +27,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                            width_ratios=[20, ] + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
     ax = fig.add_subplot(gs[0, 0])
+    ax.semilogy()
     cax = fig.add_subplot(gs[0, 1])
 
     # Loop over snapshots
