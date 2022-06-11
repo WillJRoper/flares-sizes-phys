@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 from matplotlib.colors import LogNorm
 
 from hmrs import plot_stellar_hmr, plot_stellar_gas_hmr_comp, visualise_gas
@@ -82,8 +83,14 @@ eagle_snaps = list(snaps)
 plot_subgrid_birth_den_vs_met()
 
 # Get the data we need
-data = get_data(flares_snaps, regions, stellar_data_fields, gas_data_fields,
-                path)
+try:
+    with open('data.pck', 'rb') as f:
+        data = pickle.load(f)
+except OSError:
+    data = get_data(flares_snaps, regions, stellar_data_fields, gas_data_fields,
+                    path)
+    with open('data.pck', 'wb') as f:
+        pickle.dump(data, f)
 
 print("Got all data")
 
