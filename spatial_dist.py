@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from flare import plt as flareplt
 from utils import mkdir, plot_meidan_stat, calc_ages
 from astropy.cosmology import Planck18 as cosmo
+from astropy.cosmology import z_at_value
 import eagle_IO.eagle_IO as eagle_io
 
 
@@ -36,7 +37,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
         z = float(snap.split("z")[-1].replace("p", "."))
 
         # Calculate redshift 100 Myrs before this z
-        z_100 = cosmo.z_at_value(cosmo.age, cosmo.age(z) - 101)
+        z_100 = z_at_value(cosmo.age, cosmo.age(z) - 101)
 
         # Are we dealing with EAGLE or FLARES?
         if z < 5:
