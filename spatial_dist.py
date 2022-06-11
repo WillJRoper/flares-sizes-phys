@@ -5,7 +5,7 @@ import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 from flare import plt as flareplt
 from utils import mkdir, plot_meidan_stat, calc_ages
-from astroy.cosmology import Planck18 as cosmo
+from astropy.cosmology import Planck18 as cosmo
 import eagle_IO.eagle_IO as eagle_io
 
 
