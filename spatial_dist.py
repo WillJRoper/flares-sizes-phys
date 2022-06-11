@@ -117,7 +117,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
             ini_ms = stellar_data[snap]["Particle,S_MassInitial"] * 10 ** 10
             radii = stellar_data[snap]["radii"]
             begins = stellar_data[snap]["begin"]
-            apps = stellar_data["Particle/Apertures/Star,30"]
+            apps = stellar_data[snap]["Particle/Apertures/Star,30"]
             lengths = stellar_data[snap]["Galaxy,S_Length"]
             hmrs = stellar_data[snap]["HMRs"]
 
