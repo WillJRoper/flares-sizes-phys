@@ -107,6 +107,9 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                     hmr = d["hmr"][(grp, subgrp)]
                     cop = d["cop"][(grp, subgrp)]
 
+                    if hmr == 0:
+                        continue
+
                     # Centre position
                     this_pos = pos[ind, :] - cop
 
