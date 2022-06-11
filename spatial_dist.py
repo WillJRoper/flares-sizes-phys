@@ -185,8 +185,10 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
 
                 # Normalise radii
                 if hmr <= 0:
-                    app = apps[b: b + nstar]
                     radii[b: b + nstar] = -1
+
+                if hmr > 0:
+                    app = apps[b: b + nstar]
                     gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
                     ini_ms[b: b + nstar] /= gal_m
 
