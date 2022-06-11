@@ -1,16 +1,18 @@
 import numpy as np
 import matplotlib as mpl
 import matplotlib.colors as cm
+import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 from flare import plt as flareplt
 from utils import mkdir, plot_meidan_stat, calc_ages
+from astroy.cosmology import Planck18 as cosmo
 import eagle_IO.eagle_IO as eagle_io
 
 
 def sfr_radial_profile(stellar_data, snaps, eagle_path):
 
     # Define radial bins
-    radial_bins = np.logspace(-2, 10, 50)
+    radial_bins = np.arange(0, 31, 1)
     bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
 
     # Define redshift colormap and normalisation
@@ -18,8 +20,12 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
     norm = cm.Normalize(vmin=0, vmax=10)
 
     # Set up plot
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
+    fig = plt.figure(figsize=(2.75, 2.75))
+    gs = gridspec.GridSpec(nrows=1, ncols=1 + 1,
+                           width_ratios=[20, ] + [1, ])
+    gs.update(wspace=0.0, hspace=0.0)
+    ax = fig.add_subplot(gs[0, 0])
+    cax = fig.add_subplot(gs[0, 1])
 
     # Loop over snapshots
     for snap in snaps:
@@ -28,6 +34,9 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
 
         # Get redshift
         z = float(snap.split("z")[-1].replace("p", "."))
+
+        # Calculate redshift 100 Myrs before this z
+        z_100 = cosmo.z_at_value(cosmo.age, cosmo.age(z) - 101)
 
         # Are we dealing with EAGLE or FLARES?
         if z < 5:
@@ -75,12 +84,24 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                                          physicalUnits=True,
                                          numThreads=8)[:, 4]
 
+            # Calculate birth redshifts
+            zborn = (1 / aborn) - 1
+
+            # Remove particles which are too old
+            ages_okinds = zborn < z_100
+            pos = pos[ages_okinds, :]
+            ages = ages[ages_okinds]
+            ini_ms = ini_ms[ages_okinds]
+            aborn = aborn[ages_okinds]
+            part_subgrp = part_subgrp[ages_okinds]
+            part_grp = part_grp[ages_okinds]
+
             # Create look up dictionary for galaxy values
             d = {"cop": {}, "hmr": {}, "nstar": {}}
             for (ind, grp), subgrp in zip(enumerate(grps), subgrps):
 
                 # Skip particles not in a galaxy
-                if subgrp == 2 ** 30:
+                if subgrp == 2 ** 30 or nstars[ind] < 100:
                     continue
 
                 # Store values
@@ -122,7 +143,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                     # Compute and normalise  radius
                     radii[ind] = np.sqrt(this_pos[0] ** 2
                                          + this_pos[1] ** 2
-                                         + this_pos[2] ** 2) / hmr
+                                         + this_pos[2] ** 2)
 
             # Define boolean arrays for age and the 30 pkpc aperture
             okinds = radii <= 30
@@ -152,9 +173,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                 hmr = hmrs[igal]
 
                 # Normalise radii
-                if hmr > 0:
-                    radii[b: b + nstar] /= hmr
-                else:
+                if hmr <= 0:
                     radii[b: b + nstar] = -1
 
         # Remove anomalous galaxies (with hmr = 0)
@@ -173,7 +192,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
     ax.set_xlabel("$R / R_{\star, 1/2}$")
 
     # Create colorbar
-    cb = mpl.colorbar.ColorbarBase(ax, cmap=cmap, norm=norm)
+    cb = mpl.colorbar.ColorbarBase(cax, cmap=cmap, norm=norm)
     cb.set_label("$z$")
 
     # Save figure
