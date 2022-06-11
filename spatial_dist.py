@@ -168,7 +168,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
             apps = stellar_data[snap]["Particle/Apertures/Star,30"]
             lengths = stellar_data[snap]["Galaxy,S_Length"]
             hmrs = stellar_data[snap]["HMRs"]
-            ms = stellar_data[snap]["Particle,S_Mass"] * 10 ** 10
+            ms = stellar_data[snap]["Particle,S_Mass"]
 
             # Create boolean array identifying stars born in the last 100 Myrs
             # and are within the 30 pkpc aperture
@@ -187,7 +187,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                 if hmr <= 0:
                     app = apps[b: b + nstar]
                     radii[b: b + nstar] = -1
-                    gal_m = np.sum(ms[b: b + nstar][app])
+                    gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
                     ini_ms[b: b + nstar] /= gal_m
 
         # Remove anomalous galaxies (with hmr = 0)
