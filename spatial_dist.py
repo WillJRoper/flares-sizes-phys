@@ -92,7 +92,6 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
             # Remove particles which are too old
             ages_okinds = zborn < z_100
             pos = pos[ages_okinds, :]
-            ages = ages[ages_okinds]
             ini_ms = ini_ms[ages_okinds]
             aborn = aborn[ages_okinds]
             part_subgrp = part_subgrp[ages_okinds]
