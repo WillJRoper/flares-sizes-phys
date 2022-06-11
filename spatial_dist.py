@@ -80,7 +80,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                     continue
 
                 # Store values
-                d["cop"][(grp, subgrp)] = cops[ind]
+                d["cop"][(grp, subgrp)] = cops[ind, :]
                 d["hmr"][(grp, subgrp)] = hmrs[ind]
 
             # Calculate ages
@@ -102,6 +102,9 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                     this_pos = pos[ind, :] - cop
 
                     # Compute and normalise  radius
+                    print(np.sqrt(this_pos[0] ** 2
+                                  + this_pos[1] ** 2
+                                  + this_pos[2] ** 2) / hmr)
                     radii[ind] = np.sqrt(this_pos[0] ** 2
                                          + this_pos[1] ** 2
                                          + this_pos[2] ** 2) / hmr
