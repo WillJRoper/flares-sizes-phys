@@ -62,18 +62,18 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                                        'Subhalo/HalfMassRad', noH=True,
                                        physicalUnits=True,
                                        numThreads=8) * 10**3
-            subgrp = eagle_io.read_array('SUBFIND', eagle_path, snap,
-                                         'Subhalo/SubGroupNumber', noH=True,
-                                         physicalUnits=True,
-                                         numThreads=8)
-            grp = eagle_io.read_array('SUBFIND', eagle_path, snap,
-                                      'Subhalo/GroupNumber', noH=True,
-                                      physicalUnits=True,
-                                      numThreads=8)
+            subgrps = eagle_io.read_array('SUBFIND', eagle_path, snap,
+                                          'Subhalo/SubGroupNumber', noH=True,
+                                          physicalUnits=True,
+                                          numThreads=8)
+            grps = eagle_io.read_array('SUBFIND', eagle_path, snap,
+                                       'Subhalo/GroupNumber', noH=True,
+                                       physicalUnits=True,
+                                       numThreads=8)
 
             # Create look up dictionary for galaxy values
             d = {"cop": {}, "hmr": {}}
-            for ind, (grp, subgrp) in enumerate(zip(grp. subgrp)):
+            for (ind, grp), subgrp in zip(enumerate(grps). subgrps):
 
                 # Skip particles not in a galaxy
                 if subgrp == 2 ** 30:
