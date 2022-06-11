@@ -168,7 +168,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
             apps = stellar_data[snap]["Particle/Apertures/Star,30"]
             lengths = stellar_data[snap]["Galaxy,S_Length"]
             hmrs = stellar_data[snap]["HMRs"]
-            ms = stellar_data[snap]["Particle,S_Mass"]
+            ms = stellar_data[snap]["Particle,S_Mass"] * 10 ** 10
 
             # Create boolean array identifying stars born in the last 100 Myrs
             # and are within the 30 pkpc aperture
