@@ -39,7 +39,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
         z = float(snap.split("z")[-1].replace("p", "."))
 
         # Calculate redshift 100 Myrs before this z
-        z_100 = z_at_value(cosmo.age, cosmo.age(z) - 101 * u.Myr)
+        z_100 = z_at_value(cosmo.age, cosmo.age(z) - 201 * u.Myr)
 
         # Are we dealing with EAGLE or FLARES?
         if z < 5:
@@ -195,13 +195,10 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
         # Remove anomalous galaxies (with hmr = 0)
         okinds = np.logical_and(okinds, radii >= 0)
 
-        # Derive radial sfr profile
-        binned_stellar_ms, _ = np.histogram(radii[okinds], bins=radial_bins,
-                                            weights=ini_ms[okinds])
-        radial_sfr = binned_stellar_ms / 100  # M_sun / Myr
-
         # Plot this profile
-        ax.plot(bin_cents, radial_sfr, color=cmap(norm(z)))
+        plot_meidan_stat(radii[okinds], ini_ms[okinds] / 100,
+                         np.ones(radii[okinds].size), ax,
+                         lab=None, color=cmap(norm(z)), bins=None, ls='-')
 
     # Label axes
     ax.set_ylabel("$\mathrm{sSFR}_{100} /[\mathrm{M}_\star /$ Myr]")
