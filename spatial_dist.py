@@ -14,7 +14,7 @@ import eagle_IO.eagle_IO as eagle_io
 def sfr_radial_profile(stellar_data, snaps, eagle_path):
 
     # Define radial bins
-    radial_bins = np.arange(0, 30.5, 0.5)
+    radial_bins = np.arange(0, 30.25, 0.25)
     bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
 
     # Define redshift colormap and normalisation
@@ -170,16 +170,17 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                 rs = d["radii"][key]
                 this_ini_ms = d["ini_ms"][key]
                 gal_m = d["m"][key]
+                hmr = d["hmr"][key]
 
                 # Derive radial sfr profile
                 binned_stellar_ms, _ = np.histogram(rs,
                                                     bins=radial_bins,
                                                     weights=this_ini_ms)
-                radial_sfr = binned_stellar_ms / 100  # 1 / Myr
+                radial_sfr = binned_stellar_ms / 100 / gal_m  # 1 / Myr
 
                 # Include this galaxy's profile
                 sfr_profile.extend(radial_sfr)
-                all_radii.extend(bin_cents)
+                all_radii.extend(bin_cents / hmr)
 
             ls = "--"
 
@@ -222,11 +223,11 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                 binned_stellar_ms, _ = np.histogram(rs,
                                                     bins=radial_bins,
                                                     weights=this_ini_ms)
-                radial_sfr = binned_stellar_ms / 100  # 1 / Myr
+                radial_sfr = binned_stellar_ms / 100 / gal_m  # 1 / Myr
 
                 # Include this galaxy's profile
                 sfr_profile.extend(radial_sfr)
-                all_radii.extend(bin_cents)
+                all_radii.extend(bin_cents / hmr)
 
             ls = "-"
 
@@ -238,10 +239,10 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
         plot_meidan_stat(all_radii, sfr_profile,
                          np.ones(all_radii.size), ax,
                          lab=None, color=cmap(norm(z)),
-                         bins=radial_bins, ls=ls)
+                         bins=None, ls=ls)
 
     # Label axes
-    ax.set_ylabel("$\mathrm{SFR}_{100} /[\mathrm{M}_\star /$ Myr]")
+    ax.set_ylabel("$\mathrm{sSFR}_{100} /[\mathrm{M}_\star /$ Myr]")
     ax.set_xlabel("$R / [pkpc]$")
 
     # Create colorbar
