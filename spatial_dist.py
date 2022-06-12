@@ -14,7 +14,7 @@ import eagle_IO.eagle_IO as eagle_io
 def sfr_radial_profile(stellar_data, snaps, eagle_path):
 
     # Define radial bins
-    radial_bins = np.arange(0, 30.25, 0.25)
+    radial_bins = np.logspace(-2, 1.5, 50)
     bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
 
     # Define redshift colormap and normalisation
@@ -27,7 +27,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                            width_ratios=[20, ] + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
     ax = fig.add_subplot(gs[0, 0])
-    ax.semilogy()
+    ax.loglog()
     cax = fig.add_subplot(gs[0, 1])
 
     # Loop over snapshots
@@ -160,7 +160,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                                 + this_pos[2] ** 2)
 
                     if r < 30:
-                        d["radii"][(grp, subgrp)].append(r)
+                        d["radii"][(grp, subgrp)].append(r / hmr)
                         d["ini_ms"][(grp, subgrp)].append(ini_ms[ind])
 
             # Loop over galaxies calculating profiles
@@ -170,7 +170,6 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                 rs = d["radii"][key]
                 this_ini_ms = d["ini_ms"][key]
                 gal_m = d["m"][key]
-                hmr = d["hmr"][key]
 
                 # Derive radial sfr profile
                 binned_stellar_ms, _ = np.histogram(rs,
@@ -180,7 +179,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
 
                 # Include this galaxy's profile
                 sfr_profile.extend(radial_sfr)
-                all_radii.extend(bin_cents / hmr)
+                all_radii.extend(bin_cents)
 
             ls = "--"
 
@@ -220,14 +219,14 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                 this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
 
                 # Derive radial sfr profile
-                binned_stellar_ms, _ = np.histogram(rs,
+                binned_stellar_ms, _ = np.histogram(rs / hmr,
                                                     bins=radial_bins,
                                                     weights=this_ini_ms)
                 radial_sfr = binned_stellar_ms / 100 / gal_m  # 1 / Myr
 
                 # Include this galaxy's profile
                 sfr_profile.extend(radial_sfr)
-                all_radii.extend(bin_cents / hmr)
+                all_radii.extend(bin_cents)
 
             ls = "-"
 
@@ -239,7 +238,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
         plot_meidan_stat(all_radii, sfr_profile,
                          np.ones(all_radii.size), ax,
                          lab=None, color=cmap(norm(z)),
-                         bins=None, ls=ls)
+                         bins=radial_bins, ls=ls)
 
     # Label axes
     ax.set_ylabel("$\mathrm{sSFR}_{100} /[\mathrm{M}_\star /$ Myr]")
