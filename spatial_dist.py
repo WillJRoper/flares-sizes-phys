@@ -231,17 +231,17 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
         all_radii = np.array(all_radii)
 
         # Plot this profile
-        plot_meidan_stat(sfr_profile, all_radii,
+        plot_meidan_statall_radii, sfr_profile,
                          np.ones(all_radii.size), ax,
-                         lab=None, color=cmap(norm(z)),
-                         bins=radial_bins, ls='-')
+                         lab = None, color = cmap(norm(z)),
+                         bins = radial_bins, ls = '-')
 
     # Label axes
     ax.set_ylabel("$\mathrm{sSFR}_{100} /[\mathrm{M}_\star /$ Myr]")
     ax.set_xlabel("$R / [pkpc]$")
 
     # Create colorbar
-    cb = mpl.colorbar.ColorbarBase(cax, cmap=cmap, norm=norm)
+    cb=mpl.colorbar.ColorbarBase(cax, cmap = cmap, norm = norm)
     cb.set_label("$z$")
 
     # Save figure
