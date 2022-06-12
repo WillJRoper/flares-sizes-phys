@@ -243,7 +243,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
 
     # Label axes
     ax.set_ylabel("$\mathrm{sSFR}_{100} /[\mathrm{M}_\star /$ Myr]")
-    ax.set_xlabel("$R / [pkpc]$")
+    ax.set_xlabel("$R / R_{1/2}$")
 
     # Create colorbar
     cb = mpl.colorbar.ColorbarBase(cax, cmap=cmap, norm=norm)
