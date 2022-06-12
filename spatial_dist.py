@@ -41,6 +41,10 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
         # Calculate redshift 100 Myrs before this z
         z_100 = z_at_value(cosmo.age, cosmo.age(z) - 201 * u.Myr)
 
+        # Initialise lists to hold the sfr profiles
+        sfr_profile = []
+        all_radii = []
+
         # Are we dealing with EAGLE or FLARES?
         if z < 5:
 
@@ -103,11 +107,12 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
             part_grp = part_grp[ages_okinds]
 
             # Create look up dictionary for galaxy values
-            d = {"cop": {}, "hmr": {}, "nstar": {}, "m": {}}
+            d = {"cop": {}, "hmr": {}, "nstar": {}, "m": {},
+                 "radii": {}, "ini_ms": {}}
             for (ind, grp), subgrp in zip(enumerate(grps), subgrps):
 
                 # Skip particles not in a galaxy
-                if subgrp == 2 ** 30 or nstars[ind] < 100:
+                if subgrp == 2 ** 30 or nstars[ind] < 100 or gal_ms[ind] < 10 ** 9:
                     continue
 
                 # Store values
@@ -115,6 +120,8 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                 d["hmr"][(grp, subgrp)] = hmrs[ind]
                 d["nstar"][(grp, subgrp)] = nstars[ind]
                 d["m"][(grp, subgrp)] = gal_ms[ind]
+                d["radii"][(grp, subgrp)] = []
+                d["ini_ms"][(grp, subgrp)] = []
 
             # Calculate ages
             ages = calc_ages(z, aborn)
@@ -147,16 +154,32 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                     # Centre position
                     this_pos = pos[ind, :] - cop
 
-                    # Compute and normalise  radius
-                    radii[ind] = np.sqrt(this_pos[0] ** 2
-                                         + this_pos[1] ** 2
-                                         + this_pos[2] ** 2)
+                    # Compute radius and assign to galaxy entry
+                    r = np.sqrt(this_pos[0] ** 2
+                                + this_pos[1] ** 2
+                                + this_pos[2] ** 2)
 
-                    # Normalise mass
-                    ini_ms[ind] /= d["m"][(grp, subgrp)]
+                    if r < 30:
+                        d["radii"][(grp, subgrp)].extend(r)
+                        d["ini_ms"][(grp, subgrp)].extend(ini_ms[ind])
 
-            # Define boolean arrays for age and the 30 pkpc aperture
-            okinds = radii <= 30
+            # Loop over galaxies calculating profiles
+            for key in d["radii"]:
+
+                # Get data
+                rs = d["radii"][key]
+                this_ini_ms = d["ini_ms"][key]
+                gal_m = d["m"][key]
+
+                # Derive radial sfr profile
+                binned_stellar_ms, _ = np.histogram(rs,
+                                                    bins=radial_bins,
+                                                    weights=this_ini_ms)
+                radial_sfr = binned_stellar_ms / 100 / gal_m  # 1 / Myr
+
+                # Include this galaxy's profile
+                sfr_profile.extend(radial_sfr)
+                all_radii.extend(bin_cents)
 
         else:
 
@@ -182,22 +205,34 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                 b = begins[igal]
                 nstar = lengths[igal]
                 hmr = hmrs[igal]
+                app = apps[b: b + nstar]
+                gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
 
                 # Normalise radii
-                if hmr <= 0:
-                    radii[b: b + nstar] = -1
+                if hmr <= 0 or gal_m < 10 ** 9:
+                    continue
 
-                if hmr > 0:
-                    app = apps[b: b + nstar]
-                    gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
-                    ini_ms[b: b + nstar] /= gal_m
+                # Get this galaxy's data
+                rs = radii[b: b + nstar][okinds[b: b + nstar]]
+                this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
 
-        # Remove anomalous galaxies (with hmr = 0)
-        okinds = np.logical_and(okinds, radii >= 0)
+                # Derive radial sfr profile
+                binned_stellar_ms, _ = np.histogram(rs,
+                                                    bins=radial_bins,
+                                                    weights=this_ini_ms)
+                radial_sfr = binned_stellar_ms / 100 / gal_m  # 1 / Myr
+
+                # Include this galaxy's profile
+                sfr_profile.extend(radial_sfr)
+                all_radii.extend(bin_cents)
+
+        # Convert to arrays
+        sfr_profile = np.array(sfr_profile)
+        all_radii = np.array(all_radii)
 
         # Plot this profile
-        plot_meidan_stat(radii[okinds], ini_ms[okinds] / 100,
-                         np.ones(radii[okinds].size), ax,
+        plot_meidan_stat(sfr_profile, all_radii,
+                         np.ones(all_radii.size), ax,
                          lab=None, color=cmap(norm(z)), bins=None, ls='-')
 
     # Label axes
