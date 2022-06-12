@@ -228,7 +228,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                 sfr_profile.extend(radial_sfr)
                 all_radii.extend(bin_cents)
 
-            ls - "-"
+            ls = "-"
 
         # Convert to arrays
         sfr_profile = np.array(sfr_profile)
