@@ -175,11 +175,13 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                 binned_stellar_ms, _ = np.histogram(rs,
                                                     bins=radial_bins,
                                                     weights=this_ini_ms)
-                radial_sfr = binned_stellar_ms / 100 / gal_m  # 1 / Myr
+                radial_sfr = binned_stellar_ms / 100  # 1 / Myr
 
                 # Include this galaxy's profile
                 sfr_profile.extend(radial_sfr)
                 all_radii.extend(bin_cents)
+
+            ls = "--"
 
         else:
 
@@ -220,11 +222,13 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                 binned_stellar_ms, _ = np.histogram(rs,
                                                     bins=radial_bins,
                                                     weights=this_ini_ms)
-                radial_sfr = binned_stellar_ms / 100 / gal_m  # 1 / Myr
+                radial_sfr = binned_stellar_ms / 100  # 1 / Myr
 
                 # Include this galaxy's profile
                 sfr_profile.extend(radial_sfr)
                 all_radii.extend(bin_cents)
+
+            ls - "-"
 
         # Convert to arrays
         sfr_profile = np.array(sfr_profile)
@@ -234,10 +238,10 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
         plot_meidan_stat(all_radii, sfr_profile,
                          np.ones(all_radii.size), ax,
                          lab=None, color=cmap(norm(z)),
-                         bins=radial_bins, ls='-')
+                         bins=radial_bins, ls=ls)
 
     # Label axes
-    ax.set_ylabel("$\mathrm{sSFR}_{100} /[\mathrm{M}_\star /$ Myr]")
+    ax.set_ylabel("$\mathrm{SFR}_{100} /[\mathrm{M}_\star /$ Myr]")
     ax.set_xlabel("$R / [pkpc]$")
 
     # Create colorbar
