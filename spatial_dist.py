@@ -160,7 +160,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                                 + this_pos[2] ** 2)
 
                     if r < 30:
-                        d["radii"][(grp, subgrp)].append(r / hmr)
+                        d["radii"][(grp, subgrp)].append(r)
                         d["ini_ms"][(grp, subgrp)].append(ini_ms[ind])
 
             # Loop over galaxies calculating profiles
@@ -219,7 +219,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                 this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
 
                 # Derive radial sfr profile
-                binned_stellar_ms, _ = np.histogram(rs / hmr,
+                binned_stellar_ms, _ = np.histogram(rs,
                                                     bins=radial_bins,
                                                     weights=this_ini_ms)
                 radial_sfr = binned_stellar_ms / 100 / gal_m  # 1 / Myr
