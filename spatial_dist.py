@@ -14,7 +14,7 @@ import eagle_IO.eagle_IO as eagle_io
 def sfr_radial_profile(stellar_data, snaps, eagle_path):
 
     # Define radial bins
-    radial_bins = np.logspace(-2, 1.5, 50)
+    radial_bins = np.logspace(-1.5, 1.8, 50)
     bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
 
     # Define redshift colormap and normalisation
