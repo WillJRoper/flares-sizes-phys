@@ -160,8 +160,8 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
                                 + this_pos[2] ** 2)
 
                     if r < 30:
-                        d["radii"][(grp, subgrp)].extend(r)
-                        d["ini_ms"][(grp, subgrp)].extend(ini_ms[ind])
+                        d["radii"][(grp, subgrp)].append(r)
+                        d["ini_ms"][(grp, subgrp)].append(ini_ms[ind])
 
             # Loop over galaxies calculating profiles
             for key in d["radii"]:
