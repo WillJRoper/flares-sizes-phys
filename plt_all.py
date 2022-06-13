@@ -96,7 +96,7 @@ except OSError:
 print("Got all data")
 
 # Make plots that require multiple redshifts
-sfr_radial_profile(data["stellar"], com_snaps, eagle_path)
+sfr_radial_profile(data["stellar"], com_snaps, eagle_path, flares_snaps)
 
 print("Plotted SFR profiles")
 
