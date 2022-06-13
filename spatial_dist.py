@@ -11,7 +11,7 @@ import astropy.units as u
 import eagle_IO.eagle_IO as eagle_io
 
 
-def sfr_radial_profile(stellar_data, snaps, eagle_path):
+def sfr_radial_profile(stellar_data, snaps, eagle_path, flares_snaps):
 
     # Define radial bins
     radial_bins = np.logspace(-2, 1.8, 50)
@@ -46,7 +46,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
         all_radii = []
 
         # Are we dealing with EAGLE or FLARES?
-        if z < 5:
+        if not snap in flares_snaps:
 
             aborn = eagle_io.read_array('PARTDATA', eagle_path, snap,
                                         'PartType4/StellarFormationTime',
