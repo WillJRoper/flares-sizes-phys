@@ -39,7 +39,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path, flares_snaps):
         z = float(snap.split("z")[-1].replace("p", "."))
 
         # Calculate redshift 100 Myrs before this z
-        z_100 = z_at_value(cosmo.age, cosmo.age(z) - 201 * u.Myr)
+        z_100 = z_at_value(cosmo.age, cosmo.age(z) - 101 * u.Myr)
 
         # Initialise lists to hold the sfr profiles
         sfr_profile = []
@@ -127,7 +127,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path, flares_snaps):
             ages = calc_ages(z, aborn)
 
             # Remove particles which are too old
-            ages_okinds = ages < 200
+            ages_okinds = ages < 100
             pos = pos[ages_okinds, :]
             ages = ages[ages_okinds]
             ini_ms = ini_ms[ages_okinds]
