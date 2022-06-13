@@ -20,7 +20,7 @@ weight_norm = LogNorm(vmin=10 ** -4, vmax=1)
 # Define raw data path for FLARES and EAGLE
 path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/G-EAGLE_<reg>/data/"
 # eagle_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'`
-eagel_path = "/cosma7/data/Eagle/ScienceRuns/Planck1/L0100N1504/PE/REFERENCE/data"
+eagle_path = "/cosma7/data/Eagle/ScienceRuns/Planck1/L0100N1504/PE/REFERENCE/data"
 # Define regions
 regions = []
 for reg in range(0, 40):
