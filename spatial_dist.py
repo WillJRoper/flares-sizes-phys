@@ -20,7 +20,7 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
 
     # Define redshift colormap and normalisation
     cmap = mpl.cm.get_cmap('plasma')
-    norm = cm.Normalize(vmin=0, vmax=10)
+    norm = cm.Normalize(vmin=2, vmax=10)
 
     # Define REF path that's only used here
     ref_path = "/cosma7/data/Eagle/ScienceRuns/Planck1/L0100N1504/PE/REFERENCE/data"
@@ -268,7 +268,7 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                                   linestyle="dotted"))
     ax.legend(handles=legend_elements,
               loc='upper center',
-              bbox_to_anchor=(0.5, -0.3),
+              bbox_to_anchor=(0.5, -0.25),
               fancybox=True, ncol=3)
 
     # Label axes
