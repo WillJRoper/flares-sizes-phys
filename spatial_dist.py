@@ -53,6 +53,9 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
 
             for eagle_path in [ref_path, agndt9_path]:
 
+                if eagle_path == agndt9_path and snap == '008_z005p037':
+                    continue
+
                 # Initialise lists to hold the sfr profiles
                 sfr_profile = []
                 all_radii = []
