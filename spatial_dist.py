@@ -14,7 +14,7 @@ import eagle_IO.eagle_IO as eagle_io
 def sfr_radial_profile(stellar_data, snaps, eagle_path):
 
     # Define radial bins
-    radial_bins = np.logspace(-1.5, 1.8, 50)
+    radial_bins = np.logspace(-2, 1.8, 50)
     bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
 
     # Define redshift colormap and normalisation
@@ -112,7 +112,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
             for (ind, grp), subgrp in zip(enumerate(grps), subgrps):
 
                 # Skip particles not in a galaxy
-                if subgrp == 2 ** 30 or nstars[ind] < 100 or gal_ms[ind] < 10 ** 9:
+                if nstars[ind] < 100 or gal_ms[ind] < 10 ** 9:
                     continue
 
                 # Store values
@@ -127,7 +127,7 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path):
             ages = calc_ages(z, aborn)
 
             # Remove particles which are too old
-            ages_okinds = ages < 100
+            ages_okinds = ages < 200
             pos = pos[ages_okinds, :]
             ages = ages[ages_okinds]
             ini_ms = ini_ms[ages_okinds]
