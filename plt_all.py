@@ -21,6 +21,7 @@ weight_norm = LogNorm(vmin=10 ** -4, vmax=1)
 path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/G-EAGLE_<reg>/data/"
 # eagle_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'`
 eagle_path = "/cosma7/data/Eagle/ScienceRuns/Planck1/L0100N1504/PE/REFERENCE/data"
+
 # Define regions
 regions = []
 for reg in range(0, 40):
@@ -35,7 +36,7 @@ flares_snaps = ['005_z010p000', '006_z009p000', '007_z008p000', '008_z007p000',
 
 # Create combined snaps list
 com_snaps = ['005_z010p000', '006_z009p000', '007_z008p000', '008_z007p000',
-             '009_z006p000', '010_z005p000', '009_z004p485', '010_z003p984',
+             '009_z006p000', '010_z005p000', '008_z005p037', '010_z003p984',
              '012_z003p017', '015_z002p012', '019_z001p004', '028_z000p000']
 
 
