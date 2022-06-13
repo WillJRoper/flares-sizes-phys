@@ -3,7 +3,7 @@ import matplotlib as mpl
 import matplotlib.colors as cm
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
-from matplotlib.lines import
+from matplotlib.lines import Line2D
 from flare import plt as flareplt
 from utils import mkdir, plot_meidan_stat, calc_ages
 from astropy.cosmology import Planck18 as cosmo
