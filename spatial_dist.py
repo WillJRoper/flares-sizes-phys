@@ -29,7 +29,7 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
     legend_elements = []
 
     # Set up plot
-    fig = plt.figure(figsize=(2.75, 2.75))
+    fig = plt.figure(figsize=(3.5, 3.5))
     gs = gridspec.GridSpec(nrows=1, ncols=1 + 1,
                            width_ratios=[20, ] + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
@@ -265,14 +265,14 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                                   linestyle="--"))
     legend_elements.append(Line2D([0], [0], color='k',
                                   label="EAGLE-REF",
-                                  linestyle="-"))
+                                  linestyle="dotted"))
     ax.legend(handles=legend_elements,
               loc='upper center',
               bbox_to_anchor=(0.5, -0.3),
               fancybox=True, ncol=3)
 
     # Label axes
-    ax.set_ylabel("$\mathrm{sSFR}_{100} /[\mathrm{M}_\star /$ Myr]")
+    ax.set_ylabel("$\mathrm{sSFR}_{100} / [\mathrm{Myr}^{-1}]$")
     ax.set_xlabel("$R / $[pkpc]")
 
     # Create colorbar
