@@ -288,7 +288,7 @@ def clean_data(stellar_data, gas_data):
         # Read array
         arr = stellar_data[key]
         if arr.size == n_gal:
-            arr = arr[okinds]
+            stellar_data[key] = arr[okinds]
 
     # Loop over keys and mask necessary arrays
     for key in gas_data:
@@ -296,6 +296,6 @@ def clean_data(stellar_data, gas_data):
         # Read array
         arr = gas_data[key]
         if arr.size == n_gal:
-            arr = arr[okinds]
+            gas_data[key] = arr[okinds]
 
     return stellar_data, gas_data
