@@ -46,7 +46,7 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
         z = float(snap.split("z")[-1].replace("p", "."))
 
         # Calculate redshift 100 Myrs before this z
-        z_100 = z_at_value(cosmo.age, cosmo.age(z) - 101 * u.Myr)
+        z_100 = z_at_value(cosmo.age, cosmo.age(z) - 100 * u.Myr)
 
         # Are we dealing with EAGLE or FLARES?
         if not snap in flares_snaps:
@@ -134,18 +134,6 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                     d["m"][(grp, subgrp)] = gal_ms[ind]
                     d["radii"][(grp, subgrp)] = []
                     d["ini_ms"][(grp, subgrp)] = []
-
-                # Calculate ages
-                ages = calc_ages(z, aborn)
-
-                # Remove particles which are too old
-                ages_okinds = ages < 100
-                pos = pos[ages_okinds, :]
-                ages = ages[ages_okinds]
-                ini_ms = ini_ms[ages_okinds]
-                aborn = aborn[ages_okinds]
-                part_subgrp = part_subgrp[ages_okinds]
-                part_grp = part_grp[ages_okinds]
 
                 # Loop over particles calculating and normalising radii
                 radii = np.full(ages.size, -1, dtype=np.float64)
