@@ -3,6 +3,7 @@ import matplotlib as mpl
 import matplotlib.colors as cm
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
+from matplotlib.lines import
 from flare import plt as flareplt
 from utils import mkdir, plot_meidan_stat, calc_ages
 from astropy.cosmology import Planck18 as cosmo
@@ -11,7 +12,7 @@ import astropy.units as u
 import eagle_IO.eagle_IO as eagle_io
 
 
-def sfr_radial_profile(stellar_data, snaps, eagle_path, flares_snaps):
+def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
 
     # Define radial bins
     radial_bins = np.logspace(-2, 1.8, 50)
@@ -20,6 +21,12 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path, flares_snaps):
     # Define redshift colormap and normalisation
     cmap = mpl.cm.get_cmap('plasma')
     norm = cm.Normalize(vmin=0, vmax=10)
+
+    # Define REF path that's only used here
+    ref_path = "/cosma7/data/Eagle/ScienceRuns/Planck1/L0100N1504/PE/REFERENCE/data"
+
+    # Initialise legend elements
+    legend_elements = []
 
     # Set up plot
     fig = plt.figure(figsize=(2.75, 2.75))
@@ -41,149 +48,169 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path, flares_snaps):
         # Calculate redshift 100 Myrs before this z
         z_100 = z_at_value(cosmo.age, cosmo.age(z) - 101 * u.Myr)
 
-        # Initialise lists to hold the sfr profiles
-        sfr_profile = []
-        all_radii = []
-
         # Are we dealing with EAGLE or FLARES?
         if not snap in flares_snaps:
 
-            aborn = eagle_io.read_array('PARTDATA', eagle_path, snap,
-                                        'PartType4/StellarFormationTime',
-                                        noH=True,
-                                        physicalUnits=True,
-                                        numThreads=8)
-            ini_ms = eagle_io.read_array('PARTDATA', eagle_path, snap,
-                                         'PartType4/InitialMass', noH=True,
-                                         physicalUnits=True,
-                                         numThreads=8) * 10 ** 10
-            gal_ms = eagle_io.read_array('SUBFIND', eagle_path, snap,
-                                         'Subhalo/ApertureMeasurements/Mass/030kpc', noH=True,
-                                         physicalUnits=True,
-                                         numThreads=8)[:, 4] * 10 ** 10
-            pos = eagle_io.read_array('PARTDATA', eagle_path, snap,
-                                      'PartType4/Coordinates', noH=True,
-                                      physicalUnits=True,
-                                      numThreads=8) * 10**3
-            cops = eagle_io.read_array('SUBFIND', eagle_path, snap,
-                                       'Subhalo/CentreOfPotential', noH=True,
-                                       physicalUnits=True,
-                                       numThreads=8) * 10**3
-            part_subgrp = eagle_io.read_array('PARTDATA', eagle_path, snap,
-                                              'PartType4/SubGroupNumber',
-                                              noH=True,
+            for eagle_path in [ref_path, agndt9_path]:
+
+                # Initialise lists to hold the sfr profiles
+                sfr_profile = []
+                all_radii = []
+
+                aborn = eagle_io.read_array('PARTDATA', eagle_path, snap,
+                                            'PartType4/StellarFormationTime',
+                                            noH=True,
+                                            physicalUnits=True,
+                                            numThreads=8)
+                ini_ms = eagle_io.read_array('PARTDATA', eagle_path, snap,
+                                             'PartType4/InitialMass', noH=True,
+                                             physicalUnits=True,
+                                             numThreads=8) * 10 ** 10
+                gal_ms = eagle_io.read_array('SUBFIND', eagle_path, snap,
+                                             'Subhalo/ApertureMeasurements/Mass/030kpc', noH=True,
+                                             physicalUnits=True,
+                                             numThreads=8)[:, 4] * 10 ** 10
+                pos = eagle_io.read_array('PARTDATA', eagle_path, snap,
+                                          'PartType4/Coordinates', noH=True,
+                                          physicalUnits=True,
+                                          numThreads=8) * 10**3
+                cops = eagle_io.read_array('SUBFIND', eagle_path, snap,
+                                           'Subhalo/CentreOfPotential', noH=True,
+                                           physicalUnits=True,
+                                           numThreads=8) * 10**3
+                part_subgrp = eagle_io.read_array('PARTDATA', eagle_path, snap,
+                                                  'PartType4/SubGroupNumber',
+                                                  noH=True,
+                                                  physicalUnits=True,
+                                                  numThreads=8)
+                part_grp = eagle_io.read_array('PARTDATA', eagle_path, snap,
+                                               'PartType4/GroupNumber', noH=True,
+                                               physicalUnits=True,
+                                               numThreads=8)
+                hmrs = eagle_io.read_array('SUBFIND', eagle_path, snap,
+                                           'Subhalo/HalfMassRad', noH=True,
+                                           physicalUnits=True,
+                                           numThreads=8)[:, 4] * 10**3
+                subgrps = eagle_io.read_array('SUBFIND', eagle_path, snap,
+                                              'Subhalo/SubGroupNumber', noH=True,
                                               physicalUnits=True,
                                               numThreads=8)
-            part_grp = eagle_io.read_array('PARTDATA', eagle_path, snap,
-                                           'PartType4/GroupNumber', noH=True,
+                grps = eagle_io.read_array('SUBFIND', eagle_path, snap,
+                                           'Subhalo/GroupNumber', noH=True,
                                            physicalUnits=True,
                                            numThreads=8)
-            hmrs = eagle_io.read_array('SUBFIND', eagle_path, snap,
-                                       'Subhalo/HalfMassRad', noH=True,
-                                       physicalUnits=True,
-                                       numThreads=8)[:, 4] * 10**3
-            subgrps = eagle_io.read_array('SUBFIND', eagle_path, snap,
-                                          'Subhalo/SubGroupNumber', noH=True,
-                                          physicalUnits=True,
-                                          numThreads=8)
-            grps = eagle_io.read_array('SUBFIND', eagle_path, snap,
-                                       'Subhalo/GroupNumber', noH=True,
-                                       physicalUnits=True,
-                                       numThreads=8)
-            nstars = eagle_io.read_array('SUBFIND', eagle_path, snap,
-                                         'Subhalo/SubLengthType', noH=True,
-                                         physicalUnits=True,
-                                         numThreads=8)[:, 4]
+                nstars = eagle_io.read_array('SUBFIND', eagle_path, snap,
+                                             'Subhalo/SubLengthType', noH=True,
+                                             physicalUnits=True,
+                                             numThreads=8)[:, 4]
 
-            # Calculate birth redshifts
-            zborn = (1 / aborn) - 1
+                # Calculate birth redshifts
+                zborn = (1 / aborn) - 1
 
-            # Remove particles which are too old
-            ages_okinds = zborn < z_100
-            pos = pos[ages_okinds, :]
-            ini_ms = ini_ms[ages_okinds]
-            aborn = aborn[ages_okinds]
-            part_subgrp = part_subgrp[ages_okinds]
-            part_grp = part_grp[ages_okinds]
+                # Remove particles which are too old
+                ages_okinds = zborn < z_100
+                pos = pos[ages_okinds, :]
+                ini_ms = ini_ms[ages_okinds]
+                aborn = aborn[ages_okinds]
+                part_subgrp = part_subgrp[ages_okinds]
+                part_grp = part_grp[ages_okinds]
 
-            # Create look up dictionary for galaxy values
-            d = {"cop": {}, "hmr": {}, "nstar": {}, "m": {},
-                 "radii": {}, "ini_ms": {}}
-            for (ind, grp), subgrp in zip(enumerate(grps), subgrps):
+                # Create look up dictionary for galaxy values
+                d = {"cop": {}, "hmr": {}, "nstar": {}, "m": {},
+                     "radii": {}, "ini_ms": {}}
+                for (ind, grp), subgrp in zip(enumerate(grps), subgrps):
 
-                # Skip particles not in a galaxy
-                if nstars[ind] < 100 or gal_ms[ind] < 10 ** 9:
-                    continue
-
-                # Store values
-                d["cop"][(grp, subgrp)] = cops[ind, :]
-                d["hmr"][(grp, subgrp)] = hmrs[ind]
-                d["nstar"][(grp, subgrp)] = nstars[ind]
-                d["m"][(grp, subgrp)] = gal_ms[ind]
-                d["radii"][(grp, subgrp)] = []
-                d["ini_ms"][(grp, subgrp)] = []
-
-            # Calculate ages
-            ages = calc_ages(z, aborn)
-
-            # Remove particles which are too old
-            ages_okinds = ages < 100
-            pos = pos[ages_okinds, :]
-            ages = ages[ages_okinds]
-            ini_ms = ini_ms[ages_okinds]
-            aborn = aborn[ages_okinds]
-            part_subgrp = part_subgrp[ages_okinds]
-            part_grp = part_grp[ages_okinds]
-
-            # Loop over particles calculating and normalising radii
-            radii = np.full(ages.size, -1, dtype=np.float64)
-            for ind in range(aborn.size):
-
-                # Get grp and subgrp
-                grp, subgrp = part_grp[ind], part_subgrp[ind]
-
-                # Get hmr and centre of potential if we are in a valid galaxy
-                if (grp, subgrp) in d["hmr"]:
-                    hmr = d["hmr"][(grp, subgrp)]
-                    cop = d["cop"][(grp, subgrp)]
-                    nstar = d["nstar"][(grp, subgrp)]
-
-                    if hmr == 0 or nstar < 100:
+                    # Skip particles not in a galaxy
+                    if nstars[ind] < 100 or gal_ms[ind] < 10 ** 9:
                         continue
 
-                    # Centre position
-                    this_pos = pos[ind, :] - cop
+                    # Store values
+                    d["cop"][(grp, subgrp)] = cops[ind, :]
+                    d["hmr"][(grp, subgrp)] = hmrs[ind]
+                    d["nstar"][(grp, subgrp)] = nstars[ind]
+                    d["m"][(grp, subgrp)] = gal_ms[ind]
+                    d["radii"][(grp, subgrp)] = []
+                    d["ini_ms"][(grp, subgrp)] = []
 
-                    # Compute radius and assign to galaxy entry
-                    r = np.sqrt(this_pos[0] ** 2
-                                + this_pos[1] ** 2
-                                + this_pos[2] ** 2)
+                # Calculate ages
+                ages = calc_ages(z, aborn)
 
-                    if r < 30:
-                        d["radii"][(grp, subgrp)].append(r)
-                        d["ini_ms"][(grp, subgrp)].append(ini_ms[ind])
+                # Remove particles which are too old
+                ages_okinds = ages < 100
+                pos = pos[ages_okinds, :]
+                ages = ages[ages_okinds]
+                ini_ms = ini_ms[ages_okinds]
+                aborn = aborn[ages_okinds]
+                part_subgrp = part_subgrp[ages_okinds]
+                part_grp = part_grp[ages_okinds]
 
-            # Loop over galaxies calculating profiles
-            for key in d["radii"]:
+                # Loop over particles calculating and normalising radii
+                radii = np.full(ages.size, -1, dtype=np.float64)
+                for ind in range(aborn.size):
 
-                # Get data
-                rs = d["radii"][key]
-                this_ini_ms = d["ini_ms"][key]
-                gal_m = d["m"][key]
+                    # Get grp and subgrp
+                    grp, subgrp = part_grp[ind], part_subgrp[ind]
 
-                # Derive radial sfr profile
-                binned_stellar_ms, _ = np.histogram(rs,
-                                                    bins=radial_bins,
-                                                    weights=this_ini_ms)
-                radial_sfr = binned_stellar_ms / 100 / gal_m  # 1 / Myr
+                    # Get hmr and centre of potential if we are in a valid galaxy
+                    if (grp, subgrp) in d["hmr"]:
+                        hmr = d["hmr"][(grp, subgrp)]
+                        cop = d["cop"][(grp, subgrp)]
+                        nstar = d["nstar"][(grp, subgrp)]
 
-                # Include this galaxy's profile
-                sfr_profile.extend(radial_sfr)
-                all_radii.extend(bin_cents)
+                        if hmr == 0 or nstar < 100:
+                            continue
 
-            ls = "--"
+                        # Centre position
+                        this_pos = pos[ind, :] - cop
+
+                        # Compute radius and assign to galaxy entry
+                        r = np.sqrt(this_pos[0] ** 2
+                                    + this_pos[1] ** 2
+                                    + this_pos[2] ** 2)
+
+                        if r < 30:
+                            d["radii"][(grp, subgrp)].append(r)
+                            d["ini_ms"][(grp, subgrp)].append(ini_ms[ind])
+
+                # Loop over galaxies calculating profiles
+                for key in d["radii"]:
+
+                    # Get data
+                    rs = d["radii"][key]
+                    this_ini_ms = d["ini_ms"][key]
+                    gal_m = d["m"][key]
+
+                    # Derive radial sfr profile
+                    binned_stellar_ms, _ = np.histogram(rs,
+                                                        bins=radial_bins,
+                                                        weights=this_ini_ms)
+                    radial_sfr = binned_stellar_ms / 100 / gal_m  # 1 / Myr
+
+                    # Include this galaxy's profile
+                    sfr_profile.extend(radial_sfr)
+                    all_radii.extend(bin_cents)
+
+                # Assign linestyle
+                if eagle_path == ref_path:
+                    ls = "dotted"
+                else:
+                    ls = "--"
+
+                # Convert to arrays
+                sfr_profile = np.array(sfr_profile)
+                all_radii = np.array(all_radii)
+
+                # Plot this profile
+                plot_meidan_stat(all_radii, sfr_profile,
+                                 np.ones(all_radii.size), ax,
+                                 lab=None, color=cmap(norm(z)),
+                                 bins=radial_bins, ls=ls)
 
         else:
+
+            # Initialise lists to hold the sfr profiles
+            sfr_profile = []
+            all_radii = []
 
             # Get data
             ages = stellar_data[snap]["Particle,S_Age"] * 1000
@@ -228,21 +255,34 @@ def sfr_radial_profile(stellar_data, snaps, eagle_path, flares_snaps):
                 sfr_profile.extend(radial_sfr)
                 all_radii.extend(bin_cents)
 
-            ls = "-"
+            # Convert to arrays
+            sfr_profile = np.array(sfr_profile)
+            all_radii = np.array(all_radii)
 
-        # Convert to arrays
-        sfr_profile = np.array(sfr_profile)
-        all_radii = np.array(all_radii)
+            # Plot this profile
+            plot_meidan_stat(all_radii, sfr_profile,
+                             np.ones(all_radii.size), ax,
+                             lab=None, color=cmap(norm(z)),
+                             bins=radial_bins, ls="-")
 
-        # Plot this profile
-        plot_meidan_stat(all_radii, sfr_profile,
-                         np.ones(all_radii.size), ax,
-                         lab=None, color=cmap(norm(z)),
-                         bins=radial_bins, ls=ls)
+    # Set up legend
+    legend_elements.append(Line2D([0], [0], color='k',
+                                  label="FLARES",
+                                  linestyle="-"))
+    legend_elements.append(Line2D([0], [0], color='k',
+                                  label="EAGLE-AGNdT9",
+                                  linestyle="--"))
+    legend_elements.append(Line2D([0], [0], color='k',
+                                  label="EAGLE-REF",
+                                  linestyle="-"))
+    ax.legend(handles=legend_elements,
+              loc='upper center',
+              bbox_to_anchor=(0.5, -0.3),
+              fancybox=True, ncol=3)
 
     # Label axes
     ax.set_ylabel("$\mathrm{sSFR}_{100} /[\mathrm{M}_\star /$ Myr]")
-    ax.set_xlabel("$R / R_{1/2}$")
+    ax.set_xlabel("$R / $[pkpc]")
 
     # Create colorbar
     cb = mpl.colorbar.ColorbarBase(cax, cmap=cmap, norm=norm)
