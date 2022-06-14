@@ -404,10 +404,7 @@ def sfr_radial_profile_environ(stellar_data, snap):
     ax.set_xlabel("$R / $[pkpc]")
 
     # Create colorbar
-    cb = mpl.colorbar.ColorbarBase(cax, cmap=cmap, norm=norm,
-                                   bounds=ovden_bins,
-                                   ticks=(ovden_bins[1:]
-                                          + ovden_bins[: -1]) / 2)
+    cb = mpl.colorbar.ColorbarBase(cax, cmap=cmap, norm=norm)
     cb.set_label("$\log_{10}(1 + \delta)$")
 
     # Save figure
