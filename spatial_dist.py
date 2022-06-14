@@ -136,13 +136,13 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                     d["ini_ms"][(grp, subgrp)] = []
 
                 # Loop over particles calculating and normalising radii
-                radii = np.full(ages.size, -1, dtype=np.float64)
                 for ind in range(aborn.size):
 
                     # Get grp and subgrp
                     grp, subgrp = part_grp[ind], part_subgrp[ind]
 
-                    # Get hmr and centre of potential if we are in a valid galaxy
+                    # Get hmr and centre of potential if we are
+                    # in a valid galaxy
                     if (grp, subgrp) in d["hmr"]:
                         hmr = d["hmr"][(grp, subgrp)]
                         cop = d["cop"][(grp, subgrp)]
@@ -170,6 +170,9 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                     rs = d["radii"][key]
                     this_ini_ms = d["ini_ms"][key]
                     gal_m = d["m"][key]
+
+                    if len(this_ini_ms) == 0:
+                        continue
 
                     # Derive radial sfr profile
                     binned_stellar_ms, _ = np.histogram(rs,
@@ -229,10 +232,11 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                 hmr = hmrs[igal]
                 app = apps[b: b + nstar]
                 gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
-                ws = w[b: b + nstar]
+                ws = w[igal]
+                nstar_100 = ini_ms[b: b + nstar][okinds[b: b + nstar]].size
 
                 # Normalise radii
-                if hmr <= 0 or gal_m < 10 ** 9:
+                if hmr <= 0 or gal_m < 10 ** 9 or nstar_100 == 0:
                     continue
 
                 # Get this galaxy's data
@@ -249,12 +253,12 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                 # Include this galaxy's profile
                 sfr_profile.extend(radial_sfr)
                 all_radii.extend(bin_cents)
-                all_ws.extend(ws)
+                all_ws.extend(np.full(bin_cents.size, ws))
 
             # Convert to arrays
             sfr_profile = np.array(sfr_profile)
             all_radii = np.array(all_radii)
-            all_ws = np.array(ws)
+            all_ws = np.array(all_ws)
 
             # Plot this profile
             plot_meidan_stat(all_radii, sfr_profile,
