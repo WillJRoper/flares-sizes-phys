@@ -370,7 +370,7 @@ def sfr_radial_profile_environ(stellar_data, snap):
         # Include this galaxy's profile
         sfr_profile.extend(radial_sfr)
         all_radii.extend(bin_cents)
-        all_ws.extend(np.full_like(radial_sfr.size, this_w))
+        all_ws.extend(np.full(bin_cents.size, this_w))
         all_ovdens.extend(ovdens)
 
     # Convert to arrays
