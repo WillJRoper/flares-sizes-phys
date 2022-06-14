@@ -314,6 +314,7 @@ def visualise_gas(stellar_data, gas_data, snap, path):
 
         # Load the new regions data if we have a new region
         if reg != prev_reg:
+            print("Moving on to region:", reg)
             prev_reg = reg
             s_star_pos = eagle_io.read_array('PARTDATA',
                                              path.replace("<reg>",
