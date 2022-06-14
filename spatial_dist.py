@@ -394,7 +394,7 @@ def sfr_radial_profile_environ(stellar_data, snap):
 
         # Plot this profile
         plot_meidan_stat(all_radii[okinds], sfr_profile[okinds],
-                         all_ws[okinds], ax,
+                         np.ones(all_ws[okinds].size), ax,
                          lab=None, color=cmap(norm(bin_cent)),
                          bins=radial_bins, ls="-")
 
