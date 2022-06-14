@@ -350,7 +350,6 @@ def sfr_radial_profile_environ(stellar_data, snap):
         hmr = hmrs[igal]
         app = apps[b: b + nstar]
         gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
-        ws = w[b: b + nstar]
 
         # Normalise radii
         if hmr <= 0 or gal_m < 10 ** 9:
@@ -359,7 +358,7 @@ def sfr_radial_profile_environ(stellar_data, snap):
         # Get this galaxy's data
         rs = radii[b: b + nstar][okinds[b: b + nstar]]
         this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
-        this_ws = ws[okinds[b: b + nstar]]
+        this_w = w[igal]
         ovdens = part_ovdens[b: b + nstar][okinds[b: b + nstar]]
 
         # Derive radial sfr profile
@@ -371,7 +370,7 @@ def sfr_radial_profile_environ(stellar_data, snap):
         # Include this galaxy's profile
         sfr_profile.extend(radial_sfr)
         all_radii.extend(bin_cents)
-        all_ws.extend(this_ws)
+        all_ws.extend(np.full_like(radial_sfr.size, this_w))
         all_ovdens.extend(ovdens)
 
     # Convert to arrays
