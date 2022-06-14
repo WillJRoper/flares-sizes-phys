@@ -242,7 +242,6 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                 # Get this galaxy's data
                 rs = radii[b: b + nstar][okinds[b: b + nstar]]
                 this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
-                ws = ws[okinds[b: b + nstar]]
 
                 # Derive radial sfr profile
                 binned_stellar_ms, _ = np.histogram(rs,
