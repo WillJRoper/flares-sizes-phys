@@ -6,6 +6,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 from matplotlib.colors import LogNorm
+from scipy.spatial import cKDTree
 import numpy as np
 import pandas as pd
 from utils import calc_3drad, calc_light_mass_rad, mkdir
@@ -92,7 +93,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     g_hmrs = gas_data["HMRs"]
     w = stellar_data["weight"]
     s_den_hmr = stellar_data["apertures"]["density"]["hmr"]
-    col = gas_data["apertures"]["density"]["hmr"]
+    col = gas_data["apertures"]["age"][30]
 
     # Remove galaxies without stars
     okinds = np.logical_and(g_hmrs > 0, s_hmrs > 0)
@@ -206,6 +207,9 @@ def visualise_gas(stellar_data, gas_data, snap, path):
                                   physicalUnits=True,
                                   numThreads=8)
 
+    # Build kd-tree
+    gas_tree = cKDTree(s_gas_pos)
+
     # Define the two populations
     both_compact = np.logical_and(s_hmrs < 1, g_hmrs < 1)
     extend_gas = np.logical_and(s_hmrs < 1, g_hmrs >= 1)
@@ -239,6 +243,7 @@ def visualise_gas(stellar_data, gas_data, snap, path):
 
         # Load the new regions data if we have a new region
         if reg != prev_reg:
+            print("Moving on to region:", reg)
             prev_reg = reg
             s_star_pos = eagle_io.read_array('PARTDATA',
                                              path.replace("<reg>",
@@ -267,17 +272,16 @@ def visualise_gas(stellar_data, gas_data, snap, path):
                                           physicalUnits=True,
                                           numThreads=8)
 
+            # Build kd-tree
+            gas_tree = cKDTree(s_gas_pos)
+
+        # Get particles we need
+        inds = gas_tree.query_ball_point(cops[ind, :], r=width / 2,
+                                         workers=8)
+
         # Get surrounding particle positions and masses
-        centred_surrounding_pos = s_gas_pos - cops[ind, :]
-        xokinds = np.logical_and(centred_surrounding_pos[:, 0] <= width / 2,
-                                 centred_surrounding_pos[:, 0] >= -width / 2)
-        yokinds = np.logical_and(centred_surrounding_pos[:, 1] <= width / 2,
-                                 centred_surrounding_pos[:, 1] >= -width / 2)
-        zokinds = np.logical_and(centred_surrounding_pos[:, 2] <= width / 2,
-                                 centred_surrounding_pos[:, 2] >= -width / 2)
-        okinds = np.logical_and(np.logical_and(xokinds, yokinds), zokinds)
-        this_s_gas_pos = centred_surrounding_pos[okinds, :]
-        this_s_gas_m = s_gas_m[okinds]
+        this_s_gas_pos = s_gas_pos[inds, :] - cops[ind, :]
+        this_s_gas_m = s_gas_m[inds]
 
         # Make the image of the surrounding gas
         H_s, _, _ = np.histogram2d(this_s_gas_pos[:, 0], this_s_gas_pos[:, 1],
@@ -338,17 +342,16 @@ def visualise_gas(stellar_data, gas_data, snap, path):
                                           physicalUnits=True,
                                           numThreads=8)
 
+            # Build kd-tree
+            gas_tree = cKDTree(s_gas_pos)
+
+        # Get particles we need
+        inds = gas_tree.query_ball_point(cops[ind, :], r=width / 2,
+                                         workers=8)
+
         # Get surrounding particle positions and masses
-        centred_surrounding_pos = s_gas_pos - cops[ind, :]
-        xokinds = np.logical_and(centred_surrounding_pos[:, 0] <= width / 2,
-                                 centred_surrounding_pos[:, 0] >= -width / 2)
-        yokinds = np.logical_and(centred_surrounding_pos[:, 1] <= width / 2,
-                                 centred_surrounding_pos[:, 1] >= -width / 2)
-        zokinds = np.logical_and(centred_surrounding_pos[:, 2] <= width / 2,
-                                 centred_surrounding_pos[:, 2] >= -width / 2)
-        okinds = np.logical_and(np.logical_and(xokinds, yokinds), zokinds)
-        this_s_gas_pos = centred_surrounding_pos[okinds, :]
-        this_s_gas_m = s_gas_m[okinds]
+        this_s_gas_pos = s_gas_pos[inds, :] - cops[ind, :]
+        this_s_gas_m = s_gas_m[inds]
 
         # Make the image of the surrounding gas
         H_s, _, _ = np.histogram2d(this_s_gas_pos[:, 0], this_s_gas_pos[:, 1],
