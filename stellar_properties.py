@@ -58,7 +58,9 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
         okinds = np.logical_and(np.logical_and(zs > 0, mets > 0),
                                 okinds)
 
-        plot_meidan_stat(zs[okinds], mets[okinds], w[okinds], ax,
+        plot_meidan_stat(zs[okinds], mets[okinds], np.ones(mets[okinds].size)
+                         # w[okinds],
+                         ax,
                          lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
                          % (ovden_bins[i], ovden_bins[i + 1]), color=None)
 

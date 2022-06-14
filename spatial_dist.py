@@ -202,6 +202,7 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
             # Initialise lists to hold the sfr profiles
             sfr_profile = []
             all_radii = []
+            all_ws = []
 
             # Get data
             ages = stellar_data[snap]["Particle,S_Age"] * 1000
@@ -212,6 +213,7 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
             lengths = stellar_data[snap]["Galaxy,S_Length"]
             hmrs = stellar_data[snap]["HMRs"]
             ms = stellar_data[snap]["Particle,S_Mass"]
+            w = stellar_data[snap]["weights"]
 
             # Create boolean array identifying stars born in the last 100 Myrs
             # and are within the 30 pkpc aperture
@@ -227,6 +229,7 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                 hmr = hmrs[igal]
                 app = apps[b: b + nstar]
                 gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
+                ws = w[b: b + nstar]
 
                 # Normalise radii
                 if hmr <= 0 or gal_m < 10 ** 9:
@@ -235,6 +238,7 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                 # Get this galaxy's data
                 rs = radii[b: b + nstar][okinds[b: b + nstar]]
                 this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
+                ws = ws[okinds[b: b + nstar]]
 
                 # Derive radial sfr profile
                 binned_stellar_ms, _ = np.histogram(rs,
@@ -245,14 +249,16 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                 # Include this galaxy's profile
                 sfr_profile.extend(radial_sfr)
                 all_radii.extend(bin_cents)
+                all_ws.extend(ws)
 
             # Convert to arrays
             sfr_profile = np.array(sfr_profile)
             all_radii = np.array(all_radii)
+            all_ws = np.array(ws)
 
             # Plot this profile
             plot_meidan_stat(all_radii, sfr_profile,
-                             np.ones(all_radii.size), ax,
+                             all_ws, ax,
                              lab=None, color=cmap(norm(z)),
                              bins=radial_bins, ls="-")
 
@@ -282,6 +288,127 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
     # Save figure
     mkdir("plots/spatial_dist/")
     fig.savefig("plots/spatial_dist/sfr_radial_profile.png",
+                bbox_inches="tight")
+
+    plt.close(fig)
+
+
+def sfr_radial_profile_environ(stellar_data, snap):
+
+    # Define radial bins
+    radial_bins = np.logspace(-2, 1.8, 50)
+    bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
+
+    # Define overdensity bins in log(1+delta)
+    ovden_bins = np.arange(-0.3, 0.4, 0.1)
+
+    # Define redshift colormap and normalisation
+    cmap = mpl.cm.get_cmap('magma', len(ovden_bins))
+    norm = cm.Normalize(vmin=ovden_bins.min(), vmax=ovden_bins.max())
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    gs = gridspec.GridSpec(nrows=1, ncols=1 + 1,
+                           width_ratios=[20, ] + [1, ])
+    gs.update(wspace=0.0, hspace=0.0)
+    ax = fig.add_subplot(gs[0, 0])
+    ax.loglog()
+    cax = fig.add_subplot(gs[0, 1])
+
+    # Get redshift
+    z = float(snap.split("z")[-1].replace("p", "."))
+
+    # Initialise lists to hold the sfr profiles
+    sfr_profile = []
+    all_radii = []
+    all_ws = []
+    all_ovdens = []
+
+    # Get data
+    ages = stellar_data[snap]["Particle,S_Age"] * 1000
+    ini_ms = stellar_data[snap]["Particle,S_MassInitial"] * 10 ** 10
+    radii = stellar_data[snap]["radii"]
+    begins = stellar_data[snap]["begin"]
+    apps = stellar_data[snap]["Particle/Apertures/Star,30"]
+    lengths = stellar_data[snap]["Galaxy,S_Length"]
+    hmrs = stellar_data[snap]["HMRs"]
+    ms = stellar_data[snap]["Particle,S_Mass"]
+    w = stellar_data[snap]["weights"]
+    part_ovdens = stellar_data["part_ovdens"]
+
+    # Create boolean array identifying stars born in the last 100 Myrs
+    # and are within the 30 pkpc aperture
+    age_okinds = ages < 100
+    okinds = np.logical_and(apps, age_okinds)
+
+    # Loop over galaxies normalising by half mass radius
+    for igal in range(begins.size):
+
+        # Extract this galaxies data
+        b = begins[igal]
+        nstar = lengths[igal]
+        hmr = hmrs[igal]
+        app = apps[b: b + nstar]
+        gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
+        ws = w[b: b + nstar]
+
+        # Normalise radii
+        if hmr <= 0 or gal_m < 10 ** 9:
+            continue
+
+        # Get this galaxy's data
+        rs = radii[b: b + nstar][okinds[b: b + nstar]]
+        this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
+        ws = ws[okinds[b: b + nstar]]
+        ovdens = part_ovdens[b: b + nstar][okinds[b: b + nstar]]
+
+        # Derive radial sfr profile
+        binned_stellar_ms, _ = np.histogram(rs,
+                                            bins=radial_bins,
+                                            weights=this_ini_ms)
+        radial_sfr = binned_stellar_ms / 100 / gal_m  # 1 / Myr
+
+        # Include this galaxy's profile
+        sfr_profile.extend(radial_sfr)
+        all_radii.extend(bin_cents)
+        all_ws.extend(ws)
+        all_ovdens.extend(ovdens)
+
+    # Convert to arrays
+    sfr_profile = np.array(sfr_profile)
+    all_radii = np.array(all_radii)
+    all_ovdens = np.array(all_ovdens)
+    all_ws = np.array(all_ws)
+
+    # Loop over overdensity bins and plot median curves
+    for i in range(ovden_bins[:-1].size):
+
+        bin_cent = (ovden_bins[i + 1] + ovden_bins[i]) / 2
+
+        # Get boolean indices for this bin
+        okinds = np.logical_and(all_ovdens < ovden_bins[i + 1],
+                                all_ovdens >= ovden_bins[i])
+
+        # Plot this profile
+        plot_meidan_stat(all_radii[okinds], sfr_profile[okinds],
+                         all_ws[okinds], ax,
+                         lab=None, color=cmap(norm(bin_cent)),
+                         bins=radial_bins, ls="-")
+
+    # Label axes
+    ax.set_ylabel("$\mathrm{sSFR}_{100} / [\mathrm{Myr}^{-1}]$")
+    ax.set_xlabel("$R / $[pkpc]")
+
+    # Create colorbar
+    cb = mpl.colorbar.ColorbarBase(cax, cmap=cmap, norm=norm,
+                                   bounds=ovden_bins,
+                                   ticks=(ovden_bins[1:]
+                                          + ovden_bins[: -1]) / 2)
+    cb.set_label("$\log_{10}(1 + \delta)$")
+
+    # Save figure
+    mkdir("plots/spatial_dist/")
+    fig.savefig("plots/spatial_dist/sfr_radial_profile_environ.png",
                 bbox_inches="tight")
 
     plt.close(fig)
