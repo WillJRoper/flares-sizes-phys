@@ -325,15 +325,15 @@ def sfr_radial_profile_environ(stellar_data, snap):
     all_ovdens = []
 
     # Get data
-    ages = stellar_data[snap]["Particle,S_Age"] * 1000
-    ini_ms = stellar_data[snap]["Particle,S_MassInitial"] * 10 ** 10
-    radii = stellar_data[snap]["radii"]
-    begins = stellar_data[snap]["begin"]
-    apps = stellar_data[snap]["Particle/Apertures/Star,30"]
-    lengths = stellar_data[snap]["Galaxy,S_Length"]
-    hmrs = stellar_data[snap]["HMRs"]
-    ms = stellar_data[snap]["Particle,S_Mass"]
-    w = stellar_data[snap]["weights"]
+    ages = stellar_data["Particle,S_Age"] * 1000
+    ini_ms = stellar_data["Particle,S_MassInitial"] * 10 ** 10
+    radii = stellar_data["radii"]
+    begins = stellar_data["begin"]
+    apps = stellar_data["Particle/Apertures/Star,30"]
+    lengths = stellar_data["Galaxy,S_Length"]
+    hmrs = stellar_data["HMRs"]
+    ms = stellar_data["Particle,S_Mass"]
+    w = stellar_data["weights"]
     part_ovdens = stellar_data["part_ovdens"]
 
     # Create boolean array identifying stars born in the last 100 Myrs
