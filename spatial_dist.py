@@ -350,9 +350,10 @@ def sfr_radial_profile_environ(stellar_data, snap):
         hmr = hmrs[igal]
         app = apps[b: b + nstar]
         gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
+        nstar_100 = ini_ms[b: b + nstar][okinds[b: b + nstar]].size
 
         # Normalise radii
-        if hmr <= 0 or gal_m < 10 ** 9:
+        if hmr <= 0 or gal_m < 10 ** 9 or nstar_100 == 0:
             continue
 
         # Get this galaxy's data
