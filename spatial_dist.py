@@ -359,7 +359,7 @@ def sfr_radial_profile_environ(stellar_data, snap):
         rs = radii[b: b + nstar][okinds[b: b + nstar]]
         this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
         this_w = w[igal]
-        ovdens = part_ovdens[b: b + nstar][okinds[b: b + nstar]]
+        ovden = part_ovdens[b: b + nstar][okinds[b: b + nstar]][0]
 
         # Derive radial sfr profile
         binned_stellar_ms, _ = np.histogram(rs,
@@ -371,7 +371,7 @@ def sfr_radial_profile_environ(stellar_data, snap):
         sfr_profile.extend(radial_sfr)
         all_radii.extend(bin_cents)
         all_ws.extend(np.full(bin_cents.size, this_w))
-        all_ovdens.extend(ovdens)
+        all_ovdens.extend(np.full(bin_cents.size, ovden))
 
     # Convert to arrays
     sfr_profile = np.array(sfr_profile)
