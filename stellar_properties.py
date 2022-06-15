@@ -95,6 +95,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     w = stellar_data["part_weights"]
 
     print(np.unique(w, return_counts=True))
+    print(np.unique(part_ovdens, return_counts=True))
 
     # Get eagle data
     ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
