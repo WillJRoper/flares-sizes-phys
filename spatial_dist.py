@@ -500,7 +500,7 @@ def sfr_radial_profile_mass(stellar_data, snap):
     all_ws = np.array(all_ws)
 
     # Loop over overdensity bins and plot median curves
-    for i in range(ovden_bins[:-1].size):
+    for i in range(mass_bins[:-1].size):
 
         bin_cent = (mass_bins[i + 1] + mass_bins[i]) / 2
 
