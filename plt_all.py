@@ -10,7 +10,7 @@ from stellar_properties import plot_gal_birth_den_vs_met
 from stellar_properties import plot_subgrid_birth_den_vs_met
 from phys_comp import plot_birth_density_evo, plot_birth_met_evo
 from phys_comp import plot_hmr_phys_comp, plot_gashmr_phys_comp
-from spatial_dist import sfr_radial_profile, sfr_radial_profile_environ
+from spatial_dist import sfr_radial_profile, sfr_radial_profile_environ, sfr_radial_profile_mass
 from compute_props import get_data
 
 
