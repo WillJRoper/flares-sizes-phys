@@ -101,7 +101,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     eagle_aborn = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
                                       'PartType4/StellarFormationTime',
                                       noH=True,
-                                      physicalUnits=True
+                                      physicalUnits=True,
                                       numThreads=8)
     eagle_dens = (eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
                                       "PartType4/BirthDensity",
