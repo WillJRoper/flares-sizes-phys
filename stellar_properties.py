@@ -94,10 +94,14 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     part_ovdens = stellar_data["part_ovdens"]
     w = stellar_data["part_weights"]
 
+    print(np.unique(w))
+
     # Get eagle data
     ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
     eagle_aborn = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
                                       'PartType4/StellarFormationTime',
+                                      noH=True,
+                                      physicalUnits=True
                                       numThreads=8)
     eagle_dens = (eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
                                       "PartType4/BirthDensity",
@@ -135,13 +139,11 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
         okinds = np.logical_and(np.logical_and(zs > 0, dens > 0),
                                 okinds)
 
-        plot_meidan_stat(zs[okinds], dens[okinds], np.ones(dens[okinds].size),
-                         # w[okinds],
-                         ax,
+        plot_meidan_stat(zs[okinds], dens[okinds], w[okinds], ax,
                          lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
                          % (ovden_bins[i], ovden_bins[i + 1]), color=None)
 
-    okinds = np.logical_and(eagle_zs > 0, eagle_dens > 0)
+    okinds = np.logical_and(eagle_zs >= 0, eagle_dens > 0)
 
     plot_meidan_stat(eagle_zs[okinds], eagle_dens[okinds],
                      np.ones(eagle_dens[okinds].size), ax,
