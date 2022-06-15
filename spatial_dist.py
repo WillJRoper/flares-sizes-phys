@@ -425,7 +425,7 @@ def sfr_radial_profile_mass(stellar_data, snap):
 
     # Define redshift colormap and normalisation
     cmap = mpl.cm.get_cmap('magma')
-    norm = LogNorm(vmin=mass_bins.min(), vmax=mass_bins.max())
+    norm = cm.LogNorm(vmin=mass_bins.min(), vmax=mass_bins.max())
 
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
