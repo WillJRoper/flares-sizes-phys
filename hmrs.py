@@ -93,7 +93,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     g_hmrs = gas_data["HMRs"]
     w = stellar_data["weight"]
     s_den_hmr = stellar_data["apertures"]["density"]["hmr"]
-    col = gas_data["apertures"]["age"][30]
+    col = stellar_data["apertures"]["age"][30]
 
     # Remove galaxies without stars
     okinds = np.logical_and(g_hmrs > 0, s_hmrs > 0)
@@ -377,12 +377,13 @@ def visualise_gas(stellar_data, gas_data, snap, path):
         ax.tick_params("both", left=False, right=False, top=False,
                        bottom=False, labelleft=False, labelright=False,
                        labeltop=False, labelbottom=False)
+        ax.grid(False)
 
     # Plot the images
-    ax1.imshow(compgal_img, cmap="plasma")
-    ax2.imshow(exgal_img, cmap="plasma")
-    ax3.imshow(comp_img, cmap="plasma")
-    ax4.imshow(ex_img, cmap="plasma")
+    ax1.imshow(compgal_img, cmap="plasma", norm=LogNorm())
+    ax2.imshow(exgal_img, cmap="plasma", norm=LogNorm())
+    ax3.imshow(comp_img, cmap="plasma", norm=LogNorm())
+    ax4.imshow(ex_img, cmap="plasma", norm=LogNorm())
 
     # Label this image grid
     ax1.set_title("Compact Gas")
