@@ -380,10 +380,14 @@ def visualise_gas(stellar_data, gas_data, snap, path):
         ax.grid(False)
 
     # Plot the images
-    im1 = ax1.imshow(compgal_img, cmap="plasma", norm=LogNorm())
-    im2 = ax2.imshow(exgal_img, cmap="plasma", norm=LogNorm())
-    im3 = ax3.imshow(comp_img, cmap="plasma", norm=LogNorm())
-    im4 = ax4.imshow(ex_img, cmap="plasma", norm=LogNorm())
+    im1 = ax1.imshow(compgal_img, cmap="plasma",
+                     norm=LogNorm(vmin=10**-2.5, vmax=10**2))
+    im2 = ax2.imshow(exgal_img, cmap="plasma",
+                     norm=LogNorm(vmin=10**-2.5, vmax=10**2))
+    im3 = ax3.imshow(comp_img, cmap="plasma",
+                     norm=LogNorm(vmin=10**-2.5, vmax=10**2))
+    im4 = ax4.imshow(ex_img, cmap="plasma",
+                     norm=LogNorm(vmin=10**-2.5, vmax=10**2))
 
     # Label this image grid
     ax1.set_title("Compact Gas")
