@@ -395,11 +395,6 @@ def visualise_gas(stellar_data, gas_data, snap, path):
     ax1.set_ylabel("Galaxy")
     ax3.set_ylabel("Surroundings")
 
-    fig.colorbar(im1)
-    fig.colorbar(im2)
-    fig.colorbar(im3)
-    fig.colorbar(im4)
-
     # Save figure
     mkdir("plots/images/")
     fig.savefig("plots/images/gas_dist_stack_%s.png" % snap,
