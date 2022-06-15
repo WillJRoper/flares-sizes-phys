@@ -106,7 +106,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     print("Galaxies after spurious cut: %d" % s_hmrs.size)
 
     # Set up plot
-    fig = plt.figure(figsize=(2.75, 2.75))
+    fig = plt.figure(figsize=(2 * 3.5, 3.5))
     gs = gridspec.GridSpec(nrows=2, ncols=1 + 1,
                            width_ratios=[20, ] + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
@@ -380,16 +380,21 @@ def visualise_gas(stellar_data, gas_data, snap, path):
         ax.grid(False)
 
     # Plot the images
-    ax1.imshow(compgal_img, cmap="plasma", norm=LogNorm())
-    ax2.imshow(exgal_img, cmap="plasma", norm=LogNorm())
-    ax3.imshow(comp_img, cmap="plasma", norm=LogNorm())
-    ax4.imshow(ex_img, cmap="plasma", norm=LogNorm())
+    im1 = ax1.imshow(compgal_img, cmap="plasma", norm=LogNorm())
+    im2 = ax2.imshow(exgal_img, cmap="plasma", norm=LogNorm())
+    im3 = ax3.imshow(comp_img, cmap="plasma", norm=LogNorm())
+    im4 = ax4.imshow(ex_img, cmap="plasma", norm=LogNorm())
 
     # Label this image grid
     ax1.set_title("Compact Gas")
     ax2.set_title("Extended Gas")
     ax1.set_ylabel("Galaxy")
     ax3.set_ylabel("Surroundings")
+
+    fig.colorbar(im1)
+    fig.colorbar(im2)
+    fig.colorbar(im3)
+    fig.colorbar(im4)
 
     # Save figure
     mkdir("plots/images/")
