@@ -421,11 +421,11 @@ def sfr_radial_profile_mass(stellar_data, snap):
     bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
 
     # Define overdensity bins in log(1+delta)
-    mass_bins = np.logspace(9, 11.6, 6)
+    mass_bins = np.logspace(9, 11.6, 5)
 
     # Define redshift colormap and normalisation
     cmap = mpl.cm.get_cmap('magma')
-    norm = cm.Normalize(vmin=mass_bins.min(), vmax=mass_bins.max())
+    norm = LogNorm(vmin=mass_bins.min(), vmax=mass_bins.max())
 
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
