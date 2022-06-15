@@ -146,7 +146,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     cbar.set_label("$\sum w_{i}$")
 
     cbar = fig.colorbar(im1, cax1)
-    cbar.set_label("$n_H / [\mathrm{cm}^{-3}]$")
+    cbar.set_label("$\mathrm{Age} / [\mathrm{Myrs}]$")
 
     # Save figure
     mkdir("plots/stellar_gas_hmr_comp/")
