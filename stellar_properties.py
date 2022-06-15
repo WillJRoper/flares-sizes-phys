@@ -21,6 +21,14 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     w = stellar_data["part_weights"]
     part_ovdens = stellar_data["part_ovdens"]
 
+    # Remove particles with 0 weight (these are not in a galaxy
+    # we are including)
+    okinds = w > 0
+    mets = mets[okinds]
+    zs = zs[okinds]
+    part_ovdens = part_ovdens[okinds]
+    w = w[okinds]
+
     # Get eagle data
     ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
     eagle_aborn = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
@@ -94,8 +102,13 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     part_ovdens = stellar_data["part_ovdens"]
     w = stellar_data["part_weights"]
 
-    print(np.unique(w, return_counts=True))
-    print(np.unique(part_ovdens, return_counts=True))
+    # Remove particles with 0 weight (these are not in a galaxy
+    # we are including)
+    okinds = w > 0
+    dens = dens[okinds]
+    zs = zs[okinds]
+    part_ovdens = part_ovdens[okinds]
+    w = w[okinds]
 
     # Get eagle data
     ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
