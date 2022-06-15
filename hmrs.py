@@ -129,7 +129,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
                      mincnt=np.min(w) - (0.1 * np.min(w)),
                      C=col, extent=[-1, 1.3, -1, 1.3],
                      reduce_C_function=np.mean, xscale='log', yscale='log',
-                     linewidths=0.2, cmap='magma', norm=LogNorm())
+                     linewidths=0.2, cmap='magma')
 
     # Set axes y lims
     ax.set_ylim(10**-1.1, 10**1.5)
