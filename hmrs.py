@@ -187,6 +187,7 @@ def visualise_gas(stellar_data, gas_data, snap, path):
     gas_pos = gas_data["Particle,G_Coordinates"]
     star_m = stellar_data["Particle,S_Mass"]
     gas_m = gas_data["Particle,G_Mass"]
+    gas_app = gas_data["Particle/Apertures/Gas,30"]
 
     # Load surroundings data for the first region
     prev_reg = 0
@@ -228,10 +229,11 @@ def visualise_gas(stellar_data, gas_data, snap, path):
             continue
 
         # Get galaxy positions and centre on COP
-        this_gas_pos = gas_pos[b: b + l, :] - cops[ind, :]
+        this_gas_pos = gas_pos[b: b + l,
+                               :][gas_app[b: b + l], :] - cops[ind, :]
 
         # Get the particle masses
-        this_gas_m = gas_m[b: b + l]
+        this_gas_m = gas_m[b: b + l][gas_app[b: b + l]]
 
         # Create image of particles in galaxy
         H_gal, _, _, = np.histogram2d(this_gas_pos[:, 0], this_gas_pos[:, 1],
@@ -299,10 +301,11 @@ def visualise_gas(stellar_data, gas_data, snap, path):
             continue
 
         # Get galaxy positions and centre on COP
-        this_gas_pos = gas_pos[b: b + l, :] - cops[ind, :]
+        this_gas_pos = gas_pos[b: b + l,
+                               :][gas_app[b: b + l], :] - cops[ind, :]
 
         # Get the particle masses
-        this_gas_m = gas_m[b: b + l]
+        this_gas_m = gas_m[b: b + l][gas_app[b: b + l]]
 
         # Create image of particles in galaxy
         H_gal, _, _, = np.histogram2d(this_gas_pos[:, 0], this_gas_pos[:, 1],
