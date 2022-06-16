@@ -62,12 +62,12 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     # Plot stellar_data
     im = ax.hexbin(mass[com_pop], hmrs[com_pop], gridsize=30,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w[com_pop], extent=[-1, 1.3, 8, 11.2]
+                   C=w[com_pop], extent=[-1, 1.3, 8, 11.2],
                    reduce_C_function=np.sum, xscale='log', yscale='log',
                    norm=weight_norm, linewidths=0.2, cmap='viridis')
     ax.hexbin(mass[diff_pop], hmrs[diff_pop], gridsize=30,
               mincnt=np.min(w) - (0.1 * np.min(w)),
-              C=w[diff_pop], extent=[-1, 1.3, 8, 11.2]
+              C=w[diff_pop], extent=[-1, 1.3, 8, 11.2],
               reduce_C_function=np.sum, xscale='log', yscale='log',
               norm=weight_norm, linewidths=0.2, cmap='Greys')
 

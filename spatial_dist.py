@@ -201,10 +201,6 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                                  np.ones(all_radii.size), ax,
                                  lab=None, color=cmap(norm(z)),
                                  bins=radial_bins, ls=ls)
-                plot_spread_stat_as_eb(all_radii, sfr_profile,
-                                       np.ones(all_radii.size), ax,
-                                       color=cmap(norm(z)), marker=marker,
-                                       bins=radial_bins, alpha=0.3)
 
         else:
 
@@ -270,9 +266,6 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                              all_ws, ax,
                              lab=None, color=cmap(norm(z)),
                              bins=radial_bins, ls="-")
-            plot_spread_stat_as_eb(all_radii, sfr_profile, all_ws, ax,
-                                   color=cmap(norm(z)), marker="*",
-                                   bins=radial_bins, alpha=0.3)
 
     # Set up legend
     legend_elements.append(Line2D([0], [0], color='k',
