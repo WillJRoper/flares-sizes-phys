@@ -116,9 +116,6 @@ def compute_stellar_props(stellar_data, snap, path):
     prev_reg = 0
     for igal in range(stellar_data["begin"].size):
 
-        if len(aborn) == 0:
-            continue
-
         # Extract galaxy range
         b = stellar_data["begin"][igal]
         e = b + stellar_data["Galaxy,S_Length"][igal]
@@ -135,26 +132,23 @@ def compute_stellar_props(stellar_data, snap, path):
 
         # Open a new region file if necessary
         if reg != prev_reg:
-            try:
-                # Get the arrays from the raw data files
-                aborn = eagle_io.read_array('PARTDATA',
+            print("Moving on to region:", reg)
+
+            # Get the arrays from the raw data files
+            aborn = eagle_io.read_array('PARTDATA',
+                                        path.replace("<reg>",
+                                                     str(reg).zfill(2)),
+                                        snap,
+                                        'PartType4/StellarFormationTime',
+                                        noH=True, physicalUnits=True,
+                                        numThreads=8)
+            den_born = (eagle_io.read_array("PARTDATA",
                                             path.replace("<reg>",
                                                          str(reg).zfill(2)),
-                                            snap,
-                                            'PartType4/StellarFormationTime',
+                                            snap, "PartType4/BirthDensity",
                                             noH=True, physicalUnits=True,
-                                            numThreads=8)
-                den_born = (eagle_io.read_array("PARTDATA",
-                                                path.replace("<reg>",
-                                                             str(reg).zfill(2)),
-                                                snap, "PartType4/BirthDensity",
-                                                noH=True, physicalUnits=True,
-                                                numThreads=8) * 10**10
-                            * Msun / Mpc ** 3 / mh).to(1 / cm ** 3).value
-            except KeyError:
-                aborn = np.array([])
-                den_born = np.array([])
-                continue
+                                            numThreads=8) * 10**10
+                        * Msun / Mpc ** 3 / mh).to(1 / cm ** 3).value
             prev_reg = reg
 
         # Get this galaxies data
