@@ -395,13 +395,17 @@ def visualise_gas(stellar_data, gas_data, snap, path):
     # Plot the images
     extent = [-width / 2, width / 2, -width / 2, width / 2]
     im1 = ax1.imshow(compgal_img, cmap="Greys_r",
-                     norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True))
+                     norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True),
+                     extent=extent)
     im2 = ax2.imshow(exgal_img, cmap="Greys_r",
-                     norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True))
+                     norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True),
+                     extent=extent)
     im3 = ax3.imshow(comp_img, cmap="Greys_r",
-                     norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True))
+                     norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True),
+                     extent=extent)
     im4 = ax4.imshow(ex_img, cmap="Greys_r",
-                     norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True))
+                     norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True),
+                     extent=extent)
 
     # Draw apertures
     ax1.add_patch(compgal_app)
