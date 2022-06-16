@@ -14,6 +14,8 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
     # Define overdensity bins in log(1+delta)
     ovden_bins = np.arange(-0.3, 0.4, 0.1)
+    eagle_z_bins = np.arange(0, 20, 0.5)
+    flares_z_bins = np.arange(5, 23, 0.5)
 
     # Extract arrays
     zs = stellar_data["birth_z"]
@@ -114,10 +116,12 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
         plot_meidan_stat(zs[okinds], mets[okinds],
                          w[okinds], ax,
                          lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
-                         % (ovden_bins[i], ovden_bins[i + 1]), color=None)
+                         % (ovden_bins[i], ovden_bins[i + 1]),
+                         bins=flares_z_bins,
+                         color=None)
 
     plot_meidan_stat(eagle_zs, eagle_mets, np.ones(eagle_mets.size), ax,
-                     lab=r"EAGLE-AGNdT9", color=None)
+                     lab=r"EAGLE-AGNdT9", bins=eagle_z_bins, color=None)
 
     ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
     # ax1.set_ylabel(r"$Z_{\mathrm{birth}}$")
@@ -140,6 +144,8 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
 
     # Define overdensity bins in log(1+delta)
     ovden_bins = np.arange(-0.3, 0.4, 0.1)
+    eagle_z_bins = np.arange(0, 20, 0.5)
+    flares_z_bins = np.arange(5, 23, 0.5)
 
     # Store the data so we doon't have to recalculate it
     dens = stellar_data["birth_density"]
@@ -245,14 +251,15 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
 
         plot_meidan_stat(zs[okinds], dens[okinds], w[okinds], ax,
                          lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
-                         % (ovden_bins[i], ovden_bins[i + 1]), color=None)
+                         % (ovden_bins[i], ovden_bins[i + 1]),
+                         bins=flares_z_bins, color=None)
 
     # okinds = np.logical_and(eagle_zs >= 0, eagle_dens > 0)
     okinds = np.ones(eagle_zs.size, dtype=bool)
 
     plot_meidan_stat(eagle_zs[okinds], eagle_dens[okinds],
                      np.ones(eagle_dens[okinds].size), ax,
-                     lab=r"EAGLE-AGNdT9", color=None)
+                     lab=r"EAGLE-AGNdT9", bins=eagle_z_bins, color=None)
 
     ax.set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")

@@ -11,6 +11,8 @@ from utils import mkdir, plot_meidan_stat
 
 def plot_birth_density_evo():
 
+    flares_z_bins = np.arange(5, 23, 0.5)
+
     # Define the path
     path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
 
@@ -57,7 +59,7 @@ def plot_birth_density_evo():
 
         # Plot median curves
         plot_meidan_stat(zs, den_born, np.ones(den_born.size), ax,
-                         lab=l, color=None, ls=ls)
+                         lab=l, bins=flares_z_bins, color=None, ls=ls)
 
     # Label axes
     ax.set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
@@ -74,6 +76,8 @@ def plot_birth_density_evo():
 
 
 def plot_birth_met_evo():
+
+    flares_z_bins = np.arange(5, 23, 0.5)
 
     # Define the path
     path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
@@ -120,7 +124,7 @@ def plot_birth_met_evo():
 
         # Plot median curves
         plot_meidan_stat(zs, met, np.ones(met.size), ax,
-                         lab=l, color=None, ls=ls)
+                         lab=l, color=None, bins=flares_z_bins, ls=ls)
 
     # Label axes
     ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
@@ -137,6 +141,8 @@ def plot_birth_met_evo():
 
 
 def plot_hmr_phys_comp(snap):
+
+    mass_bins = np.logspace(7.5, 11.5, 30)
 
     # Define the path
     path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
@@ -179,7 +185,7 @@ def plot_hmr_phys_comp(snap):
         # Plot median curves
         okinds = mass > 0
         plot_meidan_stat(mass[okinds], hmr[okinds], np.ones(hmr[okinds].size),
-                         ax, lab=l, color=None, ls=ls)
+                         ax, lab=l, color=None, bins=mass_bins, ls=ls)
 
     # Label axes
     ax.set_ylabel(r"$R_{1/2}$")
@@ -196,6 +202,8 @@ def plot_hmr_phys_comp(snap):
 
 
 def plot_gashmr_phys_comp(snap):
+
+    mass_bins = np.logspace(7.5, 11.5, 30)
 
     # Define the path
     path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
@@ -238,7 +246,7 @@ def plot_gashmr_phys_comp(snap):
         # Plot median curves
         okinds = mass > 0
         plot_meidan_stat(mass[okinds], hmr[okinds], np.ones(hmr[okinds].size),
-                         ax, lab=l, color=None, ls=ls)
+                         ax, lab=l, bins=mass_bins, color=None, ls=ls)
 
     # Label axes
     ax.set_ylabel(r"$R_{1/2}$")
