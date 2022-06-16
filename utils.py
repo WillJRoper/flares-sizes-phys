@@ -146,7 +146,7 @@ def plot_spread_stat_as_eb(zs, ys, w, ax, color, marker, bins, alpha=0.5):
     # Compute bincentres
     bin_cents = (bins[1:] + bins[:-1]) / 2
 
-    ax.errorbar(bin_cents, y_stat, yerr=list(zip(y_stat_16, y_stat_84)),
+    ax.errorbar(bin_cents, y_stat, yerr=(y_stat_16, y_stat_84),
                 color=color, marker=marker, linestyle="none")
 
 
