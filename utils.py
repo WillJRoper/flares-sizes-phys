@@ -127,6 +127,29 @@ def plot_spread_stat(zs, ys, w, ax, color, bins, alpha=0.5):
                     alpha=alpha, color=color)
 
 
+def plot_spread_stat_as_eb(zs, ys, w, ax, color, marker, bins, alpha=0.5):
+
+    # Compute binned statistics
+    y_stat, binedges, bin_ind = binned_statistic(
+        zs, ys,
+        statistic=lambda y: weighted_quantile(y, 0.5, sample_weight=w),
+        bins=bins)
+    y_stat_16, binedges, bin_ind = binned_statistic(
+        zs, ys,
+        statistic=lambda y: weighted_quantile(y, 0.16, sample_weight=w),
+        bins=bins)
+    y_stat_84, binedges, bin_ind = binned_statistic(
+        zs, ys,
+        statistic=lambda y: weighted_quantile(y, 0.84, sample_weight=w),
+        bins=bins)
+
+    # Compute bincentres
+    bin_cents = (bins[1:] + bins[:-1]) / 2
+
+    ax.errorbar(bin_cents, y_stat, yerr=list(zip(y_stat_16, y_stat_84)),
+                color=color, marker=marker, linestyle="none")
+
+
 def weighted_quantile(values, quantiles, sample_weight=None,
                       values_sorted=False, old_style=False):
     """

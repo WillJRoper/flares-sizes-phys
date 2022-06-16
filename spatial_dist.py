@@ -5,7 +5,7 @@ import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from flare import plt as flareplt
-from utils import mkdir, plot_meidan_stat, calc_ages, plot_spread_stat
+from utils import mkdir, plot_meidan_stat, calc_ages, plot_spread_stat_as_eb
 from astropy.cosmology import Planck18 as cosmo
 from astropy.cosmology import z_at_value
 import astropy.units as u
@@ -187,8 +187,10 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                 # Assign linestyle
                 if eagle_path == ref_path:
                     ls = "dotted"
+                    marker = "^"
                 else:
                     ls = "--"
+                    marker = "s"
 
                 # Convert to arrays
                 sfr_profile = np.array(sfr_profile)
@@ -199,10 +201,10 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                                  np.ones(all_radii.size), ax,
                                  lab=None, color=cmap(norm(z)),
                                  bins=radial_bins, ls=ls)
-                plot_spread_stat(all_radii, sfr_profile,
-                                 np.ones(all_radii.size), ax,
-                                 color=cmap(norm(z)),
-                                 bins=radial_bins, alpha=0.3)
+                plot_spread_stat_as_eb(all_radii, sfr_profile,
+                                       np.ones(all_radii.size), ax,
+                                       color=cmap(norm(z)), marker=marker,
+                                       bins=radial_bins, alpha=0.3)
 
         else:
 
@@ -268,9 +270,9 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                              all_ws, ax,
                              lab=None, color=cmap(norm(z)),
                              bins=radial_bins, ls="-")
-            plot_spread_stat(all_radii, sfr_profile, all_ws, ax,
-                             color=cmap(norm(z)),
-                             bins=radial_bins, alpha=0.3)
+            plot_spread_stat_as_eb(all_radii, sfr_profile, all_ws, ax,
+                                   color=cmap(norm(z)), marker="*",
+                                   bins=radial_bins, alpha=0.3)
 
     # Set up legend
     legend_elements.append(Line2D([0], [0], color='k',
