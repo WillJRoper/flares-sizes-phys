@@ -89,46 +89,42 @@ def calc_light_mass_rad(rs, ls, radii_frac=0.5):
     return rs[hmr_ind]
 
 
-def plot_meidan_stat(xs, ys, w, ax, lab, color, bins=None, ls='-'):
-
-    if bins is None:
-        bin = np.logspace(np.log10(xs.min()), np.log10(xs.max()), 20)
-    else:
-        zs = np.float64(xs)
-
-        uniz = np.unique(zs)
-        bin_wids = uniz[1:] - uniz[:-1]
-        low_bins = uniz[:-1] - (bin_wids / 2)
-        high_bins = uniz[:-1] + (bin_wids / 2)
-        low_bins = list(low_bins)
-        high_bins = list(high_bins)
-        low_bins.append(high_bins[-1])
-        high_bins.append(uniz[-1] + 1)
-        low_bins = np.array(low_bins)
-        high_bins = np.array(high_bins)
-
-        bin = np.zeros(uniz.size + 1)
-        bin[:-1] = low_bins
-        bin[1:] = high_bins
+def plot_meidan_stat(xs, ys, w, ax, lab, color, bins, ls='-'):
 
     # Compute binned statistics
     def func(y):
         return weighted_quantile(y, 0.5, sample_weight=w)
     y_stat, binedges, bin_ind = binned_statistic(xs, ys,
-                                                 statistic=func, bins=bin)
+                                                 statistic=func, bins=bins)
 
     # Compute bincentres
-    bin_wid = binedges[1] - binedges[0]
-    bin_cents = binedges[1:] - bin_wid / 2
-
-    okinds = np.logical_and(~np.isnan(bin_cents), ~np.isnan(y_stat))
+    bin_cents = (bins[1:] + bins[:-1]) / 2
 
     if color is not None:
-        return ax.plot(bin_cents[okinds], y_stat[okinds], color=color,
+        return ax.plot(bin_cents, y_stat, color=color,
                        linestyle=ls, label=lab)
     else:
-        return ax.plot(bin_cents[okinds], y_stat[okinds], color=color,
+        return ax.plot(bin_cents, y_stat, color=color,
                        linestyle=ls, label=lab)
+
+
+def plot_spread_stat(zs, ys, w, ax, color, bins, alpha=0.5):
+
+    # Compute binned statistics
+    y_stat_16, binedges, bin_ind = binned_statistic(
+        zs, ys,
+        statistic=lambda y: weighted_quantile(y, 0.16, sample_weight=w),
+        bins=bins)
+    y_stat_84, binedges, bin_ind = binned_statistic(
+        zs, ys,
+        statistic=lambda y: weighted_quantile(y, 0.84, sample_weight=w),
+        bins=bins)
+
+    # Compute bincentres
+    bin_cents = (bins[1:] + bins[:-1]) / 2
+
+    ax.fill_between(bin_cents, y_stat_16, y_stat_84,
+                    alpha=alpha, color=color)
 
 
 def weighted_quantile(values, quantiles, sample_weight=None,
