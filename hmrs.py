@@ -9,7 +9,7 @@ from matplotlib.colors import LogNorm
 from scipy.spatial import cKDTree
 import numpy as np
 import pandas as pd
-from utils import calc_3drad, calc_light_mass_rad, mkdir
+from utils import calc_3drad, calc_light_mass_rad, mkdir, get_pixel_hlr
 import eagle_IO.eagle_IO as eagle_io
 
 os.environ['FLARE'] = '/cosma7/data/dp004/dc-wilk2/flare'
@@ -363,6 +363,13 @@ def visualise_gas(stellar_data, gas_data, snap, path):
         exgal_img += H_gal
         ex_img += H_s
 
+    # Calculate image "half mass radii"
+    pix_area = res * res
+    exgal_hmr = get_pixel_hlr(exgal_img, pix_area, radii_frac=0.5)
+    ex_hmr = get_pixel_hlr(ex_img, pix_area, radii_frac=0.5)
+    compgal_hmr = get_pixel_hlr(compgal_img, pix_area, radii_frac=0.5)
+    comp_hmr = get_pixel_hlr(comp_img, pix_area, radii_frac=0.5)
+
     # Set up plot
     fig = plt.figure(figsize=(3.5 * 2, 3.5 * 2), dpi=ndims[0])
     gs = gridspec.GridSpec(nrows=2, ncols=2)
@@ -379,7 +386,14 @@ def visualise_gas(stellar_data, gas_data, snap, path):
                        labeltop=False, labelbottom=False)
         ax.grid(False)
 
+    # Define circles
+    exgal_app = plt.Circle((0, 0), exgal_hmr, color='r')
+    ex_app = plt.Circle((0, 0), ex_hmr, color='r')
+    compgal_app = plt.Circle((0, 0), compgal_hmr, color='r')
+    comp_app = plt.Circle((0, 0), comp_hmr, color='r')
+
     # Plot the images
+    extent = [-width / 2, width / 2, -width / 2, width / 2]
     im1 = ax1.imshow(compgal_img, cmap="Greys_r",
                      norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True))
     im2 = ax2.imshow(exgal_img, cmap="Greys_r",
@@ -388,6 +402,12 @@ def visualise_gas(stellar_data, gas_data, snap, path):
                      norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True))
     im4 = ax4.imshow(ex_img, cmap="Greys_r",
                      norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True))
+
+    # Draw apertures
+    ax1.add_patch(compgal_app)
+    ax2.add_patch(exgal_app)
+    ax3.add_patch(comp_app)
+    ax4.add_patch(ex_app)
 
     # Label this image grid
     ax1.set_title("Compact Gas")

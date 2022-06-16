@@ -150,6 +150,36 @@ def plot_spread_stat_as_eb(zs, ys, w, ax, color, marker, bins, alpha=0.5):
                 color=color, marker=marker, linestyle="none")
 
 
+def get_pixel_hlr(img, single_pix_area, radii_frac=0.5):
+    # Get half the total luminosity
+    half_l = np.sum(img) * radii_frac
+
+    # Sort pixels into 1D array ordered by decreasing intensity
+    sort_1d_img = np.sort(img.flatten())[::-1]
+    sum_1d_img = np.cumsum(sort_1d_img)
+    cumal_area = np.full_like(sum_1d_img, single_pix_area) \
+        * np.arange(1, sum_1d_img.size + 1, 1)
+
+    npix = np.argmin(np.abs(sum_1d_img - half_l))
+    cumal_area_cutout = cumal_area[np.max((npix - 10, 0)):
+                                   np.min((npix + 10, cumal_area.size - 1))]
+    sum_1d_img_cutout = sum_1d_img[np.max((npix - 10, 0)):
+                                   np.min((npix + 10, cumal_area.size - 1))]
+
+    # Interpolate the arrays for better resolution
+    interp_func = interp1d(cumal_area_cutout, sum_1d_img_cutout, kind="linear")
+    interp_areas = np.linspace(cumal_area_cutout.min(),
+                               cumal_area_cutout.max(),
+                               500)
+    interp_1d_img = interp_func(interp_areas)
+
+    # Calculate radius from pixel area defined using the interpolated arrays
+    pix_area = interp_areas[np.argmin(np.abs(interp_1d_img - half_l))]
+    hlr = np.sqrt(pix_area / np.pi)
+
+    return hlr
+
+
 def weighted_quantile(values, quantiles, sample_weight=None,
                       values_sorted=False, old_style=False):
     """
