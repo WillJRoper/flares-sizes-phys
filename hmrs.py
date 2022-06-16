@@ -389,12 +389,6 @@ def visualise_gas(stellar_data, gas_data, snap, path):
                        labeltop=False, labelbottom=False)
         ax.grid(False)
 
-    # Define circles
-    exgal_app = plt.Circle((0, 0), exgal_hmr, color='r')
-    ex_app = plt.Circle((0, 0), ex_hmr, color='r')
-    compgal_app = plt.Circle((0, 0), compgal_hmr, color='r')
-    comp_app = plt.Circle((0, 0), comp_hmr, color='r')
-
     # Plot the images
     extent = [-width / 2, width / 2, -width / 2, width / 2]
     im1 = ax1.imshow(compgal_img, cmap="Greys_r",
@@ -409,12 +403,6 @@ def visualise_gas(stellar_data, gas_data, snap, path):
     im4 = ax4.imshow(ex_img, cmap="Greys_r",
                      norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True),
                      extent=extent)
-
-    # Draw apertures
-    ax1.add_patch(compgal_app)
-    ax2.add_patch(exgal_app)
-    ax3.add_patch(comp_app)
-    ax4.add_patch(ex_app)
 
     # Label this image grid
     ax1.set_title("Compact Gas")
