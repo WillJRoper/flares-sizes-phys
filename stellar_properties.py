@@ -110,7 +110,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
         # Get boolean indices for this bin
         okinds = np.logical_and(part_ovdens < ovden_bins[i + 1],
                                 part_ovdens >= ovden_bins[i])
-        okinds = np.logical_and(np.logical_and(zs > 0, mets > 0),
+        okinds = np.logical_and(np.logical_and(zs > 0, mets >= 0),
                                 okinds)
 
         plot_meidan_stat(zs[okinds], mets[okinds],
