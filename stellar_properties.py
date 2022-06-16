@@ -157,7 +157,8 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
                          lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
                          % (ovden_bins[i], ovden_bins[i + 1]), color=None)
 
-    okinds = np.logical_and(eagle_zs >= 0, eagle_dens > 0)
+    # okinds = np.logical_and(eagle_zs >= 0, eagle_dens > 0)
+    okinds = np.ones(eagle_zs.size)
 
     plot_meidan_stat(eagle_zs[okinds], eagle_dens[okinds],
                      np.ones(eagle_dens[okinds].size), ax,
