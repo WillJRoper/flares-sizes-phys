@@ -58,7 +58,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     # Plot stellar_data
     im = ax.hexbin(mass, hmrs, gridsize=30,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w, extent=[-1, 1.3, 8, 11.2],
+                   C=w, extent=[8, 11.2, -1, 1.3],
                    reduce_C_function=np.sum, xscale='log', yscale='log',
                    norm=weight_norm, linewidths=0.2, cmap='viridis')
 
@@ -118,7 +118,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
                    linewidths=0.2, cmap='viridis', norm=weight_norm)
     im1 = ax1.hexbin(s_hmrs, g_hmrs, gridsize=30,
                      mincnt=np.min(w) - (0.1 * np.min(w)),
-                     C=col, extent=[-1, 1.3, -1, 1.3], vmin=0, vmax=510,
+                     C=col, extent=[-1, 1.3, -1, 1.3], vmin=0, vmax=490,
                      reduce_C_function=np.mean, xscale='log', yscale='log',
                      linewidths=0.2, cmap='magma')
 
