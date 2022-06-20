@@ -11,7 +11,7 @@ from utils import mkdir, plot_meidan_stat
 
 def plot_birth_density_evo():
 
-    flares_z_bins = np.arange(5, 23, 0.5)
+    flares_z_bins = np.arange(4.5, 23.5, 1.0)
 
     # Define the path
     path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
@@ -77,7 +77,7 @@ def plot_birth_density_evo():
 
 def plot_birth_met_evo():
 
-    flares_z_bins = np.arange(5, 23, 0.5)
+    flares_z_bins = np.arange(4.5, 23.5, 1.0)
 
     # Define the path
     path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
