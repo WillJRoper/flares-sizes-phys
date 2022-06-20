@@ -37,7 +37,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
                                       'PartType4/StellarFormationTime',
                                       numThreads=8)
     pre_eagle_mets = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
-                                         'PartType4/SmoothedMetallicity',
+                                         'PartType4/Metallicity',
                                          numThreads=8)
     pre_eagle_zs = 1 / eagle_aborn - 1
     subgrps = eagle_io.read_array('SUBFIND', ref_path, '028_z000p000',
@@ -124,11 +124,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
                      lab=r"EAGLE-AGNdT9", bins=eagle_z_bins, color=None)
 
     ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
-    # ax1.set_ylabel(r"$Z_{\mathrm{birth}}$")
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")
-
-    # cbar = fig.colorbar(im, cax=cax)
-    # cbar.set_label("$\sum w_{i}$")
 
     ax.legend(loc='upper center',
               bbox_to_anchor=(0.5, -0.2),
