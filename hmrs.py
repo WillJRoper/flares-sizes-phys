@@ -55,21 +55,12 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     ax = fig.add_subplot(111)
     ax.loglog()
 
-    # Define boolean indices for each population
-    com_pop = den_hmr >= stellar_data["density_cut"]
-    diff_pop = ~com_pop
-
     # Plot stellar_data
-    im = ax.hexbin(mass[com_pop], hmrs[com_pop], gridsize=30,
+    im = ax.hexbin(mass, hmrs, gridsize=30,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w[com_pop], extent=[-1, 1.3, 8, 11.2],
+                   C=w, extent=[-1, 1.3, 8, 11.2],
                    reduce_C_function=np.sum, xscale='log', yscale='log',
                    norm=weight_norm, linewidths=0.2, cmap='viridis')
-    ax.hexbin(mass[diff_pop], hmrs[diff_pop], gridsize=30,
-              mincnt=np.min(w) - (0.1 * np.min(w)),
-              C=w[diff_pop], extent=[-1, 1.3, 8, 11.2],
-              reduce_C_function=np.sum, xscale='log', yscale='log',
-              norm=weight_norm, linewidths=0.2, cmap='Greys')
 
     # Label axes
     ax.set_xlabel("$M_\star / M_\odot$")

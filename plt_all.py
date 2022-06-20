@@ -135,10 +135,6 @@ for snap in flares_snaps:
         continue
 
     plot_stellar_hmr(data["stellar"][snap], snap, weight_norm)
-    # try:
-    #     plot_stellar_density_grid(data["stellar"][snap], snap, weight_norm)
-    # except ValueError as e:
-    #     print("Stellar density grid:", e)
     plot_stellar_gas_hmr_comp(data["stellar"][snap], data["gas"][snap],
                               snap, weight_norm)
 
