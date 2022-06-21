@@ -311,12 +311,12 @@ def plot_sfr_evo(stellar_data, snap):
 
     # Get eagle data
     ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
-    eagle_aborn = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
+    eagle_aborn = eagle_io.read_array('PARTDATA', ref_path, '027_z000p101',
                                       'PartType4/StellarFormationTime',
                                       noH=True,
                                       physicalUnits=True,
                                       numThreads=8)
-    eagle_ms = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
+    eagle_ms = eagle_io.read_array('PARTDATA', ref_path, '027_z000p101',
                                    'PartType4/InitialMass',
                                    noH=True,
                                    physicalUnits=True,
