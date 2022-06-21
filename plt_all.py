@@ -7,7 +7,7 @@ from density import plot_stellar_density_grid
 from stellar_properties import plot_birth_met, plot_birth_den
 from stellar_properties import plot_eagle_birth_den_vs_met
 from stellar_properties import plot_gal_birth_den_vs_met
-from stellar_properties import plot_subgrid_birth_den_vs_met
+from stellar_properties import plot_subgrid_birth_den_vs_met, plot_sfr_evo
 from phys_comp import plot_birth_density_evo, plot_birth_met_evo
 from phys_comp import plot_hmr_phys_comp, plot_gashmr_phys_comp
 from spatial_dist import sfr_radial_profile, sfr_radial_profile_environ, sfr_radial_profile_mass
@@ -116,6 +116,7 @@ print("Plotted Physics variations")
 snap = flares_snaps[-1]
 #visualise_gas(data["stellar"][snap], data["gas"][snap], snap, path)
 print("Created images")
+plot_sfr_evo(data["stellar"][snap], snap)
 plot_birth_den(data["stellar"][snap], snap, weight_norm, path)
 plot_birth_met(data["stellar"][snap], snap, weight_norm, path)
 plot_eagle_birth_den_vs_met(data["stellar"][snap], snap, weight_norm, path)

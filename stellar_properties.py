@@ -6,6 +6,8 @@ import matplotlib.gridspec as gridspec
 from flare import plt as flareplt
 from utils import mkdir, plot_meidan_stat, age2z
 from unyt import mh, cm, Gyr, g, Msun, Mpc
+from astropy.cosmology import Planck18 as cosmo, z_at_value
+import astropy.units as u
 
 import eagle_IO.eagle_IO as eagle_io
 
@@ -70,6 +72,9 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     nstar_dict = {}
     for (ind, grp), subgrp in zip(enumerate(grps), subgrps):
 
+        if grp == 2**30 or subgrp == 2**30:
+            continue
+
         # Skip particles not in a galaxy with Nstar > 100
         if nstars[ind] >= 100:
             nstar_dict[(grp, subgrp)] = nstars[ind]
@@ -81,6 +86,9 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
         # Get grp and subgrp
         grp, subgrp = part_grp[ind], part_subgrp[ind]
+
+        if grp == 2**30 or subgrp == 2**30:
+            continue
 
         if (grp, subgrp) in nstar_dict:
             eagle_zs.append(pre_eagle_zs[ind])
@@ -118,7 +126,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
                                 okinds)
 
         plot_meidan_stat(zs[okinds], mets[okinds],
-                         np.ones(w[okinds].size), ax,
+                         w[okinds], ax,
                          lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
                          % (ovden_bins[i], ovden_bins[i + 1]),
                          bins=flares_z_bins,
@@ -201,6 +209,9 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     nstar_dict = {}
     for (ind, grp), subgrp in zip(enumerate(grps), subgrps):
 
+        if grp == 2**30 or subgrp == 2**30:
+            continue
+
         # Skip particles not in a galaxy
         if nstars[ind] >= 100:
             nstar_dict[(grp, subgrp)] = nstars[ind]
@@ -209,6 +220,9 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     eagle_zs = []
     eagle_dens = []
     for ind in range(eagle_aborn.size):
+
+        if grp == 2**30 or subgrp == 2**30:
+            continue
 
         # Get grp and subgrp
         grp, subgrp = part_grp[ind], part_subgrp[ind]
@@ -279,6 +293,92 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
                 bbox_inches="tight")
 
     return stellar_data
+
+
+def plot_sfr_evo(stellar_data, snap):
+
+    # Define overdensity bins in log(1+delta)
+    ovden_bins = np.arange(-0.3, 0.4, 0.1)
+    eagle_z_bins = np.arange(-0.5, 20.5, 0.5)
+    flares_z_bins = np.arange(4.5, 23.5, 0.5)
+    eagle_z_bins = np.arange(-0.5, 20.5, 0.5)
+    flares_z_bins = np.arange(4.5, 23.5, 0.5)
+
+    # Extract arrays
+    zs = stellar_data["birth_z"]
+    ms = stellar_data["Particle,S_MassInitial"] * 10 ** 10
+    part_ovdens = stellar_data["part_ovdens"]
+
+    # Get eagle data
+    ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
+    eagle_aborn = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
+                                      'PartType4/StellarFormationTime',
+                                      noH=True,
+                                      physicalUnits=True,
+                                      numThreads=8)
+    eagle_ms = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
+                                   'PartType4/InitialMass',
+                                   noH=True,
+                                   physicalUnits=True,
+                                   numThreads=8)
+    eagle_zs = 1 / eagle_aborn - 1
+
+    # Set up the plotd
+    fig = plt.figure(figsize=(4, 3.5))
+    ax = fig.add_subplot(111)
+
+    # Loop over overdensity bins and plot median curves
+    for i in range(ovden_bins[:-1].size):
+
+        # Get boolean indices for this bin
+        okinds = np.logical_and(part_ovdens < ovden_bins[i + 1],
+                                part_ovdens >= ovden_bins[i])
+        okinds = np.logical_and(np.logical_and(zs > 0, ms >= 0),
+                                okinds)
+
+        # Get SFRs
+        sfrs = []
+        plt_zs = []
+        for z_low in flares_z_bins[:-1]:
+
+            z_high = z_at_value(cosmo.age, cosmo.age(z_low) - (100 * u.Myr))
+
+            zokinds = np.logical_and(np.logical_and(zs < z_high, zs >= z_low),
+                                     okinds)
+
+            sfrs.append(np.sum(ms[zokinds]) / 100)  # M_sun / Myr
+            plt_zs.append(z_low)
+
+        ax.plot(plt_zs, sfrs,
+                label=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
+                % (ovden_bins[i], ovden_bins[i + 1]))
+
+    # Get SFRs
+    sfrs = []
+    plt_zs = []
+    for z_low in eagle_z_bins[:-1]:
+
+        z_high = z_at_value(cosmo.age, cosmo.age(z_low) - (100 * u.Myr))
+
+        zokinds = np.logical_and(eagle_zs < z_high, eagle_zs >= z_low)
+
+        sfrs.append(np.sum(eagle_ms[zokinds]) / 100)  # M_sun / Myr
+        plt_zs.append(z_low)
+
+    ax.plot(plt_zs, sfrs, label=r"EAGLE-AGNdT9", ls="--")
+
+    ax.set_ylabel(
+        r"$\mathrm{SFR}_{100} / [\mathrm{M}_\odot\mathrm{Myr}^{-1}]$")
+    ax.set_xlabel(r"$z_{\mathrm{birth}}$")
+
+    ax.legend(loc='upper center',
+              bbox_to_anchor=(0.5, -0.2),
+              fancybox=True, ncol=2)
+
+    # Save figure
+    mkdir("plots/stellar_evo/")
+    fig.savefig("plots/stellar_evo/stellar_SFRevo_%s.png" % snap,
+                bbox_inches="tight")
 
 
 def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
