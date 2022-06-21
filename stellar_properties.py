@@ -37,7 +37,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
                                       'PartType4/StellarFormationTime',
                                       numThreads=8)
     pre_eagle_mets = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
-                                         'PartType4/Metallicity',
+                                         'PartType4/SmoothedMetallicity',
                                          numThreads=8)
     pre_eagle_zs = 1 / eagle_aborn - 1
     subgrps = eagle_io.read_array('SUBFIND', ref_path, '028_z000p000',
@@ -114,7 +114,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
                                 okinds)
 
         plot_meidan_stat(zs[okinds], mets[okinds],
-                         w[okinds], ax,
+                         np.ones(w[okinds].size), ax,
                          lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
                          % (ovden_bins[i], ovden_bins[i + 1]),
                          bins=flares_z_bins,
