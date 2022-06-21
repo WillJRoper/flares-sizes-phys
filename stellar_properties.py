@@ -359,7 +359,8 @@ def plot_sfr_evo(stellar_data, snap):
     plt_zs = []
     for z_low in eagle_z_bins[:-1]:
 
-        z_high = z_at_value(cosmo.age, cosmo.age(z_low) - (100 * u.Myr))
+        z_high = z_at_value(cosmo.age, cosmo.age(z_low) - (100 * u.Myr),
+                            zmin=0, zmax=50)
 
         zokinds = np.logical_and(eagle_zs < z_high, eagle_zs >= z_low)
 
