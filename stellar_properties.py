@@ -87,9 +87,6 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
         # Get grp and subgrp
         grp, subgrp = part_grp[ind], part_subgrp[ind]
 
-        if grp == 2**30 or subgrp == 2**30:
-            continue
-
         if (grp, subgrp) in nstar_dict:
             eagle_zs.append(pre_eagle_zs[ind])
             eagle_mets.append(pre_eagle_mets[ind])
@@ -221,9 +218,6 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     eagle_dens = []
     for ind in range(eagle_aborn.size):
 
-        if grp == 2**30 or subgrp == 2**30:
-            continue
-
         # Get grp and subgrp
         grp, subgrp = part_grp[ind], part_subgrp[ind]
 
@@ -324,6 +318,7 @@ def plot_sfr_evo(stellar_data, snap):
     # Set up the plotd
     fig = plt.figure(figsize=(4, 3.5))
     ax = fig.add_subplot(111)
+    ax.semilogy()
 
     # Loop over overdensity bins and plot median curves
     for i in range(ovden_bins[:-1].size):
