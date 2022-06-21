@@ -16,22 +16,24 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
     # Define overdensity bins in log(1+delta)
     ovden_bins = np.arange(-0.3, 0.4, 0.1)
-    eagle_z_bins = np.arange(-0.5, 20.5, 1.0)
-    flares_z_bins = np.arange(4.5, 23.5, 1.)
+    eagle_z_bins = np.arange(0.0, 20.5, 0.5)
+    flares_z_bins = np.arange(4.5, 23.5, 0.5)
 
     # Extract arrays
     zs = stellar_data["birth_z"]
     mets = stellar_data["Particle,S_Z_smooth"]
     w = stellar_data["part_weights"]
     part_ovdens = stellar_data["part_ovdens"]
+    part_nstar = stellar_data["part_nstar"]
 
     # Remove particles with 0 weight (these are not in a galaxy
     # we are including)
-    okinds = w > 0
+    okinds = part_nstar >= 100
     mets = mets[okinds]
     zs = zs[okinds]
     part_ovdens = part_ovdens[okinds]
     w = w[okinds]
+    part_nstar = part_nstar[okinds]
 
     # Get eagle data
     ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
@@ -150,22 +152,24 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
 
     # Define overdensity bins in log(1+delta)
     ovden_bins = np.arange(-0.3, 0.4, 0.1)
-    eagle_z_bins = np.arange(-0.5, 20.5, 1.0)
-    flares_z_bins = np.arange(4.5, 23.5, 1.)
+    eagle_z_bins = np.arange(0.0, 20.5, 0.5)
+    flares_z_bins = np.arange(4.5, 23.5, 0.5)
 
     # Store the data so we doon't have to recalculate it
     dens = stellar_data["birth_density"]
     zs = stellar_data["birth_z"]
     part_ovdens = stellar_data["part_ovdens"]
     w = stellar_data["part_weights"]
+    part_nstar = stellar_data["part_nstar"]
 
     # Remove particles with 0 weight (these are not in a galaxy
     # we are including)
-    okinds = w > 0
-    dens = dens[okinds]
+    okinds = part_nstar >= 100
+    mets = mets[okinds]
     zs = zs[okinds]
     part_ovdens = part_ovdens[okinds]
     w = w[okinds]
+    part_nstar = part_nstar[okinds]
 
     # Get eagle data
     ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
@@ -300,6 +304,15 @@ def plot_sfr_evo(stellar_data, snap):
     zs = stellar_data["birth_z"]
     ms = stellar_data["Particle,S_MassInitial"] * 10 ** 10
     part_ovdens = stellar_data["part_ovdens"]
+    part_nstar = stellar_data["part_nstar"]
+
+    # Remove particles with 0 weight (these are not in a galaxy
+    # we are including)
+    okinds = part_nstar >= 100
+    ms = ms[okinds]
+    zs = zs[okinds]
+    part_ovdens = part_ovdens[okinds]
+    part_nstar = part_nstar[okinds]
 
     # Get eagle data
     ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
@@ -308,12 +321,60 @@ def plot_sfr_evo(stellar_data, snap):
                                       noH=True,
                                       physicalUnits=True,
                                       numThreads=8)
-    eagle_ms = eagle_io.read_array('PARTDATA', ref_path, '027_z000p101',
-                                   'PartType4/InitialMass',
-                                   noH=True,
+    pre_eagle_ms = eagle_io.read_array('PARTDATA', ref_path, '027_z000p101',
+                                       'PartType4/InitialMass',
+                                       noH=True,
+                                       physicalUnits=True,
+                                       numThreads=8) * 10 ** 10
+    pre_eagle_zs = 1 / eagle_aborn - 1
+    subgrps = eagle_io.read_array('SUBFIND', ref_path, '028_z000p000',
+                                  'Subhalo/SubGroupNumber', noH=True,
+                                  physicalUnits=True,
+                                  numThreads=8)
+    grps = eagle_io.read_array('SUBFIND', ref_path, '028_z000p000',
+                               'Subhalo/GroupNumber', noH=True,
+                               physicalUnits=True,
+                               numThreads=8)
+    nstars = eagle_io.read_array('SUBFIND', ref_path, '028_z000p000',
+                                 'Subhalo/SubLengthType', noH=True,
+                                 physicalUnits=True,
+                                 numThreads=8)[:, 4]
+    part_subgrp = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
+                                      'PartType4/SubGroupNumber',
+                                      noH=True,
+                                      physicalUnits=True,
+                                      numThreads=8)
+    part_grp = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
+                                   'PartType4/GroupNumber', noH=True,
                                    physicalUnits=True,
-                                   numThreads=8) * 10 ** 10
-    eagle_zs = 1 / eagle_aborn - 1
+                                   numThreads=8)
+
+    # Clean up eagle data to remove galaxies with nstar < 100
+    nstar_dict = {}
+    for (ind, grp), subgrp in zip(enumerate(grps), subgrps):
+
+        if grp == 2**30 or subgrp == 2**30:
+            continue
+
+        # Skip particles not in a galaxy
+        if nstars[ind] >= 100:
+            nstar_dict[(grp, subgrp)] = nstars[ind]
+
+    # Now get the stars we want
+    eagle_zs = []
+    eagle_ms = []
+    for ind in range(eagle_aborn.size):
+
+        # Get grp and subgrp
+        grp, subgrp = part_grp[ind], part_subgrp[ind]
+
+        if (grp, subgrp) in nstar_dict:
+            eagle_zs.append(pre_eagle_zs[ind])
+            eagle_ms.append(pre_eagle_ms[ind])
+
+    # Convert to arrays
+    eagle_zs = np.array(eagle_zs)
+    eagle_ms = np.array(eagle_ms)
 
     # Set up the plotd
     fig = plt.figure(figsize=(4, 3.5))

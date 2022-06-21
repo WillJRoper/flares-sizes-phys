@@ -111,6 +111,7 @@ def compute_stellar_props(stellar_data, snap, path):
     dens = np.zeros(s_inds.size)
     w = np.zeros(s_inds.size)
     part_ovdens = np.zeros(s_inds.size)
+    part_ngal = np.zeros(s_inds.size)
 
     # Extract weights for each particle
     prev_reg = 0
@@ -129,6 +130,9 @@ def compute_stellar_props(stellar_data, snap, path):
 
         # Set weights for these particles
         w[b: e] = stellar_data["weights"][igal]
+
+        # Set the number of stars in it's galaxy for each particle
+        part_ngal[b: e] = stellar_data["Galaxy,S_Length"][igal]
 
         # Open a new region file if necessary
         if reg != prev_reg:
@@ -160,6 +164,7 @@ def compute_stellar_props(stellar_data, snap, path):
     stellar_data["birth_z"] = zs
     stellar_data["part_ovdens"] = part_ovdens
     stellar_data["part_weights"] = w
+    stellar_data["part_nstar"] = part_ngal
 
     # Extract arrays
     dens = stellar_data["birth_density"]
