@@ -35,9 +35,13 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
     eagle_aborn = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
                                       'PartType4/StellarFormationTime',
+                                      noH=True,
+                                      physicalUnits=True,
                                       numThreads=8)
     pre_eagle_mets = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
                                          'PartType4/SmoothedMetallicity',
+                                         noH=True,
+                                         physicalUnits=True,
                                          numThreads=8)
     pre_eagle_zs = 1 / eagle_aborn - 1
     subgrps = eagle_io.read_array('SUBFIND', ref_path, '028_z000p000',
@@ -66,7 +70,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     nstar_dict = {}
     for (ind, grp), subgrp in zip(enumerate(grps), subgrps):
 
-        # Skip particles not in a galaxy
+        # Skip particles not in a galaxy with Nstar > 100
         if nstars[ind] >= 100:
             nstar_dict[(grp, subgrp)] = nstars[ind]
 
@@ -121,7 +125,8 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
                          color=None)
 
     plot_meidan_stat(eagle_zs, eagle_mets, np.ones(eagle_mets.size), ax,
-                     lab=r"EAGLE-AGNdT9", bins=eagle_z_bins, color=None)
+                     lab=r"EAGLE-AGNdT9", bins=eagle_z_bins, color=None,
+                     ls="--")
 
     ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")
@@ -255,7 +260,8 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
 
     plot_meidan_stat(eagle_zs[okinds], eagle_dens[okinds],
                      np.ones(eagle_dens[okinds].size), ax,
-                     lab=r"EAGLE-AGNdT9", bins=eagle_z_bins, color=None)
+                     lab=r"EAGLE-AGNdT9", bins=eagle_z_bins, color=None,
+                     ls="--")
 
     ax.set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")
