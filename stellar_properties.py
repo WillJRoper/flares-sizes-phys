@@ -312,7 +312,7 @@ def plot_sfr_evo(stellar_data, snap):
                                    'PartType4/InitialMass',
                                    noH=True,
                                    physicalUnits=True,
-                                   numThreads=8)
+                                   numThreads=8) * 10 ** 10
     eagle_zs = 1 / eagle_aborn - 1
 
     # Set up the plotd
