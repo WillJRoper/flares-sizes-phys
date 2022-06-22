@@ -8,64 +8,43 @@ from utils import mkdir, plot_meidan_stat, age2z
 from unyt import mh, cm, Gyr, g, Msun, Mpc
 from astropy.cosmology import Planck18 as cosmo, z_at_value
 import astropy.units as u
+import pandas as pd
 
 import eagle_IO.eagle_IO as eagle_io
 
 
-def plot_birth_met(stellar_data, snap, weight_norm, path):
+def get_nonmaster_evo_data(path, snap, y_key):
 
-    # Define overdensity bins in log(1+delta)
-    ovden_bins = np.arange(-0.3, 0.4, 0.1)
-    eagle_z_bins = np.arange(0.0, 20.5, 0.75)
-    flares_z_bins = np.arange(4.5, 23.5, 0.75)
-
-    # Extract arrays
-    zs = stellar_data["birth_z"]
-    mets = stellar_data["Particle,S_Z_smooth"]
-    w = stellar_data["part_weights"]
-    part_ovdens = stellar_data["part_ovdens"]
-    part_nstar = stellar_data["part_nstar"]
-
-    # Remove particles with 0 weight (these are not in a galaxy
-    # we are including)
-    okinds = part_nstar >= 100
-    mets = mets[okinds]
-    zs = zs[okinds]
-    part_ovdens = part_ovdens[okinds]
-    w = w[okinds]
-    part_nstar = part_nstar[okinds]
-
-    # Get eagle data
-    ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0100N1504/PE/REFERENCE/data'
-    eagle_aborn = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
-                                      'PartType4/StellarFormationTime',
-                                      noH=True,
-                                      physicalUnits=True,
-                                      numThreads=8)
-    pre_eagle_mets = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
-                                         'PartType4/SmoothedMetallicity',
-                                         noH=True,
-                                         physicalUnits=True,
-                                         numThreads=8)
-    pre_eagle_zs = 1 / eagle_aborn - 1
-    subgrps = eagle_io.read_array('SUBFIND', ref_path, '028_z000p000',
+    # Get data
+    aborn = eagle_io.read_array('PARTDATA', path, snap,
+                                'PartType4/StellarFormationTime',
+                                noH=True,
+                                physicalUnits=True,
+                                numThreads=8)
+    pre_ys = eagle_io.read_array('PARTDATA', path, snap,
+                                 y_key,
+                                 noH=True,
+                                 physicalUnits=True,
+                                 numThreads=8)
+    pre_zs = 1 / aborn - 1
+    subgrps = eagle_io.read_array('SUBFIND', path, snap,
                                   'Subhalo/SubGroupNumber', noH=True,
                                   physicalUnits=True,
                                   numThreads=8)
-    grps = eagle_io.read_array('SUBFIND', ref_path, '028_z000p000',
+    grps = eagle_io.read_array('SUBFIND', path, snap,
                                'Subhalo/GroupNumber', noH=True,
                                physicalUnits=True,
                                numThreads=8)
-    nstars = eagle_io.read_array('SUBFIND', ref_path, '028_z000p000',
+    nstars = eagle_io.read_array('SUBFIND', path, snap,
                                  'Subhalo/SubLengthType', noH=True,
                                  physicalUnits=True,
                                  numThreads=8)[:, 4]
-    part_subgrp = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
+    part_subgrp = eagle_io.read_array('PARTDATA', path, snap,
                                       'PartType4/SubGroupNumber',
                                       noH=True,
                                       physicalUnits=True,
                                       numThreads=8)
-    part_grp = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
+    part_grp = eagle_io.read_array('PARTDATA', path, snap,
                                    'PartType4/GroupNumber', noH=True,
                                    physicalUnits=True,
                                    numThreads=8)
@@ -82,20 +61,95 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
             nstar_dict[(grp, subgrp)] = nstars[ind]
 
     # Now get the stars we want
-    eagle_zs = []
-    eagle_mets = []
-    for ind in range(eagle_aborn.size):
+    zs = []
+    ys = []
+    for ind in range(aborn.size):
 
         # Get grp and subgrp
         grp, subgrp = part_grp[ind], part_subgrp[ind]
 
         if (grp, subgrp) in nstar_dict:
-            eagle_zs.append(pre_eagle_zs[ind])
-            eagle_mets.append(pre_eagle_mets[ind])
+            zs.append(pre_zs[ind])
+            ys.append(pre_ys[ind])
 
     # Convert to arrays
-    eagle_zs = np.array(eagle_zs)
-    eagle_mets = np.array(eagle_mets)
+    zs = np.array(zs)
+    ys = np.array(ys)
+
+    return zs, ys
+
+
+def plot_birth_met(stellar_data, snap, weight_norm, path):
+
+    # Define intial FLARES path
+    ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/G-EAGLE_<reg>/data/"
+
+    # Open region overdensities
+    reg_ovdens = np.loadtxt("/cosma7/data/dp004/dc-rope1/FLARES/"
+                            "flares/region_overdensity.txt",
+                            dtype=float)
+    print(reg_ovdens)
+
+    # Load weights
+    df = pd.read_csv('../weight_files/weights_grid.txt')
+    weights = np.array(df['weights'])
+
+    print(weights)
+
+    # Define regions
+    regions = []
+    for reg in range(0, 40):
+        if reg < 10:
+            regions.append('0' + str(reg))
+        else:
+            regions.append(str(reg))
+
+    # Define overdensity bins in log(1+delta)
+    ovden_bins = np.arange(-0.3, 0.4, 0.1)
+    eagle_z_bins = np.arange(0.0, 20.5, 0.75)
+    flares_z_bins = np.arange(4.5, 23.5, 0.75)
+
+    # Define lists to store data
+    zs = []
+    mets = []
+    ovdens = []
+    w = []
+    for reg in regions:
+        path = ini_path.replace("<reg>", reg)
+
+        reg_zs, reg_mets = get_nonmaster_evo_data(
+            path, snap, y_key="PartType4/SmoothedMetallicity")
+        ovdens.extend(np.full(reg_zs.size, reg_ovdens[int(reg)], dtype=float))
+        w.extend(np.full(reg_zs.size, weights[int(reg)], dtype=float))
+
+    # Convert to arrays
+    zs = np.array(zs)
+    mets = np.array(zs)
+    ovdens = np.array(zs)
+    w = np.array(w)
+
+    # # Extract arrays
+    # zs = stellar_data["birth_z"]
+    # mets = stellar_data["Particle,S_Z_smooth"]
+    # w = stellar_data["part_weights"]
+    # part_ovdens = stellar_data["part_ovdens"]
+    # part_nstar = stellar_data["part_nstar"]
+
+    # # Remove particles with 0 weight (these are not in a galaxy
+    # # we are including)
+    # okinds = part_nstar >= 100
+    # mets = mets[okinds]
+    # zs = zs[okinds]
+    # part_ovdens = part_ovdens[okinds]
+    # w = w[okinds]
+    # part_nstar = part_nstar[okinds]
+
+    # print(np.unique(w, return_counts=True))
+
+    # Get eagle data
+    ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0100N1504/PE/REFERENCE/data'
+    eagle_zs, eagle_mets = get_nonmaster_evo_data(ref_path, "028_z000p000",
+                                                  y_key="PartType4/SmoothedMetallicity")
 
     # Set up the plotd
     fig = plt.figure(figsize=(4, 3.5))
