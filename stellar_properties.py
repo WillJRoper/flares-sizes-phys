@@ -3,6 +3,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm, TwoSlopeNorm
 import matplotlib.gridspec as gridspec
+from brokenaxes import brokenaxes
 from flare import plt as flareplt
 from utils import mkdir, plot_meidan_stat, age2z
 from unyt import mh, cm, Gyr, g, Msun, Mpc
@@ -106,8 +107,8 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
     # Define overdensity bins in log(1+delta)
     ovden_bins = np.arange(-0.3, 0.4, 0.1)
-    eagle_z_bins = np.arange(0.0, 20.5, 0.75)
-    flares_z_bins = np.arange(4.5, 23.5, 0.75)
+    eagle_z_bins = np.arange(0.0, 21.0, 1.0)
+    flares_z_bins = np.arange(4.5, 23.5, 1.0)
 
     # Define lists to store data
     zs = []
@@ -131,14 +132,25 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     w = np.array(w)
 
     # Get eagle data
-    ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0100N1504/PE/REFERENCE/data'
+    agndt9_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
+    agndt9_zs, agndt9_mets = get_nonmaster_evo_data(
+        agndt9_path, "028_z000p000", y_key="PartType4/SmoothedMetallicity")
+
+    # Get eagle data
+    ref_path = "/cosma7/data/Eagle/ScienceRuns/Planck1/L0100N1504/PE/REFERENCE/data"
     eagle_zs, eagle_mets = get_nonmaster_evo_data(
         ref_path, "028_z000p000", y_key="PartType4/SmoothedMetallicity")
 
     # Set up the plotd
-    fig = plt.figure(figsize=(4, 3.5))
-    ax = fig.add_subplot(111)
-    ax.semilogy()
+    fig = plt.figure(figsize=(3.5, 3.5))
+    bax = brokenaxes(ylims=((0.0, 0.005), (0.015, 0.024)), hspace=.05)
+
+    plot_meidan_stat(eagle_zs, eagle_mets, np.ones(eagle_mets.size), bax,
+                     lab=r"EAGLE-REF", bins=eagle_z_bins, color=None,
+                     ls="dotted")
+    plot_meidan_stat(agndt9_zs, agndt9_mets, np.ones(agndt9_mets.size), bax,
+                     lab=r"EAGLE-AGNdT9", bins=eagle_z_bins, color=None,
+                     ls="--")
 
     # Loop over overdensity bins and plot median curves
     for i in range(ovden_bins[:-1].size):
@@ -150,22 +162,18 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
                                 okinds)
 
         plot_meidan_stat(zs[okinds], mets[okinds],
-                         w[okinds], ax,
+                         w[okinds], bax,
                          lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
                          % (ovden_bins[i], ovden_bins[i + 1]),
                          bins=flares_z_bins,
                          color=None)
 
-    plot_meidan_stat(eagle_zs, eagle_mets, np.ones(eagle_mets.size), ax,
-                     lab=r"EAGLE-AGNdT9", bins=eagle_z_bins, color=None,
-                     ls="--")
+    bax.set_ylabel(r"$Z_{\mathrm{birth}}$")
+    bax.set_xlabel(r"$z_{\mathrm{birth}}$")
 
-    ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
-    ax.set_xlabel(r"$z_{\mathrm{birth}}$")
-
-    ax.legend(loc='upper center',
-              bbox_to_anchor=(0.5, -0.2),
-              fancybox=True, ncol=2)
+    bax.legend(loc='upper center',
+               bbox_to_anchor=(0.5, -0.2),
+               fancybox=True, ncol=2)
 
     # Save figure
     mkdir("plots/stellar_evo/")
@@ -200,8 +208,8 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
 
     # Define overdensity bins in log(1+delta)
     ovden_bins = np.arange(-0.3, 0.4, 0.1)
-    eagle_z_bins = np.arange(0.0, 20.5, 0.75)
-    flares_z_bins = np.arange(4.5, 23.5, 0.75)
+    eagle_z_bins = np.arange(0.0, 21.0, 1.0)
+    flares_z_bins = np.arange(4.5, 23.5, 1.0)
 
     # Define lists to store data
     zs = []
@@ -225,14 +233,28 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     w = np.array(w)
 
     # Get eagle data
-    ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0100N1504/PE/REFERENCE/data'
+    agndt9_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
+    agndt9_zs, agndt9_dens = get_nonmaster_evo_data(
+        agndt9_path, "028_z000p000", y_key="PartType4/BirthDensity")
+
+    # Get eagle data
+    ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
     eagle_zs, eagle_dens = get_nonmaster_evo_data(
         ref_path, "028_z000p000", y_key="PartType4/BirthDensity")
 
     # Set up the plot
-    fig = plt.figure(figsize=(4, 3.5))
+    fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
     ax.semilogy()
+
+    plot_meidan_stat(eagle_zs, eagle_dens,
+                     np.ones(eagle_dens.size), ax,
+                     lab=r"EAGLE-REF", bins=eagle_z_bins, color=None,
+                     ls="dotted")
+    plot_meidan_stat(agndt9_zs, agndt9_dens,
+                     np.ones(agndt9_dens.size), ax,
+                     lab=r"EAGLE-AGNdT9", bins=eagle_z_bins, color=None,
+                     ls="--")
 
     # Loop over overdensity bins and plot median curves
     for i in range(ovden_bins[:-1].size):
@@ -247,14 +269,6 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
                          lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
                          % (ovden_bins[i], ovden_bins[i + 1]),
                          bins=flares_z_bins, color=None)
-
-    # okinds = np.logical_and(eagle_zs >= 0, eagle_dens > 0)
-    okinds = np.ones(eagle_zs.size, dtype=bool)
-
-    plot_meidan_stat(eagle_zs[okinds], eagle_dens[okinds],
-                     np.ones(eagle_dens[okinds].size), ax,
-                     lab=r"EAGLE-AGNdT9", bins=eagle_z_bins, color=None,
-                     ls="--")
 
     ax.set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
     ax.set_xlabel(r"$z_{\mathrm{birth}}$")
