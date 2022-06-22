@@ -143,12 +143,12 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
     # Set up the plotd
     fig = plt.figure(figsize=(3.5, 3.5))
-    bax = brokenaxes(ylims=((0.0, 0.005), (0.016, 0.022)), hspace=.05)
+    ax = fig.add_subplot(111)
 
-    plot_meidan_stat(eagle_zs, eagle_mets, np.ones(eagle_mets.size), bax,
+    plot_meidan_stat(eagle_zs, eagle_mets, np.ones(eagle_mets.size), ax,
                      lab=r"EAGLE-REF", bins=eagle_z_bins, color=None,
                      ls="dotted")
-    plot_meidan_stat(agndt9_zs, agndt9_mets, np.ones(agndt9_mets.size), bax,
+    plot_meidan_stat(agndt9_zs, agndt9_mets, np.ones(agndt9_mets.size), ax,
                      lab=r"EAGLE-AGNdT9", bins=eagle_z_bins, color=None,
                      ls="--")
 
@@ -162,18 +162,20 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
                                 okinds)
 
         plot_meidan_stat(zs[okinds], mets[okinds],
-                         w[okinds], bax,
+                         w[okinds], ax,
                          lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
                          % (ovden_bins[i], ovden_bins[i + 1]),
                          bins=flares_z_bins,
                          color=None)
 
-    bax.set_ylabel(r"$Z_{\mathrm{birth}}$")
-    bax.set_xlabel(r"$z_{\mathrm{birth}}$")
+    ax.set_ylim(0.0, 0.005)
 
-    bax.legend(loc='upper center',
-               bbox_to_anchor=(0.5, -0.2),
-               fancybox=True, ncol=2)
+    ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
+    ax.set_xlabel(r"$z_{\mathrm{birth}}$")
+
+    ax.legend(loc='upper center',
+              bbox_to_anchor=(0.5, -0.2),
+              fancybox=True, ncol=2)
 
     # Save figure
     mkdir("plots/stellar_evo/")
