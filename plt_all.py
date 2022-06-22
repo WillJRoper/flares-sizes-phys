@@ -98,20 +98,20 @@ except OSError:
 
 print("Got all data")
 
-# Make plots that require multiple redshifts
-#sfr_radial_profile_mass(data["stellar"][flares_snaps[-1]], flares_snaps[-1])
-# sfr_radial_profile_environ(data["stellar"][flares_snaps[-1]], flares_snaps[-1])
-sfr_radial_profile(data["stellar"], com_snaps, agndt9_path, flares_snaps)
+# # Make plots that require multiple redshifts
+# #sfr_radial_profile_mass(data["stellar"][flares_snaps[-1]], flares_snaps[-1])
+# # sfr_radial_profile_environ(data["stellar"][flares_snaps[-1]], flares_snaps[-1])
+# sfr_radial_profile(data["stellar"], com_snaps, agndt9_path, flares_snaps)
 
-print("Plotted SFR profiles")
+# print("Plotted SFR profiles")
 
-# Plot the physics variation plots
-plot_birth_density_evo()
-plot_birth_met_evo()
-plot_hmr_phys_comp(flares_snaps[-1])
-plot_gashmr_phys_comp(flares_snaps[-1])
+# # Plot the physics variation plots
+# plot_birth_density_evo()
+# plot_birth_met_evo()
+# plot_hmr_phys_comp(flares_snaps[-1])
+# plot_gashmr_phys_comp(flares_snaps[-1])
 
-print("Plotted Physics variations")
+# print("Plotted Physics variations")
 
 # Plot properties that are done at singular redshifts
 snap = flares_snaps[-1]
