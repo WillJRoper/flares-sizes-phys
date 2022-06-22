@@ -165,7 +165,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     # Remove particles with 0 weight (these are not in a galaxy
     # we are including)
     okinds = part_nstar >= 100
-    mets = mets[okinds]
+    dens = dens[okinds]
     zs = zs[okinds]
     part_ovdens = part_ovdens[okinds]
     w = w[okinds]
