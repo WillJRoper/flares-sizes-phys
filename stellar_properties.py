@@ -138,6 +138,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     # Set up the plotd
     fig = plt.figure(figsize=(4, 3.5))
     ax = fig.add_subplot(111)
+    ax.semilogy()
 
     # Loop over overdensity bins and plot median curves
     for i in range(ovden_bins[:-1].size):
