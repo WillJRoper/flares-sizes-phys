@@ -143,7 +143,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
     # Set up the plotd
     fig = plt.figure(figsize=(3.5, 3.5))
-    bax = brokenaxes(ylims=((0.0, 0.005), (0.015, 0.024)), hspace=.05)
+    bax = brokenaxes(ylims=((0.0, 0.005), (0.016, 0.022)), hspace=.05)
 
     plot_meidan_stat(eagle_zs, eagle_mets, np.ones(eagle_mets.size), bax,
                      lab=r"EAGLE-REF", bins=eagle_z_bins, color=None,
