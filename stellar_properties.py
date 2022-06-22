@@ -16,8 +16,8 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
     # Define overdensity bins in log(1+delta)
     ovden_bins = np.arange(-0.3, 0.4, 0.1)
-    eagle_z_bins = np.arange(0.0, 20.5, 0.5)
-    flares_z_bins = np.arange(4.5, 23.5, 0.5)
+    eagle_z_bins = np.arange(0.0, 20.5, 0.75)
+    flares_z_bins = np.arange(4.5, 23.5, 0.75)
 
     # Extract arrays
     zs = stellar_data["birth_z"]
@@ -36,7 +36,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     part_nstar = part_nstar[okinds]
 
     # Get eagle data
-    ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
+    ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0100N1504/PE/REFERENCE/data'
     eagle_aborn = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
                                       'PartType4/StellarFormationTime',
                                       noH=True,
@@ -152,8 +152,8 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
 
     # Define overdensity bins in log(1+delta)
     ovden_bins = np.arange(-0.3, 0.4, 0.1)
-    eagle_z_bins = np.arange(0.0, 20.5, 0.5)
-    flares_z_bins = np.arange(4.5, 23.5, 0.5)
+    eagle_z_bins = np.arange(0.0, 20.5, 0.75)
+    flares_z_bins = np.arange(4.5, 23.5, 0.75)
 
     # Store the data so we doon't have to recalculate it
     dens = stellar_data["birth_density"]
@@ -172,7 +172,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     part_nstar = part_nstar[okinds]
 
     # Get eagle data
-    ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
+    ref_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0100N1504/PE/REFERENCE/data'
     eagle_aborn = eagle_io.read_array('PARTDATA', ref_path, '028_z000p000',
                                       'PartType4/StellarFormationTime',
                                       noH=True,
