@@ -107,8 +107,8 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
     # Define overdensity bins in log(1+delta)
     ovden_bins = np.arange(-0.3, 0.4, 0.1)
-    eagle_z_bins = np.arange(0.0, 21.0, 0.5)
-    flares_z_bins = np.arange(4.5, 23.5, 0.5)
+    eagle_z_bins = np.arange(0.0, 21.0, 1.0)
+    flares_z_bins = np.arange(5.0, 21.0, 1.0)
 
     # Define lists to store data
     zs = []
@@ -210,8 +210,8 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
 
     # Define overdensity bins in log(1+delta)
     ovden_bins = np.arange(-0.3, 0.4, 0.1)
-    eagle_z_bins = np.arange(0.0, 21.0, 0.5)
-    flares_z_bins = np.arange(4.5, 23.5, 0.5)
+    eagle_z_bins = np.arange(0.0, 21.0, 1.0)
+    flares_z_bins = np.arange(5.0, 21.0, 1.0)
 
     # Define lists to store data
     zs = []
