@@ -421,7 +421,7 @@ def plot_hmr_phys_comp_grid(snap):
             axes[i, j].set_xlim(mass_lims[j])
 
     axes[-1, 1].legend(loc='upper center',
-                       bbox_to_anchor=(1.0, -0.2),
+                       bbox_to_anchor=(0.5, -0.2),
                        fancybox=True, ncol=7)
 
     # Save figure
