@@ -811,17 +811,16 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
     return stellar_data
 
 
-def virial_temp(m, r):
-    T = (1 / 3 * const.G * m * u.M_sun / (const.k_B * r * u.kpc)).decompose()
-    print(T)
-    return T.value
+def virial_temp(m, r, mu, z):
+    T = 4 * 10 ** 4 * (mu / 1.2) * (m / (10 ** 8 / 0.6777)) ** (1 + z / 10)
+    return T
 
 
 def plot_virial_temp():
 
     # Define arrays of masses and sizes
-    ms = np.logspace(8, 12, 1000)
-    hmrs = np.logspace(-0.5, 1, 256)
+    ms = np.logspace(7, 13, 1000)
+    hmrs = np.logspace(-2, 2, 256)
 
     # Set up colormap
     cmap = mpl.cm.plasma
@@ -832,14 +831,14 @@ def plot_virial_temp():
     gs = gridspec.GridSpec(nrows=1, ncols=2,
                            width_ratios=[20, 1])
     gs.update(wspace=0.0, hspace=0.0)
-    ax = fig.add_subplot(gs[0])
-    cax = fig.add_subplot(gs[1])
+    ax = fig.add_subplot(gs[:, 0])
+    cax = fig.add_subplot(gs[:, -1])
     ax.loglog()
 
     # Loop over hmrs calculating virial temperatures
     for hmr in hmrs:
 
-        ax.plot(ms, virial_temp(ms, hmr * 2), color=cmap(hmr))
+        ax.plot(ms, virial_temp(ms, hmr * 2, mu=1.2, z=5), color=cmap(hmr))
 
     # Set labels
     ax.set_xlabel("$M_\mathrm{tot} / M_\odot$")
