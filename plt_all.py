@@ -103,8 +103,8 @@ print("Got all data")
 
 # # Plot the physics variation plots
 plot_hmr_phys_comp_grid(flares_snaps[-1])
-# plot_birth_density_evo()
-# plot_birth_met_evo()
+plot_birth_density_evo()
+plot_birth_met_evo()
 # plot_hmr_phys_comp(flares_snaps[-1])
 # plot_gashmr_phys_comp(flares_snaps[-1])
 
