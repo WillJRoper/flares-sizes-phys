@@ -203,9 +203,9 @@ def plot_hmr_phys_comp(snap):
 
 def plot_hmr_phys_comp_grid(snap):
 
-    mass_bins = np.logspace(7.0, 14.5, 30)
-    mass_lims = [10**7, 10**15]
-    hmr_lims = [10**-1.3, 10**1.3]
+    mass_bins = np.logspace(7.0, 13, 30)
+    mass_lims = [10**7, 10**13]
+    hmr_lims = [10**-2, 10**2]
 
     # Define the path
     path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
