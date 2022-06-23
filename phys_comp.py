@@ -204,7 +204,8 @@ def plot_hmr_phys_comp(snap):
 def plot_hmr_phys_comp_grid(snap):
 
     mass_bins = np.logspace(8.0, 13, 30)
-    mass_lims = [10**7.8, 10**13]
+    mass_lims = [(10**7.8, 10**11.5), (10**7.8, 10**12.5),
+                 (10**7.8, 10**11.2), (10**7.8, 10**12.5)]
     hmr_lims = [10**-0.8, 10**2]
 
     # Define the path
@@ -346,15 +347,173 @@ def plot_hmr_phys_comp_grid(snap):
     for i in range(axes.shape[0]):
         for j in range(axes.shape[1]):
             axes[i, j].set_ylim(hmr_lims)
-            axes[i, j].set_xlim(mass_lims)
+            axes[i, j].set_xlim(mass_lims[j])
 
     axes[-1, 1].legend(loc='upper center',
                        bbox_to_anchor=(1.0, -0.2),
-                       fancybox=True, ncol=4)
+                       fancybox=True, ncol=7)
 
     # Save figure
     mkdir("plots/physics_vary/")
     fig.savefig("plots/physics_vary/hmr_grid_%s.png" % snap,
+                bbox_inches="tight")
+
+
+def plot_hmr_phys_comp_grid_1kpc(snap):
+
+    mass_bins = np.logspace(6.0, 11, 30)
+    mass_lims = [(10**6.0, 10**11), (10**6.0, 10**11),
+                 (10**6.0, 10**11), (10**6.0, 10**11)]
+    hmr_lims = [10**-0.8, 10**2]
+
+    # Define the path
+    path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
+
+    # Define physics variations directories
+    types = ["G-EAGLE_00", "FLARES_00_REF", "FLARES_00_highFBlim",
+             "FLARES_00_medFBlim", "FLARES_00_slightFBlim",
+             "FLARES_00_instantFB", "FLARES_00_noZSFthresh"]
+
+    # Define labels for each
+    labels = ["AGNdT9", "REF", "$f_{\mathrm{th, max}}=10$",
+              "$f_{\mathrm{th, max}}=6$", "$f_{\mathrm{th, max}}=4$",
+              "InstantFB", "$Z^0$"]
+
+    # Define linestyles
+    linestyles = ["-", "-", "--", "--", "--", "dotted", "dotted"]
+
+    # Define plot grid shape
+    nrows = 3
+    ncols = 4
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5 * ncols, 3.5 * nrows))
+    gs = gridspec.GridSpec(nrows=nrows, ncols=ncols)
+    gs.update(wspace=0.0, hspace=0.0)
+    axes = np.empty((nrows, ncols), dtype=object)
+    i = 0
+    while i < nrows:
+        j = 0
+        while j < ncols:
+            axes[i, j] = fig.add_subplot(gs[i, j])
+            axes[i, j].loglog()
+            if j > 0:
+                axes[i, j].tick_params(axis='y', left=False, right=False,
+                                       labelleft=False, labelright=False)
+            if i < nrows - 1:
+                axes[i, j].tick_params(axis='x', top=False, bottom=False,
+                                       labeltop=False, labelbottom=False)
+            j += 1
+        i += 1
+
+    for i in range(axes.shape[0]):
+
+        if i == 0 or i == 1:
+            idata = i
+        elif i == 2:
+            idata = 4
+
+        for j in range(axes.shape[1]):
+
+            if j == 3:
+                jdata = "tot"
+            elif j == 0 or j == 1:
+                jdata = j
+            elif j == 2:
+                jdata = 4
+
+            # Loop over the variants
+            for t, l, ls in zip(types, labels, linestyles):
+
+                print(i, j, t, l)
+
+                # Get the number stars in a galaxy to perform nstar cut
+                nparts = eagle_io.read_array('SUBFIND',
+                                             path.replace("<type>", t),
+                                             snap,
+                                             'Subhalo/SubLengthType',
+                                             noH=True, physicalUnits=True,
+                                             numThreads=8)
+                okinds = np.logical_and(nparts[:, 4] > 0, nparts[:, 0] > 0)
+                okinds = np.logical_and(okinds, nparts[:, 1] > 0)
+
+                # Get the arrays from the raw data files
+                hmr = eagle_io.read_array('SUBFIND', path.replace("<type>", t),
+                                          snap,
+                                          'Subhalo/HalfMassRad',
+                                          noH=True, physicalUnits=True,
+                                          numThreads=8)[:, idata] * 1000
+                if jdata == "tot":
+                    mass_star = eagle_io.read_array(
+                        "SUBFIND",
+                        path.replace("<type>", t),
+                        snap,
+                        "Subhalo/ApertureMeasurements/Mass/001kpc",
+                        noH=True, physicalUnits=True,
+                        numThreads=8
+                    )[:, 4] * 10 ** 10
+                    mass_gas = eagle_io.read_array(
+                        "SUBFIND",
+                        path.replace("<type>", t),
+                        snap,
+                        "Subhalo/ApertureMeasurements/Mass/001kpc",
+                        noH=True, physicalUnits=True,
+                        numThreads=8
+                    )[:, 0] * 10 ** 10
+                    mass_dm = eagle_io.read_array(
+                        "SUBFIND",
+                        path.replace("<type>", t),
+                        snap,
+                        "Subhalo/ApertureMeasurements/Mass/001kpc",
+                        noH=True, physicalUnits=True,
+                        numThreads=8
+                    )[:, 1] * 10 ** 10
+                    mass_bh = eagle_io.read_array(
+                        "SUBFIND",
+                        path.replace("<type>", t),
+                        snap,
+                        "Subhalo/ApertureMeasurements/Mass/001kpc",
+                        noH=True, physicalUnits=True,
+                        numThreads=8
+                    )[:, 5] * 10 ** 10
+                    mass = mass_star + mass_dm + mass_gas + mass_bh
+                else:
+                    mass = eagle_io.read_array(
+                        "SUBFIND",
+                        path.replace("<type>", t),
+                        snap,
+                        "Subhalo/ApertureMeasurements/Mass/001kpc",
+                        noH=True, physicalUnits=True,
+                        numThreads=8
+                    )[:, jdata] * 10 ** 10
+
+                # Plot median curves
+                # okinds = mass > 0
+                plot_meidan_stat(mass[okinds], hmr[okinds],
+                                 np.ones(hmr[okinds].size),
+                                 axes[i, j], lab=l,
+                                 color=None, bins=mass_bins, ls=ls)
+
+    # Label axes
+    subscripts = ["\mathrm{gas}", "\mathrm{DM}", "\star", "\mathrm{tot}"]
+    for ind, ax in enumerate(axes[:, 0]):
+        ax.set_ylabel(r"$R_{1/2, %s}$" % subscripts[ind])
+    for ind, ax in enumerate(axes[-1, :]):
+        ax.set_xlabel(r"$M_{%s} / M_\odot$" % subscripts[ind])
+
+    # Set axis limits
+    for i in range(axes.shape[0]):
+        for j in range(axes.shape[1]):
+            axes[i, j].set_ylim(hmr_lims)
+            axes[i, j].set_xlim(mass_lims[j])
+
+    axes[-1, 1].legend(loc='upper center',
+                       bbox_to_anchor=(1.0, -0.2),
+                       fancybox=True, ncol=7)
+
+    # Save figure
+    mkdir("plots/physics_vary/")
+    fig.savefig("plots/physics_vary/hmr_grid_1kpc_%s.png" % snap,
                 bbox_inches="tight")
 
 

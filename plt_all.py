@@ -102,6 +102,7 @@ print("Got all data")
 # print("Plotted SFR profiles")
 
 # # Plot the physics variation plots
+plot_hmr_phys_comp_grid_1kpc(flares_snaps[-1])
 plot_hmr_phys_comp_grid(flares_snaps[-1])
 plot_birth_density_evo()
 plot_birth_met_evo()
