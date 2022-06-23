@@ -2,15 +2,11 @@ import numpy as np
 import pickle
 from matplotlib.colors import LogNorm
 
-from hmrs import plot_stellar_hmr, plot_stellar_gas_hmr_comp, visualise_gas
+from hmrs import *
 from density import plot_stellar_density_grid
-from stellar_properties import plot_birth_met, plot_birth_den
-from stellar_properties import plot_eagle_birth_den_vs_met
-from stellar_properties import plot_gal_birth_den_vs_met
-from stellar_properties import plot_subgrid_birth_den_vs_met, plot_sfr_evo
-from phys_comp import plot_birth_density_evo, plot_birth_met_evo
-from phys_comp import plot_hmr_phys_comp, plot_gashmr_phys_comp
-from spatial_dist import sfr_radial_profile, sfr_radial_profile_environ, sfr_radial_profile_mass
+from stellar_properties import *
+from phys_comp import *
+from spatial_dist import *
 from compute_props import get_data
 
 
@@ -106,12 +102,13 @@ print("Got all data")
 # print("Plotted SFR profiles")
 
 # # Plot the physics variation plots
+plot_hmr_phys_comp(snap)
 # plot_birth_density_evo()
 # plot_birth_met_evo()
 # plot_hmr_phys_comp(flares_snaps[-1])
 # plot_gashmr_phys_comp(flares_snaps[-1])
 
-# print("Plotted Physics variations")
+print("Plotted Physics variations")
 
 # Plot properties that are done at singular redshifts
 snap = flares_snaps[-1]
