@@ -201,9 +201,9 @@ def plot_hmr_phys_comp(snap):
                 bbox_inches="tight")
 
 
-def plot_hmr_phys_comp(snap):
+def plot_hmr_phys_comp_grid(snap):
 
-    mass_bins = np.logspace(7.5, 11.5, 30)
+    mass_bins = np.logspace(8.0, 14.5, 30)
 
     # Define the path
     path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
@@ -264,7 +264,7 @@ def plot_hmr_phys_comp(snap):
             # Loop over the variants
             for t, l, ls in zip(types, labels, linestyles):
 
-                print(i, j, k, t, l)
+                print(i, j, t, l)
 
                 # Get the number stars in a galaxy to perform nstar cut
                 nstar = eagle_io.read_array('SUBFIND',
