@@ -829,7 +829,7 @@ def plot_virial_temp():
 
     # Set up the plot
     fig = plt.figure(figsize=(3.5, 3.5))
-    gs = gridspec.GridSpec(nrows=1, ncols=2,
+    gs = gridspec.GridSpec(nrows=2, ncols=2,
                            width_ratios=[20, 1])
     gs.update(wspace=0.0, hspace=0.0)
     ax = fig.add_subplot(gs[:, 0])
@@ -839,7 +839,8 @@ def plot_virial_temp():
     # Loop over hmrs calculating virial temperatures
     for hmr in hmrs:
 
-        ax.plot(ms, virial_temp(ms, hmr * 2, mu=1.2, z=5), color=cmap(hmr))
+        ax.plot(ms, virial_temp(ms, hmr * 2, mu=1.2, z=5),
+                color=cmap(norm(hmr)))
 
     # Set labels
     ax.set_xlabel("$M_\mathrm{tot} / M_\odot$")

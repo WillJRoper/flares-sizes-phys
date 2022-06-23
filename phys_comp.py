@@ -258,7 +258,7 @@ def plot_sfr_evo_comp(snap):
 
             zokinds = np.logical_and(zs < z_high, zs >= z_low)
 
-            sfrs.append(np.sum(ms[zokinds]) / 100)  # M_sun / Myr
+            sfrs.append(np.sum(ms[zokinds]) * 10**10 / 100)  # M_sun / Myr
             plt_zs.append(z_low)
 
         ax.plot(plt_zs, sfrs, label=l, ls=ls)
