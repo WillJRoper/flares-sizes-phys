@@ -223,7 +223,7 @@ def plot_sfr_evo_comp(snap):
 
     # Define z bins
     flares_age_bins = np.arange(cosmo.age(5).value, cosmo.age(30).value, -0.1)
-    flares_z_bins = []
+    flares_z_bins = [5, ]
     for age in flares_age_bins:
         flares_z_bins.append(z_at_value(cosmo.age,
                                         age * u.Gyr,
