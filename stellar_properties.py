@@ -843,7 +843,7 @@ def plot_virial_temp():
 
     # Set labels
     ax.set_xlabel("$M_\mathrm{tot} / M_\odot$")
-    ax.set_ylabel("$T_{\mathrm{vir}} /$ [K / kg]")
+    ax.set_ylabel("$T_{\mathrm{vir}} / \mu /$ [K]")
 
     # Make colorbar
     cb1 = mpl.colorbar.ColorbarBase(ax, cmap=cmap,
