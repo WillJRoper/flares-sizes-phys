@@ -222,7 +222,7 @@ def plot_sfr_evo_comp(snap):
     linestyles = ["-", "-", "--", "--", "--", "dotted", "dotted"]
 
     # Define overdensity bins in log(1+delta)
-    flares_age_bins = np.arange(cosmo.age(5).value, cosmo.age(20).value, 0.1)
+    flares_age_bins = np.arange(cosmo.age(5).value, cosmo.age(20).value, -0.1)
     flares_z_bins = []
     for age in flares_age_bins:
         flares_z_bins.append(z_at_value(cosmo.age,
