@@ -297,7 +297,7 @@ def plot_hmr_phys_comp_grid(snap):
 
     # Define plot grid shape
     nrows = 3
-    ncols = 4
+    ncols = 3
 
     # Set up plot
     fig = plt.figure(figsize=(3.5 * ncols, 3.5 * nrows))
