@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from matplotlib.colors import LogNorm, TwoSlopeNorm
+from matplotlib.colors import LogNorm, TwoSlopeNorm, Normalize
 import matplotlib.gridspec as gridspec
 from brokenaxes import brokenaxes
 from flare import plt as flareplt
@@ -820,11 +820,11 @@ def plot_virial_temp():
 
     # Define arrays of masses and sizes
     ms = np.logspace(7, 13, 1000)
-    zs = np.linspace(5, 20, 256)
+    zs = np.linspace(0, 20, 256)
 
     # Set up colormap
     cmap = mpl.cm.plasma
-    norm = LogNorm(vmin=np.min(zs), vmax=np.max(zs))
+    norm = Normalize(vmin=np.min(zs), vmax=np.max(zs))
 
     # Set up the plot
     fig = plt.figure(figsize=(3.5, 3.5))
@@ -833,7 +833,7 @@ def plot_virial_temp():
     gs.update(wspace=0.0, hspace=0.0)
     ax = fig.add_subplot(gs[:, 0])
     cax = fig.add_subplot(gs[:, -1])
-    ax.semilogy()
+    ax.loglog()
 
     # Loop over hmrs calculating virial temperatures
     for z in zs:
@@ -844,10 +844,16 @@ def plot_virial_temp():
     ax.set_xlabel("$M_\mathrm{tot} / M_\odot$")
     ax.set_ylabel("$T_{\mathrm{vir}} /$ [K]")
 
+    # Plot star formation temperature increase
+    ax.axhline(10**7.5, color="k", alpha=0.8, linestyle="--",
+               label="$\Delta T_{SF}")
+
     # Make colorbar
     cb1 = mpl.colorbar.ColorbarBase(cax, cmap=cmap,
                                     norm=norm)
     cb1.set_label("$z$")
+
+    ax.legend()
 
     # Save figure
     mkdir("plots/stellar_formprops/")
