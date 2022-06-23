@@ -269,20 +269,21 @@ def plot_hmr_phys_comp_grid(snap):
                 print(i, j, t, l)
 
                 # Get the number stars in a galaxy to perform nstar cut
-                nstar = eagle_io.read_array('SUBFIND',
-                                            path.replace("<type>", t),
-                                            snap,
-                                            'Subhalo/SubLengthType',
-                                            noH=True, physicalUnits=True,
-                                            numThreads=8)[:, 4]
-                okinds = nstar > 100
+                nparts = eagle_io.read_array('SUBFIND',
+                                             path.replace("<type>", t),
+                                             snap,
+                                             'Subhalo/SubLengthType',
+                                             noH=True, physicalUnits=True,
+                                             numThreads=8)
+                okinds = np.logical_and(nparts[:, 4] >= 100, nparts[:, 0] > 0)
+                okinds = np.logical_and(okinds, nparts[:, 1] > 0)
 
                 # Get the arrays from the raw data files
                 hmr = eagle_io.read_array('SUBFIND', path.replace("<type>", t),
                                           snap,
                                           'Subhalo/HalfMassRad',
                                           noH=True, physicalUnits=True,
-                                          numThreads=8)[okinds, idata] * 1000
+                                          numThreads=8)[:, idata] * 1000
                 if jdata == "tot":
                     mass_star = eagle_io.read_array(
                         "SUBFIND",
@@ -291,7 +292,7 @@ def plot_hmr_phys_comp_grid(snap):
                         "Subhalo/ApertureMeasurements/Mass/030kpc",
                         noH=True, physicalUnits=True,
                         numThreads=8
-                    )[okinds, 4] * 10 ** 10
+                    )[:, 4] * 10 ** 10
                     mass_gas = eagle_io.read_array(
                         "SUBFIND",
                         path.replace("<type>", t),
@@ -299,7 +300,7 @@ def plot_hmr_phys_comp_grid(snap):
                         "Subhalo/ApertureMeasurements/Mass/030kpc",
                         noH=True, physicalUnits=True,
                         numThreads=8
-                    )[okinds, 0] * 10 ** 10
+                    )[:, 0] * 10 ** 10
                     mass_dm = eagle_io.read_array(
                         "SUBFIND",
                         path.replace("<type>", t),
@@ -307,7 +308,7 @@ def plot_hmr_phys_comp_grid(snap):
                         "Subhalo/ApertureMeasurements/Mass/030kpc",
                         noH=True, physicalUnits=True,
                         numThreads=8
-                    )[okinds, 1] * 10 ** 10
+                    )[:, 1] * 10 ** 10
                     mass_bh = eagle_io.read_array(
                         "SUBFIND",
                         path.replace("<type>", t),
@@ -315,7 +316,7 @@ def plot_hmr_phys_comp_grid(snap):
                         "Subhalo/ApertureMeasurements/Mass/030kpc",
                         noH=True, physicalUnits=True,
                         numThreads=8
-                    )[okinds, 5] * 10 ** 10
+                    )[:, 5] * 10 ** 10
                     mass = mass_star + mass_dm + mass_gas + mass_bh
                 else:
                     mass = eagle_io.read_array(
@@ -325,10 +326,10 @@ def plot_hmr_phys_comp_grid(snap):
                         "Subhalo/ApertureMeasurements/Mass/030kpc",
                         noH=True, physicalUnits=True,
                         numThreads=8
-                    )[okinds, jdata] * 10 ** 10
+                    )[:, jdata] * 10 ** 10
 
                 # Plot median curves
-                okinds = mass > 0
+                # okinds = mass > 0
                 plot_meidan_stat(mass[okinds], hmr[okinds],
                                  np.ones(hmr[okinds].size),
                                  axes[i, j], lab=l,
