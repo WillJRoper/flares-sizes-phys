@@ -813,7 +813,6 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
 
 def virial_temp(m, r, mu, z):
     T = 4 * 10 ** 4 * (mu / 1.2) * (m / (10 ** 8 / 0.6777)) ** (1 + z / 10)
-    print(T)
     return T
 
 
@@ -834,20 +833,19 @@ def plot_virial_temp():
     gs.update(wspace=0.0, hspace=0.0)
     ax = fig.add_subplot(gs[:, 0])
     cax = fig.add_subplot(gs[:, -1])
-    ax.loglog()
+    ax.semilogy()
 
     # Loop over hmrs calculating virial temperatures
     for hmr in hmrs:
-
-        ax.plot(ms, virial_temp(ms, hmr * 2, mu=1.2, z=5),
-                color=cmap(norm(hmr)))
+        ts = virial_temp(ms, hmr * 2, mu=1.2, z=5)
+        ax.plot(ms, ts, color=cmap(norm(hmr)))
 
     # Set labels
     ax.set_xlabel("$M_\mathrm{tot} / M_\odot$")
     ax.set_ylabel("$T_{\mathrm{vir}} / \mu /$ [K]")
 
     # Make colorbar
-    cb1 = mpl.colorbar.ColorbarBase(ax, cmap=cmap,
+    cb1 = mpl.colorbar.ColorbarBase(cax, cmap=cmap,
                                     norm=norm,
                                     orientation='horizontal')
     cb1.set_label("$R_{1/2} /$ [pkpc]")
