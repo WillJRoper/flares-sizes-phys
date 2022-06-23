@@ -203,7 +203,9 @@ def plot_hmr_phys_comp(snap):
 
 def plot_hmr_phys_comp_grid(snap):
 
-    mass_bins = np.logspace(8.0, 14.5, 30)
+    mass_bins = np.logspace(7.0, 14.5, 30)
+    mass_lims = [10**7, 10**15]
+    hmr_lims = [10***-1.3, 10**1.3]
 
     # Define the path
     path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
@@ -338,6 +340,12 @@ def plot_hmr_phys_comp_grid(snap):
         ax.set_ylabel(r"$R_{1/2, %s}$" % subscripts[ind])
     for ind, ax in enumerate(axes[-1, :]):
         ax.set_xlabel(r"$M_{%s} / M_\odot$" % subscripts[ind])
+
+    # Set axis limits
+    for i in range(axes.shape[0]):
+        for j in range(axes.shape[1]):
+            axes[i, j].set_ylim(hmr_lims)
+            axes[i, j].set_xlim(mass_lims)
 
     axes[-1, 1].legend(loc='upper center',
                        bbox_to_anchor=(1.0, -0.2),
