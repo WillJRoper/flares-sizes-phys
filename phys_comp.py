@@ -275,7 +275,7 @@ def plot_hmr_phys_comp_grid(snap):
                                              'Subhalo/SubLengthType',
                                              noH=True, physicalUnits=True,
                                              numThreads=8)
-                okinds = np.logical_and(nparts[:, 4] >= 100, nparts[:, 0] > 0)
+                okinds = np.logical_and(nparts[:, 4] > 0, nparts[:, 0] > 0)
                 okinds = np.logical_and(okinds, nparts[:, 1] > 0)
 
                 # Get the arrays from the raw data files
