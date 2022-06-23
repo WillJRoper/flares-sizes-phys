@@ -847,7 +847,7 @@ def plot_virial_temp():
     # Make colorbar
     cb1 = mpl.colorbar.ColorbarBase(cax, cmap=cmap,
                                     norm=norm)
-    cb1.set_label("$R_{1/2} /$ [pkpc]")
+    cb1.set_label("$z$")
 
     # Save figure
     mkdir("plots/stellar_formprops/")
