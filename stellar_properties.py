@@ -374,7 +374,7 @@ def plot_sfr_evo(stellar_data, snap):
     eagle_ms = np.array(eagle_ms)
 
     # Set up the plotd
-    fig = plt.figure(figsize=(4, 3.5))
+    fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
     ax.semilogy()
 
@@ -482,7 +482,7 @@ def plot_birth_den_vs_met(stellar_data, snap, weight_norm, path):
     ncols = len(zbins) - 1
 
     # Set up plot
-    fig = plt.figure(figsize=(2.5 * ncols, 2.5))
+    fig = plt.figure(figsize=(3.5 * ncols, 3.5))
     gs = gridspec.GridSpec(nrows=1, ncols=ncols + 1,
                            width_ratios=[20, ] * ncols + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
@@ -562,7 +562,7 @@ def plot_subgrid_birth_den_vs_met():
     ncols = len(fmaxs)
 
     # Set up plot
-    fig = plt.figure(figsize=(2.5 * ncols, 2.5))
+    fig = plt.figure(figsize=(3.5 * ncols, 3.5))
     gs = gridspec.GridSpec(nrows=1, ncols=ncols + 1,
                            width_ratios=[20, ] * ncols + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
@@ -777,7 +777,7 @@ def plot_eagle_birth_den_vs_met(stellar_data, snap, weight_norm, path):
     ncols = len(zbins) - 1
 
     # Set up plot
-    fig = plt.figure(figsize=(2.5 * ncols, 2.5))
+    fig = plt.figure(figsize=(3.5 * ncols, 3.5))
     gs = gridspec.GridSpec(nrows=1, ncols=ncols + 1,
                            width_ratios=[20, ] * ncols + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
