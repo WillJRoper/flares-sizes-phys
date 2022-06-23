@@ -837,7 +837,7 @@ def plot_virial_temp():
 
     # Loop over hmrs calculating virial temperatures
     for z in zs:
-        ts = virial_temp(ms, hmr * 2, mu=1.2, z=z)
+        ts = virial_temp(ms, mu=1.2, z=z)
         ax.plot(ms, ts, color=cmap(norm(z)))
 
     # Set labels
