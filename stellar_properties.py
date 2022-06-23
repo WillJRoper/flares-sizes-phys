@@ -819,8 +819,8 @@ def virial_temp(m, mu, z):
 def plot_virial_temp():
 
     # Define arrays of masses and sizes
-    ms = np.logspace(7, 13, 1000)
-    zs = np.linspace(0, 20, 256)
+    ms = np.logspace(8, 12, 1000)
+    zs = np.linspace(0, 10, 256)
 
     # Set up colormap
     cmap = mpl.cm.plasma
@@ -845,8 +845,8 @@ def plot_virial_temp():
     ax.set_ylabel("$T_{\mathrm{vir}} /$ [K]")
 
     # Plot star formation temperature increase
-    ax.axhline(10**7.5, color="k", alpha=0.8, linestyle="--",
-               label="$\Delta T_{SF}")
+    ax.axhline(10**7.5, color="k", alpha=0.6, linestyle="--",
+               label="$\Delta T_{SF}$")
 
     # Make colorbar
     cb1 = mpl.colorbar.ColorbarBase(cax, cmap=cmap,
