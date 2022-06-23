@@ -81,6 +81,7 @@ eagle_snaps = list(snaps)
 
 # PLot the indicative birth density vs metallicity plot
 plot_subgrid_birth_den_vs_met()
+plot_virial_temp()
 
 # Get the data we need
 try:

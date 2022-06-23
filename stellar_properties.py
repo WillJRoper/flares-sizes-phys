@@ -9,6 +9,7 @@ from utils import mkdir, plot_meidan_stat, age2z, get_nonmaster_evo_data
 from unyt import mh, cm, Gyr, g, Msun, Mpc
 from astropy.cosmology import Planck18 as cosmo, z_at_value
 import astropy.units as u
+import astropy.constants as const
 import pandas as pd
 
 import eagle_IO.eagle_IO as eagle_io
@@ -808,3 +809,48 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
                 bbox_inches="tight")
 
     return stellar_data
+
+
+def virial_temp(m, r):
+    return (1 / 3 * const.G * m * u. M_sun
+            / (const.k_B * r * u.kpc)).to(u.K).value
+
+
+def plot_virial_temp():
+
+    # Define arrays of masses and sizes
+    ms = np.logspace(8, 12, 1000)
+    hmrs = np.logspace(-0.5, 1, 256)
+
+    # Set up colormap
+    cmap = mpl.cm.plasma
+    norm = LogNorm(vmin=np.min(hmrs), vmax=np.max(hmrs))
+
+    # Set up the plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    gs = gridspec.GridSpec(nrows=1, ncols=2,
+                           width_ratios=[20, 1])
+    gs.update(wspace=0.0, hspace=0.0)
+    ax = fig.add_subplot(gs[0, 0])
+    cax = fig.add_subplot(gs[0, 1])
+    ax.loglog()
+
+    # Loop over hmrs calculating virial temperatures
+    for hmr in hmrs:
+
+        ax.plot(ms, virial_temp(ms, hmr * 2), color=cmap(hmr))
+
+    # Set labels
+    ax.set_xlabel("$M_\mathrm{tot} / M_\odot$")
+    ax.set_ylabel("$T_{\mathrm{vir}} /$ [K]")
+
+    # Make colorbar
+    cb1 = mpl.colorbar.ColorbarBase(ax, cmap=cmap,
+                                    norm=norm,
+                                    orientation='horizontal')
+    cb1.set_label("$R_{1/2} /$ [pkpc]")
+
+    # Save figure
+    mkdir("plots/stellar_formprops/")
+    fig.savefig("plots/stellar_formprops/virial_temp.png",
+                bbox_inches="tight")
