@@ -812,8 +812,9 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
 
 
 def virial_temp(m, r):
-    return (1 / 3 * const.G * m * u. M_sun
-            / (const.k_B * r * u.kpc)).to(u.K).value
+    T = (1 / 3 * const.G * m * u.M_sun / (const.k_B * r * u.kpc)).decompose()
+    print(T)
+    return T.value
 
 
 def plot_virial_temp():
