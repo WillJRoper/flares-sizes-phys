@@ -222,7 +222,7 @@ def plot_sfr_evo_comp(snap):
     linestyles = ["-", "-", "--", "--", "--", "dotted", "dotted"]
 
     # Define overdensity bins in log(1+delta)
-    flares_z_bins = np.arange(4.5, 15.5, 1.0)
+    flares_z_bins = np.arange(5, 20, 1.0)
 
     # Set up the plot
     fig = plt.figure(figsize=(3.5, 3.5))
@@ -277,7 +277,7 @@ def plot_hmr_phys_comp_grid(snap):
     mass_bins = np.logspace(8.0, 13, 30)
     mass_lims = [(10**7.8, 10**11.5), (10**7.8, 10**12.5),
                  (10**7.8, 10**11.2), (10**7.8, 10**12.5)]
-    hmr_lims = [10**-0.8, 10**2]
+    hmr_lims = [(10**0, 10**2), (10**0, 10**2), (10**-0.8, 10**1.3)]
 
     # Define the path
     path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
@@ -417,7 +417,7 @@ def plot_hmr_phys_comp_grid(snap):
     # Set axis limits
     for i in range(axes.shape[0]):
         for j in range(axes.shape[1]):
-            axes[i, j].set_ylim(hmr_lims)
+            axes[i, j].set_ylim(hmr_lims[i])
             axes[i, j].set_xlim(mass_lims[j])
 
     axes[-1, 1].legend(loc='upper center',
