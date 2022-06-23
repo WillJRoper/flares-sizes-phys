@@ -811,7 +811,7 @@ def plot_gal_birth_den_vs_met(stellar_data, snap, weight_norm, path):
     return stellar_data
 
 
-def virial_temp(m, r, mu, z):
+def virial_temp(m, mu, z):
     T = 4 * 10 ** 4 * (mu / 1.2) * (m / (10 ** 8 / 0.6777)) ** (1 + z / 10)
     return T
 
@@ -820,11 +820,11 @@ def plot_virial_temp():
 
     # Define arrays of masses and sizes
     ms = np.logspace(7, 13, 1000)
-    hmrs = np.logspace(-2, 2, 256)
+    zs = np.linspace(5, 20, 256)
 
     # Set up colormap
     cmap = mpl.cm.plasma
-    norm = LogNorm(vmin=np.min(hmrs), vmax=np.max(hmrs))
+    norm = LogNorm(vmin=np.min(zs), vmax=np.max(zs))
 
     # Set up the plot
     fig = plt.figure(figsize=(3.5, 3.5))
@@ -836,18 +836,17 @@ def plot_virial_temp():
     ax.semilogy()
 
     # Loop over hmrs calculating virial temperatures
-    for hmr in hmrs:
-        ts = virial_temp(ms, hmr * 2, mu=1.2, z=5)
-        ax.plot(ms, ts, color=cmap(norm(hmr)))
+    for z in zs:
+        ts = virial_temp(ms, hmr * 2, mu=1.2, z=z)
+        ax.plot(ms, ts, color=cmap(norm(z)))
 
     # Set labels
     ax.set_xlabel("$M_\mathrm{tot} / M_\odot$")
-    ax.set_ylabel("$T_{\mathrm{vir}} / \mu /$ [K]")
+    ax.set_ylabel("$T_{\mathrm{vir}} /$ [K]")
 
     # Make colorbar
     cb1 = mpl.colorbar.ColorbarBase(cax, cmap=cmap,
-                                    norm=norm,
-                                    orientation='horizontal')
+                                    norm=norm)
     cb1.set_label("$R_{1/2} /$ [pkpc]")
 
     # Save figure
