@@ -264,6 +264,8 @@ def plot_hmr_phys_comp(snap):
             # Loop over the variants
             for t, l, ls in zip(types, labels, linestyles):
 
+                print(i, j, k, t, l)
+
                 # Get the number stars in a galaxy to perform nstar cut
                 nstar = eagle_io.read_array('SUBFIND',
                                             path.replace("<type>", t),
