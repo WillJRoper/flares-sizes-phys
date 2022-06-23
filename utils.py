@@ -7,6 +7,8 @@ import pandas as pd
 from astropy.cosmology import Planck18 as cosmo, z_at_value
 import astropy.units as u
 
+import eagle_IO.eagle_IO as eagle_io
+
 
 def calc_ages(z, a_born):
     # Convert scale factor into redshift
@@ -350,3 +352,21 @@ def clean_data(stellar_data, gas_data):
             gas_data[key] = arr[okinds]
 
     return stellar_data, gas_data
+
+
+def get_nonmaster_evo_data(path, snap, y_key):
+
+    # Get data
+    aborn = eagle_io.read_array('PARTDATA', path, snap,
+                                'PartType4/StellarFormationTime',
+                                noH=True,
+                                physicalUnits=True,
+                                numThreads=8)
+    ys = eagle_io.read_array('PARTDATA', path, snap,
+                             y_key,
+                             noH=True,
+                             physicalUnits=True,
+                             numThreads=8)
+    zs = 1 / aborn - 1
+
+    return zs, ys

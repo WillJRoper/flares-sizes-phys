@@ -5,79 +5,13 @@ from matplotlib.colors import LogNorm, TwoSlopeNorm
 import matplotlib.gridspec as gridspec
 from brokenaxes import brokenaxes
 from flare import plt as flareplt
-from utils import mkdir, plot_meidan_stat, age2z
+from utils import mkdir, plot_meidan_stat, age2z, get_nonmaster_evo_data
 from unyt import mh, cm, Gyr, g, Msun, Mpc
 from astropy.cosmology import Planck18 as cosmo, z_at_value
 import astropy.units as u
 import pandas as pd
 
 import eagle_IO.eagle_IO as eagle_io
-
-
-def get_nonmaster_evo_data(path, snap, y_key):
-
-    # Get data
-    aborn = eagle_io.read_array('PARTDATA', path, snap,
-                                'PartType4/StellarFormationTime',
-                                noH=True,
-                                physicalUnits=True,
-                                numThreads=8)
-    ys = eagle_io.read_array('PARTDATA', path, snap,
-                             y_key,
-                             noH=True,
-                             physicalUnits=True,
-                             numThreads=8)
-    zs = 1 / aborn - 1
-    # subgrps = eagle_io.read_array('SUBFIND', path, snap,
-    #                               'Subhalo/SubGroupNumber', noH=True,
-    #                               physicalUnits=True,
-    #                               numThreads=8)
-    # grps = eagle_io.read_array('SUBFIND', path, snap,
-    #                            'Subhalo/GroupNumber', noH=True,
-    #                            physicalUnits=True,
-    #                            numThreads=8)
-    # nstars = eagle_io.read_array('SUBFIND', path, snap,
-    #                              'Subhalo/SubLengthType', noH=True,
-    #                              physicalUnits=True,
-    #                              numThreads=8)[:, 4]
-    # part_subgrp = eagle_io.read_array('PARTDATA', path, snap,
-    #                                   'PartType4/SubGroupNumber',
-    #                                   noH=True,
-    #                                   physicalUnits=True,
-    #                                   numThreads=8)
-    # part_grp = eagle_io.read_array('PARTDATA', path, snap,
-    #                                'PartType4/GroupNumber', noH=True,
-    #                                physicalUnits=True,
-    #                                numThreads=8)
-
-    # # Clean up eagle data to remove galaxies with nstar < 100
-    # nstar_dict = {}
-    # for (ind, grp), subgrp in zip(enumerate(grps), subgrps):
-
-    #     if grp == 2**30 or subgrp == 2**30:
-    #         continue
-
-    #     # Skip particles not in a galaxy with Nstar > 100
-    #     if nstars[ind] >= 100:
-    #         nstar_dict[(grp, subgrp)] = nstars[ind]
-
-    # # Now get the stars we want
-    # zs = []
-    # ys = []
-    # for ind in range(aborn.size):
-
-    #     # Get grp and subgrp
-    #     grp, subgrp = part_grp[ind], part_subgrp[ind]
-
-    #     if (grp, subgrp) in nstar_dict:
-    #         zs.append(pre_zs[ind])
-    #         ys.append(pre_ys[ind])
-
-    # # Convert to arrays
-    # zs = np.array(zs)
-    # ys = np.array(ys)
-
-    return zs, ys
 
 
 def plot_birth_met(stellar_data, snap, weight_norm, path):

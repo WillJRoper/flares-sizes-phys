@@ -6,7 +6,9 @@ import matplotlib.gridspec as gridspec
 import eagle_IO.eagle_IO as eagle_io
 from flare import plt as flareplt
 from unyt import mh, cm, Gyr, g, Msun, Mpc
-from utils import mkdir, plot_meidan_stat
+from utils import mkdir, plot_meidan_stat, get_nonmaster_evo_data
+import astropy.units as u
+from astropy.cosmology import Planck18 as cosmo, z_at_value
 
 
 def plot_birth_density_evo():
@@ -198,6 +200,80 @@ def plot_hmr_phys_comp(snap):
     # Save figure
     mkdir("plots/physics_vary/")
     fig.savefig("plots/physics_vary/stellar_hmr_%s.png" % snap,
+                bbox_inches="tight")
+
+
+def plot_sfr_evo_comp(snap):
+
+    # Define the path
+    path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
+
+    # Define physics variations directories
+    types = ["G-EAGLE_00", "FLARES_00_REF", "FLARES_00_highFBlim",
+             "FLARES_00_medFBlim", "FLARES_00_slightFBlim",
+             "FLARES_00_instantFB", "FLARES_00_noZSFthresh"]
+
+    # Define labels for each
+    labels = ["AGNdT9", "REF", "$f_{\mathrm{th, max}}=10$",
+              "$f_{\mathrm{th, max}}=6$", "$f_{\mathrm{th, max}}=4$",
+              "InstantFB", "$Z^0$"]
+
+    # Define linestyles
+    linestyles = ["-", "-", "--", "--", "--", "dotted", "dotted"]
+
+    # Define overdensity bins in log(1+delta)
+    flares_age_bins = np.arange(cosmo.age(5).value, cosmo.age(20).value, 0.1)
+    flares_z_bins = []
+    for age in flares_age_bins:
+        flares_z_bins.append(z_at_value(cosmo.age,
+                                        age * u.Gyr,
+                                        zmin=0, zmax=50))
+
+    # Set up the plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+
+    # Log the y axis
+    ax.loglog()
+
+    # Set up the plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+    ax.semilogy()
+
+    # Loop over the variants
+    for t, l, ls in zip(types, labels, linestyles):
+
+        # Get data
+        zs, ms = get_nonmaster_evo_data(
+            path.replace("<type>", t), snap, y_key="PartType4/InitialMass")
+
+        # Loop over reshift bins
+        sfrs = []
+        plt_zs = []
+        for z_low in flares_z_bins[:-1]:
+
+            z_high = z_at_value(cosmo.age, cosmo.age(z_low) - (100 * u.Myr),
+                                zmin=0, zmax=50)
+
+            zokinds = np.logical_and(zs < z_high, zs >= z_low)
+
+            sfrs.append(np.sum(ms[zokinds]) / 100)  # M_sun / Myr
+            plt_zs.append(z_low)
+
+        ax.plot(plt_zs, sfrs, label=l, ls=ls)
+
+    ax.set_ylabel(
+        r"$\mathrm{SFR}_{100} / [\mathrm{M}_\odot\mathrm{Myr}^{-1}]$")
+    ax.set_xlabel(r"$z_{\mathrm{birth}}$")
+
+    ax.legend(loc='upper center',
+              bbox_to_anchor=(0.5, -0.2),
+              fancybox=True, ncol=3)
+
+    # Save figure
+    mkdir("plots/physics_vary/")
+    fig.savefig("plots/physics_vary/sfr_evo.png",
                 bbox_inches="tight")
 
 
