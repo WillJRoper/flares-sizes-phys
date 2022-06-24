@@ -9,6 +9,7 @@ from unyt import mh, cm, Gyr, g, Msun, Mpc
 from utils import mkdir, plot_meidan_stat, get_nonmaster_evo_data
 from utils import get_nonmaster_centred_data, grav
 import astropy.units as u
+import astropy.const as const
 from astropy.cosmology import Planck18 as cosmo, z_at_value
 
 
