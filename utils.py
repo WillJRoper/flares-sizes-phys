@@ -462,6 +462,7 @@ def get_nonmaster_centred_data(path, snap, keys, part_type):
             nstar_dict[(grp, subgrp)] = nstars[ind]
             gal_data[(grp, subgrp)]["HMR"] = hmrs[ind]
             gal_data[(grp, subgrp)]["Mass"] = ms[ind]
+            gal_data[(grp, subgrp)]["COP"] = cops[ind]
 
     # Define dicitonary to store desired arrays
     ys = {}
@@ -487,7 +488,7 @@ def get_nonmaster_centred_data(path, snap, keys, part_type):
             # Include data not in keys
             gal_data[(grp, subgrp)].setdefault(
                 'PartType%s/Coordinates' % str(part_type), []
-            ).append(coords[ind, :] - cops[ind])
+            ).append(coords[ind, :] - gal_data[(grp, subgrp)]["COP"])
             if part_type == 4:
                 gal_data[(grp, subgrp)].setdefault(
                     'PartType4/StellarFormationTime', []
