@@ -701,16 +701,20 @@ def plot_potential(snap):
     # Loop over the variants
     for t, l, ls in zip(types, labels, linestyles):
 
-        print(t, l, ls)
+        print(t, l, ls, snap)
 
         # Get data dict from the raw data files
-        star_data = get_nonmaster_centred_data(path, snap, star_keys,
+        star_data = get_nonmaster_centred_data(path.replace("<type>", t),
+                                               snap, star_keys,
                                                part_type=4)
-        gas_data = get_nonmaster_centred_data(path, snap, keys,
+        gas_data = get_nonmaster_centred_data(path.replace("<type>", t),
+                                              snap, keys,
                                               part_type=0)
-        dm_data = get_nonmaster_centred_data(path, snap, keys,
+        dm_data = get_nonmaster_centred_data(path.replace("<type>", t),
+                                             snap, keys,
                                              part_type=1)
-        bh_data = get_nonmaster_centred_data(path, snap, keys,
+        bh_data = get_nonmaster_centred_data(path.replace("<type>", t),
+                                             snap, keys,
                                              part_type=5)
 
         # Loop over galaxies

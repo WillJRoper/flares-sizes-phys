@@ -392,6 +392,8 @@ def get_nonmaster_evo_data(path, snap, y_key):
 
 def get_nonmaster_centred_data(path, snap, keys, part_type):
 
+    print("PartType%d" % part_type)
+
     # Get coordinates
     coords = eagle_io.read_array('PARTDATA', path, snap,
                                  'PartType%d/Coordinates' % part_type,
