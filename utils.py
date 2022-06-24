@@ -478,7 +478,7 @@ def get_nonmaster_centred_data(path, snap, keys, part_type):
                                       numThreads=8)
 
     # Define a dictionary for galaxy data
-    for ind in range(aborn.size):
+    for ind in range(part_grp.size):
 
         # Get grp and subgrp
         grp, subgrp = part_grp[ind], part_subgrp[ind]
