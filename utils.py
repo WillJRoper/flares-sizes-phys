@@ -6,6 +6,7 @@ import h5py
 import pandas as pd
 from astropy.cosmology import Planck18 as cosmo, z_at_value
 import astropy.units as u
+from scipy.spatial.distance import cdist
 
 import eagle_IO.eagle_IO as eagle_io
 
@@ -354,6 +355,23 @@ def clean_data(stellar_data, gas_data):
     return stellar_data, gas_data
 
 
+def grav(halo_poss, soft, masses, redshift, G):
+
+    GE = 0
+
+    # Compute gravitational potential energy
+    for i in range(1, halo_poss.shape[0]):
+        pos_i = np.array([halo_poss[i, :], ])
+        dists = cdist(pos_i, halo_poss[:i, :], metric="sqeuclidean")
+        GE += np.sum(masses[:i] * masses[i]
+                     / np.sqrt(dists + soft ** 2))
+
+    # Convert GE to be in the same units as KE (M_sun km^2 s^-2)
+    GE = np.log10(G * GE * (1 + redshift) * 1 / 3.086e+19)
+
+    return GE
+
+
 def get_nonmaster_evo_data(path, snap, y_key):
 
     # Get data
@@ -370,3 +388,109 @@ def get_nonmaster_evo_data(path, snap, y_key):
     zs = 1 / aborn - 1
 
     return zs, ys
+
+
+def get_nonmaster_centred_data(path, snap, keys, part_type):
+
+    # Get coordinates
+    coords = eagle_io.read_array('PARTDATA', path, snap,
+                                 'PartType%s/Coordinates' % str(part_type),
+                                 noH=True,
+                                 physicalUnits=True,
+                                 numThreads=8)
+
+    # Get birth scale factors
+    if part_type == 4:
+        aborn = eagle_io.read_array('PARTDATA', path, snap,
+                                    'PartType4/StellarFormationTime',
+                                    noH=True,
+                                    physicalUnits=True,
+                                    numThreads=8)
+        zs = 1 / aborn - 1
+
+    # Get necessary subhalo quantities
+    hmrs = eagle_io.read_array('SUBFIND', path, snap,
+                               'Subhalo/HalfMassRad',
+                               noH=True,
+                               physicalUnits=True,
+                               numThreads=8)[:, 4]
+    cops = eagle_io.read_array('SUBFIND', path, snap,
+                               'Subhalo/CentreOfPotential',
+                               noH=True,
+                               physicalUnits=True,
+                               numThreads=8)
+    ms = eagle_io.read_array('SUBFIND', path, snap,
+                             'Subhalo/ApertureMeasurements/Mass/030kpc',
+                             noH=True,
+                             physicalUnits=True,
+                             numThreads=8)[:, part_type]
+    subgrps = eagle_io.read_array('SUBFIND', path, snap,
+                                  'Subhalo/SubGroupNumber', noH=True,
+                                  physicalUnits=True,
+                                  numThreads=8)
+    grps = eagle_io.read_array('SUBFIND', path, snap,
+                               'Subhalo/GroupNumber', noH=True,
+                               physicalUnits=True,
+                               numThreads=8)
+    nstars = eagle_io.read_array('SUBFIND', path, snap,
+                                 'Subhalo/SubLengthType', noH=True,
+                                 physicalUnits=True,
+                                 numThreads=8)[:, 4]
+    part_subgrp = eagle_io.read_array('PARTDATA', path, snap,
+                                      'PartType4/SubGroupNumber',
+                                      noH=True,
+                                      physicalUnits=True,
+                                      numThreads=8)
+    part_grp = eagle_io.read_array('PARTDATA', path, snap,
+                                   'PartType4/GroupNumber', noH=True,
+                                   physicalUnits=True,
+                                   numThreads=8)
+
+    # Clean up eagle data to remove galaxies with nstar < 100
+    nstar_dict = {}
+    for (ind, grp), subgrp in zip(enumerate(grps), subgrps):
+
+        if grp == 2**30 or subgrp == 2**30:
+            continue
+
+        # Skip particles not in a galaxy with Nstar > 100
+        if nstars[ind] >= 100:
+            nstar_dict[(grp, subgrp)] = nstars[ind]
+
+    # Define dicitonary to store desired arrays
+    ys = {}
+
+    for key in keys:
+
+        ys[key] = eagle_io.read_array('PARTDATA', path, snap,
+                                      key,
+                                      noH=True,
+                                      physicalUnits=True,
+                                      numThreads=8)
+
+    # Define a dictionary for galaxy data
+    gal_data = {}
+    for ind in range(aborn.size):
+
+        # Get grp and subgrp
+        grp, subgrp = part_grp[ind], part_subgrp[ind]
+
+        if (grp, subgrp) in nstar_dict:
+            gal_data.setdefault((grp, subgrp), {})
+
+            # Include data not in keys
+            gal_data[(grp, subgrp)].setdefault(
+                'PartType%s/Coordinates' % str(part_type), []
+            ).append(coords[ind, :] - cops[ind])
+            gal_data[(grp, subgrp)]["HMR"] = hmrs[ind]
+            gal_data[(grp, subgrp)]["Mass"] = ms[ind]
+            if part_type == 4:
+                gal_data[(grp, subgrp)].setdefault(
+                    'PartType4/StellarFormationTime', []
+                ).append(zs[ind])
+
+            for key in keys:
+                gal_data[(grp, subgrp)].setdefault(
+                    key, []).append(ys[key][ind])
+
+    return gal_data

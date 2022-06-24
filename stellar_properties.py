@@ -841,7 +841,7 @@ def plot_virial_temp():
         ax.plot(ms, ts, color=cmap(norm(z)))
 
     # Set labels
-    ax.set_xlabel("$M_\mathrm{tot} / M_\odot$")
+    ax.set_xlabel("$M_\mathrm{H} / M_\odot$")
     ax.set_ylabel("$T_{\mathrm{vir}} /$ [K]")
 
     # Plot star formation temperature increase

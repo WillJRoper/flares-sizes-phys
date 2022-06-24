@@ -7,6 +7,7 @@ import eagle_IO.eagle_IO as eagle_io
 from flare import plt as flareplt
 from unyt import mh, cm, Gyr, g, Msun, Mpc
 from utils import mkdir, plot_meidan_stat, get_nonmaster_evo_data
+from utils import get_nonmaster_centred_data, grav
 import astropy.units as u
 from astropy.cosmology import Planck18 as cosmo, z_at_value
 
@@ -265,7 +266,7 @@ def plot_sfr_evo_comp(snap):
 
     ax.set_ylabel(
         r"$\mathrm{SFR}_{100} / [\mathrm{M}_\odot\mathrm{Myr}^{-1}]$")
-    ax.set_xlabel(r"$z_{\mathrm{birth}}$")
+    ax.set_xlabel(r"$z$")
 
     ax.legend(loc='upper center',
               bbox_to_anchor=(0.5, -0.2),
@@ -651,4 +652,123 @@ def plot_gashmr_phys_comp(snap):
     # Save figure
     mkdir("plots/physics_vary/")
     fig.savefig("plots/physics_vary/gas_hmr_%s.png" % snap,
+                bbox_inches="tight")
+
+
+def plot_potential(snap):
+
+    # Get redshift
+    z = float(snap.split("z")[-1].replace("p", "."))
+
+    # Define softening length
+    if z <= 2.8:
+        soft = 0.000474390 / 0.6777
+    else:
+        soft = 0.001802390 / (0.6777 * (1 + z))
+
+    mass_bins = np.logspace(7.5, 11.5, 30)
+
+    # Define the path
+    path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
+
+    # Define physics variations directories
+    types = ["G-EAGLE_00", "FLARES_00_REF", "FLARES_00_highFBlim",
+             "FLARES_00_medFBlim", "FLARES_00_slightFBlim",
+             "FLARES_00_instantFB", "FLARES_00_noZSFthresh"]
+
+    # Define labels for each
+    labels = ["AGNdT9", "REF", "$f_{\mathrm{th, max}}=10$",
+              "$f_{\mathrm{th, max}}=6$", "$f_{\mathrm{th, max}}=4$",
+              "InstantFB", "$Z^0$"]
+
+    # Define linestyles
+    linestyles = ["-", "-", "--", "--", "--", "dotted", "dotted"]
+
+    star_keys = ["InitialMass", "Feedback_EnergyFraction", ]
+    keys = ["Mass", ]
+
+    # Physical constants
+    G = (const.G.to(u.km ** 3 * u.M_sun ** -1 * u.s ** -2)).value
+
+    # Set up the plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+
+    # Log the y axis
+    ax.loglog()
+
+    # Loop over the variants
+    for t, l, ls in zip(types, labels, linestyles):
+
+        # Get data dict from the raw data files
+        star_data = get_nonmaster_centred_data(path, snap, star_keys,
+                                               part_type=4)
+        gas_data = get_nonmaster_centred_data(path, snap, keys,
+                                              part_type=0)
+        dm_data = get_nonmaster_centred_data(path, snap, keys,
+                                             part_type=1)
+        bh_data = get_nonmaster_centred_data(path, snap, keys,
+                                             part_type=5)
+
+        # Loop over galaxies
+        masses = []
+        binding_energy = []
+        feedback_energy = []
+        for key in star_data:
+
+            # Get hmrs
+            hmr = star_data[key]["HMR"]
+
+            # Calculate feedback energy
+            zs = star_data[key]['PartType4/StellarFormationTime']
+            z_low = z_at_value(cosmo.age, cosmo.age(z) - (60 * u.Myr),
+                               zmin=0, zmax=50)
+            z_high = z_at_value(cosmo.age, cosmo.age(z) - (30 * u.Myr),
+                                zmin=0, zmax=50)
+            zokinds = np.logical_and(zs < z_high, zs >= z_low)
+            ini_ms = star_data[key]['PartType4/InitialMass']
+            fth = star_data[key]['PartType4/Feedback_EnergyFraction']
+            feedback_energy.append(np.sum(1.74 * 10 ** (49 - 50)
+                                          * ini_ms[zokinds] * fth))
+
+            # Combine particle arrays
+            pos = np.concatenate((star_data[key]["PartType4/Coordinates"],
+                                  dm_data[key]["PartType1/Coordinates"],
+                                  gas_data[key]["PartType0/Coordinates"],
+                                  bh_data[key]["PartType5/Coordinates"]))
+            ms = np.concatenate((star_data[key]["PartType4/Mass"],
+                                 dm_data[key]["PartType1/Mass"],
+                                 gas_data[key]["PartType0/Mass"],
+                                 bh_data[key]["PartType5/Mass"]))
+
+            # # Calculate radii
+            # rs = np.sqrt(pos[:, 0] ** 2 + pos[:, 1] ** 2 + pos[:, 2] ** 2)
+
+            # Calculate binding energy
+            binding_energy.append(grav(pos, soft, ms, z, G).to(u.erg)
+                                  / 10**50)
+
+            # Get galaxy mass
+            masses.append(star_data[key]["Mass"])
+
+        masses = np.array(masses)
+        binding_energy = np.array(binding_energy)
+        feedback_energy = np.array(feedback_energy)
+
+        # Plot median curves
+        plot_meidan_stat(masses, binding_energy / feedback_energy,
+                         np.ones(hmr[okinds].size),
+                         ax, lab=l, bins=mass_bins, color=None, ls=ls)
+
+    # Label axes
+    ax.set_ylabel(r"$E_{\mathrm{grav}} / E_{\mathrm{FB}}$")
+    ax.set_xlabel(r"$M_{\star} / M_\odot$")
+
+    ax.legend(loc='upper center',
+              bbox_to_anchor=(0.5, -0.2),
+              fancybox=True, ncol=3)
+
+    # Save figure
+    mkdir("plots/physics_vary/")
+    fig.savefig("plots/physics_vary/potential_energy_%s.png" % snap,
                 bbox_inches="tight")
