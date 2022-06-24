@@ -496,6 +496,6 @@ def get_nonmaster_centred_data(path, snap, keys, part_type):
 
             for key in keys:
                 gal_data[(grp, subgrp)].setdefault(
-                    key, []).append(ys[key][ind])
+                    'PartType%d/' % part_type + key, []).append(ys[key][ind])
 
     return gal_data
