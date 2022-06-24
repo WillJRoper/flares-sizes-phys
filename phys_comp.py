@@ -701,6 +701,8 @@ def plot_potential(snap):
     # Loop over the variants
     for t, l, ls in zip(types, labels, linestyles):
 
+        print(t, l, ls)
+
         # Get data dict from the raw data files
         star_data = get_nonmaster_centred_data(path, snap, star_keys,
                                                part_type=4)

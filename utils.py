@@ -394,7 +394,7 @@ def get_nonmaster_centred_data(path, snap, keys, part_type):
 
     # Get coordinates
     coords = eagle_io.read_array('PARTDATA', path, snap,
-                                 'PartType%s/Coordinates' % str(part_type),
+                                 'PartType%d/Coordinates' % part_type,
                                  noH=True,
                                  physicalUnits=True,
                                  numThreads=8)
@@ -461,6 +461,8 @@ def get_nonmaster_centred_data(path, snap, keys, part_type):
     ys = {}
 
     for key in keys:
+
+        print("Extracting", key)
 
         ys[key] = eagle_io.read_array('PARTDATA', path, snap,
                                       key,
