@@ -450,6 +450,7 @@ def get_nonmaster_centred_data(path, snap, keys, part_type):
 
     # Clean up eagle data to remove galaxies with nstar < 100
     nstar_dict = {}
+    gal_data = {}
     for (ind, grp), subgrp in zip(enumerate(grps), subgrps):
 
         if grp == 2**30 or subgrp == 2**30:
@@ -457,7 +458,10 @@ def get_nonmaster_centred_data(path, snap, keys, part_type):
 
         # Skip particles not in a galaxy with Nstar > 100
         if nstars[ind] >= 100:
+            gal_data.setdefault((grp, subgrp), {})
             nstar_dict[(grp, subgrp)] = nstars[ind]
+            gal_data[(grp, subgrp)]["HMR"] = hmrs[ind]
+            gal_data[(grp, subgrp)]["Mass"] = ms[ind]
 
     # Define dicitonary to store desired arrays
     ys = {}
@@ -473,21 +477,17 @@ def get_nonmaster_centred_data(path, snap, keys, part_type):
                                       numThreads=8)
 
     # Define a dictionary for galaxy data
-    gal_data = {}
     for ind in range(aborn.size):
 
         # Get grp and subgrp
         grp, subgrp = part_grp[ind], part_subgrp[ind]
 
         if (grp, subgrp) in nstar_dict:
-            gal_data.setdefault((grp, subgrp), {})
 
             # Include data not in keys
             gal_data[(grp, subgrp)].setdefault(
                 'PartType%s/Coordinates' % str(part_type), []
             ).append(coords[ind, :] - cops[ind])
-            gal_data[(grp, subgrp)]["HMR"] = hmrs[ind]
-            gal_data[(grp, subgrp)]["Mass"] = ms[ind]
             if part_type == 4:
                 gal_data[(grp, subgrp)].setdefault(
                     'PartType4/StellarFormationTime', []
