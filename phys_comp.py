@@ -728,9 +728,9 @@ def plot_potential(snap):
 
             # Calculate feedback energy
             zs = star_data[key]['PartType4/StellarFormationTime']
-            z_low = z_at_value(cosmo.age, cosmo.age(z) - (60 * u.Myr),
+            z_low = z_at_value(cosmo.age, cosmo.age(z) - (30 * u.Myr),
                                zmin=0, zmax=50)
-            z_high = z_at_value(cosmo.age, cosmo.age(z) - (30 * u.Myr),
+            z_high = z_at_value(cosmo.age, cosmo.age(z) - (60 * u.Myr),
                                 zmin=0, zmax=50)
             zokinds = np.logical_and(zs < z_high, zs >= z_low)
             ini_ms = np.array(star_data[key]['PartType4/InitialMass'])
