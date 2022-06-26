@@ -689,8 +689,7 @@ def plot_potential(snap):
     keys = ["Mass", ]
 
     # Physical constants
-    # G = (const.G.to(u.km ** 3 * u.M_sun ** -1 * u.s ** -2)).value
-    G = const.G
+    G = (const.G.to(u.km ** 3 * u.M_sun ** -1 * u.s ** -2)).value
 
     # Set up the plot
     fig = plt.figure(figsize=(3.5, 3.5))
