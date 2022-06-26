@@ -685,7 +685,7 @@ def plot_potential(snap):
     # Define linestyles
     linestyles = ["-", "-", "--", "--", "--", "dotted", "dotted"]
 
-    star_keys = ["InitialMass", "Feedback_EnergyFraction", ]
+    star_keys = ["Mass", "InitialMass", "Feedback_EnergyFraction", ]
     keys = ["Mass", ]
 
     # Physical constants
