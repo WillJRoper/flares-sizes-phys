@@ -471,11 +471,21 @@ def get_nonmaster_centred_data(path, snap, keys, part_type):
 
         print("Extracting", key)
 
-        ys[key] = eagle_io.read_array('PARTDATA', path, snap,
-                                      'PartType%d/' % part_type + key,
-                                      noH=True,
-                                      physicalUnits=True,
-                                      numThreads=8)
+        if key == "Mass" and part_type == 1:
+
+            hdf = h5py.File(
+                path + "snapshot_000_z015p000/snap_000_z015p000.0.hdf5")
+            part_mass = hdf.attrs["MassTable"][part_type]
+            ys[key] = np.full(coords.shape[0], part_mass)
+            hdf.close()
+
+        else:
+
+            ys[key] = eagle_io.read_array('PARTDATA', path, snap,
+                                          'PartType%d/' % part_type + key,
+                                          noH=True,
+                                          physicalUnits=True,
+                                          numThreads=8)
 
     # Define a dictionary for galaxy data
     for ind in range(part_grp.size):
@@ -495,17 +505,8 @@ def get_nonmaster_centred_data(path, snap, keys, part_type):
                 ).append(zs[ind])
 
             for key in keys:
-                if key == "Mass" and part_type == 1:
-                    hdf = h5py.File(
-                        path + "snapshot_000_z015p000/snap_000_z015p000.0.hdf5")
-                    part_mass = hdf.attrs["MassTable"][part_type]
-                    gal_data[(grp, subgrp)].setdefault(
-                        'PartType%d/' % part_type + key,
-                        []).append(part_mass)
-                    hdf.close()
-                else:
-                    gal_data[(grp, subgrp)].setdefault(
-                        'PartType%d/' % part_type + key,
+                gal_data[(grp, subgrp)].setdefault(
+                    'PartType%d/' % part_type + key,
                         []).append(ys[key][ind])
 
     return gal_data
