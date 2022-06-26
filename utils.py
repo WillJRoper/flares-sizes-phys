@@ -369,7 +369,7 @@ def grav(halo_poss, soft, masses, redshift, G):
     # Convert GE to be in the same units as KE (M_sun km^2 s^-2)
     GE = np.log10(G * GE * (1 + redshift) * 1 / 3.086e+19) + 10
 
-    return GE
+    return GE * u.M_sun * u.km ** 2 * u.s ** -2
 
 
 def get_nonmaster_evo_data(path, snap, y_key):
