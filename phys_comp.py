@@ -754,6 +754,12 @@ def plot_potential(snap):
                                      gas_data[key]["PartType0/Mass"],
                                      bh_data[key]["PartType5/Mass"]))
             except KeyError:
+                pos = np.concatenate((star_data[key]["PartType4/Coordinates"],
+                                      dm_data[key]["PartType1/Coordinates"],
+                                      gas_data[key]["PartType0/Coordinates"]))
+                ms = np.concatenate((star_data[key]["PartType4/Mass"],
+                                     dm_data[key]["PartType1/Mass"],
+                                     gas_data[key]["PartType0/Mass"]))
                 continue
 
             # # Calculate radii
