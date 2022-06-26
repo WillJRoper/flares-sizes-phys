@@ -756,7 +756,7 @@ def plot_potential(snap):
             # rs = np.sqrt(pos[:, 0] ** 2 + pos[:, 1] ** 2 + pos[:, 2] ** 2)
 
             # Calculate binding energy
-            binding_energy.append(grav(pos, soft, ms, z, G).to(u.erg)
+            binding_energy.append(grav(pos, soft, ms, z, G).to(u.erg).value
                                   / 10**50)
 
             # Get galaxy mass
