@@ -475,6 +475,7 @@ def get_nonmaster_centred_data(path, snap, keys, part_type):
 
             hdf = h5py.File(
                 path + "snapshot_000_z015p000/snap_000_z015p000.0.hdf5")
+            print(hdf.attrs.keys())
             part_mass = hdf.attrs["MassTable"][part_type]
             ys[key] = np.full(coords.shape[0], part_mass)
             hdf.close()
