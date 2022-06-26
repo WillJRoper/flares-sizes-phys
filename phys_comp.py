@@ -768,7 +768,7 @@ def plot_potential(snap):
 
         # Plot median curves
         plot_meidan_stat(masses, binding_energy / feedback_energy,
-                         np.ones(hmr[okinds].size),
+                         np.ones(hmr.size),
                          ax, lab=l, bins=mass_bins, color=None, ls=ls)
 
     # Label axes
