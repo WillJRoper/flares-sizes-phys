@@ -439,12 +439,13 @@ def get_nonmaster_centred_data(path, snap, keys, part_type):
                                  physicalUnits=True,
                                  numThreads=8)[:, 4]
     part_subgrp = eagle_io.read_array('PARTDATA', path, snap,
-                                      'PartType4/SubGroupNumber',
+                                      'PartType%d/SubGroupNumber' % part_type,
                                       noH=True,
                                       physicalUnits=True,
                                       numThreads=8)
     part_grp = eagle_io.read_array('PARTDATA', path, snap,
-                                   'PartType4/GroupNumber', noH=True,
+                                   'PartType%d/GroupNumber' % part_type,
+                                   noH=True,
                                    physicalUnits=True,
                                    numThreads=8)
 
