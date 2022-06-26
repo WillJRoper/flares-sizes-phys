@@ -766,6 +766,10 @@ def plot_potential(snap):
         binding_energy = np.array(binding_energy)
         feedback_energy = np.array(feedback_energy)
 
+        print(masses)
+        print(binding_energy)
+        print(feedback_energy)
+
         # Plot median curves
         plot_meidan_stat(masses, binding_energy / feedback_energy,
                          np.ones(hmr.size),
