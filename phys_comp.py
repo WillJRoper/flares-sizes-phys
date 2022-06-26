@@ -734,9 +734,13 @@ def plot_potential(snap):
                                 zmin=0, zmax=50)
             zokinds = np.logical_and(zs < z_high, zs >= z_low)
             ini_ms = np.array(star_data[key]['PartType4/InitialMass'])
+
+            if ini_ms[zokinds].size == 0:
+                continue
+
             fth = np.array(star_data[key]['PartType4/Feedback_EnergyFraction'])
             feedback_energy.append(np.sum(1.74 * 10 ** (49 - 50)
-                                          * ini_ms[zokinds] * fth))
+                                          * ini_ms[zokinds] * fth[zokinds]))
 
             # Combine particle arrays
             pos = np.concatenate((star_data[key]["PartType4/Coordinates"],
