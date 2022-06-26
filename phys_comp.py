@@ -689,7 +689,8 @@ def plot_potential(snap):
     keys = ["Mass", ]
 
     # Physical constants
-    G = (const.G.to(u.km ** 3 * u.M_sun ** -1 * u.s ** -2)).value
+    # G = (const.G.to(u.km ** 3 * u.M_sun ** -1 * u.s ** -2)).value
+    G = const.G
 
     # Set up the plot
     fig = plt.figure(figsize=(3.5, 3.5))
@@ -722,16 +723,18 @@ def plot_potential(snap):
         binding_energy = []
         feedback_energy = []
         for key in star_data:
-            print(key)
+            print(key, len(star_data[key]["PartType4/Mass"])
+                  + len(dm_data[key]["PartType1/Mass"]) +
+                  len(gas_data[key]["PartType0/Mass"]))
 
             # Get hmrs
             hmr = star_data[key]["HMR"]
 
             # Calculate feedback energy
             zs = star_data[key]['PartType4/StellarFormationTime']
-            z_low = z_at_value(cosmo.age, cosmo.age(z) - (30 * u.Myr),
+            z_low = z_at_value(cosmo.age, cosmo.age(z) - (0.03 * u.Gyr),
                                zmin=0, zmax=50)
-            z_high = z_at_value(cosmo.age, cosmo.age(z) - (60 * u.Myr),
+            z_high = z_at_value(cosmo.age, cosmo.age(z) - (0.06 * u.Gyr),
                                 zmin=0, zmax=50)
             zokinds = np.logical_and(zs < z_high, zs >= z_low)
             ini_ms = np.array(star_data[key]['PartType4/InitialMass'])
@@ -762,11 +765,13 @@ def plot_potential(snap):
                                      gas_data[key]["PartType0/Mass"]))
                 continue
 
-            # # Calculate radii
-            # rs = np.sqrt(pos[:, 0] ** 2 + pos[:, 1] ** 2 + pos[:, 2] ** 2)
+            # Calculate radii
+            rs = np.sqrt(pos[:, 0] ** 2 + pos[:, 1] ** 2 + pos[:, 2] ** 2)
+            okinds = rs < 2 * hmr
 
             # Calculate binding energy
-            binding_energy.append(grav(pos, soft, ms, z, G).to(u.erg).value
+            binding_energy.append(grav(pos[okinds], soft,
+                                       ms[okinds], z, G).to(u.erg).value
                                   / 10**50)
 
             # Get galaxy mass
