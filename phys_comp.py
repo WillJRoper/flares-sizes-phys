@@ -733,8 +733,8 @@ def plot_potential(snap):
             z_high = z_at_value(cosmo.age, cosmo.age(z) - (30 * u.Myr),
                                 zmin=0, zmax=50)
             zokinds = np.logical_and(zs < z_high, zs >= z_low)
-            ini_ms = star_data[key]['PartType4/InitialMass']
-            fth = star_data[key]['PartType4/Feedback_EnergyFraction']
+            ini_ms = np.array(star_data[key]['PartType4/InitialMass'])
+            fth = np.array(star_data[key]['PartType4/Feedback_EnergyFraction'])
             feedback_energy.append(np.sum(1.74 * 10 ** (49 - 50)
                                           * ini_ms[zokinds] * fth))
 
