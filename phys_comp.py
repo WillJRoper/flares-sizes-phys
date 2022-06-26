@@ -722,6 +722,7 @@ def plot_potential(snap):
         binding_energy = []
         feedback_energy = []
         for key in star_data:
+            print(key)
 
             # Get hmrs
             hmr = star_data[key]["HMR"]
@@ -743,14 +744,17 @@ def plot_potential(snap):
                                           * ini_ms[zokinds] * fth[zokinds]))
 
             # Combine particle arrays
-            pos = np.concatenate((star_data[key]["PartType4/Coordinates"],
-                                  dm_data[key]["PartType1/Coordinates"],
-                                  gas_data[key]["PartType0/Coordinates"],
-                                  bh_data[key]["PartType5/Coordinates"]))
-            ms = np.concatenate((star_data[key]["PartType4/Mass"],
-                                 dm_data[key]["PartType1/Mass"],
-                                 gas_data[key]["PartType0/Mass"],
-                                 bh_data[key]["PartType5/Mass"]))
+            try:
+                pos = np.concatenate((star_data[key]["PartType4/Coordinates"],
+                                      dm_data[key]["PartType1/Coordinates"],
+                                      gas_data[key]["PartType0/Coordinates"],
+                                      bh_data[key]["PartType5/Coordinates"]))
+                ms = np.concatenate((star_data[key]["PartType4/Mass"],
+                                     dm_data[key]["PartType1/Mass"],
+                                     gas_data[key]["PartType0/Mass"],
+                                     bh_data[key]["PartType5/Mass"]))
+            except KeyError:
+                continue
 
             # # Calculate radii
             # rs = np.sqrt(pos[:, 0] ** 2 + pos[:, 1] ** 2 + pos[:, 2] ** 2)
