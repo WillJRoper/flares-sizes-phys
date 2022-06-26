@@ -367,7 +367,7 @@ def grav(halo_poss, soft, masses, redshift, G):
                      / np.sqrt(dists + soft ** 2))
 
     # Convert GE to be in the same units as KE (M_sun km^2 s^-2)
-    GE = np.log10(G * GE * (1 + redshift) * 1 / 3.086e+19)
+    GE = np.log10(G * GE * (1 + redshift) * 1 / 3.086e+19) + 10
 
     return GE
 
@@ -495,7 +495,17 @@ def get_nonmaster_centred_data(path, snap, keys, part_type):
                 ).append(zs[ind])
 
             for key in keys:
-                gal_data[(grp, subgrp)].setdefault(
-                    'PartType%d/' % part_type + key, []).append(ys[key][ind])
+                if key == "Mass" and part_type == 1:
+                    hdf = h5py.File(
+                        path + "snapshot_000_z015p000/snap_000_z015p000.0.hdf5")
+                    part_mass = hdf.attrs["MassTable"][part_type]
+                    gal_data[(grp, subgrp)].setdefault(
+                        'PartType%d/' % part_type + key,
+                        []).append(part_mass)
+                    hdf.close()
+                else:
+                    gal_data[(grp, subgrp)].setdefault(
+                        'PartType%d/' % part_type + key,
+                        []).append(ys[key][ind])
 
     return gal_data
