@@ -738,14 +738,14 @@ def plot_potential(snap):
                 ms = np.concatenate((star_data[key]["PartType4/Mass"],
                                      dm_data[key]["PartType1/Mass"],
                                      gas_data[key]["PartType0/Mass"],
-                                     bh_data[key]["PartType5/Mass"]))
+                                     bh_data[key]["PartType5/Mass"])) * 10 ** 10
             except KeyError:
                 pos = np.concatenate((star_data[key]["PartType4/Coordinates"],
                                       dm_data[key]["PartType1/Coordinates"],
                                       gas_data[key]["PartType0/Coordinates"]))
                 ms = np.concatenate((star_data[key]["PartType4/Mass"],
                                      dm_data[key]["PartType1/Mass"],
-                                     gas_data[key]["PartType0/Mass"]))
+                                     gas_data[key]["PartType0/Mass"])) * 10 ** 10
 
             # Calculate feedback energy
             zs = star_data[key]['PartType4/StellarFormationTime']
@@ -754,7 +754,8 @@ def plot_potential(snap):
             z_high = z_at_value(cosmo.age, cosmo.age(z) - (0.06 * u.Gyr),
                                 zmin=0, zmax=50)
             zokinds = np.logical_and(zs < z_high, zs >= z_low)
-            ini_ms = np.array(star_data[key]['PartType4/InitialMass'])
+            ini_ms = np.array(
+                star_data[key]['PartType4/InitialMass']) * 10 ** 10
 
             if ini_ms[zokinds].size == 0:
                 continue
@@ -773,7 +774,7 @@ def plot_potential(snap):
                                   / 10**50)
 
             # Get galaxy mass
-            masses.append(star_data[key]["Mass"])
+            masses.append(star_data[key]["Mass"] * 10 ** 10)
 
         masses = np.array(masses)
         binding_energy = np.array(binding_energy)
