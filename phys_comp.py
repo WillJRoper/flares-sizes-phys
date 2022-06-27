@@ -729,22 +729,6 @@ def plot_potential(snap):
             # Get hmrs
             hmr = star_data[key]["HMR"]
 
-            # Calculate feedback energy
-            zs = star_data[key]['PartType4/StellarFormationTime']
-            z_low = z_at_value(cosmo.age, cosmo.age(z) - (0.03 * u.Gyr),
-                               zmin=0, zmax=50)
-            z_high = z_at_value(cosmo.age, cosmo.age(z) - (0.06 * u.Gyr),
-                                zmin=0, zmax=50)
-            zokinds = np.logical_and(zs < z_high, zs >= z_low)
-            ini_ms = np.array(star_data[key]['PartType4/InitialMass'])
-
-            if ini_ms[zokinds].size == 0:
-                continue
-
-            fth = np.array(star_data[key]['PartType4/Feedback_EnergyFraction'])
-            feedback_energy.append(np.sum(1.74 * 10 ** (49 - 50)
-                                          * ini_ms[zokinds] * fth[zokinds]))
-
             # Combine particle arrays
             try:
                 pos = np.concatenate((star_data[key]["PartType4/Coordinates"],
@@ -762,7 +746,22 @@ def plot_potential(snap):
                 ms = np.concatenate((star_data[key]["PartType4/Mass"],
                                      dm_data[key]["PartType1/Mass"],
                                      gas_data[key]["PartType0/Mass"]))
+
+            # Calculate feedback energy
+            zs = star_data[key]['PartType4/StellarFormationTime']
+            z_low = z_at_value(cosmo.age, cosmo.age(z) - (0.03 * u.Gyr),
+                               zmin=0, zmax=50)
+            z_high = z_at_value(cosmo.age, cosmo.age(z) - (0.06 * u.Gyr),
+                                zmin=0, zmax=50)
+            zokinds = np.logical_and(zs < z_high, zs >= z_low)
+            ini_ms = np.array(star_data[key]['PartType4/InitialMass'])
+
+            if ini_ms[zokinds].size == 0:
                 continue
+
+            fth = np.array(star_data[key]['PartType4/Feedback_EnergyFraction'])
+            feedback_energy.append(np.sum(1.74 * 10 ** (49 - 50)
+                                          * ini_ms[zokinds] * fth[zokinds]))
 
             # Calculate radii
             rs = np.sqrt(pos[:, 0] ** 2 + pos[:, 1] ** 2 + pos[:, 2] ** 2)
@@ -780,13 +779,13 @@ def plot_potential(snap):
         binding_energy = np.array(binding_energy)
         feedback_energy = np.array(feedback_energy)
 
-        print(masses)
-        print(binding_energy)
-        print(feedback_energy)
+        print(masses, len(masses))
+        print(binding_energy, len(binding_energy))
+        print(feedback_energy, len(feedback_energy))
 
         # Plot median curves
         plot_meidan_stat(masses, binding_energy / feedback_energy,
-                         np.ones(hmr.size),
+                         np.ones(masses.size),
                          ax, lab=l, bins=mass_bins, color=None, ls=ls)
 
     # Label axes
