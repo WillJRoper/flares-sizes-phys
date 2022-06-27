@@ -367,7 +367,7 @@ def grav(halo_poss, soft, masses, redshift, G):
                      / np.sqrt(dists + soft ** 2))
 
     # Convert GE to be in the same units as KE (M_sun km^2 s^-2)
-    GE = np.log10(G * GE * (1 + redshift) * 1 / 3.086e+19) + 10
+    GE = np.log10(G * GE * (1 + redshift) * 1 / 3.086e+19)
 
     return GE * u.M_sun * u.km ** 2 * u.s ** -2
 
