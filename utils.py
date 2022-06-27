@@ -437,7 +437,7 @@ def get_nonmaster_centred_data(path, snap, keys, part_type):
     nstars = eagle_io.read_array('SUBFIND', path, snap,
                                  'Subhalo/SubLengthType', noH=True,
                                  physicalUnits=True,
-                                 numThreads=8)[:, 4]
+                                 numThreads=8)
     part_subgrp = eagle_io.read_array('PARTDATA', path, snap,
                                       'PartType%d/SubGroupNumber' % part_type,
                                       noH=True,
@@ -458,7 +458,7 @@ def get_nonmaster_centred_data(path, snap, keys, part_type):
             continue
 
         # Skip particles not in a galaxy with Nstar > 100
-        if nstars[ind] >= 100:
+        if nstars[ind, 4] >= 100 and nstars[ind, 0] > 0 and nstars[ind, 1] > 0:
             gal_data.setdefault((grp, subgrp), {})
             nstar_dict[(grp, subgrp)] = nstars[ind]
             gal_data[(grp, subgrp)]["HMR"] = hmrs[ind]
