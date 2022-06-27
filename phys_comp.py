@@ -766,7 +766,7 @@ def plot_potential(snap):
 
             # Calculate radii
             rs = np.sqrt(pos[:, 0] ** 2 + pos[:, 1] ** 2 + pos[:, 2] ** 2)
-            okinds = rs < 2 * hmr
+            okinds = rs < 30
 
             # Calculate binding energy
             binding_energy.append(grav(pos[okinds], soft,
