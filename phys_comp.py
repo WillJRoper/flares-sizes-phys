@@ -7,10 +7,11 @@ import eagle_IO.eagle_IO as eagle_io
 from flare import plt as flareplt
 from unyt import mh, cm, Gyr, g, Msun, Mpc
 from utils import mkdir, plot_meidan_stat, get_nonmaster_evo_data
-from utils import get_nonmaster_centred_data, grav
+from utils import get_nonmaster_centred_data, grav_tree
 import astropy.units as u
 import astropy.constants as const
 from astropy.cosmology import Planck18 as cosmo, z_at_value
+from scipy.spatial import cKDTree
 
 
 def plot_birth_density_evo():
@@ -764,13 +765,16 @@ def plot_potential(snap):
             feedback_energy.append(np.sum(1.74 * 10 ** (49 - 50)
                                           * ini_ms[zokinds] * fth[zokinds]))
 
+            # Build tree
+            tree = cKDTree(pos)
+
             # Calculate radii
             rs = np.sqrt(pos[:, 0] ** 2 + pos[:, 1] ** 2 + pos[:, 2] ** 2)
             okinds = rs < 30
 
             # Calculate binding energy
-            binding_energy.append(grav(pos[okinds], soft,
-                                       ms[okinds], z, G).to(u.erg).value
+            binding_energy.append(grav_tree(tree, pos[okinds], soft,
+                                            ms[okinds], z, G).to(u.erg).value
                                   / 10**50)
 
             # Get galaxy mass

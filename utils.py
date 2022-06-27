@@ -372,6 +372,23 @@ def grav(halo_poss, soft, masses, redshift, G):
     return GE * u.M_sun * u.km ** 2 * u.s ** -2
 
 
+def grav_tree(tree, halo_poss, soft, masses, redshift, G):
+
+    npart = halo_poss.shape[0]
+
+    GE = np.zeros(npart)
+
+    # Compute gravitational potential energy
+    for i in range(0, halo_poss.shape[0]):
+        dists, _ = tree(halo_poss[i, :], k=npart, workers=28)
+        GE[i] = np.sum(masses * masses[i] / np.sqrt(dists + soft ** 2))
+
+    # Convert GE to M_sun km^2 s^-2
+    GE = G * GE * (1 + redshift) * 1 / 3.086e+19
+
+    return np.sum(GE) * u.M_sun * u.km ** 2 * u.s ** -2
+
+
 def get_nonmaster_evo_data(path, snap, y_key):
 
     # Get data
