@@ -380,7 +380,7 @@ def grav_tree(tree, halo_poss, soft, masses, redshift, G):
 
     # Compute gravitational potential energy
     for i in range(0, halo_poss.shape[0]):
-        dists, _ = tree(halo_poss[i, :], k=npart, workers=28)
+        dists, _ = tree.query(halo_poss[i, :], k=npart, workers=28)
         GE[i] = np.sum(masses * masses[i] / np.sqrt(dists + soft ** 2))
 
     # Convert GE to M_sun km^2 s^-2
