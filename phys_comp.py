@@ -784,7 +784,7 @@ def plot_potential(snap):
                 e_bind = grav_tree(all_tree, gas_pos[inds, :],
                                    soft, ms, gas_ms[inds], z,
                                    G).to(u.erg).value
-                if len(e_bind) == 1:
+                if type(e_bind) is np.float64:
                     binding_energy.append(e_bind)
                 else:
                     binding_energy.extend(e_bind)
