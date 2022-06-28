@@ -784,17 +784,18 @@ def plot_potential(snap):
                 e_bind = grav_tree(all_tree, gas_pos[inds, :],
                                    soft, ms, gas_ms[inds], z,
                                    G).to(u.erg).value
+
+                # Store what we have calculated
                 if type(e_bind) is np.float64:
                     binding_energy.append(e_bind)
+                    feedback_energy.append(1.74 * 10 ** (49 - 50) * m)
+                    masses.append(star_data[key]["Mass"] * 10 ** 10)
                 else:
                     binding_energy.extend(e_bind)
-
-                # Calculate feedback from this particle
-                for i in range(len(inds)):
-                    feedback_energy.append(1.74 * 10 ** (49 - 50) * m)
-
-                    # Get galaxy mass
-                    masses.append(star_data[key]["Mass"] * 10 ** 10)
+                    # Store feedback and mass
+                    for i in range(len(inds)):
+                        feedback_energy.append(1.74 * 10 ** (49 - 50) * m)
+                        masses.append(star_data[key]["Mass"] * 10 ** 10)
 
         masses = np.array(masses)
         binding_energy = np.array(binding_energy)
