@@ -748,6 +748,9 @@ def plot_potential(snap):
                                      dm_data[key]["PartType1/Mass"],
                                      gas_data[key]["PartType0/Mass"])) * 10 ** 10
 
+            gas_pos = np.array(gas_data[key]["PartType0/Coordinates"])
+            gas_ms = np.array(gas_data[key]["PartType0/Mass"]) * 10 ** 10
+
             # Calculate feedback energy
             zs = star_data[key]['PartType4/StellarFormationTime']
             z_low = z_at_value(cosmo.age, cosmo.age(z) - (0.03 * u.Gyr),
@@ -756,29 +759,36 @@ def plot_potential(snap):
                                 zmin=0, zmax=50)
             zokinds = np.logical_and(zs < z_high, zs >= z_low)
             ini_ms = np.array(
-                star_data[key]['PartType4/InitialMass']) * 10 ** 10
+                star_data[key]['PartType4/InitialMass'][zokinds]) * 10 ** 10
 
-            if ini_ms[zokinds].size == 0:
+            if ini_ms.size == 0:
                 continue
 
-            fth = np.array(star_data[key]['PartType4/Feedback_EnergyFraction'])
-            feedback_energy.append(np.sum(1.74 * 10 ** (49 - 50)
-                                          * ini_ms[zokinds] * fth[zokinds]))
+            fths = np.array(star_data[key][
+                'PartType4/Feedback_EnergyFraction'][zokinds])
+            star_pos = np.array(star_data[key][
+                "PartType4/Coordinates"][zokinds])
 
             # Build tree
-            tree = cKDTree(pos)
+            all_tree = cKDTree(pos)
+            gas_tree = cKDTree(gas_pos)
 
-            # Calculate radii
-            rs = np.sqrt(pos[:, 0] ** 2 + pos[:, 1] ** 2 + pos[:, 2] ** 2)
-            okinds = rs < 30
+            for (ind, m), fth in zip(enumerate(ini_ms), fths):
 
-            # Calculate binding energy
-            binding_energy.append(grav_tree(tree, pos[okinds], soft,
-                                            ms[okinds], z, G).to(u.erg).value
-                                  / 10**50)
+                # Find neighbouring gas particles to this stellar particle
+                inds = gas_tree.query(star_pos[ind, :], k=int(fth))
 
-            # Get galaxy mass
-            masses.append(star_data[key]["Mass"] * 10 ** 10)
+                # Calculate binding energy
+                binding_energy.extend(grav_tree(all_tree, gas_pos[inds, :],
+                                                soft, ms, gas_ms[inds], z,
+                                                G).to(u.erg).value)
+
+                # Calculate feedback from this particle
+                for i in range(len(inds)):
+                    feedback_energy.append(1.74 * 10 ** (49 - 50) * m)
+
+                    # Get galaxy mass
+                    masses.append(star_data[key]["Mass"] * 10 ** 10)
 
         masses = np.array(masses)
         binding_energy = np.array(binding_energy)
@@ -789,13 +799,14 @@ def plot_potential(snap):
         print(feedback_energy, len(feedback_energy))
 
         # Plot median curves
-        plot_meidan_stat(masses, binding_energy / feedback_energy,
+        plot_meidan_stat(binding_energy, feedback_energy,
                          np.ones(masses.size),
                          ax, lab=l, bins=mass_bins, color=None, ls=ls)
 
     # Label axes
-    ax.set_ylabel(r"$E_{\mathrm{grav}} / E_{\mathrm{FB}}$")
-    ax.set_xlabel(r"$M_{\star} / M_\odot$")
+    ax.set_xlabel(r"$E_{\mathrm{grav}}$")
+    ax.set_ylabel(r"$E_{\mathrm{FB}}$")
+    # ax.set_xlabel(r"$M_{\star} / M_\odot$")
 
     ax.legend(loc='upper center',
               bbox_to_anchor=(0.5, -0.2),
