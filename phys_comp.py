@@ -759,15 +759,15 @@ def plot_potential(snap):
                                 zmin=0, zmax=50)
             zokinds = np.logical_and(zs < z_high, zs >= z_low)
             ini_ms = np.array(
-                star_data[key]['PartType4/InitialMass'][zokinds]) * 10 ** 10
+                star_data[key]['PartType4/InitialMass'])[zokinds] * 10 ** 10
 
             if ini_ms.size == 0:
                 continue
 
             fths = np.array(star_data[key][
-                'PartType4/Feedback_EnergyFraction'][zokinds])
+                'PartType4/Feedback_EnergyFraction'])[zokinds]
             star_pos = np.array(star_data[key][
-                "PartType4/Coordinates"][zokinds])
+                "PartType4/Coordinates"])[zokinds]
 
             # Build tree
             all_tree = cKDTree(pos)
