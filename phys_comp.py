@@ -781,9 +781,13 @@ def plot_potential(snap):
                 print(inds)
 
                 # Calculate binding energy
-                binding_energy.extend(grav_tree(all_tree, gas_pos[inds, :],
-                                                soft, ms, gas_ms[inds], z,
-                                                G).to(u.erg).value)
+                e_bind = grav_tree(all_tree, gas_pos[inds, :],
+                                   soft, ms, gas_ms[inds], z,
+                                   G).to(u.erg).value
+                if len(e_bind) == 1:
+                    binding_energy.append(e_bind)
+                else:
+                    binding_energy.extend(e_bind)
 
                 # Calculate feedback from this particle
                 for i in range(len(inds)):
