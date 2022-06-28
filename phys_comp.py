@@ -776,7 +776,8 @@ def plot_potential(snap):
             for (ind, m), fth in zip(enumerate(ini_ms), fths):
 
                 # Find neighbouring gas particles to this stellar particle
-                inds = gas_tree.query(star_pos[ind, :], k=int(fth))
+                dist, inds = gas_tree.query(star_pos[ind, :], k=int(fth))
+                print(inds)
 
                 # Calculate binding energy
                 binding_energy.extend(grav_tree(all_tree, gas_pos[inds, :],
@@ -799,14 +800,13 @@ def plot_potential(snap):
         print(feedback_energy, len(feedback_energy))
 
         # Plot median curves
-        plot_meidan_stat(binding_energy, feedback_energy,
+        plot_meidan_stat(masses, binding_energy / feedback_energy,
                          np.ones(masses.size),
                          ax, lab=l, bins=mass_bins, color=None, ls=ls)
 
     # Label axes
-    ax.set_xlabel(r"$E_{\mathrm{grav}}$")
-    ax.set_ylabel(r"$E_{\mathrm{FB}}$")
-    # ax.set_xlabel(r"$M_{\star} / M_\odot$")
+    ax.set_ylabel(r"$E_{\mathrm{grav} / E_{\mathrm{FB}}$")
+    ax.set_xlabel(r"$M_{\star} / M_\odot$")
 
     ax.legend(loc='upper center',
               bbox_to_anchor=(0.5, -0.2),
