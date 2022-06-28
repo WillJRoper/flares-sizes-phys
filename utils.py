@@ -385,7 +385,6 @@ def grav_tree(tree, gas_poss, soft, masses, gas_ms, redshift, G):
         GE = np.zeros(gas_poss.shape[0])
 
         dists, _ = tree.query(gas_poss, k=npart, workers=28)
-        # range here is safer
         for ind, ds in zip(range(gas_poss.shape[0]), dists):
             okinds = np.logical_and(ds > 0, ds < np.inf)
             GE[ind] = np.sum(masses[okinds] * gas_ms[ind] /
