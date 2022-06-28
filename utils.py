@@ -374,14 +374,14 @@ def grav(halo_poss, soft, masses, redshift, G):
 
 def grav_tree(tree, gas_poss, soft, gas_ms, masses, redshift, G):
 
-    npart = masses.shape[0]
+    npart = masses.size
 
     GE = np.zeros(gas_poss.shape[0])
 
     dists, _ = tree.query(gas_poss, k=npart, workers=28)
     okinds = np.logical_and(dists > 0, dists < np.inf)
     for (ind, ds) in enumerate(dists):
-        GE[ind] = np.sum(masses[okinds] * masses[ind] /
+        GE[ind] = np.sum(masses[okinds] * gas_ms[ind] /
                          np.sqrt(dists[okinds] + soft ** 2))
 
     # Convert GE to M_sun km^2 s^-2
