@@ -776,7 +776,8 @@ def plot_potential(snap):
             for (ind, m), fth in zip(enumerate(ini_ms), fths):
 
                 # Find neighbouring gas particles to this stellar particle
-                dist, inds = gas_tree.query(star_pos[ind, :], k=int(fth))
+                dist, inds = gas_tree.query(star_pos[ind, :],
+                                            k=int(np.ceil(1.3 * fth)))
                 print(inds)
 
                 # Calculate binding energy
