@@ -377,7 +377,7 @@ def grav_tree(tree, gas_poss, soft, masses, gas_ms, redshift, G):
     npart = masses.size
     if gas_ms.size == 1:
         dists, _ = tree.query(gas_poss, k=npart, workers=28)
-        if type[dists] is float:
+        if type(dists) is float:
             GE = np.sum(masses * gas_ms /
                         np.sqrt(dists + soft ** 2))
         else:
