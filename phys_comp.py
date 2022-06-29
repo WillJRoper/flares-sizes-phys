@@ -723,33 +723,27 @@ def plot_potential(snap):
         binding_energy = []
         feedback_energy = []
         for key in star_data:
-            print(key, len(star_data[key]["PartType4/Mass"])
-                  + len(dm_data[key]["PartType1/Mass"]) +
+            print(key,
+                  len(star_data[key]["PartType4/Mass"]),
+                  len(dm_data[key]["PartType1/Mass"]),
                   len(gas_data[key]["PartType0/Mass"]))
 
             # Get hmrs
             hmr = star_data[key]["HMR"]
 
-            # Combine particle arrays
-            try:
-                pos = np.concatenate((star_data[key]["PartType4/Coordinates"],
-                                      dm_data[key]["PartType1/Coordinates"],
-                                      gas_data[key]["PartType0/Coordinates"],
-                                      bh_data[key]["PartType5/Coordinates"]))
-                ms = np.concatenate((star_data[key]["PartType4/Mass"],
-                                     dm_data[key]["PartType1/Mass"],
-                                     gas_data[key]["PartType0/Mass"],
-                                     bh_data[key]["PartType5/Mass"])) * 10 ** 10
-            except KeyError:
-                pos = np.concatenate((star_data[key]["PartType4/Coordinates"],
-                                      dm_data[key]["PartType1/Coordinates"],
-                                      gas_data[key]["PartType0/Coordinates"]))
-                ms = np.concatenate((star_data[key]["PartType4/Mass"],
-                                     dm_data[key]["PartType1/Mass"],
-                                     gas_data[key]["PartType0/Mass"])) * 10 ** 10
-
             gas_pos = np.array(gas_data[key]["PartType0/Coordinates"])
+            dm_pos = np.array(dm_data[key]["PartType1/Coordinates"])
+            all_star_pos = np.array(star_data[key]["PartType4/Coordinates"])
             gas_ms = np.array(gas_data[key]["PartType0/Mass"]) * 10 ** 10
+            dm_ms = np.array(dm_data[key]["PartType1/Mass"]) * 10 ** 10
+            star_ms = np.array(star_data[key]["PartType4/Mass"]) * 10 ** 10
+
+            try:
+                bh_pos = np.array(bh_data[key]["PartType5/Coordinates"])
+                bh_ms = np.array(bh_data[key]["PartType5/Mass"]) * 10 ** 10
+            except KeyError:
+                bh_pos = np.array([])
+                bh_ms = np.array([])
 
             # Calculate feedback energy
             zs = star_data[key]['PartType4/StellarFormationTime']
@@ -770,12 +764,15 @@ def plot_potential(snap):
                 "PartType4/Coordinates"])[zokinds]
 
             # Build tree
-            all_tree = cKDTree(pos)
+            dm_tree = cKDTree(dm_pos)
+            star_tree = cKDTree(all_star_pos)
             gas_tree = cKDTree(gas_pos)
+            if bh_ms.size > 0:
+                bh_tree = cKDTree(bh_pos)
 
             for (ind, m), fth in zip(enumerate(ini_ms), fths):
 
-                if fth == 0 or m == 0:
+                if fth == 0 or m == 0 or gas_ms.size == 0:
                     continue
 
                 # Find neighbouring gas particles to this stellar particle
@@ -783,20 +780,32 @@ def plot_potential(snap):
                                             k=int(np.ceil(1.3 * fth)))
 
                 # Calculate binding energy
-                e_bind = grav_tree(all_tree, gas_pos[inds, :],
-                                   soft, ms, gas_ms[inds], z,
-                                   G).to(u.erg).value
+                gas_e_bind = grav_tree(gas_tree, gas_pos[inds, :],
+                                       soft, gas_ms, gas_ms[inds], z,
+                                       G).to(u.erg).value
+                dm_e_bind = grav_tree(dm_tree, gas_pos[inds, :],
+                                      soft, dm_ms, gas_ms[inds], z,
+                                      G).to(u.erg).value
+                star_e_bind = grav_tree(star_tree, gas_pos[inds, :],
+                                        soft, star_ms, gas_ms[inds], z,
+                                        G).to(u.erg).value
+                e_bind = star_e_bind + gas_e_bind + dm_e_bind
+                if bh_ms.size > 0:
+                    bh_e_bind = grav_tree(bh_tree, gas_pos[inds, :],
+                                          soft, bh_ms, gas_ms[inds], z,
+                                          G).to(u.erg).value
+                    e_bind += bh_e_bind
 
                 # Store what we have calculated
                 if type(e_bind) is np.float64:
                     binding_energy.append(e_bind)
-                    feedback_energy.append(1.74 * 10 ** (49 - 50) * m)
+                    feedback_energy.append(1.74 * 10 ** 49 * m)
                     masses.append(star_data[key]["Mass"] * 10 ** 10)
                 else:
                     binding_energy.extend(e_bind)
                     # Store feedback and mass
                     for i in range(len(inds)):
-                        feedback_energy.append(1.74 * 10 ** (49 - 50) * m)
+                        feedback_energy.append(1.74 * 10 ** 49 * m)
                         masses.append(star_data[key]["Mass"] * 10 ** 10)
 
         masses = np.array(masses)
