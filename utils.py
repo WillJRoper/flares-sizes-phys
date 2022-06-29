@@ -377,9 +377,13 @@ def grav_tree(tree, gas_poss, soft, masses, gas_ms, redshift, G):
     npart = masses.size
     if gas_ms.size == 1:
         dists, _ = tree.query(gas_poss, k=npart, workers=28)
-        okinds = np.logical_and(dists > 0, dists < np.inf)
-        GE = np.sum(masses[okinds] * gas_ms /
-                    np.sqrt(dists[okinds] + soft ** 2))
+        if type[dists] is float:
+            GE = np.sum(masses * gas_ms /
+                        np.sqrt(dists + soft ** 2))
+        else:
+            okinds = np.logical_and(dists > 0, dists < np.inf)
+            GE = np.sum(masses[okinds] * gas_ms /
+                        np.sqrt(dists[okinds] + soft ** 2))
     else:
 
         GE = np.zeros(gas_poss.shape[0])
