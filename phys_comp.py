@@ -823,7 +823,7 @@ def plot_potential(snap):
                          ax, lab=l, bins=mass_bins, color=None, ls=ls)
 
     # Label axes
-    ax.set_ylabel(r"$E_{\mathrm{grav} / E_{\mathrm{FB}}$")
+    ax.set_ylabel(r"$E_{\mathrm{grav}} / E_{\mathrm{FB}}$")
     ax.set_xlabel(r"$M_{\star} / M_\odot$")
 
     ax.legend(loc='upper center',
