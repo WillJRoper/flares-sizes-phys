@@ -787,8 +787,10 @@ def plot_potential(snap):
                                          k=k,
                                          workers=28)
 
-                # Loop over the neigbouring gas particles
-                for i in inds:
+                # How many neighbours are there?
+                if k == 1:
+
+                    i = inds
 
                     # Get this radius
                     r = gas_rs[i]
@@ -810,6 +812,30 @@ def plot_potential(snap):
                     feedback_energy.append(1.74 * 10 ** 49 * m)
                     masses.append(star_data[key]["Mass"] * 10 ** 10)
 
+                else:
+                    # Loop over the neigbouring gas particles
+                    for i in inds:
+
+                        # Get this radius
+                        r = gas_rs[i]
+
+                        # Calculate binding energy
+                        gas_e_bind = grav_enclosed(r, soft, gas_ms[gas_rs < r],
+                                                   gas_ms[i], G)
+                        dm_e_bind = grav_enclosed(r, soft, dm_ms[dm_rs < r],
+                                                  gas_ms[i], G)
+                        star_e_bind = grav_enclosed(r, soft, star_ms[star_rs < r],
+                                                    gas_ms[i], G)
+                        e_bind = star_e_bind + gas_e_bind + dm_e_bind
+                        if bh_ms[bh_rs < r].size > 0:
+                            bh_e_bind = grav_enclosed(r, soft, bh_ms[bh_rs < r],
+                                                      gas_ms[i], G)
+                            e_bind += bh_e_bind
+
+                        binding_energy.append(e_bind)
+                        feedback_energy.append(1.74 * 10 ** 49 * m)
+                        masses.append(star_data[key]["Mass"] * 10 ** 10)
+
         masses = np.array(masses)
         binding_energy = np.array(binding_energy)
         feedback_energy = np.array(feedback_energy)
@@ -824,14 +850,14 @@ def plot_potential(snap):
                          ax, lab=l, bins=mass_bins, color=None, ls=ls)
 
     # Label axes
-    ax.set_ylabel(r"$E_{\mathrm{grav}}(<R_\mathrm{gas}) / E_{\mathrm{FB}}$")
-    ax.set_xlabel(r"$M_{\star} / M_\odot$")
+Some compliance matters    ax.set_ylabel(r"$E_{\mathrm{grav}}(<R_\mathrm{gas}) / E_{\mathrm{FB}}$")
+ax.set_xlabel(r"$M_{\star} / M_\odot$")
 
-    ax.legend(loc='upper center',
-              bbox_to_anchor=(0.5, -0.2),
-              fancybox=True, ncol=3)
+ax.legend(loc='upper center',
+          bbox_to_anchor=(0.5, -0.2),
+          fancybox=True, ncol=3)
 
-    # Save figure
-    mkdir("plots/physics_vary/")
-    fig.savefig("plots/physics_vary/potential_energy_%s.png" % snap,
-                bbox_inches="tight")
+# Save figure
+mkdir("plots/physics_vary/")
+fig.savefig("plots/physics_vary/potential_energy_%s.png" % snap,
+            bbox_inches="tight")
