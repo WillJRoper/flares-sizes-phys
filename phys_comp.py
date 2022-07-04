@@ -768,11 +768,11 @@ def plot_potential(snap):
             gas_tree = cKDTree(gas_pos)
 
             # Calculate radii
-            dm_rs = np.linalg.norm(dm_pos - cop)
-            star_rs = np.linalg.norm(all_star_pos - cop)
-            gas_rs = np.linalg.norm(gas_pos - cop)
+            dm_rs = np.linalg.norm(dm_pos - cop, axis=1)
+            star_rs = np.linalg.norm(all_star_pos - cop, axis=1)
+            gas_rs = np.linalg.norm(gas_pos - cop, axis=1)
             if bh_ms.size > 0:
-                bh_rs = np.linalg.norm(bh_pos - cop)
+                bh_rs = np.linalg.norm(bh_pos - cop, axis=1)
 
             for (ind, m), fth in zip(enumerate(ini_ms), fths):
 
