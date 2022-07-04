@@ -811,7 +811,7 @@ def plot_potential(snap):
                         e_bind += bh_e_bind
 
                     binding_energy.append(e_bind)
-                    feedback_energy.append(1.74 * 10 ** 49 * m)
+                    feedback_energy.append(10 ** 51)
                     masses.append(star_data[key]["Mass"] * 10 ** 10)
 
                 else:
