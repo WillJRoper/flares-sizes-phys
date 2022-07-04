@@ -7,7 +7,7 @@ import eagle_IO.eagle_IO as eagle_io
 from flare import plt as flareplt
 from unyt import mh, cm, Gyr, g, Msun, Mpc
 from utils import mkdir, plot_meidan_stat, get_nonmaster_evo_data
-from utils import get_nonmaster_centred_data, grav_tree
+from utils import get_nonmaster_centred_data, grav_enclosed
 import astropy.units as u
 import astropy.constants as const
 from astropy.cosmology import Planck18 as cosmo, z_at_value
@@ -690,7 +690,7 @@ def plot_potential(snap):
     keys = ["Mass", ]
 
     # Physical constants
-    G = (const.G.to(u.km ** 3 * u.M_sun ** -1 * u.s ** -2)).value
+    G = (const.G.to(u.Mpc ** 3 * u.M_sun ** -1 * u.yr ** -2))
 
     # Set up the plot
     fig = plt.figure(figsize=(3.5, 3.5))
@@ -730,6 +730,7 @@ def plot_potential(snap):
 
             # Get hmrs
             hmr = star_data[key]["HMR"]
+            cop = star_data[key]["COP"]
 
             gas_pos = np.array(gas_data[key]["PartType0/Coordinates"])
             dm_pos = np.array(dm_data[key]["PartType1/Coordinates"])
@@ -764,50 +765,50 @@ def plot_potential(snap):
                 "PartType4/Coordinates"])[zokinds]
 
             # Build tree
-            dm_tree = cKDTree(dm_pos)
-            star_tree = cKDTree(all_star_pos)
             gas_tree = cKDTree(gas_pos)
+
+            # Calculate radii
+            dm_rs = np.linalg.norm(dm_pos - cop)
+            star_rs = np.linalg.norm(all_star_pos - cop)
+            gas_rs = np.linalg.norm(gas_pos - cop)
             if bh_ms.size > 0:
-                bh_tree = cKDTree(bh_pos)
+                bh_rs = np.linalg.norm(bh_pos - cop)
 
             for (ind, m), fth in zip(enumerate(ini_ms), fths):
 
                 if fth == 0 or m == 0 or gas_ms.size == 0:
                     continue
 
+                # Calculate the number of gas neighbours
+                k = int(np.ceil(1.3 * fth))
+
                 # Find neighbouring gas particles to this stellar particle
-                dist, inds = gas_tree.query(star_pos[ind, :],
-                                            k=int(np.ceil(1.3 * fth)),
-                                            workers=28)
+                _, inds = gas_tree.query(star_pos[ind, :],
+                                         k=k,
+                                         workers=28)
 
-                # Calculate binding energy
-                gas_e_bind = grav_tree(gas_tree, gas_pos[inds, :],
-                                       soft, gas_ms, gas_ms[inds], z,
-                                       G).to(u.erg).value
-                dm_e_bind = grav_tree(dm_tree, gas_pos[inds, :],
-                                      soft, dm_ms, gas_ms[inds], z,
-                                      G).to(u.erg).value
-                star_e_bind = grav_tree(star_tree, gas_pos[inds, :],
-                                        soft, star_ms, gas_ms[inds], z,
-                                        G).to(u.erg).value
-                e_bind = star_e_bind + gas_e_bind + dm_e_bind
-                if bh_ms.size > 0:
-                    bh_e_bind = grav_tree(bh_tree, gas_pos[inds, :],
-                                          soft, bh_ms, gas_ms[inds], z,
-                                          G).to(u.erg).value
-                    e_bind += bh_e_bind
+                # Loop over the neigbouring gas particles
+                for i in inds:
 
-                # Store what we have calculated
-                if type(e_bind) is np.float64:
+                    # Get this radius
+                    r = gas_rs[i]
+
+                    # Calculate binding energy
+                    gas_e_bind = grav_enclosed(r, soft, gas_ms[gas_rs < r],
+                                               gas_ms[i], G)
+                    dm_e_bind = grav_enclosed(r, soft, dm_ms[dm_rs < r],
+                                              gas_ms[i], G)
+                    star_e_bind = grav_enclosed(r, soft, star_ms[star_rs < r],
+                                                gas_ms[i], G)
+                    e_bind = star_e_bind + gas_e_bind + dm_e_bind
+                    if bh_ms[bh_rs < r].size > 0:
+                        bh_e_bind = grav_enclosed(r, soft, bh_ms[bh_rs < r],
+                                                  gas_ms[i], G)
+                        e_bind += bh_e_bind
+
                     binding_energy.append(e_bind)
                     feedback_energy.append(1.74 * 10 ** 49 * m)
                     masses.append(star_data[key]["Mass"] * 10 ** 10)
-                else:
-                    binding_energy.extend(e_bind)
-                    # Store feedback and mass
-                    for i in range(len(inds)):
-                        feedback_energy.append(1.74 * 10 ** 49 * m)
-                        masses.append(star_data[key]["Mass"] * 10 ** 10)
 
         masses = np.array(masses)
         binding_energy = np.array(binding_energy)

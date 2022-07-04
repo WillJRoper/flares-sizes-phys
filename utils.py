@@ -400,6 +400,14 @@ def grav_tree(tree, gas_poss, soft, masses, gas_ms, redshift, G):
     return GE * u.M_sun * u.km ** 2 * u.s ** -2
 
 
+def grav_enclosed(r, soft, masses, gas_ms, G):
+
+    val = G * np.sum(masses) * gas_ms / np.sqrt(r ** 2 + soft ** 2)
+    val *= u.Msun ** 2 * u.Mpc ** -1
+
+    return val.decompose().to(u.erg).value
+
+
 def get_nonmaster_evo_data(path, snap, y_key):
 
     # Get data
