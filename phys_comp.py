@@ -849,16 +849,15 @@ def plot_potential(snap):
                          np.ones(masses.size),
                          ax, lab=l, bins=mass_bins, color=None, ls=ls)
 
+    # Label axes
+    ax.set_ylabel(r"$E_{\mathrm{grav}}(<R_\mathrm{gas}) / E_{\mathrm{FB}}$")
+    ax.set_xlabel(r"$M_{\star} / M_\odot$")
 
-# Label axes
-ax.set_ylabel(r"$E_{\mathrm{grav}}(<R_\mathrm{gas}) / E_{\mathrm{FB}}$")
-ax.set_xlabel(r"$M_{\star} / M_\odot$")
+    ax.legend(loc='upper center',
+              bbox_to_anchor=(0.5, -0.2),
+              fancybox=True, ncol=3)
 
-ax.legend(loc='upper center',
-          bbox_to_anchor=(0.5, -0.2),
-          fancybox=True, ncol=3)
-
-# Save figure
-mkdir("plots/physics_vary/")
-fig.savefig("plots/physics_vary/potential_energy_%s.png" % snap,
-            bbox_inches="tight")
+    # Save figure
+    mkdir("plots/physics_vary/")
+    fig.savefig("plots/physics_vary/potential_energy_%s.png" % snap,
+                bbox_inches="tight")
