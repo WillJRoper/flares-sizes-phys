@@ -849,8 +849,9 @@ def plot_potential(snap):
                          np.ones(masses.size),
                          ax, lab=l, bins=mass_bins, color=None, ls=ls)
 
-    # Label axes
-Some compliance matters    ax.set_ylabel(r"$E_{\mathrm{grav}}(<R_\mathrm{gas}) / E_{\mathrm{FB}}$")
+
+# Label axes
+ax.set_ylabel(r"$E_{\mathrm{grav}}(<R_\mathrm{gas}) / E_{\mathrm{FB}}$")
 ax.set_xlabel(r"$M_{\star} / M_\odot$")
 
 ax.legend(loc='upper center',
