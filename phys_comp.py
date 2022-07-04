@@ -827,10 +827,12 @@ def plot_potential(snap):
                         star_e_bind = grav_enclosed(r, soft, star_ms[star_rs < r],
                                                     gas_ms[i], G)
                         e_bind = star_e_bind + gas_e_bind + dm_e_bind
-                        if bh_ms[bh_rs < r].size > 0:
-                            bh_e_bind = grav_enclosed(r, soft, bh_ms[bh_rs < r],
-                                                      gas_ms[i], G)
-                            e_bind += bh_e_bind
+                        if bh_ms.size > 0:
+                            if bh_ms[bh_rs < r].size > 0:
+                                bh_e_bind = grav_enclosed(r, soft,
+                                                          bh_ms[bh_rs < r],
+                                                          gas_ms[i], G)
+                                e_bind += bh_e_bind
 
                         binding_energy.append(e_bind)
                         feedback_energy.append(1.74 * 10 ** 49 * m)
