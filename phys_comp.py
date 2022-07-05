@@ -697,7 +697,7 @@ def plot_potential(snap):
     ax = fig.add_subplot(111)
 
     # Log the y axis
-    ax.loglog()
+    ax.semilogx()
 
     # Loop over the variants
     for t, l, ls in zip(types, labels, linestyles):
@@ -750,7 +750,7 @@ def plot_potential(snap):
             zs = star_data[key]['PartType4/StellarFormationTime']
             z_low = z_at_value(cosmo.age, cosmo.age(z) - (0.03 * u.Gyr),
                                zmin=0, zmax=50)
-            z_high = z_at_value(cosmo.age, cosmo.age(z) - (0.04 * u.Gyr),
+            z_high = z_at_value(cosmo.age, cosmo.age(z) - (0.06 * u.Gyr),
                                 zmin=0, zmax=50)
             zokinds = np.logical_and(zs < z_high, zs >= z_low)
             ini_ms = np.array(
