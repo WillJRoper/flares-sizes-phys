@@ -739,6 +739,9 @@ def plot_potential(snap):
             dm_ms = np.array(dm_data[key]["PartType1/Mass"]) * 10 ** 10
             star_ms = np.array(star_data[key]["PartType4/Mass"]) * 10 ** 10
 
+            if gas_ms.size == 0 or star_ms.size == 0 or dm_ms.size == 0:
+                continue
+
             try:
                 bh_pos = np.array(bh_data[key]["PartType5/Coordinates"])
                 bh_ms = np.array(bh_data[key]["PartType5/Mass"]) * 10 ** 10
