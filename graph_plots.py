@@ -36,6 +36,8 @@ def plot_size_change(stellar_data, snaps):
     # Loop over snapshots
     for snap, prog_snap in zip(current_snaps, prog_snaps):
 
+        print(snap, prog_snap)
+
         # Open region 0 initially
         reg = "00"
         reg_int = 0
@@ -76,12 +78,6 @@ def plot_size_change(stellar_data, snaps):
         prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"]
         regions = stellar_data[snap]["regions"]
         prog_regions = stellar_data[prog_snap]["regions"]
-
-        # Get only this regions flares data
-        reg_okinds = prog_regions == reg_int
-        reg_prog_hmrs = prog_hmrs[reg_okinds]
-        reg_prog_grps = prog_grps[reg_okinds]
-        reg_prog_subgrps = prog_subgrps[reg_okinds]
 
         # Loop over galaxies
         for ind in range(len(hmrs)):
@@ -130,12 +126,6 @@ def plot_size_change(stellar_data, snaps):
                 hdf_prog.close()
                 hdf_graph.close()
 
-                # Get only this regions flares data
-                reg_okinds = prog_regions == reg_int
-                reg_prog_hmrs = prog_hmrs[reg_okinds]
-                reg_prog_grps = prog_grps[reg_okinds]
-                reg_prog_subgrps = prog_subgrps[reg_okinds]
-
             # Extract this galaxies information
             hmr = hmrs[ind]
             g, sg = grps[ind], subgrps[ind]
@@ -161,10 +151,10 @@ def plot_size_change(stellar_data, snaps):
 
             # Get this progenitor's size
             flares_ind = np.where(
-                np.logical_and(reg_prog_grps == prog_g,
-                               reg_prog_subgrps == prog_sg)
+                np.logical_and(prog_grps == prog_g,
+                               prog_subgrps == prog_sg)
             )[0]
-            prog_hmr = reg_prog_hmrs[flares_ind]
+            prog_hmr = prog_hmrs[flares_ind]
 
             if prog_hmr.size == 0:
                 continue
