@@ -209,7 +209,7 @@ def plot_size_change(stellar_data, snaps):
                     cmap="plasma")
 
     # Axes labels
-    ax.set_xlabel("$M_\mathrm{cont} / M_\mathrm{tot}$")
+    ax.set_xlabel("$M_{A,\star} / M_\mathrm{B,\star}$")
     ax.set_ylabel("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
 
     cbar = fig.colorbar(im)
@@ -230,7 +230,7 @@ def plot_size_change(stellar_data, snaps):
     ax.scatter(tot_mass, delta_hmr, marker=".")
 
     # Axes labels
-    ax.set_xlabel("$M_{A,\star} / M_\mathrm{B,\star}$")
+    ax.set_xlabel("$M_{\star} / M_\odot$")
     ax.set_ylabel("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
 
     # Save figure
