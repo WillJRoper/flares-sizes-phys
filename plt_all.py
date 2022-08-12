@@ -8,6 +8,7 @@ from stellar_properties import *
 from phys_comp import *
 from spatial_dist import *
 from compute_props import get_data
+from graph_plots import *
 
 
 # Define the norm
@@ -101,6 +102,9 @@ print("Got all data")
 # sfr_radial_profile(data["stellar"], com_snaps, agndt9_path, flares_snaps)
 
 # print("Plotted SFR profiles")
+
+# PLot graph plots
+plot_size_change(data["stellar"], flares_snaps)
 
 # # Plot the physics variation plots
 # plot_hmr_phys_comp_grid_1kpc(flares_snaps[-1])
