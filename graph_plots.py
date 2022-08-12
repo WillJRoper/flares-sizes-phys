@@ -168,7 +168,7 @@ def plot_size_change(stellar_data, snaps):
 
             # Include these results for plotting
             tot_cont.extend(frac_prog_cont)
-            tot_hmrs.extend(hmr)
+            tot_hmrs.append(hmr)
             tot_prog_hmrs.extend(prog_hmr)
 
     # Convert to arrays
