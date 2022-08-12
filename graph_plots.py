@@ -17,8 +17,8 @@ def plot_size_change(stellar_data, snaps):
 
     # Define paths
     path = "/cosma/home/dp004/dc-rope1/cosma7/FLARES/flares-mergergraph/"
-    halo_base = "data/halos/MEGAFLARES_halos_<reg>_<snap>.hdf5"
-    graph_base = "data/dgraph/MEGAFLARES_graph_<reg>_<snap>.hdf5"
+    halo_base = path + "data/halos/MEGAFLARES_halos_<reg>_<snap>.hdf5"
+    graph_base = path + "data/dgraph/MEGAFLARES_graph_<reg>_<snap>.hdf5"
 
     # Split snapshots into current and progenitor lists
     current_snaps = snaps[1:]
@@ -77,10 +77,16 @@ def plot_size_change(stellar_data, snaps):
             if hmrs[ind] > 1:
                 continue
 
+            if reg_int == 18:
+                continue
+
             # Get the region for this galaxy
             reg_int = regions[ind]
             if int(reg) != reg_int:
                 reg = str(reg_int).zfill(2)
+
+                if reg_int == 18:
+                    continue
 
                 # Open this new region
                 this_halo_base = halo_base.replace("<reg>", reg)
