@@ -150,11 +150,9 @@ def plot_size_change(stellar_data, snaps):
             main_prog = prog_ids[start]
             star_m = pmasses[mega_ind, 4] * 10 ** 10
 
-            # Store nprogs for plotting
-            plt_nprog.append(stride)
-            plt_hmr.append(hmr)
-
             if stride == 0:
+                plt_nprog.append(stride)
+                plt_hmr.append(hmr)
                 continue
 
             # Get this progenitors group and subgroup ID
@@ -176,8 +174,14 @@ def plot_size_change(stellar_data, snaps):
             mass = masses[mega_ind] * 10 ** 10
 
             # Calculate the mass contribution as a fraction of current mass
-            tot_prog_cont = np.sum(prog_cont[:, 4])
-            frac_prog_cont = tot_prog_cont / star_m
+            star_prog_cont = np.sum(prog_cont[:, 4])
+            frac_prog_cont = star_prog_cont / star_m
+
+            tot_prog_cont = np.sum(prog_cont, axis=1)
+            frac_tot_prog_cont = tot_prog_cont / mass
+
+            plt_nprog.append(tot_prog_cont[frac_tot_prog_cont > 0.1].size)
+            plt_hmr.append(hmr)
 
             # Include these results for plotting
             tot_cont.extend(frac_prog_cont)
