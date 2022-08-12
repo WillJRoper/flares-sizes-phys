@@ -151,8 +151,9 @@ def plot_size_change(stellar_data, snaps):
 
             # Get this progenitor's size
             flares_ind = np.where(
-                np.logical_and(prog_grps == prog_g,
-                               prog_subgrps == prog_sg)
+                np.logical_and(prog_regions == reg,
+                               np.logical_and(prog_grps == prog_g,
+                                              prog_subgrps == prog_sg))
             )[0]
             prog_hmr = prog_hmrs[flares_ind]
 
