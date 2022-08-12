@@ -72,6 +72,7 @@ def plot_size_change(stellar_data, snaps):
 
         # Extract galaxy data from the sizes dict
         hmrs = stellar_data[snap]["HMRs"]
+        print("There are %d galaxies" % len(hmrs))
         prog_hmrs = stellar_data[prog_snap]["HMRs"]
         grps = stellar_data[snap]["Galaxy,GroupNumber"]
         subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"]
@@ -87,11 +88,10 @@ def plot_size_change(stellar_data, snaps):
             if hmrs[ind] > 1:
                 continue
 
-            if reg_int == 18:
-                continue
-
             # Get the region for this galaxy
             reg_int = regions[ind]
+            if reg_int == 18:
+                continue
             if int(reg) != reg_int:
                 reg = str(reg_int).zfill(2)
                 print(reg)
