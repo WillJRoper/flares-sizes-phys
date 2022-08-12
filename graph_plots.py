@@ -275,6 +275,7 @@ def plot_size_change(stellar_data, snaps):
     plt.close(fig)
 
     # Set up plot
+    print(np.unique(plt_nprog, return_counts=True))
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
 
