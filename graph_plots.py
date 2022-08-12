@@ -166,8 +166,8 @@ def plot_size_change(stellar_data, snaps):
             mass = masses[mega_ind] * 10 ** 10
 
             # Calculate the mass contribution as a fraction of current mass
-            tot_prog_cont = np.sum(prog_cont)
-            frac_prog_cont = tot_prog_cont / mass
+            tot_prog_cont = np.sum(prog_cont[:, 4])
+            frac_prog_cont = tot_prog_cont / star_m
 
             # Include these results for plotting
             tot_cont.extend(frac_prog_cont)
@@ -217,7 +217,7 @@ def plot_size_change(stellar_data, snaps):
     ax.scatter(tot_mass, delta_hmr, marker=".")
 
     # Axes labels
-    ax.set_xlabel("$M_\star / M_\mathrm{tot}$")
+    ax.set_xlabel("$M_{A,\star} / M_\mathrm{B,\star}$")
     ax.set_ylabel("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
 
     # Save figure
