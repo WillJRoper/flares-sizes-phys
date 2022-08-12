@@ -46,10 +46,10 @@ def plot_size_change(stellar_data, snaps):
         hdf_graph = h5py.File(this_graph_base, "r")
 
         # Get the MEGA ID arrays for both snapshots
-        grps = hdf_halo["group_number"][...]
-        subgrps = hdf_halo["subgroup_number"][...]
-        prog_grps = hdf_prog["subgroup_number"][...]
-        prog_subgrps = hdf_prog["subgroup_number"][...]
+        mega_grps = hdf_halo["group_number"][...]
+        mega_subgrps = hdf_halo["subgroup_number"][...]
+        mega_prog_grps = hdf_prog["subgroup_number"][...]
+        mega_prog_subgrps = hdf_prog["subgroup_number"][...]
 
         # Get the progenitor information
         prog_mass_conts = hdf_graph["ProgMassContribution"][...]
