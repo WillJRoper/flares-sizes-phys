@@ -153,6 +153,10 @@ def plot_size_change(stellar_data, snaps):
                                reg_prog_subgrps == prog_sg)
             )[0]
             prog_hmr = reg_prog_hmrs[flares_ind]
+            print(prog_g, prog_sg, flares_ind, prog_hmr)
+
+            if prog_hmr.size == 0:
+                continue
 
             # Get the contribution information
             prog_cont = prog_mass_conts[start: start + stride] * 10 ** 10
@@ -163,9 +167,9 @@ def plot_size_change(stellar_data, snaps):
             frac_prog_cont = tot_prog_cont / mass
 
             # Include these results for plotting
-            tot_cont.append(frac_prog_cont)
-            tot_hmrs.append(hmr)
-            tot_prog_hmrs.append(prog_hmr)
+            tot_cont.extend(frac_prog_cont)
+            tot_hmrs.extend(hmr)
+            tot_prog_hmrs.extend(prog_hmr)
 
     # Convert to arrays
     print(tot_hmrs)
