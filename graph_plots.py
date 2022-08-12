@@ -85,9 +85,9 @@ def plot_size_change(stellar_data, snaps):
         # Loop over galaxies
         for ind in range(len(hmrs)):
 
-            # Skip this galaxy if it is not compact
-            if hmrs[ind] > 1:
-                continue
+            # # Skip this galaxy if it is not compact
+            # if hmrs[ind] > 1:
+            #     continue
 
             # Get the region for this galaxy
             reg_int = regions[ind]
@@ -151,11 +151,6 @@ def plot_size_change(stellar_data, snaps):
             # Get this progenitors group and subgroup ID
             prog_g = mega_prog_grps[main_prog]
             prog_sg = mega_prog_subgrps[main_prog]
-
-            print("ind=%d, grp=%d, subgrp=%d, nprog=%d, "
-                  "main_prog=%d, prog_grp=%d, prog_subgrp=%s" % (
-                      ind, g, sg, stride, main_prog, prog_g, prog_sg
-                  ))
 
             # Get this progenitor's size
             flares_ind = np.where(
