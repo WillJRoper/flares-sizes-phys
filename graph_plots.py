@@ -40,6 +40,7 @@ def plot_size_change(stellar_data, snaps):
 
         # Open region 0 initially
         reg = "00"
+        print(reg)
         reg_int = 0
         this_halo_base = halo_base.replace("<reg>", reg)
         this_halo_base = this_halo_base.replace("<snap>", snap)
@@ -93,6 +94,7 @@ def plot_size_change(stellar_data, snaps):
             reg_int = regions[ind]
             if int(reg) != reg_int:
                 reg = str(reg_int).zfill(2)
+                print(reg)
 
                 if reg_int == 18:
                     continue
