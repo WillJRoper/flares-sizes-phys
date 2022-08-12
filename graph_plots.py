@@ -71,6 +71,12 @@ def plot_size_change(stellar_data, snaps):
         regions = stellar_data[snap]["regions"]
         prog_regions = stellar_data[prog_snap]["regions"]
 
+        # Get only this regions flares data
+        reg_okinds = prog_regions == reg_int
+        reg_prog_hmrs = prog_hmrs[reg_okinds]
+        reg_prog_grps = prog_grps[reg_okinds]
+        reg_prog_subgrps = prog_subgrps[reg_okinds]
+
         # Loop over galaxies
         for ind in range(len(hmrs)):
 
