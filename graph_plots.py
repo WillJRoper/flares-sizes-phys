@@ -145,7 +145,7 @@ def plot_size_change(stellar_data, snaps):
             start = start_index[mega_ind][0]
             stride = nprogs[mega_ind][0]
             main_prog = prog_ids[start]
-            star_m = split_masses[mega_ind, 4] * 10 ** 10
+            star_m = pmasses[mega_ind, 4] * 10 ** 10
 
             # Get this progenitors group and subgroup ID
             prog_g = mega_prog_grps[main_prog]
