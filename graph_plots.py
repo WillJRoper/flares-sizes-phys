@@ -56,7 +56,7 @@ def plot_size_change(stellar_data, snaps):
         mega_grps = hdf_halo["group_number"][...]
         mega_subgrps = hdf_halo["subgroup_number"][...]
         masses = hdf_halo["masses"][...]
-        mega_prog_grps = hdf_prog["subgroup_number"][...]
+        mega_prog_grps = hdf_prog["group_number"][...]
         mega_prog_subgrps = hdf_prog["subgroup_number"][...]
 
         # Get the progenitor information
@@ -115,7 +115,7 @@ def plot_size_change(stellar_data, snaps):
                 mega_grps = hdf_halo["group_number"][...]
                 mega_subgrps = hdf_halo["subgroup_number"][...]
                 masses = hdf_halo["masses"][...]
-                mega_prog_grps = hdf_prog["subgroup_number"][...]
+                mega_prog_grps = hdf_prog["group_number"][...]
                 mega_prog_subgrps = hdf_prog["subgroup_number"][...]
 
                 # Get the progenitor information
