@@ -207,6 +207,7 @@ def plot_size_change(stellar_data, snaps):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
+    ax.semilogx()
 
     # Plot the scatter
     ax.scatter(tot_mass, delta_hmr, marker=".")
