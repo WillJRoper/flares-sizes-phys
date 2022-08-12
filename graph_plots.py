@@ -192,7 +192,7 @@ def plot_size_change(stellar_data, snaps):
     ax = fig.add_subplot(111)
 
     # Plot the scatter
-    im = ax.scatter(tot_cont, delta_hmr, C=tot_prog_hmrs, marker=".",
+    im = ax.scatter(tot_cont, delta_hmr, c=tot_prog_hmrs, marker=".",
                     cmap="plasma")
 
     # Axes labels
