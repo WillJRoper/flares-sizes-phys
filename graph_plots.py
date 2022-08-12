@@ -73,6 +73,7 @@ def plot_size_change(stellar_data, snaps):
         # Extract galaxy data from the sizes dict
         hmrs = stellar_data[snap]["HMRs"]
         print("There are %d galaxies" % len(hmrs))
+        print("There are %d compact galaxies" % len(hmrs[hmrs < 1]))
         prog_hmrs = stellar_data[prog_snap]["HMRs"]
         grps = stellar_data[snap]["Galaxy,GroupNumber"]
         subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"]
@@ -151,7 +152,10 @@ def plot_size_change(stellar_data, snaps):
             prog_g = mega_prog_grps[main_prog]
             prog_sg = mega_prog_subgrps[main_prog]
 
-            print(stride, main_prog, prog_g, prog_sg)
+            print("ind=%d, grp=%d, subgrp=%d, nprog=%d, "
+                  "main_prog=%d, prog_grp=%d, prog_subgrp=%s" % (
+                      ind, g, sg, stride, main_prog, prog_g, prog_sg
+                  ))
 
             # Get this progenitor's size
             flares_ind = np.where(
