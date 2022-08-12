@@ -287,6 +287,6 @@ def plot_size_change(stellar_data, snaps):
 
     # Save figure
     mkdir("plots/graph/")
-    fig.savefig("plots/graph/delta_hmr_proghmrs.png",
+    fig.savefig("plots/graph/nprog_hmr.png",
                 bbox_inches="tight")
     plt.close(fig)
