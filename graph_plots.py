@@ -192,11 +192,15 @@ def plot_size_change(stellar_data, snaps):
     ax = fig.add_subplot(111)
 
     # Plot the scatter
-    ax.scatter(tot_cont, delta_hmr, marker=".")
+    im = ax.scatter(tot_cont, delta_hmr, C=tot_prog_hmrs, marker=".",
+                    cmap="plasma")
 
     # Axes labels
     ax.set_xlabel("$M_\mathrm{cont} / M_\mathrm{tot}$")
     ax.set_ylabel("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$R_{1/2, prog} / [\mathrm{pkpc}]$")
 
     # Save figure
     mkdir("plots/graph/")
