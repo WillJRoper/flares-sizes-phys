@@ -28,6 +28,7 @@ def plot_size_change(stellar_data, snaps):
     tot_hmrs = []
     tot_prog_hmrs = []
     tot_cont = []
+    tot_mass = []
 
     # Loop over snapshots
     for snap, prog_snap in zip(current_snaps, prog_snaps):
@@ -56,6 +57,7 @@ def plot_size_change(stellar_data, snaps):
         prog_mass_conts = hdf_graph["ProgMassContribution"][...]
         prog_ids = hdf_graph["ProgHaloIDs"][...]
         start_index = hdf_graph["prog_start_index"][...]
+        pmasses = hdf_graph["halo_mass"][...]
         nprogs = hdf_graph["n_progs"][...]
 
         hdf_halo.close()
@@ -118,6 +120,7 @@ def plot_size_change(stellar_data, snaps):
                 prog_mass_conts = hdf_graph["ProgMassContribution"][...]
                 prog_ids = hdf_graph["ProgHaloIDs"][...]
                 start_index = hdf_graph["prog_start_index"][...]
+                pmasses = hdf_graph["halo_mass"][...]
                 nprogs = hdf_graph["n_progs"][...]
 
                 hdf_halo.close()
@@ -142,6 +145,7 @@ def plot_size_change(stellar_data, snaps):
             start = start_index[mega_ind][0]
             stride = nprogs[mega_ind][0]
             main_prog = prog_ids[start]
+            star_m = split_masses[mega_ind, 4] * 10 ** 10
 
             # Get this progenitors group and subgroup ID
             prog_g = mega_prog_grps[main_prog]
@@ -153,7 +157,6 @@ def plot_size_change(stellar_data, snaps):
                                reg_prog_subgrps == prog_sg)
             )[0]
             prog_hmr = reg_prog_hmrs[flares_ind]
-            print(prog_g, prog_sg, flares_ind, prog_hmr)
 
             if prog_hmr.size == 0:
                 continue
@@ -170,14 +173,16 @@ def plot_size_change(stellar_data, snaps):
             tot_cont.extend(frac_prog_cont)
             tot_hmrs.append(hmr)
             tot_prog_hmrs.extend(prog_hmr)
+            tot_mass.append(star_m)
 
     # Convert to arrays
-    print(tot_hmrs)
-    print(tot_cont)
-    print(tot_prog_hmrs)
+    print(len(tot_hmrs))
+    print(len(tot_cont))
+    print(len(tot_prog_hmrs))
     tot_hmrs = np.array(tot_hmrs)
     tot_prog_hmrs = np.array(tot_prog_hmrs)
     tot_cont = np.array(tot_cont)
+    tot_mass = np.array(tot_mass)
 
     # Compute delta
     delta_hmr = tot_hmrs - tot_prog_hmrs
@@ -191,9 +196,44 @@ def plot_size_change(stellar_data, snaps):
 
     # Axes labels
     ax.set_xlabel("$M_\mathrm{cont} / M_\mathrm{tot}$")
-    ax.set_ylabel("$\Delta R_{1/2}$")
+    ax.set_ylabel("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
 
     # Save figure
     mkdir("plots/graph/")
     fig.savefig("plots/graph/delta_hmr_contribution.png",
-                bbox_inches="tight", dpi=100)
+                bbox_inches="tight")
+    plt.close(fig)
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+
+    # Plot the scatter
+    ax.scatter(tot_mass, delta_hmr, marker=".")
+
+    # Axes labels
+    ax.set_xlabel("$M_\star / M_\mathrm{tot}$")
+    ax.set_ylabel("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
+
+    # Save figure
+    mkdir("plots/graph/")
+    fig.savefig("plots/graph/delta_hmr_stellarmass.png",
+                bbox_inches="tight")
+    plt.close(fig)
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+
+    # Plot the scatter
+    ax.scatter(tot_hmrs, delta_hmr, marker=".")
+
+    # Axes labels
+    ax.set_xlabel("$R_{1/2} / [\mathrm{pkpc}]$")
+    ax.set_ylabel("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
+
+    # Save figure
+    mkdir("plots/graph/")
+    fig.savefig("plots/graph/delta_hmr_hmrs.png",
+                bbox_inches="tight")
+    plt.close(fig)
