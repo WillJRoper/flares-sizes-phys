@@ -238,3 +238,20 @@ def plot_size_change(stellar_data, snaps):
     fig.savefig("plots/graph/delta_hmr_hmrs.png",
                 bbox_inches="tight")
     plt.close(fig)
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+
+    # Plot the scatter
+    ax.scatter(tot_prog_hmrs, delta_hmr, marker=".")
+
+    # Axes labels
+    ax.set_xlabel("$R_{1/2, prog} / [\mathrm{pkpc}]$")
+    ax.set_ylabel("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
+
+    # Save figure
+    mkdir("plots/graph/")
+    fig.savefig("plots/graph/delta_hmr_proghmrs.png",
+                bbox_inches="tight")
+    plt.close(fig)
