@@ -30,6 +30,9 @@ def plot_size_change(stellar_data, snaps):
     tot_cont = []
     tot_mass = []
 
+    plt_nprog = []
+    plt_hmr = []
+
     # Loop over snapshots
     for snap, prog_snap in zip(current_snaps, prog_snaps):
 
@@ -147,6 +150,13 @@ def plot_size_change(stellar_data, snaps):
             main_prog = prog_ids[start]
             star_m = pmasses[mega_ind, 4] * 10 ** 10
 
+            # Store nprogs for plotting
+            plt_nprog.append(stride)
+            plt_hmr.append(hmr)
+
+            if stride == 0:
+                continue
+
             # Get this progenitors group and subgroup ID
             prog_g = mega_prog_grps[main_prog]
             prog_sg = mega_prog_subgrps[main_prog]
@@ -253,6 +263,23 @@ def plot_size_change(stellar_data, snaps):
     # Axes labels
     ax.set_xlabel("$R_{1/2, prog} / [\mathrm{pkpc}]$")
     ax.set_ylabel("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
+
+    # Save figure
+    mkdir("plots/graph/")
+    fig.savefig("plots/graph/delta_hmr_proghmrs.png",
+                bbox_inches="tight")
+    plt.close(fig)
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+
+    # Plot the scatter
+    ax.scatter(plt_nprog, plt_hmr, marker=".")
+
+    # Axes labels
+    ax.set_xlabel("$R_{1/2} / [\mathrm{pkpc}]$")
+    ax.set_ylabel("$N_{\mathrm{prog}}$")
 
     # Save figure
     mkdir("plots/graph/")
