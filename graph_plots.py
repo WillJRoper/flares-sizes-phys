@@ -566,7 +566,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
         soft = 0.001802390 / (0.6777 * (1 + z))
         prog_soft = 0.001802390 / (0.6777 * (1 + prog_z))
 
-        # Open region 0 initially
+        # Set fake region IDs
         reg = "100"
         reg_int = -1
 
@@ -817,3 +817,150 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
     fig.savefig("plots/graph/delta_hmr_bind.png",
                 bbox_inches="tight")
     plt.close(fig)
+
+
+def plot_size_mass_evo_grid(stellar_data, snaps):
+
+    # Define paths
+    path = "/cosma/home/dp004/dc-rope1/cosma7/FLARES/flares-mergergraph/"
+    halo_base = path + "data/halos/MEGAFLARES_halos_<reg>_<snap>.hdf5"
+    graph_base = path + "data/dgraph/MEGAFLARES_graph_<reg>_<snap>.hdf5"
+
+    # Set up the dictionary to store the graph information
+    graph = {}
+
+    # Define root snapshot
+    root_snap = snaps[-1]
+
+    # Set fake region IDs
+    reg = "100"
+    reg_int = -1
+
+    # Extract galaxy data from the sizes dict for the root snap
+    root_hmrs = stellar_data[root_snap]["HMRs"]
+    root_mass = stellar_data[root_snap]["mass"]
+    root_grps = stellar_data[root_snap]["Galaxy,GroupNumber"]
+    root_subgrps = stellar_data[root_snap]["Galaxy,SubGroupNumber"]
+    root_regions = stellar_data[root_snap]["regions"]
+
+    # Loop over galaxies and populate the root level of the graph with
+    # only the compact galaxies
+    for ind in range(len(root_hmrs)):
+
+        # Exit if the galaxy isn't compact
+        if root_hmrs[ind] > 1 or root_mass[ind] < 10 ** 10:
+            continue
+
+        # Get ID
+        g, sg = root_grps[ind], root_subgrps[ind]
+
+        # Make an entry in the dict for it
+        graph[(g, sg, ind)] = {"HMRs": [], "Masses": []}
+
+    # Loop over these root galaxies and populate the rest of the graph
+    for key in graph:
+
+        # Extract IDs
+        g, sg, ind = key
+
+        # Get the region for this galaxy
+        reg_int = root_regions[ind]
+        if reg_int == 18:
+            continue
+        reg = str(reg_int).zfill(2)
+
+        # Set up the snapshot
+        snap_ind = len(snaps) - 1
+        snap = root_snap
+        prog_snap = snaps[snap_ind - 1]
+
+        # Set up looping variables
+        this_g, this_sg, this_ind = g, sg, ind
+
+        # Loop until we don't have a progenitor to step to
+        while snap_ind >= 0:
+
+            # Extract galaxy data from the sizes dict
+            hmrs = stellar_data[snap]["HMRs"]
+            mass = stellar_data[snap]["mass"]
+            prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"]
+            prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"]
+
+            # Put this galaxy in the graph
+            graph[(g, sg, ind)]["HMRs"].append(hmrs[this_ind])
+            graph[(g, sg, ind)]["Masses"].append(mass[this_ind])
+
+            # Open this new region
+            this_halo_base = halo_base.replace("<reg>", reg)
+            this_halo_base = this_halo_base.replace("<snap>", snap)
+            this_graph_base = graph_base.replace("<reg>", reg)
+            this_graph_base = this_graph_base.replace("<snap>", snap)
+            this_prog_base = halo_base.replace("<reg>", reg)
+            this_prog_base = this_prog_base.replace("<snap>", prog_snap)
+            hdf_halo = h5py.File(this_halo_base, "r")
+            hdf_prog = h5py.File(this_prog_base, "r")
+            hdf_graph = h5py.File(this_graph_base, "r")
+
+            # Get the MEGA ID arrays for both snapshots
+            mega_grps = hdf_halo["group_number"][...]
+            mega_subgrps = hdf_halo["subgroup_number"][...]
+            mega_prog_grps = hdf_prog["group_number"][...]
+            mega_prog_subgrps = hdf_prog["subgroup_number"][...]
+
+            # Get the progenitor information
+            prog_ids = hdf_graph["ProgHaloIDs"][...]
+            start_index = hdf_graph["prog_start_index"][...]
+
+            hdf_halo.close()
+            hdf_prog.close()
+            hdf_graph.close()
+
+            # Whats the MEGA ID of this galaxy?
+            mega_ind = np.where(np.logical_and(mega_grps == this_g,
+                                               mega_subgrps == this_sg))[0]
+
+            # Get the progenitor
+            start = start_index[mega_ind][0]
+            main_prog = prog_ids[start]
+
+            if start != 2**30:
+
+                # Get this progenitors group and subgroup ID
+                this_g = mega_prog_grps[main_prog]
+                this_sg = mega_prog_subgrps[main_prog]
+
+                # Get this progenitors index
+                this_ind = np.where(np.logical_and(prog_grps == this_g,
+                                                   prog_subgrps == this_sg))[0]
+
+                if this_ind.size == 0:
+                    break
+
+                # Set snapshots
+                snap_ind -= 1
+                snap = snaps[snap_ind]
+                prog_snap = snaps[snap_ind - 1]
+
+            else:
+                break
+
+    # Loop over graphs
+    for key in graph:
+
+        # Set up plot
+        fig = plt.figure(figsize=(3.5, 3.5))
+        ax = fig.add_subplot(111)
+
+        # Plot the scatter
+        im = ax.plot(graph[key]["Masses"], graph[key]["HMRs"], marker=".")
+
+        # Axes labels
+        ax.set_xlabel("$M_\star / M_\odot$")
+        ax.set_ylabel("$R_{1/2} / [\mathrm{pkpc}]$")
+
+        # Save figure
+        mkdir("plots/graph_plot/")
+        fig.savefig("plots/graph_plot/size_mass_evo_%s_%s.png" % (key[0],
+                                                                  key[1]),
+                    bbox_inches="tight")
+        plt.close(fig)
