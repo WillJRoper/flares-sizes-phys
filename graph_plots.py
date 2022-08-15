@@ -482,7 +482,7 @@ def plot_size_change_comp(stellar_data, gas_data, snaps):
     ax = fig.add_subplot(111)
 
     # Plot the scatter
-    im = ax.hexbin(star_delta_hmr, gas_delta_hmr, gridsize=30,
+    im = ax.hexbin(gas_delta_hmr, star_delta_hmr, gridsize=30,
                    mincnt=np.min(tot_cont) - (0.1 * np.min(tot_cont)),
                    C=tot_cont,
                    reduce_C_function=np.mean, xscale="log", yscale='log',
