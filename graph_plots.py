@@ -2,7 +2,6 @@ import numpy as np
 import h5py
 import matplotlib as mpl
 import matplotlib.colors as cm
-import LogNorm
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
@@ -485,7 +484,7 @@ def plot_size_change_comp(stellar_data, gas_data, snaps):
     # Plot the scatter
     im = ax.hexbin(gas_delta_hmr, star_delta_hmr, gridsize=50,
                    mincnt=np.min(tot_cont) - (0.1 * np.min(tot_cont)),
-                   C=tot_cont, norm=LogNorm(),
+                   C=tot_cont, norm=cm.LogNorm(),
                    reduce_C_function=np.mean,
                    linewidths=0.2)
 
