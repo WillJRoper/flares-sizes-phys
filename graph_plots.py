@@ -483,7 +483,7 @@ def plot_size_change_comp(stellar_data, gas_data, snaps):
     ax.set_ylabel("$\Delta R_\star / [\mathrm{pkpc}]$")
 
     cbar = fig.colorbar(im)
-    cbar.set_label("$M_{A} / M_\mathrm{B}$")
+    cbar.set_label("$M_\mathrm{progs} / M_\mathrm{current}$")
 
     # Save figure
     mkdir("plots/graph/")
