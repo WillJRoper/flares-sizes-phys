@@ -447,9 +447,9 @@ def plot_size_change_comp(stellar_data, gas_data, snaps):
     # Convert to arrays
     gas_tot_hmrs = np.array(tot_hmrs["gas"])
     gas_tot_prog_hmrs = np.array(tot_prog_hmrs["gas"])
-    star_tot_hmrs = np.array(tot_hmrs["stellar"])
-    star_tot_prog_hmrs = np.array(tot_prog_hmrs["stellar"])
-    star_tot_cont = np.array(tot_cont["stellar"])
+    star_tot_hmrs = np.array(tot_hmrs["star"])
+    star_tot_prog_hmrs = np.array(tot_prog_hmrs["star"])
+    star_tot_cont = np.array(tot_cont["star"])
 
     # Get deltas
     gas_delta_hmr = gas_tot_hmrs - gas_tot_prog_hmrs
