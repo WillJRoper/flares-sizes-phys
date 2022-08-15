@@ -104,6 +104,7 @@ print("Got all data")
 # print("Plotted SFR profiles")
 
 # PLot graph plots
+plot_size_change_comp(data["stellar"], data["gas"], snaps)
 plot_size_change(data["stellar"], flares_snaps, "stellar")
 plot_size_change(data["gas"], flares_snaps, "gas")
 
