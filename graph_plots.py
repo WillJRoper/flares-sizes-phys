@@ -357,9 +357,9 @@ def plot_size_change_comp(stellar_data, gas_data, snaps):
             # Loop over galaxies
             for ind in range(len(hmrs)):
 
-                # # Skip this galaxy if it is not compact
-                # if hmrs[ind] > 1:
-                #     continue
+                # Skip this galaxy if it is not compact
+                if hmrs[ind] > 1:
+                    continue
 
                 # Get the region for this galaxy
                 reg_int = regions[ind]
