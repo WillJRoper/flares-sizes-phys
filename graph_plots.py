@@ -204,11 +204,11 @@ def plot_size_change(stellar_data, snaps, plt_type, weight_norm):
     ax = fig.add_subplot(111)
 
     # Plot the scatter
-    im = ax.scatter(tot_cont, delta_hmr,  gridsize=30,
-                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                    C=w, extent=[-1, 1.3, -1, 1.3],
-                    reduce_C_function=np.sum, yscale='log',
-                    linewidths=0.2, norm=weight_norm)
+    im = ax.hexbin(tot_cont, delta_hmr,  gridsize=30,
+                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                   C=w, extent=[-1, 1.3, -1, 1.3],
+                   reduce_C_function=np.sum, yscale='log',
+                   linewidths=0.2, norm=weight_norm)
 
     # Axes labels
     ax.set_xlabel("$M_{A,\star} / M_\mathrm{B,\star}$")
