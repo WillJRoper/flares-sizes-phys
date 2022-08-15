@@ -301,7 +301,7 @@ def plot_size_change_comp(stellar_data, gas_data, snaps):
     # Initialise lists for storing results
     tot_hmrs = {"star": [], "gas": []}
     tot_prog_hmrs = {"star": [], "gas": []}
-    tot_cont = {"star": [], "gas": []}
+    tot_cont = []
 
     # Loop over snapshots
     for snap, prog_snap in zip(current_snaps, prog_snaps):
@@ -409,7 +409,8 @@ def plot_size_change_comp(stellar_data, gas_data, snaps):
                 hdf_graph.close()
 
             # Extract this galaxies information
-            hmr = star_hmrs[ind]
+            star_hmr = star_hmrs[ind]
+            gas_hmr = gas_hmrs[ind]
             g, sg = star_grps[ind], star_subgrps[ind]
 
             # Whats the MEGA ID of this galaxy?
@@ -427,14 +428,21 @@ def plot_size_change_comp(stellar_data, gas_data, snaps):
             prog_sg = mega_prog_subgrps[main_prog]
 
             # Get this progenitor's size
-            flares_ind = np.where(
-                np.logical_and(prog_regions == reg_int,
-                               np.logical_and(prog_grps == prog_g,
-                                              prog_subgrps == prog_sg))
+            sflares_ind = np.where(
+                np.logical_and(star_prog_regions == reg_int,
+                               np.logical_and(star_prog_grps == prog_g,
+                                              star_prog_subgrps == prog_sg))
             )[0]
-            prog_hmr = prog_hmrs[flares_ind]
+            gflares_ind = np.where(
+                np.logical_and(gas_prog_regions == reg_int,
+                               np.logical_and(gas_prog_grps == prog_g,
+                                              gas_prog_subgrps == prog_sg))
+            )[0]
+            print(sflares_ind, gflares_ind)
+            star_prog_hmr = star_prog_hmrs[sflares_ind]
+            gas_prog_hmr = gas_prog_hmrs[gflares_ind]
 
-            if prog_hmr.size == 0:
+            if star_prog_hmr.size == 0:
                 continue
 
             # Get the contribution information
@@ -446,16 +454,18 @@ def plot_size_change_comp(stellar_data, gas_data, snaps):
             frac_prog_cont = star_prog_cont / star_m
 
             # Include these results for plotting
-            tot_cont[key].extend(frac_prog_cont)
-            tot_hmrs[key].append(hmr)
-            tot_prog_hmrs[key].extend(prog_hmr)
+            tot_cont.extend(frac_prog_cont)
+            tot_hmrs["star"].append(star_hmr)
+            tot_prog_hmrs["star"].extend(star_prog_hmr)
+            tot_hmrs["gas"].append(gas_hmr)
+            tot_prog_hmrs["gas"].extend(gas_prog_hmr)
 
     # Convert to arrays
     gas_tot_hmrs = np.array(tot_hmrs["gas"])
     gas_tot_prog_hmrs = np.array(tot_prog_hmrs["gas"])
     star_tot_hmrs = np.array(tot_hmrs["star"])
     star_tot_prog_hmrs = np.array(tot_prog_hmrs["star"])
-    star_tot_cont = np.array(tot_cont["star"])
+    tot_cont = np.array(tot_cont)
 
     # Get deltas
     gas_delta_hmr = gas_tot_hmrs - gas_tot_prog_hmrs
@@ -466,7 +476,7 @@ def plot_size_change_comp(stellar_data, gas_data, snaps):
     ax = fig.add_subplot(111)
 
     # Plot the scatter
-    im = ax.scatter(star_delta_hmr, gas_delta_hmr, c=star_tot_cont, marker=".",
+    im = ax.scatter(star_delta_hmr, gas_delta_hmr, c=tot_cont, marker=".",
                     cmap="plasma")
 
     # Axes labels
