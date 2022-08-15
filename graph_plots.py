@@ -449,7 +449,7 @@ def plot_size_change_comp(stellar_data, gas_data, snaps):
             mass = masses[mega_ind] * 10 ** 10
 
             # Calculate the mass contribution as a fraction of current mass
-            star_prog_cont = np.sum(prog_cont)
+            star_prog_cont = np.sum(prog_cont[:, 4])
             frac_prog_cont = star_prog_cont / mass
 
             # Include these results for plotting
@@ -483,7 +483,7 @@ def plot_size_change_comp(stellar_data, gas_data, snaps):
     ax.set_ylabel("$\Delta R_\star / [\mathrm{pkpc}]$")
 
     cbar = fig.colorbar(im)
-    cbar.set_label("$\Sigma M_\mathrm{i} / M_\mathrm{tot}$")
+    cbar.set_label("$\sum_i M_\mathrm{\star}^{pi} / M_\star$")
 
     # Save figure
     mkdir("plots/graph/")
