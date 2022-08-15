@@ -13,7 +13,7 @@ import astropy.units as u
 import eagle_IO.eagle_IO as eagle_io
 
 
-def plot_size_change(stellar_data, snaps):
+def plot_size_change(stellar_data, snaps, plt_type):
 
     # Define paths
     path = "/cosma/home/dp004/dc-rope1/cosma7/FLARES/flares-mergergraph/"
@@ -212,7 +212,7 @@ def plot_size_change(stellar_data, snaps):
 
     # Save figure
     mkdir("plots/graph/")
-    fig.savefig("plots/graph/delta_hmr_contribution.png",
+    fig.savefig("plots/graph/delta_hmr_contribution_%s.png" % plt_type,
                 bbox_inches="tight")
     plt.close(fig)
 
@@ -230,7 +230,7 @@ def plot_size_change(stellar_data, snaps):
 
     # Save figure
     mkdir("plots/graph/")
-    fig.savefig("plots/graph/delta_hmr_stellarmass.png",
+    fig.savefig("plots/graph/delta_hmr_stellarmass_%s.png" % plt_type,
                 bbox_inches="tight")
     plt.close(fig)
 
@@ -264,7 +264,7 @@ def plot_size_change(stellar_data, snaps):
 
     # Save figure
     mkdir("plots/graph/")
-    fig.savefig("plots/graph/delta_hmr_proghmrs.png",
+    fig.savefig("plots/graph/delta_hmr_proghmrs_%s.png" % plt_type,
                 bbox_inches="tight")
     plt.close(fig)
 
@@ -282,6 +282,6 @@ def plot_size_change(stellar_data, snaps):
 
     # Save figure
     mkdir("plots/graph/")
-    fig.savefig("plots/graph/nprog_hmr.png",
+    fig.savefig("plots/graph/nprog_hmr_%s.png" % plt_type,
                 bbox_inches="tight")
     plt.close(fig)

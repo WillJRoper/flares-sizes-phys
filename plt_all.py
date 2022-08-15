@@ -104,7 +104,8 @@ print("Got all data")
 # print("Plotted SFR profiles")
 
 # PLot graph plots
-plot_size_change(data["stellar"], flares_snaps)
+plot_size_change(data["stellar"], flares_snaps, "stellar")
+plot_size_change(data["gas"], flares_snaps, "gas")
 
 # # Plot the physics variation plots
 # plot_hmr_phys_comp_grid_1kpc(flares_snaps[-1])
