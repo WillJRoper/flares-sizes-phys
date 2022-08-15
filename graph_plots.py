@@ -200,7 +200,7 @@ def plot_size_change(stellar_data, snaps, plt_type):
     ax = fig.add_subplot(111)
 
     # Plot the scatter
-    im = ax.scatter(tot_cont, delta_hmr, c=tot_prog_hmrs, marker=".",
+    im = ax.scatter(tot_cont, delta_hmr, c=np.log10(tot_mass), marker=".",
                     cmap="plasma")
 
     # Axes labels
@@ -208,7 +208,7 @@ def plot_size_change(stellar_data, snaps, plt_type):
     ax.set_ylabel("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
 
     cbar = fig.colorbar(im)
-    cbar.set_label("$R_{1/2, prog} / [\mathrm{pkpc}]$")
+    cbar.set_label("$\log_{10}(M_{\star} / M_\odot)$")
 
     # Save figure
     mkdir("plots/graph/")
@@ -303,147 +303,152 @@ def plot_size_change_comp(stellar_data, gas_data, snaps):
     tot_prog_hmrs = {"star": [], "gas": []}
     tot_cont = {"star": [], "gas": []}
 
-    for key, data in zip(["star", "gas"], [stellar_data, gas_data]):
+    # Loop over snapshots
+    for snap, prog_snap in zip(current_snaps, prog_snaps):
 
-        # Loop over snapshots
-        for snap, prog_snap in zip(current_snaps, prog_snaps):
+        print(snap, prog_snap)
 
-            print(snap, prog_snap)
+        # Open region 0 initially
+        reg = "00"
+        print(reg)
+        reg_int = 0
+        this_halo_base = halo_base.replace("<reg>", reg)
+        this_halo_base = this_halo_base.replace("<snap>", snap)
+        this_graph_base = graph_base.replace("<reg>", reg)
+        this_graph_base = this_graph_base.replace("<snap>", snap)
+        this_prog_base = halo_base.replace("<reg>", reg)
+        this_prog_base = this_prog_base.replace("<snap>", prog_snap)
+        hdf_halo = h5py.File(this_halo_base, "r")
+        hdf_prog = h5py.File(this_prog_base, "r")
+        hdf_graph = h5py.File(this_graph_base, "r")
 
-            # Open region 0 initially
-            reg = "00"
-            print(reg)
-            reg_int = 0
-            this_halo_base = halo_base.replace("<reg>", reg)
-            this_halo_base = this_halo_base.replace("<snap>", snap)
-            this_graph_base = graph_base.replace("<reg>", reg)
-            this_graph_base = this_graph_base.replace("<snap>", snap)
-            this_prog_base = halo_base.replace("<reg>", reg)
-            this_prog_base = this_prog_base.replace("<snap>", prog_snap)
-            hdf_halo = h5py.File(this_halo_base, "r")
-            hdf_prog = h5py.File(this_prog_base, "r")
-            hdf_graph = h5py.File(this_graph_base, "r")
+        # Get the MEGA ID arrays for both snapshots
+        mega_grps = hdf_halo["group_number"][...]
+        mega_subgrps = hdf_halo["subgroup_number"][...]
+        masses = hdf_halo["masses"][...]
+        mega_prog_grps = hdf_prog["group_number"][...]
+        mega_prog_subgrps = hdf_prog["subgroup_number"][...]
 
-            # Get the MEGA ID arrays for both snapshots
-            mega_grps = hdf_halo["group_number"][...]
-            mega_subgrps = hdf_halo["subgroup_number"][...]
-            masses = hdf_halo["masses"][...]
-            mega_prog_grps = hdf_prog["group_number"][...]
-            mega_prog_subgrps = hdf_prog["subgroup_number"][...]
+        # Get the progenitor information
+        prog_mass_conts = hdf_graph["ProgMassContribution"][...]
+        prog_ids = hdf_graph["ProgHaloIDs"][...]
+        start_index = hdf_graph["prog_start_index"][...]
+        pmasses = hdf_graph["halo_mass"][...]
+        nprogs = hdf_graph["n_progs"][...]
 
-            # Get the progenitor information
-            prog_mass_conts = hdf_graph["ProgMassContribution"][...]
-            prog_ids = hdf_graph["ProgHaloIDs"][...]
-            start_index = hdf_graph["prog_start_index"][...]
-            pmasses = hdf_graph["halo_mass"][...]
-            nprogs = hdf_graph["n_progs"][...]
+        hdf_halo.close()
+        hdf_prog.close()
+        hdf_graph.close()
 
-            hdf_halo.close()
-            hdf_prog.close()
-            hdf_graph.close()
+        # Extract galaxy data from the sizes dict
+        gas_hmrs = gas_data[snap]["HMRs"]
+        star_hmrs = stellar_data[snap]["HMRs"]
+        print("There are %d galaxies (%d)" % (len(star_hmrs), len(gas_hmrs)))
+        print("There are %d compact galaxies" % len(star_hmrs[star_hmrs < 1]))
+        star_prog_hmrs = stellar_data[prog_snap]["HMRs"]
+        star_grps = stellar_data[snap]["Galaxy,GroupNumber"]
+        star_subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"]
+        star_prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"]
+        star_prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"]
+        star_regions = stellar_data[snap]["regions"]
+        star_prog_regions = stellar_data[prog_snap]["regions"]
+        gas_prog_hmrs = gas_data[prog_snap]["HMRs"]
+        gas_grps = gas_data[snap]["Galaxy,GroupNumber"]
+        gas_subgrps = gas_data[snap]["Galaxy,SubGroupNumber"]
+        gas_prog_grps = gas_data[prog_snap]["Galaxy,GroupNumber"]
+        gas_prog_subgrps = gas_data[prog_snap]["Galaxy,SubGroupNumber"]
+        gas_regions = gas_data[snap]["regions"]
+        gas_prog_regions = gas_data[prog_snap]["regions"]
 
-            # Extract galaxy data from the sizes dict
-            hmrs = data[snap]["HMRs"]
-            star_hmrs = stellar_data[snap]["HMRs"]
-            print("There are %d galaxies" % len(hmrs))
-            print("There are %d compact galaxies" % len(hmrs[hmrs < 1]))
-            prog_hmrs = data[prog_snap]["HMRs"]
-            grps = data[snap]["Galaxy,GroupNumber"]
-            subgrps = data[snap]["Galaxy,SubGroupNumber"]
-            prog_grps = data[prog_snap]["Galaxy,GroupNumber"]
-            prog_subgrps = data[prog_snap]["Galaxy,SubGroupNumber"]
-            regions = data[snap]["regions"]
-            prog_regions = data[prog_snap]["regions"]
+        # Loop over galaxies
+        for ind in range(len(star_hmrs)):
 
-            # Loop over galaxies
-            for ind in range(len(hmrs)):
+            # Skip this galaxy if it is not compact
+            if star_hmrs[ind] > 1:
+                continue
 
-                # Skip this galaxy if it is not compact
-                if star_hmrs[ind] > 1:
-                    continue
+            # Get the region for this galaxy
+            reg_int = star_regions[ind]
+            if reg_int == 18:
+                continue
+            if int(reg) != reg_int:
+                reg = str(reg_int).zfill(2)
+                print(reg)
 
-                # Get the region for this galaxy
-                reg_int = regions[ind]
                 if reg_int == 18:
                     continue
-                if int(reg) != reg_int:
-                    reg = str(reg_int).zfill(2)
-                    print(reg)
 
-                    if reg_int == 18:
-                        continue
+                # Open this new region
+                this_halo_base = halo_base.replace("<reg>", reg)
+                this_halo_base = this_halo_base.replace("<snap>", snap)
+                this_graph_base = graph_base.replace("<reg>", reg)
+                this_graph_base = this_graph_base.replace("<snap>", snap)
+                this_prog_base = halo_base.replace("<reg>", reg)
+                this_prog_base = this_prog_base.replace(
+                    "<snap>", prog_snap)
+                hdf_halo = h5py.File(this_halo_base, "r")
+                hdf_prog = h5py.File(this_prog_base, "r")
+                hdf_graph = h5py.File(this_graph_base, "r")
 
-                    # Open this new region
-                    this_halo_base = halo_base.replace("<reg>", reg)
-                    this_halo_base = this_halo_base.replace("<snap>", snap)
-                    this_graph_base = graph_base.replace("<reg>", reg)
-                    this_graph_base = this_graph_base.replace("<snap>", snap)
-                    this_prog_base = halo_base.replace("<reg>", reg)
-                    this_prog_base = this_prog_base.replace(
-                        "<snap>", prog_snap)
-                    hdf_halo = h5py.File(this_halo_base, "r")
-                    hdf_prog = h5py.File(this_prog_base, "r")
-                    hdf_graph = h5py.File(this_graph_base, "r")
+                # Get the MEGA ID arrays for both snapshots
+                mega_grps = hdf_halo["group_number"][...]
+                mega_subgrps = hdf_halo["subgroup_number"][...]
+                masses = hdf_halo["masses"][...]
+                mega_prog_grps = hdf_prog["group_number"][...]
+                mega_prog_subgrps = hdf_prog["subgroup_number"][...]
 
-                    # Get the MEGA ID arrays for both snapshots
-                    mega_grps = hdf_halo["group_number"][...]
-                    mega_subgrps = hdf_halo["subgroup_number"][...]
-                    masses = hdf_halo["masses"][...]
-                    mega_prog_grps = hdf_prog["group_number"][...]
-                    mega_prog_subgrps = hdf_prog["subgroup_number"][...]
+                # Get the progenitor information
+                prog_mass_conts = hdf_graph["ProgMassContribution"][...]
+                prog_ids = hdf_graph["ProgHaloIDs"][...]
+                start_index = hdf_graph["prog_start_index"][...]
+                pmasses = hdf_graph["halo_mass"][...]
+                nprogs = hdf_graph["n_progs"][...]
 
-                    # Get the progenitor information
-                    prog_mass_conts = hdf_graph["ProgMassContribution"][...]
-                    prog_ids = hdf_graph["ProgHaloIDs"][...]
-                    start_index = hdf_graph["prog_start_index"][...]
-                    pmasses = hdf_graph["halo_mass"][...]
-                    nprogs = hdf_graph["n_progs"][...]
+                hdf_halo.close()
+                hdf_prog.close()
+                hdf_graph.close()
 
-                    hdf_halo.close()
-                    hdf_prog.close()
-                    hdf_graph.close()
+            # Extract this galaxies information
+            hmr = star_hmrs[ind]
+            g, sg = star_grps[ind], star_subgrps[ind]
 
-                # Extract this galaxies information
-                hmr = hmrs[ind]
-                g, sg = grps[ind], subgrps[ind]
+            # Whats the MEGA ID of this galaxy?
+            mega_ind = np.where(np.logical_and(mega_grps == g,
+                                               mega_subgrps == sg))[0]
 
-                # Whats the MEGA ID of this galaxy?
-                mega_ind = np.where(np.logical_and(mega_grps == g,
-                                                   mega_subgrps == sg))[0]
+            # Get the progenitor
+            start = start_index[mega_ind][0]
+            stride = nprogs[mega_ind][0]
+            main_prog = prog_ids[start]
+            star_m = pmasses[mega_ind, 4] * 10 ** 10
 
-                # Get the progenitor
-                start = start_index[mega_ind][0]
-                stride = nprogs[mega_ind][0]
-                main_prog = prog_ids[start]
-                star_m = pmasses[mega_ind, 4] * 10 ** 10
+            # Get this progenitors group and subgroup ID
+            prog_g = mega_prog_grps[main_prog]
+            prog_sg = mega_prog_subgrps[main_prog]
 
-                # Get this progenitors group and subgroup ID
-                prog_g = mega_prog_grps[main_prog]
-                prog_sg = mega_prog_subgrps[main_prog]
+            # Get this progenitor's size
+            flares_ind = np.where(
+                np.logical_and(prog_regions == reg_int,
+                               np.logical_and(prog_grps == prog_g,
+                                              prog_subgrps == prog_sg))
+            )[0]
+            prog_hmr = prog_hmrs[flares_ind]
 
-                # Get this progenitor's size
-                flares_ind = np.where(
-                    np.logical_and(prog_regions == reg_int,
-                                   np.logical_and(prog_grps == prog_g,
-                                                  prog_subgrps == prog_sg))
-                )[0]
-                prog_hmr = prog_hmrs[flares_ind]
+            if prog_hmr.size == 0:
+                continue
 
-                if prog_hmr.size == 0:
-                    continue
+            # Get the contribution information
+            prog_cont = prog_mass_conts[start: start + stride] * 10 ** 10
+            mass = masses[mega_ind] * 10 ** 10
 
-                # Get the contribution information
-                prog_cont = prog_mass_conts[start: start + stride] * 10 ** 10
-                mass = masses[mega_ind] * 10 ** 10
+            # Calculate the mass contribution as a fraction of current mass
+            star_prog_cont = np.sum(prog_cont[:, 4])
+            frac_prog_cont = star_prog_cont / star_m
 
-                # Calculate the mass contribution as a fraction of current mass
-                star_prog_cont = np.sum(prog_cont[:, 4])
-                frac_prog_cont = star_prog_cont / star_m
-
-                # Include these results for plotting
-                tot_cont[key].extend(frac_prog_cont)
-                tot_hmrs[key].append(hmr)
-                tot_prog_hmrs[key].extend(prog_hmr)
+            # Include these results for plotting
+            tot_cont[key].extend(frac_prog_cont)
+            tot_hmrs[key].append(hmr)
+            tot_prog_hmrs[key].extend(prog_hmr)
 
     # Convert to arrays
     gas_tot_hmrs = np.array(tot_hmrs["gas"])
