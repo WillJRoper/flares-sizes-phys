@@ -344,6 +344,7 @@ def plot_size_change_comp(stellar_data, gas_data, snaps):
 
             # Extract galaxy data from the sizes dict
             hmrs = data[snap]["HMRs"]
+            star_hmrs = stellar_data[snap]["HMRs"]
             print("There are %d galaxies" % len(hmrs))
             print("There are %d compact galaxies" % len(hmrs[hmrs < 1]))
             prog_hmrs = data[prog_snap]["HMRs"]
@@ -358,7 +359,7 @@ def plot_size_change_comp(stellar_data, gas_data, snaps):
             for ind in range(len(hmrs)):
 
                 # Skip this galaxy if it is not compact
-                if hmrs[ind] > 1:
+                if star_hmrs[ind] > 1:
                     continue
 
                 # Get the region for this galaxy
