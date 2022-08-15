@@ -206,7 +206,7 @@ def plot_size_change(stellar_data, snaps, plt_type, weight_norm):
     # Plot the scatter
     im = ax.hexbin(tot_cont, delta_hmr,  gridsize=30,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w, extent=[-1, 1.3, -1, 1.3],
+                   C=w,
                    reduce_C_function=np.sum,
                    linewidths=0.2, norm=weight_norm, cmap="plasma")
 
