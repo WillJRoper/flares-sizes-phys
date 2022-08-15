@@ -13,7 +13,7 @@ import astropy.units as u
 import eagle_IO.eagle_IO as eagle_io
 
 
-def plot_size_change(stellar_data, snaps, plt_type):
+def plot_size_change(stellar_data, snaps, plt_type, weight_norm):
 
     # Define paths
     path = "/cosma/home/dp004/dc-rope1/cosma7/FLARES/flares-mergergraph/"
@@ -29,6 +29,7 @@ def plot_size_change(stellar_data, snaps, plt_type):
     tot_prog_hmrs = []
     tot_cont = []
     tot_mass = []
+    w = []
 
     plt_nprog = []
     plt_hmr = []
@@ -80,6 +81,7 @@ def plot_size_change(stellar_data, snaps, plt_type):
         prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"]
         prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"]
         regions = stellar_data[snap]["regions"]
+        ws = stellar_data[snap]["weights"]
         prog_regions = stellar_data[prog_snap]["regions"]
 
         # Loop over galaxies
@@ -182,6 +184,7 @@ def plot_size_change(stellar_data, snaps, plt_type):
             tot_hmrs.append(hmr)
             tot_prog_hmrs.extend(prog_hmr)
             tot_mass.append(star_m)
+            w.append(ws[ind])
 
     # Convert to arrays
     print(len(tot_hmrs))
@@ -191,6 +194,7 @@ def plot_size_change(stellar_data, snaps, plt_type):
     tot_prog_hmrs = np.array(tot_prog_hmrs)
     tot_cont = np.array(tot_cont)
     tot_mass = np.array(tot_mass)
+    w = np.array(w)
 
     # Compute delta
     delta_hmr = tot_hmrs - tot_prog_hmrs
@@ -200,8 +204,11 @@ def plot_size_change(stellar_data, snaps, plt_type):
     ax = fig.add_subplot(111)
 
     # Plot the scatter
-    im = ax.scatter(tot_cont, delta_hmr, c=np.log10(tot_mass), marker=".",
-                    cmap="plasma")
+    im = ax.scatter(tot_cont, delta_hmr,  gridsize=30,
+                    mincnt=np.min(w) - (0.1 * np.min(w)),
+                    C=w, extent=[-1, 1.3, -1, 1.3],
+                    reduce_C_function=np.sum, yscale='log',
+                    linewidths=0.2, norm=weight_norm)
 
     # Axes labels
     ax.set_xlabel("$M_{A,\star} / M_\mathrm{B,\star}$")
@@ -475,15 +482,18 @@ def plot_size_change_comp(stellar_data, gas_data, snaps):
     ax = fig.add_subplot(111)
 
     # Plot the scatter
-    im = ax.scatter(star_delta_hmr, gas_delta_hmr, c=tot_cont, marker=".",
-                    cmap="plasma")
+    im = ax.scatter(star_delta_hmr, gas_delta_hmr, gridsize=30,
+                    mincnt=np.min(tot_cont) - (0.1 * np.min(tot_cont)),
+                    C=tot_cont,
+                    reduce_C_function=np.mean, xscale="log", yscale='log',
+                    linewidths=0.2)
 
     # Axes labels
     ax.set_xlabel("$\Delta R_\mathrm{gas} / [\mathrm{pkpc}]$")
     ax.set_ylabel("$\Delta R_\star / [\mathrm{pkpc}]$")
 
     cbar = fig.colorbar(im)
-    cbar.set_label("$\sum_i M_\mathrm{\star}^{pi} / M_\star$")
+    cbar.set_label("$\sum_p M_\mathrm{\star}^{p} / M_\star$")
 
     # Save figure
     mkdir("plots/graph/")

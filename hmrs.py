@@ -129,7 +129,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     ax1.set_xlim(10**-1.1, 10**1.5)
 
     # Label axes
-    ax.set_ylabel("$R_{\mathrm{gas}} / [\mathrm{pkpc}]$")
+    ax.set_ylabel("$R_{\mathrm{gas}} / [\mathrm{pkbpc}]$")
     ax1.set_ylabel("$R_{\mathrm{gas}} / [\mathrm{pkpc}]$")
     ax1.set_xlabel("$R_{\star} / [\mathrm{pkpc}]$")
 

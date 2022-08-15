@@ -105,8 +105,8 @@ print("Got all data")
 
 # PLot graph plots
 plot_size_change_comp(data["stellar"], data["gas"], flares_snaps)
-plot_size_change(data["stellar"], flares_snaps, "stellar")
-plot_size_change(data["gas"], flares_snaps, "gas")
+plot_size_change(data["stellar"], flares_snaps, "stellar", weight_norm)
+plot_size_change(data["gas"], flares_snaps, "gas", weight_norm)
 
 # # Plot the physics variation plots
 # plot_hmr_phys_comp_grid_1kpc(flares_snaps[-1])
