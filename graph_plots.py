@@ -1039,19 +1039,28 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                 break
 
     # Set up plot parameters
-    ylims = (10**-1, 10**1.6)
+    ylims = (10**-1.3, 10**1.3)
     xlims = (10**8, 10**11.5)
 
-    # Define size bins
-    size_bins = 10 ** np.arange(-1, 1.4, 0.5)
+    # Define mins and maxs for binning
+    min_hmr = np.inf
+    max_hmr = 0
 
     # Get the max size reached in each main branch
     max_size = {}
     for key in list(graph.keys()):
         if len(graph[key]["HMRs"]) > 1:
             max_size[key] = np.max(graph[key]["HMRs"])
+            if max_size[key] > max_hmr:
+                max_hmr = max_size[key]
+            min_size = np.max(graph[key]["HMRs"])
+            if min_size < min_hmr:
+                min_hmr = min_size
         else:
             del graph[key]
+
+    # Define size bins
+    size_bins = np.linspace(min_hmr, max_hmr, 5)
 
     # Define plot grid shape
     nrows = 1
