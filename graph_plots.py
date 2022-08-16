@@ -570,7 +570,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
         reg = "100"
         reg_int = -1
 
-        if snap != snaps[-1]:
+        if snap != snaps[4]:
             continue
 
         # Extract galaxy data from the sizes dict
@@ -1101,7 +1101,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
         ii = 0
         for key in graph:
 
-            print("Plotting %d (%d, %d, %d) of %d" % (i, key[0], key[1],
+            print("Plotting %d (%d, %d, %d) of %d" % (ii, key[0], key[1],
                                                       key[2], len(graph)), end="\r")
 
             if size_bins[k] <= max_size[key] and size_bins[k + 1] > max_size[key]:
@@ -1115,7 +1115,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
         ii = 0
         for key in graph:
 
-            print("Plotting %d (%d, %d, %d) of %d" % (i, key[0], key[1],
+            print("Plotting %d (%d, %d, %d) of %d" % (ii, key[0], key[1],
                                                       key[2], len(graph)), end="\r")
 
             if size_bins[k] <= max_size[key] and size_bins[k + 1] > max_size[key]:
