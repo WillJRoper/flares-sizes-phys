@@ -1041,7 +1041,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     xlims = (10**8, 10**11.5)
 
     # Define size bins
-    size_bins = np.logspace(ylims[0], ylims[1], 6)
+    size_bins = np.linspace(ylims[0], ylims[1], 6)
 
     # Get the max size reached in each main branch
     max_size = {}
@@ -1056,13 +1056,20 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     ncols = len(size_bins) - 1
 
     # Set up plot
-    fig = plt.figure(figsize=(3.5 * ncols, 3.5 * nrows))
-    gs = gridspec.GridSpec(nrows=nrows, ncols=ncols)
+    fig = plt.figure(figsize=(3.5 * ncols + 0.1 * 3.5, 3.5 * nrows))
+    gs = gridspec.GridSpec(nrows=nrows, ncols=ncols + 1,
+                           width_ratios=[20, ] * ncols + [1])
     gs.update(wspace=0.0, hspace=0.0)
     axes = np.empty(ncols, dtype=object)
+    cax = fig.add_subplot(gs[-1])
+
+    cax.tick_params(axis="both", top=False, bottom=False,
+                    left=False, right=False,
+                    labeltop=False, labelbottom=False,
+                    labelleft=False, labelright=False)
 
     j = 0
-    while j < ncols:
+    while j < ncols - 1:
         axes[j] = fig.add_subplot(gs[j])
         axes[j].loglog()
         axes[j].set_xlim(xlims)
@@ -1108,7 +1115,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
 
     axes[0].set_ylabel("$R_{z} / R_{z=5}$")
 
-    cbar = fig.colorbar(im)
+    cbar = fig.colorbar(im, cax)
     cbar.set_label("$z$")
 
     # Save figure
