@@ -1094,8 +1094,8 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                                    labelleft=False, labelright=False)
 
     for k in range(len(size_bins) - 1):
-        i = k % ncols
-        j = k % nrows
+        j = k % ncols
+        i = k % nrows
 
         # Loop over graphs
         ii = 0
