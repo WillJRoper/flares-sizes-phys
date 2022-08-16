@@ -924,8 +924,12 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
             prog_regions = stellar_data[prog_snap]["regions"]
 
             # Put this galaxy in the graph
-            graph[(g, sg, ind)]["HMRs"].append(hmrs[this_ind])
-            graph[(g, sg, ind)]["Masses"].append(mass[this_ind])
+            if snap == root_snap:
+                graph[(g, sg, ind)]["HMRs"].append(hmrs[this_ind])
+                graph[(g, sg, ind)]["Masses"].append(mass[this_ind])
+            else:
+                graph[(g, sg, ind)]["HMRs"].extend(hmrs[this_ind])
+                graph[(g, sg, ind)]["Masses"].extend(mass[this_ind])
 
             # Get the MEGA ID arrays for both snapshots
             mega_grps = mega_data[reg][snap]["group_number"]
