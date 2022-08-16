@@ -861,6 +861,9 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     # Loop over these root galaxies and populate the rest of the graph
     for key in graph:
 
+        print("Walking %d, %d, %d of %d" % (key[0], key[1],
+                                            key[2], len(graph)), end="\r")
+
         # Extract IDs
         g, sg, ind = key
 
@@ -947,6 +950,9 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
 
     # Loop over graphs
     for key in graph:
+
+        print("Plotting %d, %d, %d of %d" % (key[0], key[1],
+                                             key[2], len(graph)), end="\r")
 
         # Set up plot
         fig = plt.figure(figsize=(3.5, 3.5))
