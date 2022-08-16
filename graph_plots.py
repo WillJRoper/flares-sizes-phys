@@ -859,10 +859,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
             this_halo_base = this_halo_base.replace("<snap>", snap)
             this_graph_base = graph_base.replace("<reg>", reg)
             this_graph_base = this_graph_base.replace("<snap>", snap)
-            this_prog_base = halo_base.replace("<reg>", reg)
-            this_prog_base = this_prog_base.replace("<snap>", prog_snap)
             hdf_halo = h5py.File(this_halo_base, "r")
-            hdf_prog = h5py.File(this_prog_base, "r")
             hdf_graph = h5py.File(this_graph_base, "r")
 
             # Get the MEGA ID arrays for both snapshots
@@ -874,7 +871,6 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
             mega_data[reg][snap]["prog_start_index"] = hdf_graph["prog_start_index"][...]
 
             hdf_halo.close()
-            hdf_prog.close()
             hdf_graph.close()
 
     # Loop over galaxies and populate the root level of the graph with
