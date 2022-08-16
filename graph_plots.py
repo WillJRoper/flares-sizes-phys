@@ -570,6 +570,9 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
         reg = "100"
         reg_int = -1
 
+        if snap != snaps[-1]:
+            continue
+
         # Extract galaxy data from the sizes dict
         hmrs = stellar_data[snap]["HMRs"]
         print("There are %d galaxies" % len(hmrs))
@@ -801,7 +804,6 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
                 else:
                     low, high = 0, part_counts[ipart]
                 if part_counts[ipart] > 0:
-                    print(pos.shape)
                     coords[low: high, :] = pos
                     masses[low: high] = ms
 
@@ -814,6 +816,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
                 else:
                     low, high = 0, prog_part_counts[ipart]
                 if prog_part_counts[ipart] > 0:
+                    print(pos.shape)
                     prog_coords[low: high, :] = pos
                     prog_masses[low: high] = ms
 
