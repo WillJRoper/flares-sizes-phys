@@ -714,6 +714,8 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
             if prog_master_ind.size == 0:
                 continue
 
+            print(master_ind)
+
             # Get the start index for each particle type
             s_start = np.sum(master_s_length[:master_ind])
             g_start = np.sum(master_g_length[:master_ind])
@@ -985,6 +987,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
         # Set up plot
         fig = plt.figure(figsize=(3.5, 3.5))
         ax = fig.add_subplot(111)
+        ax.loglog()
 
         # Plot the scatter
         im = ax.plot(graph[key]["Masses"], graph[key]["HMRs"], marker=".")
