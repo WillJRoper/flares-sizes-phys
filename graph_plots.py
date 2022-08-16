@@ -714,10 +714,12 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
             if prog_master_ind.size == 0:
                 continue
 
-            print(master_ind)
+           # Extract the index from the array it's contained within
+           master_ind = master_ind[0]
+           prog_master_ind = prog_master_ind[0]
 
             # Get the start index for each particle type
-            s_start = np.sum(master_s_length[:master_ind])
+            s_start = np.sum(master_s_length[:master_ind)
             g_start = np.sum(master_g_length[:master_ind])
             dm_start = np.sum(master_dm_length[:master_ind])
             bh_start = np.sum(master_bh_length[:master_ind])
@@ -927,10 +929,14 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
 
             # Put this galaxy in the graph
             if snap == root_snap:
-                graph[(g, sg, ind)]["HMRs"].append(hmrs[this_ind])
+                graph[(g, sg, ind)]["HMRs"].append(
+                    hmrs[this_ind] / stellar_data[root_snap]["HMRs"][ind]
+                )
                 graph[(g, sg, ind)]["Masses"].append(mass[this_ind])
             else:
-                graph[(g, sg, ind)]["HMRs"].extend(hmrs[this_ind])
+                graph[(g, sg, ind)]["HMRs"].extend(
+                    hmrs[this_ind] / stellar_data[root_snap]["HMRs"][ind]
+                )
                 graph[(g, sg, ind)]["Masses"].extend(mass[this_ind])
 
             # Get the MEGA ID arrays for both snapshots
@@ -973,6 +979,11 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
 
             else:
                 break
+                             
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+    ax.semilogx()
 
     # Loop over graphs
     i = 0
@@ -984,22 +995,17 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
         if len(graph[key]["Masses"]) < 6:
             continue
 
-        # Set up plot
-        fig = plt.figure(figsize=(3.5, 3.5))
-        ax = fig.add_subplot(111)
-        ax.loglog()
-
         # Plot the scatter
         im = ax.plot(graph[key]["Masses"], graph[key]["HMRs"], marker=".")
+        i += 1
 
-        # Axes labels
-        ax.set_xlabel("$M_\star / M_\odot$")
-        ax.set_ylabel("$R_{1/2} / [\mathrm{pkpc}]$")
+    # Axes labels
+    ax.set_xlabel("$M_\star / M_\odot$")
+    ax.set_ylabel("$R_{z} / R_{z=5}$")
 
-        # Save figure
-        mkdir("plots/graph_plot/")
-        fig.savefig("plots/graph_plot/size_mass_evo_%s_%s.png" % (key[0],
+    # Save figure
+    mkdir("plots/graph_plot/")
+    fig.savefig("plots/graph_plot/size_mass_evo_%s_%s.png" % (key[0],
                                                                   key[1]),
                     bbox_inches="tight")
-        plt.close(fig)
-        i += 1
+    plt.close(fig)
