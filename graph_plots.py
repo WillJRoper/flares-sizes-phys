@@ -1081,6 +1081,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     for k in range(len(size_bins) - 1):
         i = k % ncols
         j = k % nrows
+        print(k, i, j)
         axes[i, j] = fig.add_subplot(gs[i, j])
         axes[i, j].loglog()
         axes[i, j].set_xlim(xlims)
