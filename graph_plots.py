@@ -1035,7 +1035,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
 
         # Plot the scatter
         im = ax.plot(graph[key]["Masses"], graph[key]["HMRs"], marker=".",
-                     alpha=0.5)
+                     color="grey", alpha=0.2)
         i += 1
 
     # Axes labels
