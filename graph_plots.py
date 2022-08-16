@@ -709,6 +709,11 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
                                prog_master_subgrps == prog_sg)
             )[0]
 
+            if master_ind.size == 0:
+                continue
+            if prog_master_ind.size == 0:
+                continue
+
             # Get the start index for each particle type
             s_start = np.sum(master_s_length[:master_ind])
             g_start = np.sum(master_g_length[:master_ind])
@@ -832,10 +837,6 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     # Define root snapshot
     root_snap = snaps[-1]
 
-    # Set fake region IDs
-    reg = "100"
-    reg_int = -1
-
     # Extract galaxy data from the sizes dict for the root snap
     root_hmrs = stellar_data[root_snap]["HMRs"]
     root_mass = stellar_data[root_snap]["mass"]
@@ -847,7 +848,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     # only the compact galaxies
     for ind in range(len(root_hmrs)):
 
-        # Exit if the galaxy isn't compact
+        # Skip if the galaxy isn't compact
         if root_hmrs[ind] > 1 or root_mass[ind] < 10 ** 10:
             continue
 

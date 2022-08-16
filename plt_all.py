@@ -104,6 +104,7 @@ print("Got all data")
 # print("Plotted SFR profiles")
 
 # PLot graph plots
+plot_size_mass_evo_grid(data["stellar"], flares_snaps)
 plot_size_change_binding(data["stellar"], flares_snaps, weight_norm)
 plot_size_change_comp(data["stellar"], data["gas"], flares_snaps, weight_norm)
 plot_size_change(data["stellar"], flares_snaps, "stellar", weight_norm)
