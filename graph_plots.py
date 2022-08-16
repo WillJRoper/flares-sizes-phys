@@ -811,6 +811,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
                 else:
                     low, high = 0, prog_part_counts[ipart]
                 if prog_part_counts[ipart] > 0:
+                    print(prog_lst_coords[ipart])
                     prog_coords[low: high, :] = prog_lst_coords[ipart]
                     prog_masses[low: high] = prog_lst_masses[ipart]
 
@@ -1034,7 +1035,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                                                   key[2], len(graph)), end="\r")
 
         # Plot the scatter
-        im = ax.plot(graph[key]["Masses"], graph[key]["HMRs"], marker=".",
+        im = ax.plot(graph[key]["Masses"], graph[key]["HMRs"],
                      color="grey", alpha=0.2)
         i += 1
 
