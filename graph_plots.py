@@ -1059,7 +1059,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
             del graph[key]
 
     # Define size bins
-    size_bins = np.linspace(min_hmr, max_hmr, 5)
+    size_bins = [10**-1.3, 10**-0.2, 1, 2, 4, 10]
 
     # Define plot grid shape
     nrows = 1
