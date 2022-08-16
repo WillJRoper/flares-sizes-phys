@@ -983,7 +983,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
-    ax.semilogx()
+    ax.loglog()
 
     # Loop over graphs
     i = 0
