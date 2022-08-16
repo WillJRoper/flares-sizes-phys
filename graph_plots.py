@@ -1076,8 +1076,18 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
         # Plot the scatter
         im = ax.plot(graph[key]["Masses"], graph[key]["HMRs"],
                      color="grey", alpha=0.2)
+        i += 1
+
+    # Loop over graphs
+    i = 0
+    for key in graph:
+
+        print("Plotting %d (%d, %d, %d) of %d" % (i, key[0], key[1],
+                                                  key[2], len(graph)), end="\r")
+
+        # Plot the scatter
         im = ax.scatter(graph[key]["Masses"], graph[key]["HMRs"],
-                        marker=".", edgecolors="none", s=1,
+                        marker=".", edgecolors="none", s=5,
                         c=graph[key]["z"], cmap="plasma", alpha=0.6)
         i += 1
 
