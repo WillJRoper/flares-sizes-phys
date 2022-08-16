@@ -844,6 +844,39 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     root_subgrps = stellar_data[root_snap]["Galaxy,SubGroupNumber"]
     root_regions = stellar_data[root_snap]["regions"]
 
+    # Create data dictionary to speed up walking
+    mega_data = {}
+    for reg_int in np.unique(root_regions):
+        if reg_int == 18:
+            continue
+        reg = str(reg_int).zfill(2)
+        mega_data[reg] = {}
+        for snap in snaps:
+            mega_data[reg][snap] = {}
+
+            # Open this new region
+            this_halo_base = halo_base.replace("<reg>", reg)
+            this_halo_base = this_halo_base.replace("<snap>", snap)
+            this_graph_base = graph_base.replace("<reg>", reg)
+            this_graph_base = this_graph_base.replace("<snap>", snap)
+            this_prog_base = halo_base.replace("<reg>", reg)
+            this_prog_base = this_prog_base.replace("<snap>", prog_snap)
+            hdf_halo = h5py.File(this_halo_base, "r")
+            hdf_prog = h5py.File(this_prog_base, "r")
+            hdf_graph = h5py.File(this_graph_base, "r")
+
+            # Get the MEGA ID arrays for both snapshots
+            mega_data[reg][snap]["group_number"] = hdf_halo["group_number"][...]
+            mega_data[reg][snap]["subgroup_number"] = hdf_halo["subgroup_number"][...]
+
+            # Get the progenitor information
+            mega_data[reg][snap]["ProgHaloIDs"] = hdf_graph["ProgHaloIDs"][...]
+            mega_data[reg][snap]["prog_start_index"] = hdf_graph["prog_start_index"][...]
+
+            hdf_halo.close()
+            hdf_prog.close()
+            hdf_graph.close()
+
     # Loop over galaxies and populate the root level of the graph with
     # only the compact galaxies
     for ind in range(len(root_hmrs)):
@@ -864,7 +897,6 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
 
         print("Walking %d (%d, %d, %d) of %d" % (i, key[0], key[1],
                                                  key[2], len(graph)), end="\r")
-        print("", end="\r")
 
         # Extract IDs
         g, sg, ind = key
@@ -898,30 +930,15 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
             graph[(g, sg, ind)]["HMRs"].append(hmrs[this_ind])
             graph[(g, sg, ind)]["Masses"].append(mass[this_ind])
 
-            # Open this new region
-            this_halo_base = halo_base.replace("<reg>", reg)
-            this_halo_base = this_halo_base.replace("<snap>", snap)
-            this_graph_base = graph_base.replace("<reg>", reg)
-            this_graph_base = this_graph_base.replace("<snap>", snap)
-            this_prog_base = halo_base.replace("<reg>", reg)
-            this_prog_base = this_prog_base.replace("<snap>", prog_snap)
-            hdf_halo = h5py.File(this_halo_base, "r")
-            hdf_prog = h5py.File(this_prog_base, "r")
-            hdf_graph = h5py.File(this_graph_base, "r")
-
             # Get the MEGA ID arrays for both snapshots
-            mega_grps = hdf_halo["group_number"][...]
-            mega_subgrps = hdf_halo["subgroup_number"][...]
-            mega_prog_grps = hdf_prog["group_number"][...]
-            mega_prog_subgrps = hdf_prog["subgroup_number"][...]
+            mega_grps = mega_data[reg][snap]["group_number"]
+            mega_subgrps = mega_data[reg][snap]["subgroup_number"]
+            mega_prog_grps = mega_data[reg][prog_snap]["group_number"]
+            mega_prog_subgrps = mega_data[reg][prog_snap]["subgroup_number"]
 
             # Get the progenitor information
-            prog_ids = hdf_graph["ProgHaloIDs"][...]
-            start_index = hdf_graph["prog_start_index"][...]
-
-            hdf_halo.close()
-            hdf_prog.close()
-            hdf_graph.close()
+            prog_ids = mega_data[reg][snap]["ProgHaloIDs"]
+            start_index = mega_data[reg][snap]["prog_start_index"]
 
             # Whats the MEGA ID of this galaxy?
             mega_ind = np.where(np.logical_and(mega_grps == this_g,
@@ -958,11 +975,12 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
 
         print("Plotting %d (%d, %d, %d) of %d" % (i, key[0], key[1],
                                                   key[2], len(graph)), end="\r")
-        print("", end="\r")
 
         # Set up plot
         fig = plt.figure(figsize=(3.5, 3.5))
         ax = fig.add_subplot(111)
+
+        print(graph[key]["Masses"], graph[key]["HMRs"])
 
         # Plot the scatter
         im = ax.plot(graph[key]["Masses"], graph[key]["HMRs"], marker=".")
