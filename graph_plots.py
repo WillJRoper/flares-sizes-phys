@@ -1045,7 +1045,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
 
     # Get the max size reached in each main branch
     max_size = {}
-    for key in graph:
+    for key in list(graph.keys()):
         if len(graph[key]["HMRs"]) > 1:
             max_size[key] = np.max(graph[key]["HMRs"])
         else:
