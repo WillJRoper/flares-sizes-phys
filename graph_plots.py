@@ -921,6 +921,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
             mass = stellar_data[snap]["mass"]
             prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"]
             prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"]
+            prog_regions = stellar_data[prog_snap]["regions"]
 
             # Put this galaxy in the graph
             graph[(g, sg, ind)]["HMRs"].append(hmrs[this_ind])
@@ -951,9 +952,10 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                 this_sg = mega_prog_subgrps[main_prog]
 
                 # Get this progenitors index
-                this_ind = np.where(np.logical_and(prog_grps == this_g,
-                                                   prog_subgrps == this_sg))[0]
-                print(main_prog, this_ind)
+                this_ind = np.where(
+                    np.logical_and(prog_regions == reg_int,
+                                   np.logical_and(prog_grps == this_g,
+                                                  prog_subgrps == this_sg)))[0]
 
                 if this_ind.size == 0:
                     break
