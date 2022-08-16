@@ -979,11 +979,12 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
         print("Plotting %d (%d, %d, %d) of %d" % (i, key[0], key[1],
                                                   key[2], len(graph)), end="\r")
 
+        if len(graph[key]["Masses"]) < 6:
+            continue
+
         # Set up plot
         fig = plt.figure(figsize=(3.5, 3.5))
         ax = fig.add_subplot(111)
-
-        print(graph[key]["Masses"], graph[key]["HMRs"])
 
         # Plot the scatter
         im = ax.plot(graph[key]["Masses"], graph[key]["HMRs"], marker=".")
