@@ -1059,72 +1059,78 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
             del graph[key]
 
     # Define size bins
-    size_bins = [10**-1.3, 10**-0.2, 1.5, 2.5, 3, 10]
+    size_bins = [10**-1.3, 10**-0.5, 10**-0.2, 1.2, 1.6, 2, 2.5, 3, 10]
 
     # Define plot grid shape
-    nrows = 1
-    ncols = len(size_bins) - 1
+    nrows = len(size_bins) - 1 / 2
+    ncols = 2
 
     # Set up plot
     fig = plt.figure(figsize=(3.5 * ncols + 0.1 * 3.5, 3.5 * nrows))
     gs = gridspec.GridSpec(nrows=nrows, ncols=ncols + 1,
                            width_ratios=[20, ] * ncols + [1])
     gs.update(wspace=0.0, hspace=0.0)
-    axes = np.empty(ncols, dtype=object)
-    cax = fig.add_subplot(gs[-1])
+    axes = np.empty((nrows, ncols), dtype=object)
+    cax = fig.add_subplot(gs[:, -1])
 
     cax.tick_params(axis="both", top=False, bottom=False,
                     left=False, right=False,
                     labeltop=False, labelbottom=False,
                     labelleft=False, labelright=False)
 
-    j = 0
-    while j < ncols:
-        axes[j] = fig.add_subplot(gs[j])
-        axes[j].loglog()
-        axes[j].set_xlim(xlims)
-        axes[j].set_ylim(ylims)
+    for k in range(len(size_bins) - 1):
+        i = k % ncols
+        j = k % nrows
+        axes[i, j] = fig.add_subplot(gs[j])
+        axes[i, j].loglog()
+        axes[i, j].set_xlim(xlims)
+        axes[i, j].set_ylim(ylims)
+        if i < nrows - 1:
+            axes[i, j].tick_params(axis='x', top=False, bottom=False,
+                                   labeltop=False, labelbottom=False)
         if j > 0:
-            axes[j].tick_params(axis='y', left=False, right=False,
-                                labelleft=False, labelright=False)
-        j += 1
+            axes[i, j].tick_params(axis='y', left=False, right=False,
+                                   labelleft=False, labelright=False)
 
-    for axi in range(ncols):
+    for k in range(len(size_bins) - 1):
+        i = k % ncols
+        j = k % nrows
 
         # Loop over graphs
-        i = 0
+        ii = 0
         for key in graph:
 
             print("Plotting %d (%d, %d, %d) of %d" % (i, key[0], key[1],
                                                       key[2], len(graph)), end="\r")
 
-            if size_bins[axi] <= max_size[key] and size_bins[axi + 1] > max_size[key]:
+            if size_bins[k] <= max_size[key] and size_bins[k + 1] > max_size[key]:
 
                 # Plot the scatter
-                im = axes[axi].plot(graph[key]["Masses"], graph[key]["HMRs"],
-                                    color="grey", alpha=0.2, zorder=0)
-            i += 1
+                im = axes[i, j].plot(graph[key]["Masses"], graph[key]["HMRs"],
+                                     color="grey", alpha=0.2, zorder=0)
+            ii += 1
 
         # Loop over graphs
-        i = 0
+        ii = 0
         for key in graph:
 
             print("Plotting %d (%d, %d, %d) of %d" % (i, key[0], key[1],
                                                       key[2], len(graph)), end="\r")
 
-            if size_bins[axi] <= max_size[key] and size_bins[axi + 1] > max_size[key]:
+            if size_bins[k] <= max_size[key] and size_bins[k + 1] > max_size[key]:
 
                 # Plot the scatter
-                im = axes[axi].scatter(graph[key]["Masses"], graph[key]["HMRs"],
-                                       marker=".", edgecolors="none", s=10,
-                                       c=graph[key]["z"], cmap="plasma",
-                                       alpha=0.8, zorder=1, norm=norm)
-            i += 1
+                im = axes[i, j].scatter(graph[key]["Masses"], graph[key]["HMRs"],
+                                        marker=".", edgecolors="none", s=10,
+                                        c=graph[key]["z"], cmap="plasma",
+                                        alpha=0.8, zorder=1, norm=norm)
+            ii += 1
 
-        # Axes labels
-        axes[axi].set_xlabel("$M_{\star z} / M_{\odot}$")
-
-    axes[0].set_ylabel("$R_{z} / R_{z=5}$")
+    # Axes labels
+    for ax in axes[:, 0]:
+        ax.set_ylabel("$R_{1/2\star} / [\mathrm{pkpc}]$")
+    for ax in axes[-1, :]:
+        ax.set_xlabel("$M_{\star z} / M_{\odot}$")
 
     cbar = fig.colorbar(im, cax)
     cbar.set_label("$z$")
