@@ -1062,7 +1062,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     size_bins = [10**-1.3, 10**-0.5, 10**-0.2, 1.2, 1.6, 2, 2.5, 3, 10]
 
     # Define plot grid shape
-    nrows = (len(size_bins) - 1) / 2
+    nrows = int((len(size_bins) - 1) / 2)
     ncols = 2
 
     # Set up plot
@@ -1130,7 +1130,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     for ax in axes[:, 0]:
         ax.set_ylabel("$R_{1/2\star} / [\mathrm{pkpc}]$")
     for ax in axes[-1, :]:
-        ax.set_xlabel("$M_{\star z} / M_{\odot}$")
+        ax.set_xlabel("$M_{\star} / M_{\odot}$")
 
     cbar = fig.colorbar(im, cax)
     cbar.set_label("$z$")
