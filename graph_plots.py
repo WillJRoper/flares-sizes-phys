@@ -984,14 +984,14 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                     hmrs[this_ind] / stellar_data[root_snap]["HMRs"][ind]
                 )
                 graph[(g, sg, ind)]["Masses"].append(
-                    mass[this_ind] / stellar_data[root_snap]["mass"][ind]
+                    mass[this_ind]
                 )
             else:
                 graph[(g, sg, ind)]["HMRs"].extend(
                     hmrs[this_ind] / stellar_data[root_snap]["HMRs"][ind]
                 )
                 graph[(g, sg, ind)]["Masses"].extend(
-                    mass[this_ind] / stellar_data[root_snap]["mass"][ind]
+                    mass[this_ind]
                 )
             graph[(g, sg, ind)]["z"].append(z)
 
@@ -1036,72 +1036,78 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
             else:
                 break
 
-    # Set up plot
-    fig = plt.figure(figsize=(3.5, 3.5))
-    ax = fig.add_subplot(111)
-    ax.loglog()
+    # Set up plot parameters
+    ylims = (10**-1, 10**1.6)
+    xlims = (10**8, 10**11.5)
 
-    # Loop over graphs
-    i = 0
+    # Define size bins
+    size_bins = np.arange(ylims[0], ylims[1], 0.2)
+
+    # Get the max size reached in each main branch
+    max_size = {}
     for key in graph:
+        max_size[key] = np.max(graph[key]["HMRs"])
 
-        print("Plotting %d (%d, %d, %d) of %d" % (i, key[0], key[1],
-                                                  key[2], len(graph)), end="\r")
-
-        # Plot the scatter
-        im = ax.plot(graph[key]["Masses"], graph[key]["HMRs"],
-                     color="grey", alpha=0.2)
-        i += 1
-
-    # Axes labels
-    ax.set_xlabel("$M_{\star z} / M_{\star z=5}$")
-    ax.set_ylabel("$R_{z} / R_{z=5}$")
-
-    # Save figure
-    mkdir("plots/graph_plot/")
-    fig.savefig("plots/graph_plot/size_mass_evo_all.png",
-                bbox_inches="tight")
-    plt.close(fig)
+    # Define plot grid shape
+    nrows = 1
+    ncols = len(size_bins) - 1
 
     # Set up plot
-    fig = plt.figure(figsize=(3.5, 3.5))
-    ax = fig.add_subplot(111)
-    ax.loglog()
+    fig = plt.figure(figsize=(3.5 * ncols, 3.5 * nrows))
+    gs = gridspec.GridSpec(nrows=nrows, ncols=ncols)
+    gs.update(wspace=0.0, hspace=0.0)
+    axes = np.empty(ncols, dtype=object)
 
-    # Loop over graphs
-    i = 0
-    for key in graph:
+    j = 0
+    while j < ncols:
+        axes[j] = fig.add_subplot(gs[j])
+        axes[j].loglog()
+        if j > 0:
+            axes[i, j].tick_params(axis='y', left=False, right=False,
+                                   labelleft=False, labelright=False)
+        j += 1
 
-        print("Plotting %d (%d, %d, %d) of %d" % (i, key[0], key[1],
-                                                  key[2], len(graph)), end="\r")
+    for axi in range(ncols):
 
-        # Plot the scatter
-        im = ax.plot(graph[key]["Masses"], graph[key]["HMRs"],
-                     color="grey", alpha=0.2, zorder=0)
-        i += 1
+        # Loop over graphs
+        i = 0
+        for key in graph:
 
-    # Loop over graphs
-    i = 0
-    for key in graph:
+            print("Plotting %d (%d, %d, %d) of %d" % (i, key[0], key[1],
+                                                      key[2], len(graph)), end="\r")
 
-        print("Plotting %d (%d, %d, %d) of %d" % (i, key[0], key[1],
-                                                  key[2], len(graph)), end="\r")
+            if size_bins[axi] <= max_size[key] and size_bins[axi + 1] > max_size[key]:
 
-        # Plot the scatter
-        im = ax.scatter(graph[key]["Masses"], graph[key]["HMRs"],
-                        marker=".", edgecolors="none", s=10,
-                        c=graph[key]["z"], cmap="plasma", alpha=0.8, zorder=1)
-        i += 1
+                # Plot the scatter
+                im = axes[axi].plot(graph[key]["Masses"], graph[key]["HMRs"],
+                                    color="grey", alpha=0.2, zorder=0)
+            i += 1
 
-    # Axes labels
-    ax.set_xlabel("$M_{\star z} / M_{\star z=5}$")
-    ax.set_ylabel("$R_{z} / R_{z=5}$")
+        # Loop over graphs
+        i = 0
+        for key in graph:
+
+            print("Plotting %d (%d, %d, %d) of %d" % (i, key[0], key[1],
+                                                      key[2], len(graph)), end="\r")
+
+            if size_bins[axi] <= max_size[key] and size_bins[axi + 1] > max_size[key]:
+
+                # Plot the scatter
+                im = axes[axi].scatter(graph[key]["Masses"], graph[key]["HMRs"],
+                                       marker=".", edgecolors="none", s=10,
+                                       c=graph[key]["z"], cmap="plasma", alpha=0.8, zorder=1)
+            i += 1
+
+        # Axes labels
+        axes[axi].set_xlabel("$M_{\star z} / M_{\odot}$")
+
+    axes[0].set_ylabel("$R_{z} / R_{z=5}$")
 
     cbar = fig.colorbar(im)
     cbar.set_label("$z$")
 
     # Save figure
     mkdir("plots/graph_plot/")
-    fig.savefig("plots/graph_plot/size_mass_evo_scatter.png",
+    fig.savefig("plots/graph_plot/size_mass_evo_all.png",
                 bbox_inches="tight")
     plt.close(fig)
