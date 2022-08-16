@@ -932,7 +932,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     for ind in range(len(root_hmrs)):
 
         # Skip if the galaxy isn't compact
-        if root_hmrs[ind] > 1 or root_mass[ind] < 10 ** 10:
+        if root_hmrs[ind] > 1:
             continue
 
         # Get ID
