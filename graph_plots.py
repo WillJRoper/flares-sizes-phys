@@ -801,6 +801,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
                 else:
                     low, high = 0, part_counts[ipart]
                 if part_counts[ipart] > 0:
+                    print(pos.shape)
                     coords[low: high, :] = pos
                     masses[low: high] = ms
 
