@@ -646,31 +646,31 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
                 # Get other data from the master file
                 cops = snap_grp["Galaxy"]["COP"][...]
                 master_s_length = snap_grp["Galaxy"]["S_Length"][...]
-                master_s_pos = snap_grp["Particle"]["S_Coordinates"][...]
+                master_s_pos = snap_grp["Particle"]["S_Coordinates"][...].T
                 ini_ms = snap_grp["Particle"]["S_MassInitial"][...]
                 s_mass = snap_grp["Particle"]["S_Mass"][...]
                 master_g_length = snap_grp["Galaxy"]["G_Length"][...]
-                master_g_pos = snap_grp["Particle"]["G_Coordinates"][...]
+                master_g_pos = snap_grp["Particle"]["G_Coordinates"][...].T
                 g_mass = snap_grp["Particle"]["G_Mass"][...]
                 master_dm_length = snap_grp["Galaxy"]["DM_Length"][...]
-                master_dm_pos = snap_grp["Particle"]["DM_Coordinates"][...]
+                master_dm_pos = snap_grp["Particle"]["DM_Coordinates"][...].T
                 dm_mass = np.full(master_dm_pos.shape[0], mdm)
                 master_bh_length = snap_grp["Galaxy"]["BH_Length"][...]
-                master_bh_pos = snap_grp["Particle"]["BH_Coordinates"][...]
+                master_bh_pos = snap_grp["Particle"]["BH_Coordinates"][...].T
                 bh_mass = snap_grp["Particle"]["BH_Mass"][...]
                 prog_cops = prog_grp["Galaxy"]["COP"][...]
                 prog_master_s_length = prog_grp["Galaxy"]["S_Length"][...]
-                prog_master_s_pos = prog_grp["Particle"]["S_Coordinates"][...]
+                prog_master_s_pos = prog_grp["Particle"]["S_Coordinates"][...].T
                 prog_ini_ms = prog_grp["Particle"]["S_MassInitial"][...]
                 prog_s_mass = prog_grp["Particle"]["S_Mass"][...]
                 prog_master_g_length = prog_grp["Galaxy"]["G_Length"][...]
-                prog_master_g_pos = prog_grp["Particle"]["G_Coordinates"][...]
+                prog_master_g_pos = prog_grp["Particle"]["G_Coordinates"][...].T
                 prog_g_mass = prog_grp["Particle"]["G_Mass"][...]
                 prog_master_dm_length = prog_grp["Galaxy"]["DM_Length"][...]
-                prog_master_dm_pos = prog_grp["Particle"]["DM_Coordinates"][...]
+                prog_master_dm_pos = prog_grp["Particle"]["DM_Coordinates"][...].T
                 prog_dm_mass = np.full(prog_master_dm_pos.shape[0], mdm)
                 prog_master_bh_length = prog_grp["Galaxy"]["BH_Length"][...]
-                prog_master_bh_pos = prog_grp["Particle"]["BH_Coordinates"][...]
+                prog_master_bh_pos = prog_grp["Particle"]["BH_Coordinates"][...].T
                 prog_bh_mass = prog_grp["Particle"]["BH_Mass"][...]
 
             # Extract this galaxies information
