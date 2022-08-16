@@ -768,6 +768,25 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
                 prog_s_start: prog_s_start + prog_s_len]
 
             # Combine coordiantes and masses into a single array
+            part_counts = [this_g_pos.shape[0], this_dm_pos.shape[0], 0, 0,
+                           this_s_pos.shape[0], this_bh_pos.shape[0]]
+            prog_part_counts = [prog_this_g_pos.shape[0],
+                                prog_this_dm_pos.shape[0], 0, 0,
+                                prog_this_s_pos.shape[0],
+                                prog_this_bh_pos.shape[0]]
+            npart = (this_bh_pos.shape[0] + this_s_pos.shape[0]
+                     + this_dm_pos.shape[0] + this_g_pos.shape[0])
+            prog_npart = (prog_this_bh_pos.shape[0] + prog_this_s_pos.shape[0]
+                          + prog_this_dm_pos.shape[0] + prog_this_g_pos.shape[0])
+            coords = np.zeros((npart, 3))
+            prog_coords = np.zeros((prog_npart, 3))
+            masses = np.zeros(npart)
+            prog_masses = np.zeros(prog_npart)
+
+            if part_counts[0] > 0:
+                coords[0:part_counts[0], :] = this_g_pos
+            if part_counts[1] > 0:
+                coords[part_counts[0]: part_counts[1], :] = this_dm_pos
             coords = np.concatenate((this_bh_pos, this_s_pos,
                                      this_g_pos, this_dm_pos))
             prog_coords = np.concatenate((prog_this_bh_pos, prog_this_s_pos,
@@ -932,12 +951,16 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                 graph[(g, sg, ind)]["HMRs"].append(
                     hmrs[this_ind] / stellar_data[root_snap]["HMRs"][ind]
                 )
-                graph[(g, sg, ind)]["Masses"].append(mass[this_ind])
+                graph[(g, sg, ind)]["Masses"].append(
+                    mass[this_ind] / stellar_data[root_snap]["mass"][ind]
+                )
             else:
                 graph[(g, sg, ind)]["HMRs"].extend(
                     hmrs[this_ind] / stellar_data[root_snap]["HMRs"][ind]
                 )
-                graph[(g, sg, ind)]["Masses"].extend(mass[this_ind])
+                graph[(g, sg, ind)]["Masses"].extend(
+                    mass[this_ind] / stellar_data[root_snap]["mass"][ind]
+                )
 
             # Get the MEGA ID arrays for both snapshots
             mega_grps = mega_data[reg][snap]["group_number"]
