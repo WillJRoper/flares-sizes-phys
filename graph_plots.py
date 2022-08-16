@@ -1041,7 +1041,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     xlims = (10**8, 10**11.5)
 
     # Define size bins
-    size_bins = np.arange(ylims[0], ylims[1], 0.2)
+    size_bins = np.logspace(ylims[0], ylims[1], 6)
 
     # Get the max size reached in each main branch
     max_size = {}
