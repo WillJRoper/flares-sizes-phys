@@ -953,6 +953,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                 # Get this progenitors index
                 this_ind = np.where(np.logical_and(prog_grps == this_g,
                                                    prog_subgrps == this_sg))[0]
+                print(main_prog, this_ind)
 
                 if this_ind.size == 0:
                     break
