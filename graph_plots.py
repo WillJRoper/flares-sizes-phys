@@ -996,7 +996,8 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
             continue
 
         # Plot the scatter
-        im = ax.plot(graph[key]["Masses"], graph[key]["HMRs"], marker=".")
+        im = ax.plot(graph[key]["Masses"], graph[key]["HMRs"], marker=".",
+                     alpha=0.5)
         i += 1
 
     # Axes labels
@@ -1005,7 +1006,6 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
 
     # Save figure
     mkdir("plots/graph_plot/")
-    fig.savefig("plots/graph_plot/size_mass_evo_%s_%s.png" % (key[0],
-                                                                  key[1]),
-                    bbox_inches="tight")
+    fig.savefig("plots/graph_plot/size_mass_evo_all.png",
+                bbox_inches="tight")
     plt.close(fig)
