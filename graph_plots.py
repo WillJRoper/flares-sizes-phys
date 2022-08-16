@@ -781,7 +781,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
                 + this_dm_pos.shape[0] + this_g_pos.shape[0]
             prog_npart = prog_this_bh_pos.shape[0] + prog_this_s_pos.shape[0] \
                 + prog_this_dm_pos.shape[0] + prog_this_g_pos.shape[0]
-            print("Nparts: %d %d" % prog_npart, npart)
+            print("Nparts: %d %d" % (prog_npart, npart))
             coords = np.zeros((npart, 3))
             prog_coords = np.zeros((prog_npart, 3))
             masses = np.zeros(npart)
