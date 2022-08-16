@@ -859,7 +859,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
         graph[(g, sg, ind)] = {"HMRs": [], "Masses": []}
 
     # Loop over these root galaxies and populate the rest of the graph
-    i += 1
+    i = 0
     for key in graph:
 
         print("Walking %d (%d, %d, %d) of %d" % (i, key[0], key[1],
@@ -882,6 +882,8 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
 
         # Set up looping variables
         this_g, this_sg, this_ind = g, sg, ind
+
+        i += 1
 
         # Loop until we don't have a progenitor to step to
         while snap_ind >= 0:
