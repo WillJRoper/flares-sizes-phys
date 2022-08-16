@@ -1069,7 +1069,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                     labelleft=False, labelright=False)
 
     j = 0
-    while j < ncols - 1:
+    while j < ncols:
         axes[j] = fig.add_subplot(gs[j])
         axes[j].loglog()
         axes[j].set_xlim(xlims)
