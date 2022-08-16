@@ -803,11 +803,12 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
             for pos, ms, ipart in zip(lst_coords, lst_masses,
                                       range(len(prog_part_counts))):
                 if ipart > 0:
-                    low, high = part_counts[ipart - 1], part_counts[ipart]
+                    low = part_counts[ipart - 1]
+                    high = part_counts[ipart - 1] + part_counts[ipart]
                 else:
                     low, high = 0, part_counts[ipart]
                 if part_counts[ipart] > 0:
-                    coords[low: high, :] = pos
+                    coords[low:  high, :] = pos
                     masses[low: high] = ms
 
             # Construct combined prog arrays
@@ -815,7 +816,8 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
                                       range(len(prog_part_counts))):
                 if ipart > 0:
                     low = prog_part_counts[ipart - 1]
-                    high = prog_part_counts[ipart]
+                    high = prog_part_counts[ipart -
+                                            1] + prog_part_counts[ipart]
                 else:
                     low, high = 0, prog_part_counts[ipart]
                 if prog_part_counts[ipart] > 0:
