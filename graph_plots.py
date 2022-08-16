@@ -1078,10 +1078,11 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                     labeltop=False, labelbottom=False,
                     labelleft=False, labelright=False)
 
+    # Create grid bin reference
+    grid = [(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1), (3, 0), (3, 1)]
+
     for k in range(len(size_bins) - 1):
-        j = k % ncols
-        i = k % nrows
-        print(k, i, j)
+        i, j = grid[k]
         axes[i, j] = fig.add_subplot(gs[i, j])
         axes[i, j].loglog()
         axes[i, j].set_xlim(xlims)
@@ -1094,8 +1095,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                                    labelleft=False, labelright=False)
 
     for k in range(len(size_bins) - 1):
-        j = k % ncols
-        i = k % nrows
+        i, j = grid[k]
 
         # Loop over graphs
         ii = 0
