@@ -226,16 +226,10 @@ def weighted_quantile(values, quantiles, sample_weight=None,
 
 def get_reg_data(ii, tag, data_fields, inp='FLARES', length_key="Galaxy,S_Length"):
     num = str(ii)
-    if inp == 'FLARES':
-        if len(num) == 1:
-            num = '0' + num
+    if len(num) == 1:
+        num = '0' + num
 
-        sim = rF"/cosma7/data/dp004/dc-payy1/my_files/flares_pipeline/data/" \
-              rF"FLARES_{num}_sp_info.hdf5"
-
-    else:
-        sim = rF"/cosma7/data/dp004/dc-payy1/my_files/flares_pipeline/data/" \
-              rF"EAGLE_{inp}_sp_info.hdf5"
+    sim = "/cosma7/data/dp004/dc-payy1/my_files/flares_pipeline/data/flares.hdf5"
 
     # Initialise dictionary to store data
     data = {}
@@ -246,7 +240,7 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', length_key="Galaxy,S_Length
 
     with h5py.File(sim, 'r') as hf:
         splt_len_key = length_key.split(",")
-        s_len = hf[tag + "/" + splt_len_key[0]].get(splt_len_key[1])
+        s_len = hf[num][tag + "/" + splt_len_key[0]].get(splt_len_key[1])
         if s_len is not None:
             for f in data_fields:
                 f_splt = f.split(",")
@@ -254,7 +248,7 @@ def get_reg_data(ii, tag, data_fields, inp='FLARES', length_key="Galaxy,S_Length
                 # Extract this dataset
                 if len(f_splt) > 1:
                     key = tag + '/' + f_splt[0]
-                    d = np.array(hf[key].get(f_splt[1]))
+                    d = np.array(hf[num][key].get(f_splt[1]))
 
                     # Apply conversion from cMpc to pkpc
                     if "Coordinates" in f_splt[1] or "COP" in f_splt[1]:
