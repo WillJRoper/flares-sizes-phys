@@ -783,18 +783,36 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
             masses = np.zeros(npart)
             prog_masses = np.zeros(prog_npart)
 
-            if part_counts[0] > 0:
-                coords[0:part_counts[0], :] = this_g_pos
-            if part_counts[1] > 0:
-                coords[part_counts[0]: part_counts[1], :] = this_dm_pos
-            coords = np.concatenate((this_bh_pos, this_s_pos,
-                                     this_g_pos, this_dm_pos))
-            prog_coords = np.concatenate((prog_this_bh_pos, prog_this_s_pos,
-                                          prog_this_g_pos, prog_this_dm_pos))
-            masses = np.concatenate((this_bh_mass, this_s_mass,
-                                     this_g_mass, this_dm_mass))
-            prog_masses = np.concatenate((prog_this_bh_mass, prog_this_s_mass,
-                                          prog_this_g_mass, prog_this_dm_mass))
+            # Create lists of particle type data
+            lst_coords = (this_g_pos, this_dm_pos, [], [],
+                          this_s_pos, this_bh_pos)
+            prog_lst_coords = (prog_this_g_pos, prog_this_dm_pos, [], [],
+                               prog_this_s_pos, prog_this_bh_pos)
+            lst_masses = (this_g_mass, this_dm_mass, [], [],
+                          this_s_mass, this_bh_mass)
+            prog_lst_masses = (prog_this_g_mass, prog_this_dm_mass, [], [],
+                               prog_this_s_mass, prog_this_bh_mass)
+
+            # Construct combined arrays
+            for ipart in range(len(part_counts)):
+                if ipart > 0:
+                    low, high = part_counts[ipart - 1], part_counts[ipart]
+                else:
+                    low, high = 0, part_counts[ipart]
+                if part_counts[ipart] > 0:
+                    coords[low: high, :] = lst_coords[ipart]
+                    masses[low: high] = lst_masses[ipart]
+
+            # Construct combined prog arrays
+            for ipart in range(len(prog_part_counts)):
+                if ipart > 0:
+                    low = prog_part_counts[ipart - 1]
+                    high = prog_part_counts[ipart]
+                else:
+                    low, high = 0, prog_part_counts[ipart]
+                if prog_part_counts[ipart] > 0:
+                    prog_coords[low: high, :] = prog_lst_coords[ipart]
+                    prog_masses[low: high] = prog_lst_masses[ipart]
 
             # Calcualte the binding energy
             ebind = grav(coords, soft, masses, z, G)
