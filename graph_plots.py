@@ -1050,7 +1050,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     max_size = {}
     for key in list(graph.keys()):
         if len(graph[key]["HMRs"]) > 1:
-            max_size[key] = graph[key]["HMRs"][-1]
+            max_size[key] = np.max(graph[key]["HMRs"][-1])
             if max_size[key] > max_hmr:
                 max_hmr = max_size[key]
             if max_size[key] < min_hmr:
