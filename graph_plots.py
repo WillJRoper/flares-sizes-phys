@@ -570,7 +570,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
         reg = "100"
         reg_int = -1
 
-        if snap != snaps[3]:
+        if snap != snaps[1]:
             continue
 
         # Extract galaxy data from the sizes dict
