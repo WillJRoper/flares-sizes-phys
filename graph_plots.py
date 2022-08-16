@@ -981,14 +981,14 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
             # Put this galaxy in the graph
             if snap == root_snap:
                 graph[(g, sg, ind)]["HMRs"].append(
-                    hmrs[this_ind] / stellar_data[root_snap]["HMRs"][ind]
+                    hmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
                 )
                 graph[(g, sg, ind)]["Masses"].append(
                     mass[this_ind]
                 )
             else:
                 graph[(g, sg, ind)]["HMRs"].extend(
-                    hmrs[this_ind] / stellar_data[root_snap]["HMRs"][ind]
+                    hmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
                 )
                 graph[(g, sg, ind)]["Masses"].extend(
                     mass[this_ind]
@@ -1041,7 +1041,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     xlims = (10**8, 10**11.5)
 
     # Define size bins
-    size_bins = np.linspace(ylims[0], ylims[1], 6)
+    size_bins = 10 ** np.linspace(-1, 1.6, 0.4)
 
     # Get the max size reached in each main branch
     max_size = {}
