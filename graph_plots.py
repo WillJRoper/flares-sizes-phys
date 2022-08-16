@@ -794,26 +794,27 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
                                prog_this_s_mass, prog_this_bh_mass)
 
             # Construct combined arrays
-            for ipart in range(len(part_counts)):
+            for pos, ms, ipart in zip(lst_coords, lst_masses,
+                                      range(len(prog_part_counts))):
                 if ipart > 0:
                     low, high = part_counts[ipart - 1], part_counts[ipart]
                 else:
                     low, high = 0, part_counts[ipart]
                 if part_counts[ipart] > 0:
-                    coords[low: high, :] = lst_coords[ipart]
-                    masses[low: high] = lst_masses[ipart]
+                    coords[low: high, :] = pos
+                    masses[low: high] = ms
 
             # Construct combined prog arrays
-            for ipart in range(len(prog_part_counts)):
+            for pos, ms, ipart in zip(prog_lst_coords, prog_lst_masses,
+                                      range(len(prog_part_counts))):
                 if ipart > 0:
                     low = prog_part_counts[ipart - 1]
                     high = prog_part_counts[ipart]
                 else:
                     low, high = 0, prog_part_counts[ipart]
                 if prog_part_counts[ipart] > 0:
-                    print(prog_lst_coords[ipart])
-                    prog_coords[low: high, :] = prog_lst_coords[ipart]
-                    prog_masses[low: high] = prog_lst_masses[ipart]
+                    prog_coords[low: high, :] = pos
+                    prog_masses[low: high] = ms
 
             # Calcualte the binding energy
             ebind = grav(coords, soft, masses, z, G)
@@ -886,6 +887,9 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     root_subgrps = stellar_data[root_snap]["Galaxy,SubGroupNumber"]
     root_regions = stellar_data[root_snap]["regions"]
 
+    # Define redshift norm
+    norm = cm.Normalize(vmin=5, vmax=10)
+
     # Create data dictionary to speed up walking
     mega_data = {}
     for reg_int in np.unique(root_regions):
@@ -927,7 +931,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
         g, sg = root_grps[ind], root_subgrps[ind]
 
         # Make an entry in the dict for it
-        graph[(g, sg, ind)] = {"HMRs": [], "Masses": []}
+        graph[(g, sg, ind)] = {"HMRs": [], "Masses": [], "z": []}
 
     # Loop over these root galaxies and populate the rest of the graph
     i = 0
@@ -958,6 +962,9 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
         # Loop until we don't have a progenitor to step to
         while snap_ind >= 0:
 
+            # Get redshift
+            z = float(snap.split("z")[-1].replace("p", "."))
+
             # Extract galaxy data from the sizes dict
             hmrs = stellar_data[snap]["HMRs"]
             mass = stellar_data[snap]["mass"]
@@ -980,6 +987,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                 graph[(g, sg, ind)]["Masses"].extend(
                     mass[this_ind] / stellar_data[root_snap]["mass"][ind]
                 )
+            graph[(g, sg, ind)]["z"].append(z)
 
             # Get the MEGA ID arrays for both snapshots
             mega_grps = mega_data[reg][snap]["group_number"]
@@ -1042,6 +1050,36 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     # Axes labels
     ax.set_xlabel("$M_{\star z} / M_{\star z=5}$")
     ax.set_ylabel("$R_{z} / R_{z=5}$")
+
+    # Save figure
+    mkdir("plots/graph_plot/")
+    fig.savefig("plots/graph_plot/size_mass_evo_all.png",
+                bbox_inches="tight")
+    plt.close(fig)
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+    ax.loglog()
+
+    # Loop over graphs
+    i = 0
+    for key in graph:
+
+        print("Plotting %d (%d, %d, %d) of %d" % (i, key[0], key[1],
+                                                  key[2], len(graph)), end="\r")
+
+        # Plot the scatter
+        im = ax.scatter(graph[key]["Masses"], graph[key]["HMRs"],
+                        c=graph[key]["z"], cmap="plasma", alpha=0.6)
+        i += 1
+
+    # Axes labels
+    ax.set_xlabel("$M_{\star z} / M_{\star z=5}$")
+    ax.set_ylabel("$R_{z} / R_{z=5}$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$z$")
 
     # Save figure
     mkdir("plots/graph_plot/")
