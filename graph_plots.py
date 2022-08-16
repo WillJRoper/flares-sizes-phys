@@ -1015,16 +1015,13 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
         print("Plotting %d (%d, %d, %d) of %d" % (i, key[0], key[1],
                                                   key[2], len(graph)), end="\r")
 
-        if len(graph[key]["Masses"]) < 6:
-            continue
-
         # Plot the scatter
         im = ax.plot(graph[key]["Masses"], graph[key]["HMRs"], marker=".",
                      alpha=0.5)
         i += 1
 
     # Axes labels
-    ax.set_xlabel("$M_\star / M_\odot$")
+    ax.set_xlabel("$M_{\star z} / M_{\star z=5}$")
     ax.set_ylabel("$R_{z} / R_{z=5}$")
 
     # Save figure
