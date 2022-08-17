@@ -641,7 +641,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
                 prog_master_subgrps = prog_grp["Galaxy"]["SubGroupNumber"][...]
 
                 # Get other data from the master file
-                cops = snap_grp["Galaxy"]["COP"][...]
+                cops = snap_grp["Galaxy"]["COP"][...].T / (1 + z)
                 master_s_length = snap_grp["Galaxy"]["S_Length"][...]
                 master_s_pos = snap_grp["Particle"]["S_Coordinates"][...].T / \
                     (1 + z)
@@ -659,7 +659,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
                 master_bh_pos = snap_grp["Particle"]["BH_Coordinates"][...].T / (
                     1 + z)
                 bh_mass = snap_grp["Particle"]["BH_Mass"][...]
-                prog_cops = prog_grp["Galaxy"]["COP"][...]
+                prog_cops = prog_grp["Galaxy"]["COP"][...].T / (1 + prog_z)
                 prog_master_s_length = prog_grp["Galaxy"]["S_Length"][...]
                 prog_master_s_pos = prog_grp["Particle"]["S_Coordinates"][...].T / (
                     1 + prog_z)
