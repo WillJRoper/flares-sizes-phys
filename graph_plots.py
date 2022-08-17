@@ -896,7 +896,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     root_regions = stellar_data[root_snap]["regions"]
 
     # Define redshift norm
-    norm = cm.Normalize(vmin=5, vmax=10)
+    norm = cm.Normalize(vmin=5, vmax=15)
 
     # Create data dictionary to speed up walking
     mega_data = {}
