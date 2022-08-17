@@ -551,7 +551,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
     hdf_master = h5py.File(master_base, "r")
 
     # Physical constants
-    G = (const.G.to(u.Mpc ** 3 * u.M_sun ** -1 * u.yr ** -2))
+    G = (const.G.to(u.Mpc ** 3 * u.M_sun ** -1 * u.yr ** -2)).value
 
     # Loop over snapshots
     for snap, prog_snap in zip(current_snaps, prog_snaps):
@@ -1050,7 +1050,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     max_size = {}
     for key in list(graph.keys()):
         if len(graph[key]["HMRs"]) > 1:
-            max_size[key] = np.max(graph[key]["HMRs"])
+            max_size[key] = np.max(graph[key]["HMRs"]) - graph[key]["HMRs"][0]
             if max_size[key] > max_hmr:
                 max_hmr = max_size[key]
             if max_size[key] < min_hmr:
@@ -1059,7 +1059,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
             del graph[key]
 
     # Define size bins
-    size_bins = [10**-1.3, 10**-0.5, 10**-0.2, 1.2, 1.6, 2, 2.5, 3, 10]
+    size_bins = np.linspace(-1, 1, 9)
 
     # Define plot grid shape
     nrows = int((len(size_bins) - 1) / 2)
@@ -1139,5 +1139,288 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     # Save figure
     mkdir("plots/graph_plot/")
     fig.savefig("plots/graph_plot/size_mass_evo_all.png",
+                bbox_inches="tight")
+    plt.close(fig)
+
+
+def plot_size_sfr_evo_grid(stellar_data, snaps):
+
+    # Define paths
+    path = "/cosma/home/dp004/dc-rope1/cosma7/FLARES/flares-mergergraph/"
+    halo_base = path + "data/halos/MEGAFLARES_halos_<reg>_<snap>.hdf5"
+    graph_base = path + "data/dgraph/MEGAFLARES_graph_<reg>_<snap>.hdf5"
+
+    # Set up the dictionary to store the graph information
+    graph = {}
+
+    # Define root snapshot
+    root_snap = snaps[-1]
+
+    # Extract galaxy data from the sizes dict for the root snap
+    root_hmrs = stellar_data[root_snap]["HMRs"]
+    root_mass = stellar_data[root_snap]["mass"]
+    root_grps = stellar_data[root_snap]["Galaxy,GroupNumber"]
+    root_subgrps = stellar_data[root_snap]["Galaxy,SubGroupNumber"]
+    root_regions = stellar_data[root_snap]["regions"]
+
+    # Define redshift norm
+    norm = cm.Normalize(vmin=5, vmax=12)
+
+    # Create data dictionary to speed up walking
+    mega_data = {}
+    for reg_int in np.unique(root_regions):
+        if reg_int == 18:
+            continue
+        reg = str(reg_int).zfill(2)
+        mega_data[reg] = {}
+        for snap in snaps:
+            mega_data[reg][snap] = {}
+
+            # Open this new region
+            this_halo_base = halo_base.replace("<reg>", reg)
+            this_halo_base = this_halo_base.replace("<snap>", snap)
+            this_graph_base = graph_base.replace("<reg>", reg)
+            this_graph_base = this_graph_base.replace("<snap>", snap)
+            hdf_halo = h5py.File(this_halo_base, "r")
+            hdf_graph = h5py.File(this_graph_base, "r")
+
+            # Get the MEGA ID arrays for both snapshots
+            mega_data[reg][snap]["group_number"] = hdf_halo["group_number"][...]
+            mega_data[reg][snap]["subgroup_number"] = hdf_halo["subgroup_number"][...]
+
+            # Get the progenitor information
+            mega_data[reg][snap]["ProgHaloIDs"] = hdf_graph["ProgHaloIDs"][...]
+            mega_data[reg][snap]["prog_start_index"] = hdf_graph["prog_start_index"][...]
+
+            hdf_halo.close()
+            hdf_graph.close()
+
+    # Loop over galaxies and populate the root level of the graph with
+    # only the compact galaxies
+    for ind in range(len(root_hmrs)):
+
+        # Skip if the galaxy isn't compact
+        if root_hmrs[ind] > 1:
+            continue
+
+        # Get ID
+        g, sg = root_grps[ind], root_subgrps[ind]
+
+        # Make an entry in the dict for it
+        graph[(g, sg, ind)] = {"HMRs": [], "Masses": [], "z": []}
+
+    # Loop over these root galaxies and populate the rest of the graph
+    i = 0
+    for key in graph:
+
+        print("Walking %d (%d, %d, %d) of %d" % (i, key[0], key[1],
+                                                 key[2], len(graph)), end="\r")
+
+        # Extract IDs
+        g, sg, ind = key
+
+        # Get the region for this galaxy
+        reg_int = root_regions[ind]
+        if reg_int == 18:
+            continue
+        reg = str(reg_int).zfill(2)
+
+        # Set up the snapshot
+        snap_ind = len(snaps) - 1
+        snap = root_snap
+        prog_snap = snaps[snap_ind - 1]
+
+        # Set up looping variables
+        this_g, this_sg, this_ind = g, sg, ind
+
+        i += 1
+
+        # Loop until we don't have a progenitor to step to
+        while snap_ind >= 0:
+
+            # Get redshift
+            z = float(snap.split("z")[-1].replace("p", "."))
+
+            # Extract galaxy data from the sizes dict
+            hmrs = stellar_data[snap]["HMRs"]
+            mass = stellar_data[snap]["mass"]
+            prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"]
+            prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"]
+            prog_regions = stellar_data[prog_snap]["regions"]
+            ages = stellar_data[snap]["Particle,S_Age"] * 1000
+            ini_ms = stellar_data[snap]["Particle,S_MassInitial"] * 10 ** 10
+            begins = stellar_data[snap]["begin"]
+            apps = stellar_data[snap]["Particle/Apertures/Star,30"]
+            lengths = stellar_data[snap]["Galaxy,S_Length"]
+
+            # Create boolean array identifying stars born in the last 100 Myrs
+            # and are within the 30 pkpc aperture
+            age_okinds = ages < 100
+            okinds = np.logical_and(apps, age_okinds)
+
+            # Extract this galaxies data
+            b = begins[this_ind]
+            nstar = lengths[this_ind]
+            this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
+
+            # Put this galaxy in the graph
+            if snap == root_snap:
+                graph[(g, sg, ind)]["HMRs"].append(
+                    hmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
+                )
+                graph[(g, sg, ind)]["Masses"].append(
+                    mass[this_ind]
+                )
+            else:
+                graph[(g, sg, ind)]["HMRs"].extend(
+                    hmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
+                )
+                graph[(g, sg, ind)]["Masses"].extend(
+                    mass[this_ind]
+                )
+            graph[(g, sg, ind)]["ssfr"].append(this_ini_ms / 100 / mass)
+
+            # Get the MEGA ID arrays for both snapshots
+            mega_grps = mega_data[reg][snap]["group_number"]
+            mega_subgrps = mega_data[reg][snap]["subgroup_number"]
+            mega_prog_grps = mega_data[reg][prog_snap]["group_number"]
+            mega_prog_subgrps = mega_data[reg][prog_snap]["subgroup_number"]
+
+            # Get the progenitor information
+            prog_ids = mega_data[reg][snap]["ProgHaloIDs"]
+            start_index = mega_data[reg][snap]["prog_start_index"]
+
+            # Whats the MEGA ID of this galaxy?
+            mega_ind = np.where(np.logical_and(mega_grps == this_g,
+                                               mega_subgrps == this_sg))[0]
+
+            # Get the progenitor
+            start = start_index[mega_ind][0]
+            main_prog = prog_ids[start]
+
+            if start != 2**30:
+
+                # Get this progenitors group and subgroup ID
+                this_g = mega_prog_grps[main_prog]
+                this_sg = mega_prog_subgrps[main_prog]
+
+                # Get this progenitors index
+                this_ind = np.where(
+                    np.logical_and(prog_regions == reg_int,
+                                   np.logical_and(prog_grps == this_g,
+                                                  prog_subgrps == this_sg)))[0]
+
+                if this_ind.size == 0:
+                    break
+
+                # Set snapshots
+                snap_ind -= 1
+                snap = snaps[snap_ind]
+                prog_snap = snaps[snap_ind - 1]
+
+            else:
+                break
+
+    # Set up plot parameters
+    ylims = (10**-1.3, 10**1.3)
+    xlims = (10**8, 10**11.5)
+
+    # Define mins and maxs for binning
+    min_hmr = np.inf
+    max_hmr = 0
+
+    # Get the max size reached in each main branch
+    max_size = {}
+    for key in list(graph.keys()):
+        if len(graph[key]["HMRs"]) > 1:
+            max_size[key] = np.max(graph[key]["HMRs"]) - graph[key]["HMRs"][0]
+            if max_size[key] > max_hmr:
+                max_hmr = max_size[key]
+            if max_size[key] < min_hmr:
+                min_hmr = max_size[key]
+        else:
+            del graph[key]
+
+    # Define size bins
+    size_bins = np.linspace(-1, 1, 9)
+
+    # Define plot grid shape
+    nrows = int((len(size_bins) - 1) / 2)
+    ncols = 2
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5 * ncols + 0.1 * 3.5, 3.5 * nrows))
+    gs = gridspec.GridSpec(nrows=nrows, ncols=ncols + 1,
+                           width_ratios=[20, ] * ncols + [1])
+    gs.update(wspace=0.0, hspace=0.0)
+    axes = np.empty((nrows, ncols), dtype=object)
+    cax = fig.add_subplot(gs[:, -1])
+
+    cax.tick_params(axis="both", top=False, bottom=False,
+                    left=False, right=False,
+                    labeltop=False, labelbottom=False,
+                    labelleft=False, labelright=False)
+
+    # Create grid bin reference
+    grid = [(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1), (3, 0), (3, 1)]
+
+    for k in range(len(size_bins) - 1):
+        i, j = grid[k]
+        axes[i, j] = fig.add_subplot(gs[i, j])
+        axes[i, j].loglog()
+        axes[i, j].set_xlim(xlims)
+        axes[i, j].set_ylim(ylims)
+        if i < nrows - 1:
+            axes[i, j].tick_params(axis='x', top=False, bottom=False,
+                                   labeltop=False, labelbottom=False)
+        if j > 0:
+            axes[i, j].tick_params(axis='y', left=False, right=False,
+                                   labelleft=False, labelright=False)
+
+    for k in range(len(size_bins) - 1):
+        i, j = grid[k]
+
+        # Loop over graphs
+        ii = 0
+        for key in graph:
+
+            print("Plotting %d (%d, %d, %d) of %d" % (ii, key[0], key[1],
+                                                      key[2], len(graph)), end="\r")
+
+            if size_bins[k] <= max_size[key] and size_bins[k + 1] > max_size[key]:
+
+                # Plot the scatter
+                im = axes[i, j].plot(graph[key]["Masses"], graph[key]["HMRs"],
+                                     color="grey", alpha=0.2, zorder=0)
+            ii += 1
+
+        # Loop over graphs
+        ii = 0
+        for key in graph:
+
+            print("Plotting %d (%d, %d, %d) of %d" % (ii, key[0], key[1],
+                                                      key[2], len(graph)), end="\r")
+
+            if size_bins[k] <= max_size[key] and size_bins[k + 1] > max_size[key]:
+
+                # Plot the scatter
+                im = axes[i, j].scatter(graph[key]["Masses"], graph[key]["HMRs"],
+                                        marker=".", edgecolors="none", s=10,
+                                        c=graph[key]["ssfr"], cmap="cividis",
+                                        alpha=0.8, zorder=1, norm=cm.LogNorm())
+            ii += 1
+
+    # Axes labels
+    for ax in axes[:, 0]:
+        ax.set_ylabel("$R_{1/2\star} / [\mathrm{pkpc}]$")
+    for ax in axes[-1, :]:
+        ax.set_xlabel("$M_{\star} / M_{\odot}$")
+
+    cbar = fig.colorbar(im, cax)
+    cbar.set_label("$\mathrm{sSFR} / [\mathrm{Myr}^{-1}]$")
+
+    # Save figure
+    mkdir("plots/graph_plot/")
+    fig.savefig("plots/graph_plot/size_ssfr_evo_all.png",
                 bbox_inches="tight")
     plt.close(fig)
