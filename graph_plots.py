@@ -1259,8 +1259,8 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
             okinds = np.logical_and(apps, age_okinds)
 
             # Extract this galaxies data
-            b = begins[this_ind]
-            nstar = lengths[this_ind]
+            b = begins[this_ind][0]
+            nstar = lengths[this_ind][0]
             this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
 
             # Put this galaxy in the graph
@@ -1427,7 +1427,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
     plt.close(fig)
 
 
-def plot_ssfr_mass_size_change(stellar_data, snaps, plt_type, weight_norm):
+def plot_ssfr_mass_size_change(stellar_data, snaps):
 
     # Define paths
     path = "/cosma/home/dp004/dc-rope1/cosma7/FLARES/flares-mergergraph/"
@@ -1441,12 +1441,10 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, plt_type, weight_norm):
     # Initialise lists for storing results
     tot_hmrs = []
     tot_prog_hmrs = []
-    tot_cont = []
     tot_mass = []
-    w = []
-
-    plt_nprog = []
-    plt_hmr = []
+    tot_ssfr = []
+    no_prog_mass = []
+    no_prog_ssfr = []
 
     # Physical constants
     G = (const.G.to(u.Mpc ** 3 * u.M_sun ** -1 * u.yr ** -2))
@@ -1465,37 +1463,9 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, plt_type, weight_norm):
         else:
             soft = 0.001802390 / (0.6777 * (1 + z))
 
-        # Open region 0 initially
-        reg = "00"
-        print(reg)
-        reg_int = 0
-        this_halo_base = halo_base.replace("<reg>", reg)
-        this_halo_base = this_halo_base.replace("<snap>", snap)
-        this_graph_base = graph_base.replace("<reg>", reg)
-        this_graph_base = this_graph_base.replace("<snap>", snap)
-        this_prog_base = halo_base.replace("<reg>", reg)
-        this_prog_base = this_prog_base.replace("<snap>", prog_snap)
-        hdf_halo = h5py.File(this_halo_base, "r")
-        hdf_prog = h5py.File(this_prog_base, "r")
-        hdf_graph = h5py.File(this_graph_base, "r")
-
-        # Get the MEGA ID arrays for both snapshots
-        mega_grps = hdf_halo["group_number"][...]
-        mega_subgrps = hdf_halo["subgroup_number"][...]
-        masses = hdf_halo["masses"][...]
-        mega_prog_grps = hdf_prog["group_number"][...]
-        mega_prog_subgrps = hdf_prog["subgroup_number"][...]
-
-        # Get the progenitor information
-        prog_mass_conts = hdf_graph["ProgMassContribution"][...]
-        prog_ids = hdf_graph["ProgHaloIDs"][...]
-        start_index = hdf_graph["prog_start_index"][...]
-        pmasses = hdf_graph["halo_mass"][...]
-        nprogs = hdf_graph["n_progs"][...]
-
-        hdf_halo.close()
-        hdf_prog.close()
-        hdf_graph.close()
+        # Open fake region
+        reg = "100"
+        reg_int = -1
 
         # Extract galaxy data from the sizes dict
         hmrs = stellar_data[snap]["HMRs"]
@@ -1509,6 +1479,17 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, plt_type, weight_norm):
         regions = stellar_data[snap]["regions"]
         ws = stellar_data[snap]["weights"]
         prog_regions = stellar_data[prog_snap]["regions"]
+        ages = stellar_data[snap]["Particle,S_Age"] * 1000
+        ini_ms = stellar_data[snap]["Particle,S_MassInitial"] * 10 ** 10
+        begins = stellar_data[snap]["begin"]
+        apps = stellar_data[snap]["Particle/Apertures/Star,30"]
+        lengths = stellar_data[snap]["Galaxy,S_Length"]
+        ms = stellar_data[snap]["Particle,S_Mass"]
+
+        # Create boolean array identifying stars born in the last 100 Myrs
+        # and are within the 30 pkpc aperture
+        age_okinds = ages < 100
+        okinds = np.logical_and(apps, age_okinds)
 
         # Loop over galaxies
         for ind in range(len(hmrs)):
@@ -1538,20 +1519,26 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, plt_type, weight_norm):
                 # Get the MEGA ID arrays for both snapshots
                 mega_grps = hdf_halo["group_number"][...]
                 mega_subgrps = hdf_halo["subgroup_number"][...]
-                masses = hdf_halo["masses"][...]
                 mega_prog_grps = hdf_prog["group_number"][...]
                 mega_prog_subgrps = hdf_prog["subgroup_number"][...]
 
                 # Get the progenitor information
-                prog_mass_conts = hdf_graph["ProgMassContribution"][...]
                 prog_ids = hdf_graph["ProgHaloIDs"][...]
                 start_index = hdf_graph["prog_start_index"][...]
-                pmasses = hdf_graph["halo_mass"][...]
                 nprogs = hdf_graph["n_progs"][...]
 
                 hdf_halo.close()
                 hdf_prog.close()
                 hdf_graph.close()
+
+            # Extract this galaxies data
+            b = begins[ind]
+            nstar = lengths[ind]
+            app = apps[b: b + nstar]
+            this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
+            gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
+
+            ssfr = this_ini_ms / 100 / gal_m
 
             # Extract this galaxies information
             hmr = hmrs[ind]
@@ -1565,11 +1552,10 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, plt_type, weight_norm):
             start = start_index[mega_ind][0]
             stride = nprogs[mega_ind][0]
             main_prog = prog_ids[start]
-            star_m = pmasses[mega_ind, 4] * 10 ** 10
 
             if stride == 0:
-                plt_nprog.append(stride)
-                plt_hmr.append(hmr)
+                no_prog_ssfr.append(ssfr)
+                no_prog_mass.append(gal_m)
                 continue
 
             # Get this progenitors group and subgroup ID
@@ -1585,35 +1571,52 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, plt_type, weight_norm):
             prog_hmr = prog_hmrs[flares_ind]
 
             if prog_hmr.size == 0:
+                no_prog_ssfr.append(ssfr)
+                no_prog_mass.append(gal_m)
                 continue
 
-            # Get the contribution information
-            prog_cont = prog_mass_conts[start: start + stride] * 10 ** 10
-            mass = masses[mega_ind] * 10 ** 10
-
-            # Calculate the mass contribution as a fraction of current mass
-            star_prog_cont = np.sum(prog_cont[:, 4])
-            frac_prog_cont = star_prog_cont / star_m
-
-            tot_prog_cont = np.sum(prog_cont, axis=1)
-            frac_tot_prog_cont = tot_prog_cont / mass
-
-            plt_nprog.append(tot_prog_cont[frac_tot_prog_cont > 0.1].size)
-            plt_hmr.append(hmr)
-
             # Include these results for plotting
-            tot_cont.extend(frac_prog_cont)
             tot_hmrs.append(hmr)
             tot_prog_hmrs.extend(prog_hmr)
-            tot_mass.append(star_m)
-            w.append(ws[ind])
+            tot_mass.append(gal_m)
+            tot_ssfr.append(ssfr)
 
     # Convert to arrays
-    print(len(tot_hmrs))
-    print(len(tot_cont))
-    print(len(tot_prog_hmrs))
     tot_hmrs = np.array(tot_hmrs)
     tot_prog_hmrs = np.array(tot_prog_hmrs)
-    tot_cont = np.array(tot_cont)
+    tot_ssfr = np.array(tot_ssfr)
     tot_mass = np.array(tot_mass)
-    w = np.array(w)
+    no_prog_ssfr = np.array(no_prog_ssfr)
+    no_prog_mass = np.array(no_prog_mass)
+
+    # Define delta
+    delta_hmr = tot_hmrs - tot_prog_hmrs
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+
+    # Plot the scatter
+    im = ax.hexbin(tot_mass, tot_ssfr,  gridsize=30,
+                   mincnt=np.min(delta_hmr) - (0.1 * np.min(delta_hmr)),
+                   C=delta_hmr,
+                   reduce_C_function=np.mean,
+                   linewidths=0.2, cmap="plasma")
+    ax.scatter(no_prog_mass, no_prog_ssfr,
+               marker="s", color="k", label="Recent")
+
+    # Axes labels
+    ax.set_xlabel("$M_{\star} / M_\odot$")
+    ax.set_ylabel("$\mathrm{sSFR} / [\mathrm{Myr}^{-1}]$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
+
+    # Draw legend
+    ax.legend()
+
+    # Save figure
+    mkdir("plots/graph/")
+    fig.savefig("plots/graph/delta_hmr_ssfr_mass.png",
+                bbox_inches="tight")
+    plt.close(fig)
