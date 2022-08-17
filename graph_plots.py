@@ -1252,6 +1252,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
             begins = stellar_data[snap]["begin"]
             apps = stellar_data[snap]["Particle/Apertures/Star,30"]
             lengths = stellar_data[snap]["Galaxy,S_Length"]
+            ms = stellar_data[snap]["Particle,S_Mass"]
 
             # Create boolean array identifying stars born in the last 100 Myrs
             # and are within the 30 pkpc aperture
@@ -1265,7 +1266,8 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
                 b = begins[this_ind]
                 nstar = lengths[this_ind]
                 this_ini_ms = np.sum(
-                    ini_ms[b: b + nstar][okinds[b: b + nstar]])
+                    ini_ms[b: b + nstar][okinds[b: b + nstar]]) * 10 ** 10
+                gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
 
                 graph[(g, sg, ind)]["HMRs"].append(
                     hmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
@@ -1274,14 +1276,15 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
                     mass[this_ind]
                 )
                 graph[(g, sg, ind)]["ssfr"].append(this_ini_ms / 0.1
-                                                   / mass[this_ind])
+                                                   / gal_m)
             else:
 
                 # Extract this galaxies data
                 b = begins[this_ind][0]
                 nstar = lengths[this_ind][0]
                 this_ini_ms = np.sum(
-                    ini_ms[b: b + nstar][okinds[b: b + nstar]])
+                    ini_ms[b: b + nstar][okinds[b: b + nstar]]) * 10 ** 10
+                gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
 
                 graph[(g, sg, ind)]["HMRs"].extend(
                     hmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
@@ -1290,7 +1293,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
                     mass[this_ind]
                 )
                 graph[(g, sg, ind)]["ssfr"].extend(this_ini_ms / 0.1
-                                                   / mass[this_ind])
+                                                   / gal_m)
 
             # Get the MEGA ID arrays for both snapshots
             mega_grps = mega_data[reg][snap]["group_number"]
@@ -1717,10 +1720,6 @@ def plot_size_feedback(stellar_data, snaps, weight_norm):
         z = float(snap.split("z")[-1].replace("p", "."))
         prog_z = float(prog_snap.split("z")[-1].replace("p", "."))
 
-        # Define softening length
-        soft = 0.001802390 / (0.6777 * (1 + z))
-        prog_soft = 0.001802390 / (0.6777 * (1 + prog_z))
-
         # Set fake region IDs
         reg = "100"
         reg_int = -1
@@ -1873,8 +1872,8 @@ def plot_size_feedback(stellar_data, snaps, weight_norm):
     prog_feedback_energy = np.array(prog_feedback_energy)
     w = np.array(w)
 
-    # Compute delta
-    delta_hmr = tot_hmrs - tot_prog_hmrs
+    # Define deltas
+    delta_hmr = tot_hmrs / tot_prog_hmrs
     delta_fb = feedback_energy / prog_feedback_energy
 
     # Set up plot
@@ -1882,15 +1881,13 @@ def plot_size_feedback(stellar_data, snaps, weight_norm):
     ax = fig.add_subplot(111)
 
     # Plot the scatter
-    im = ax.scatter(delta_fb, delta_hmr, c=w, norm=weight_norm,
+    im = ax.scatter(delta_fb, delta_hmr,
                     cmap="plasma", marker=".")
 
     # Axes labels
-    ax.set_xlabel("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
-    ax.set_ylabel("$E_\mathrm{bind}^\mathrm{B} / E_\mathrm{bind}^\mathrm{A}$")
-
-    cbar = fig.colorbar(im)
-    cbar.set_label("$\sum w_i$")
+    ax.set_xlabel(
+        "$E_{\star\mathrm{fb}}^\mathrm{B} / E_{\star\mathrm{fb}}^\mathrm{A}$")
+    ax.set_ylabel("$R_{1/2}^{B} / R_{1/2}^{A}$")
 
     # Save figure
     mkdir("plots/graph/")
