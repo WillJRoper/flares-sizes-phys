@@ -680,7 +680,6 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
 
             # Extract this galaxies information
             hmr = hmrs[ind]
-            cop = cops[ind]
             g, sg = grps[ind], subgrps[ind]
 
             # Whats the MEGA ID of this galaxy?
@@ -736,6 +735,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
             g_len = master_g_length[master_ind]
             dm_len = master_dm_length[master_ind]
             bh_len = master_bh_length[master_ind]
+            cop = cops[master_ind]
 
             prog_s_start = np.sum(prog_master_s_length[:prog_master_ind])
             prog_g_start = np.sum(prog_master_g_length[:prog_master_ind])
