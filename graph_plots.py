@@ -1258,11 +1258,6 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
             age_okinds = ages < 100
             okinds = np.logical_and(apps, age_okinds)
 
-            # Extract this galaxies data
-            b = begins[this_ind][0]
-            nstar = lengths[this_ind][0]
-            this_ini_ms = np.sum(ini_ms[b: b + nstar][okinds[b: b + nstar]])
-
             # Put this galaxy in the graph
             if snap == root_snap:
 
