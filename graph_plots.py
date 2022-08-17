@@ -13,6 +13,7 @@ import astropy.units as u
 import astropy.constants as const
 import eagle_IO.eagle_IO as eagle_io
 from utils import grav
+import cmasher as cmr
 
 
 def plot_size_change(stellar_data, snaps, plt_type, weight_norm):
@@ -1140,7 +1141,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                 # Plot the scatter
                 im = axes[i, j].scatter(graph[key]["Masses"], graph[key]["HMRs"],
                                         marker=".", edgecolors="none", s=20,
-                                        c=graph[key]["z"], cmap="cividis",
+                                        c=graph[key]["z"], cmap="cmr.chroma",
                                         alpha=0.8, zorder=1, norm=norm)
             ii += 1
 
@@ -1440,7 +1441,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
                 # Plot the scatter
                 im = axes[i, j].scatter(graph[key]["Masses"], graph[key]["HMRs"],
                                         marker=".", edgecolors="none", s=20,
-                                        c=graph[key]["ssfr"], cmap="cividis",
+                                        c=graph[key]["ssfr"], cmap="cmr.chroma",
                                         alpha=0.8, zorder=1, norm=cm.LogNorm(vmin=10**-2.1, vmax=10**1.1))
             ii += 1
 
