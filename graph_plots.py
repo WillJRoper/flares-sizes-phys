@@ -1247,15 +1247,15 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
             prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"]
             prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"]
             prog_regions = stellar_data[prog_snap]["regions"]
-            ages = stellar_data[snap]["Particle,S_Age"] * 1000
-            ini_ms = stellar_data[snap]["Particle,S_MassInitial"] * 10 ** 10
+            ages = stellar_data[snap]["Particle,S_Age"]
+            ini_ms = stellar_data[snap]["Particle,S_MassInitial"]
             begins = stellar_data[snap]["begin"]
             apps = stellar_data[snap]["Particle/Apertures/Star,30"]
             lengths = stellar_data[snap]["Galaxy,S_Length"]
 
             # Create boolean array identifying stars born in the last 100 Myrs
             # and are within the 30 pkpc aperture
-            age_okinds = ages < 100
+            age_okinds = ages < 0.1
             okinds = np.logical_and(apps, age_okinds)
 
             # Put this galaxy in the graph
@@ -1265,7 +1265,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
                 b = begins[this_ind]
                 nstar = lengths[this_ind]
                 this_ini_ms = np.sum(
-                    ini_ms[b: b + nstar][okinds[b: b + nstar]])
+                    ini_ms[b: b + nstar][okinds[b: b + nstar]]) * 10 ** 10
 
                 graph[(g, sg, ind)]["HMRs"].append(
                     hmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
@@ -1273,7 +1273,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
                 graph[(g, sg, ind)]["Masses"].append(
                     mass[this_ind]
                 )
-                graph[(g, sg, ind)]["ssfr"].append(this_ini_ms / 100
+                graph[(g, sg, ind)]["ssfr"].append(this_ini_ms / 0.1
                                                    / mass[this_ind])
             else:
 
@@ -1281,7 +1281,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
                 b = begins[this_ind][0]
                 nstar = lengths[this_ind][0]
                 this_ini_ms = np.sum(
-                    ini_ms[b: b + nstar][okinds[b: b + nstar]])
+                    ini_ms[b: b + nstar][okinds[b: b + nstar]]) * 10 ** 10
 
                 graph[(g, sg, ind)]["HMRs"].extend(
                     hmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
@@ -1289,7 +1289,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
                 graph[(g, sg, ind)]["Masses"].extend(
                     mass[this_ind]
                 )
-                graph[(g, sg, ind)]["ssfr"].extend(this_ini_ms / 100
+                graph[(g, sg, ind)]["ssfr"].extend(this_ini_ms / 0.1
                                                    / mass[this_ind])
 
             # Get the MEGA ID arrays for both snapshots
@@ -1345,7 +1345,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
     max_size = {}
     for key in list(graph.keys()):
         if len(graph[key]["HMRs"]) > 1:
-            max_size[key] = np.max(graph[key]["HMRs"]) - graph[key]["HMRs"][0]
+            max_size[key] = graph[key]["HMRs"][0] - np.max(graph[key]["HMRs"])
             if max_size[key] > max_hmr:
                 max_hmr = max_size[key]
             if max_size[key] < min_hmr:
@@ -1354,7 +1354,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
             del graph[key]
 
     # Define size bins
-    size_bins = np.linspace(-1, 1, 9)
+    size_bins = np.linspace(-1.5, 0.2, 9)
 
     # Define plot grid shape
     nrows = int((len(size_bins) - 1) / 2)
@@ -1429,7 +1429,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
         ax.set_xlabel("$M_{\star} / M_{\odot}$")
 
     cbar = fig.colorbar(im, cax)
-    cbar.set_label("$\mathrm{sSFR} / [\mathrm{Myr}^{-1}]$")
+    cbar.set_label("$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
 
     # Save figure
     mkdir("plots/graph_plot/")
