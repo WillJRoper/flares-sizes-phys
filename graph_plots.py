@@ -1311,7 +1311,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
                 graph[(g, sg, ind)]["Masses"].extend(
                     mass[this_ind]
                 )
-                graph[(g, sg, ind)]["ssfr"].extend(this_ini_ms / 0.1
+                graph[(g, sg, ind)]["ssfr"].append(this_ini_ms / 0.1
                                                    / gal_m)
 
             # Get the MEGA ID arrays for both snapshots
