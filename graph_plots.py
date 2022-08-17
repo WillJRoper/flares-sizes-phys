@@ -1582,12 +1582,14 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
             tot_ssfr.append(ssfr)
 
     # Convert to arrays
+    print(no_prog_ssfr)
     tot_hmrs = np.array(tot_hmrs)
     tot_prog_hmrs = np.array(tot_prog_hmrs)
     tot_ssfr = np.array(tot_ssfr)
     tot_mass = np.array(tot_mass)
-    no_prog_ssfr = np.array(no_prog_ssfr)
-    no_prog_mass = np.array(no_prog_mass)
+    if len(no_prog_ssfr) > 0:
+        no_prog_ssfr = np.array(no_prog_ssfr)
+        no_prog_mass = np.array(no_prog_mass)
 
     # Define delta
     delta_hmr = tot_hmrs - tot_prog_hmrs
@@ -1602,8 +1604,9 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
                    C=delta_hmr,
                    reduce_C_function=np.mean,
                    linewidths=0.2, cmap="plasma")
-    ax.scatter(no_prog_mass, no_prog_ssfr,
-               marker="s", color="k", label="Recent")
+    if len(no_prog_ssfr) > 0:
+        ax.scatter(no_prog_mass, no_prog_ssfr,
+                   marker="s", color="k", label="Recent")
 
     # Axes labels
     ax.set_xlabel("$M_{\star} / M_\odot$")
@@ -1613,7 +1616,8 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
     cbar.set_label("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
 
     # Draw legend
-    ax.legend()
+    if len(no_prog_ssfr) > 0:
+        ax.legend()
 
     # Save figure
     mkdir("plots/graph/")
