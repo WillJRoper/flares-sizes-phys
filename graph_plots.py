@@ -1616,10 +1616,10 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
     okinds = np.logical_and(tot_mass > 0, tot_ssfr)
 
     # Plot the scatter
-    im = ax.hexbin(tot_mass[okinds], tot_ssfr[okinds],  gridsize=50,
-                   mincnt=np.min(delta_hmr[okinds]) -
-                   (0.1 * np.min(delta_hmr[okinds])),
-                   C=delta_hmr[okinds], xscale="log", yscale="log",
+    im = ax.hexbin(delta_hmr[okinds], tot_ssfr[okinds],  gridsize=50,
+                   mincnt=np.min(tot_mass[okinds]) -
+                   (0.1 * np.min(tot_mass[okinds])),
+                   C=tot_mass[okinds], xscale="log", yscale="log",
                    reduce_C_function=np.mean, norm=cm.LogNorm(),
                    linewidths=0.2, cmap="plasma")
     # if len(no_prog_ssfr) > 0:
@@ -1628,11 +1628,11 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
     #                marker="s", color="k", label="Recent")
 
     # Axes labels
-    ax.set_xlabel("$M_{\star} / M_\odot$")
+    ax.set_xlabel("$R_{1/2}^{B} / R_{1/2}^{A}$")
     ax.set_ylabel("$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
 
     cbar = fig.colorbar(im)
-    cbar.set_label("$R_{1/2}^{B} / R_{1/2}^{A}$")
+    cbar.set_label("$M_{\star} / M_\odot$")
 
     # Draw legend
     if len(no_prog_ssfr) > 0:
