@@ -1898,6 +1898,7 @@ def plot_size_feedback(stellar_data, snaps, weight_norm, plt_type):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
+    ax.loglog()
 
     # Plot the scatter
     im = ax.scatter(delta_fb, delta_hmr,
