@@ -1609,10 +1609,10 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
                    C=delta_hmr[okinds], xscale="log", yscale="log",
                    reduce_C_function=np.mean,
                    linewidths=0.2, cmap="plasma")
-    if len(no_prog_ssfr) > 0:
-        okinds = np.logical_and(no_prog_mass > 0, no_prog_ssfr)
-        ax.scatter(no_prog_mass[okinds], no_prog_ssfr[okinds],
-                   marker="s", color="k", label="Recent")
+    # if len(no_prog_ssfr) > 0:
+    #     okinds = np.logical_and(no_prog_mass > 0, no_prog_ssfr)
+    #     ax.scatter(no_prog_mass[okinds], no_prog_ssfr[okinds],
+    #                marker="s", color="k", label="Recent")
 
     # Axes labels
     ax.set_xlabel("$M_{\star} / M_\odot$")
