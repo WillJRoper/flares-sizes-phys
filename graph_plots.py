@@ -1207,7 +1207,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
         g, sg = root_grps[ind], root_subgrps[ind]
 
         # Make an entry in the dict for it
-        graph[(g, sg, ind)] = {"HMRs": [], "Masses": [], "z": []}
+        graph[(g, sg, ind)] = {"HMRs": [], "Masses": [], "ssfr": []}
 
     # Loop over these root galaxies and populate the rest of the graph
     i = 0
