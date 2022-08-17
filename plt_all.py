@@ -109,7 +109,7 @@ print("Got all data")
 # print("Plotted SFR profiles")
 
 # PLot graph plots
-plot_ssfr_mass_size_change(stellar_data, flares_snaps)
+plot_ssfr_mass_size_change(data["stellar"], flares_snaps)
 plot_size_sfr_evo_grid(data["stellar"], flares_snaps)
 plot_size_mass_evo_grid(data["stellar"], flares_snaps)
 plot_size_change_binding(data["stellar"], flares_snaps, weight_norm)
