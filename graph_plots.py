@@ -1582,7 +1582,6 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
             tot_ssfr.append(ssfr)
 
     # Convert to arrays
-    print(no_prog_ssfr)
     tot_hmrs = np.array(tot_hmrs)
     tot_prog_hmrs = np.array(tot_prog_hmrs)
     tot_ssfr = np.array(tot_ssfr)
@@ -1597,11 +1596,12 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
+    ax.loglog()
 
     # Plot the scatter
     im = ax.hexbin(tot_mass, tot_ssfr,  gridsize=30,
                    mincnt=np.min(delta_hmr) - (0.1 * np.min(delta_hmr)),
-                   C=delta_hmr,
+                   C=delta_hmr, xscale="log", yscale="log",
                    reduce_C_function=np.mean,
                    linewidths=0.2, cmap="plasma")
     if len(no_prog_ssfr) > 0:
