@@ -1620,7 +1620,7 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
                    mincnt=np.min(delta_hmr[okinds]) -
                    (0.1 * np.min(delta_hmr[okinds])),
                    C=delta_hmr[okinds], xscale="log", yscale="log",
-                   reduce_C_function=np.mean,
+                   reduce_C_function=np.mean, norm=cm.LogNorm(),
                    linewidths=0.2, cmap="plasma")
     # if len(no_prog_ssfr) > 0:
     #     okinds = np.logical_and(no_prog_mass > 0, no_prog_ssfr)
