@@ -1261,7 +1261,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
             # Extract this galaxies data
             b = begins[this_ind][0]
             nstar = lengths[this_ind][0]
-            this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
+            this_ini_ms = np.sum(ini_ms[b: b + nstar][okinds[b: b + nstar]])
 
             # Put this galaxy in the graph
             if snap == root_snap:
@@ -1535,7 +1535,7 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
             b = begins[ind]
             nstar = lengths[ind]
             app = apps[b: b + nstar]
-            this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
+            this_ini_ms = np.sum(ini_ms[b: b + nstar][okinds[b: b + nstar]])
             gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
 
             ssfr = this_ini_ms / 100 / gal_m
