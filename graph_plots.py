@@ -1697,7 +1697,7 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
     plt.close(fig)
 
 
-def plot_size_feedback(stellar_data, snaps, weight_norm, plt_type):
+def plot_size_feedback(stellar_data, other_data, snaps, weight_norm, plt_type):
 
     # Get the dark matter mass
     hdf = h5py.File("/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/G-EAGLE_00/"
@@ -1745,6 +1745,7 @@ def plot_size_feedback(stellar_data, snaps, weight_norm, plt_type):
 
         # Extract galaxy data from the sizes dict
         hmrs = stellar_data[snap]["HMRs"]
+        cuton_hmrs = other_data[snap]["HMRs"]
         print("There are %d galaxies" % len(hmrs))
         print("There are %d compact galaxies" % len(hmrs[hmrs < 1]))
         prog_hmrs = stellar_data[prog_snap]["HMRs"]
@@ -1760,7 +1761,7 @@ def plot_size_feedback(stellar_data, snaps, weight_norm, plt_type):
         for ind in range(len(hmrs)):
 
             # Skip this galaxy if it is not compact
-            if hmrs[ind] > 1:
+            if cuton_hmrs[ind] > 1:
                 continue
 
             # Get the region for this galaxy
