@@ -1419,7 +1419,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
                 im = axes[i, j].scatter(graph[key]["Masses"], graph[key]["HMRs"],
                                         marker=".", edgecolors="none", s=10,
                                         c=graph[key]["ssfr"], cmap="cividis",
-                                        alpha=0.8, zorder=1, norm=cm.LogNorm())
+                                        alpha=0.8, zorder=1, norm=cm.LogNorm(vmin=10**-2.1, vmax=10**1.1))
             ii += 1
 
     # Axes labels
@@ -1636,13 +1636,41 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
     cbar = fig.colorbar(im)
     cbar.set_label("$M_{\star} / M_\odot$")
 
-    # Draw legend
-    if len(no_prog_ssfr) > 0:
-        ax.legend()
+    # # Draw legend
+    # if len(no_prog_ssfr) > 0:
+    #     ax.legend()
 
     # Save figure
     mkdir("plots/graph/")
     fig.savefig("plots/graph/delta_hmr_ssfr_mass.png",
+                bbox_inches="tight")
+    plt.close(fig)
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+    ax.loglog()
+
+    okinds = np.logical_and(tot_mass > 0, tot_ssfr > 0)
+    okinds = np.logical_and(okinds, tot_prog_hmrs > 1)
+
+    # Plot the scatter
+    im = ax.hexbin(delta_hmr[okinds], tot_ssfr[okinds],  gridsize=50,
+                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                   C=w[okinds], xscale="log", yscale="log",
+                   reduce_C_function=np.sum, norm=weight_norm,
+                   linewidths=0.2, cmap="plasma")
+
+    # Axes labels
+    ax.set_xlabel("$R_{1/2}^{B} / R_{1/2}^{A}$")
+    ax.set_ylabel("$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$M_{\star} / M_\odot$")
+
+    # Save figure
+    mkdir("plots/graph/")
+    fig.savefig("plots/graph/delta_hmr_ssfr_mass_subset.png",
                 bbox_inches="tight")
     plt.close(fig)
 
