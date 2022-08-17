@@ -1901,13 +1901,19 @@ def plot_size_feedback(stellar_data, snaps, weight_norm, plt_type):
     ax.loglog()
 
     # Plot the scatter
-    im = ax.scatter(delta_fb, delta_hmr,
-                    cmap="plasma", marker=".")
+    im = ax.hexbin(delta_fb, delta_hmr, gridsize=50,
+                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                   C=w, xscale="log", yscale="log",
+                   reduce_C_function=np.sum, norm=weight_norm,
+                   linewidths=0.2, cmap="plasma")
 
     # Axes labels
     ax.set_xlabel(
         "$E_{\star\mathrm{fb}}^\mathrm{B} / E_{\star\mathrm{fb}}^\mathrm{A}$")
     ax.set_ylabel("$R_{1/2}^{B} / R_{1/2}^{A}$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$\sum w_i$")
 
     # Save figure
     mkdir("plots/graph/")
