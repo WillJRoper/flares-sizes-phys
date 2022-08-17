@@ -1613,14 +1613,15 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
     ax = fig.add_subplot(111)
     ax.loglog()
 
-    okinds = np.logical_and(tot_mass > 0, tot_ssfr)
+    okinds = np.logical_and(tot_mass > 0, tot_ssfr > 0)
 
     # Plot the scatter
     im = ax.hexbin(delta_hmr[okinds], tot_ssfr[okinds],  gridsize=50,
                    mincnt=np.min(tot_mass[okinds]) -
                    (0.1 * np.min(tot_mass[okinds])),
                    C=tot_mass[okinds], xscale="log", yscale="log",
-                   reduce_C_function=np.mean, norm=cm.LogNorm(),
+                   reduce_C_function=np.mean, norm=cm.LogNorm(
+                       vmin=10**8, vmax=10**11.3),
                    linewidths=0.2, cmap="plasma")
     # if len(no_prog_ssfr) > 0:
     #     okinds = np.logical_and(no_prog_mass > 0, no_prog_ssfr)
