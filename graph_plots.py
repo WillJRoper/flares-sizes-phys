@@ -1505,6 +1505,10 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
         # Loop over galaxies
         for ind in range(len(hmrs)):
 
+            # Skip if the galaxy isn't compact
+            if hmrs[ind] > 1:
+                continue
+
             # Get the region for this galaxy
             reg_int = regions[ind]
             if reg_int == 18:
