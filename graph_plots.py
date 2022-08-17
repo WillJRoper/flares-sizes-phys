@@ -826,6 +826,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
 
             # Calcualte the binding energy
             ebind = grav(coords, soft, masses, z, G)
+            print(ebind)
             prog_ebind = grav(prog_coords, prog_soft, prog_masses, prog_z, G)
 
             # Include these results for plotting
@@ -834,8 +835,8 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
             feedback_energy.append(np.sum(1.74 * 10 ** 49 * this_ini_ms))
             prog_feedback_energy.append(np.sum(1.74 * 10 ** 49 *
                                                prog_this_ini_ms))
-            binding_energy.append(ebind)
-            prog_binding_energy.append(prog_ebind)
+            binding_energy.append(ebind.value)
+            prog_binding_energy.append(prog_ebind.value)
             w.append(ws[ind])
 
     hdf_master.close()
@@ -896,7 +897,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     root_regions = stellar_data[root_snap]["regions"]
 
     # Define redshift norm
-    norm = cm.Normalize(vmin=5, vmax=15)
+    norm = cm.Normalize(vmin=5, vmax=12)
 
     # Create data dictionary to speed up walking
     mega_data = {}
@@ -1123,7 +1124,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                 # Plot the scatter
                 im = axes[i, j].scatter(graph[key]["Masses"], graph[key]["HMRs"],
                                         marker=".", edgecolors="none", s=10,
-                                        c=graph[key]["z"], cmap="plasma",
+                                        c=graph[key]["z"], cmap="cividis",
                                         alpha=0.8, zorder=1, norm=norm)
             ii += 1
 
