@@ -1553,7 +1553,7 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
             this_ini_ms = np.sum(ini_ms[b: b + nstar][okinds[b: b + nstar]])
             gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
 
-            ssfr = this_ini_ms / 100 / gal_m
+            ssfr = this_ini_ms / 0.1 / gal_m
 
             # Extract this galaxies information
             hmr = hmrs[ind]
@@ -1606,7 +1606,7 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
         no_prog_mass = np.array(no_prog_mass)
 
     # Define delta
-    delta_hmr = tot_hmrs - tot_prog_hmrs
+    delta_hmr = tot_hmrs / tot_prog_hmrs
 
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
@@ -1629,10 +1629,10 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
 
     # Axes labels
     ax.set_xlabel("$M_{\star} / M_\odot$")
-    ax.set_ylabel("$\mathrm{sSFR} / [\mathrm{Myr}^{-1}]$")
+    ax.set_ylabel("$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
 
     cbar = fig.colorbar(im)
-    cbar.set_label("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
+    cbar.set_label("$R_{1/2}^{B} / R_{1/2}^{A}$")
 
     # Draw legend
     if len(no_prog_ssfr) > 0:
