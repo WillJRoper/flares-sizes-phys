@@ -1438,7 +1438,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
     plt.close(fig)
 
 
-def plot_ssfr_mass_size_change(stellar_data, snaps):
+def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
 
     # Define paths
     path = "/cosma/home/dp004/dc-rope1/cosma7/FLARES/flares-mergergraph/"
@@ -1456,6 +1456,7 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
     tot_ssfr = []
     no_prog_mass = []
     no_prog_ssfr = []
+    w = []
 
     # Physical constants
     G = (const.G.to(u.Mpc ** 3 * u.M_sun ** -1 * u.yr ** -2))
@@ -1595,12 +1596,14 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
             tot_prog_hmrs.extend(prog_hmr)
             tot_mass.append(gal_m)
             tot_ssfr.append(ssfr)
+            w.append(ws[ind])
 
     # Convert to arrays
     tot_hmrs = np.array(tot_hmrs)
     tot_prog_hmrs = np.array(tot_prog_hmrs)
     tot_ssfr = np.array(tot_ssfr)
     tot_mass = np.array(tot_mass)
+    w = np.array(w)
     if len(no_prog_ssfr) > 0:
         no_prog_ssfr = np.array(no_prog_ssfr)
         no_prog_mass = np.array(no_prog_mass)
@@ -1617,13 +1620,14 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
 
     # Plot the scatter
     im = ax.hexbin(delta_hmr[okinds], tot_ssfr[okinds],  gridsize=50,
-                   mincnt=0.1, xscale="log", yscale="log",
-                   reduce_C_function=np.mean, norm=cm.LogNorm(),
+                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                   C=w[okinds], xscale="log", yscale="log",
+                   reduce_C_function=np.sum, norm=weight_norm,
                    linewidths=0.2, cmap="plasma")
-    # if len(no_prog_ssfr) > 0:
-    #     okinds = np.logical_and(no_prog_mass > 0, no_prog_ssfr)
-    #     ax.scatter(no_prog_mass[okinds], no_prog_ssfr[okinds],
-    #                marker="s", color="k", label="Recent")
+    if len(no_prog_ssfr) > 0:
+        okinds = np.logical_and(no_prog_mass > 0, no_prog_ssfr)
+        ax.scatter(delta_hmr[okinds], tot_ssfr[okinds], s=2,
+                   marker="s", color="k", label="Recent")
 
     # Axes labels
     ax.set_xlabel("$R_{1/2}^{B} / R_{1/2}^{A}$")
@@ -1639,5 +1643,232 @@ def plot_ssfr_mass_size_change(stellar_data, snaps):
     # Save figure
     mkdir("plots/graph/")
     fig.savefig("plots/graph/delta_hmr_ssfr_mass.png",
+                bbox_inches="tight")
+    plt.close(fig)
+
+
+def plot_size_feedback(stellar_data, snaps, weight_norm):
+
+    # Get the dark matter mass
+    hdf = h5py.File("/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/G-EAGLE_00/"
+                    "data/snapshot_000_z015p000/snap_000_z015p000.0.hdf5")
+    mdm = hdf["Header"].attrs["MassTable"][1]
+    hdf.close()
+
+    # Define paths
+    path = "/cosma/home/dp004/dc-rope1/cosma7/FLARES/flares-mergergraph/"
+    halo_base = path + "data/halos/MEGAFLARES_halos_<reg>_<snap>.hdf5"
+    graph_base = path + "data/dgraph/MEGAFLARES_graph_<reg>_<snap>.hdf5"
+    master_base = "/cosma7/data/dp004/dc-payy1/my_files/flares_pipeline/data/flares.hdf5"
+
+    # Split snapshots into current and progenitor lists
+    current_snaps = snaps[1:]
+    prog_snaps = snaps[:-1]
+
+    # Initialise lists for storing results
+    tot_hmrs = []
+    tot_prog_hmrs = []
+    binding_energy = []
+    feedback_energy = []
+    prog_binding_energy = []
+    prog_feedback_energy = []
+    w = []
+
+    # Open the master file
+    hdf_master = h5py.File(master_base, "r")
+
+    # Physical constants
+    G = (const.G.to(u.Mpc ** 3 * u.M_sun ** -1 * u.yr ** -2)).value
+
+    # Loop over snapshots
+    for snap, prog_snap in zip(current_snaps, prog_snaps):
+
+        print(snap, prog_snap)
+
+        # Get redshift
+        z = float(snap.split("z")[-1].replace("p", "."))
+        prog_z = float(prog_snap.split("z")[-1].replace("p", "."))
+
+        # Define softening length
+        soft = 0.001802390 / (0.6777 * (1 + z))
+        prog_soft = 0.001802390 / (0.6777 * (1 + prog_z))
+
+        # Set fake region IDs
+        reg = "100"
+        reg_int = -1
+
+        if snap != snaps[5]:
+            continue
+
+        # Extract galaxy data from the sizes dict
+        hmrs = stellar_data[snap]["HMRs"]
+        print("There are %d galaxies" % len(hmrs))
+        print("There are %d compact galaxies" % len(hmrs[hmrs < 1]))
+        prog_hmrs = stellar_data[prog_snap]["HMRs"]
+        grps = stellar_data[snap]["Galaxy,GroupNumber"]
+        subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"]
+        prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"]
+        prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"]
+        regions = stellar_data[snap]["regions"]
+        ws = stellar_data[snap]["weights"]
+        prog_regions = stellar_data[prog_snap]["regions"]
+
+        # Loop over galaxies
+        for ind in range(len(hmrs)):
+
+            # Skip this galaxy if it is not compact
+            if hmrs[ind] > 1:
+                continue
+
+            # Get the region for this galaxy
+            reg_int = regions[ind]
+            if reg_int == 18:
+                continue
+            if int(reg) != reg_int:
+                reg = str(reg_int).zfill(2)
+                print(reg)
+
+                if reg_int == 18:
+                    continue
+
+                # Open this new region
+                this_halo_base = halo_base.replace("<reg>", reg)
+                this_halo_base = this_halo_base.replace("<snap>", snap)
+                this_graph_base = graph_base.replace("<reg>", reg)
+                this_graph_base = this_graph_base.replace("<snap>", snap)
+                this_prog_base = halo_base.replace("<reg>", reg)
+                this_prog_base = this_prog_base.replace("<snap>", prog_snap)
+                hdf_halo = h5py.File(this_halo_base, "r")
+                hdf_prog = h5py.File(this_prog_base, "r")
+                hdf_graph = h5py.File(this_graph_base, "r")
+
+                # Get the MEGA ID arrays for both snapshots
+                mega_grps = hdf_halo["group_number"][...]
+                mega_subgrps = hdf_halo["subgroup_number"][...]
+                masses = hdf_halo["masses"][...]
+                mega_prog_grps = hdf_prog["group_number"][...]
+                mega_prog_subgrps = hdf_prog["subgroup_number"][...]
+
+                # Get the progenitor information
+                prog_ids = hdf_graph["ProgHaloIDs"][...]
+                start_index = hdf_graph["prog_start_index"][...]
+
+                hdf_halo.close()
+                hdf_prog.close()
+                hdf_graph.close()
+
+                # Get the master file group
+                snap_grp = hdf_master[reg][snap]
+                prog_grp = hdf_master[reg][prog_snap]
+
+                # Get the group and subgroup id arrays from the master file
+                master_grps = snap_grp["Galaxy"]["GroupNumber"][...]
+                master_subgrps = snap_grp["Galaxy"]["SubGroupNumber"][...]
+                prog_master_grps = prog_grp["Galaxy"]["GroupNumber"][...]
+                prog_master_subgrps = prog_grp["Galaxy"]["SubGroupNumber"][...]
+
+                # Get other data from the master file
+                master_s_length = snap_grp["Galaxy"]["S_Length"][...]
+                ini_ms = snap_grp["Particle"]["S_MassInitial"][...]
+                prog_master_s_length = prog_grp["Galaxy"]["S_Length"][...]
+                prog_ini_ms = prog_grp["Particle"]["S_MassInitial"][...]
+
+            # Extract this galaxies information
+            hmr = hmrs[ind]
+            g, sg = grps[ind], subgrps[ind]
+
+            # Whats the MEGA ID of this galaxy?
+            mega_ind = np.where(np.logical_and(mega_grps == g,
+                                               mega_subgrps == sg))[0]
+
+            # Get the progenitor
+            start = start_index[mega_ind][0]
+            main_prog = prog_ids[start]
+
+            # Get this progenitors group and subgroup ID
+            prog_g = mega_prog_grps[main_prog]
+            prog_sg = mega_prog_subgrps[main_prog]
+
+            # Get this progenitor's size
+            flares_ind = np.where(
+                np.logical_and(prog_regions == reg_int,
+                               np.logical_and(prog_grps == prog_g,
+                                              prog_subgrps == prog_sg))
+            )[0]
+            prog_hmr = prog_hmrs[flares_ind]
+
+            if prog_hmr.size == 0:
+                continue
+
+            # Get the index in the master file
+            master_ind = np.where(
+                np.logical_and(master_grps == g,
+                               master_subgrps == sg)
+            )[0]
+            prog_master_ind = np.where(
+                np.logical_and(prog_master_grps == prog_g,
+                               prog_master_subgrps == prog_sg)
+            )[0]
+
+            if master_ind.size == 0:
+                continue
+            if prog_master_ind.size == 0:
+                continue
+
+            # Extract the index from the array it's contained within
+            master_ind = master_ind[0]
+            prog_master_ind = prog_master_ind[0]
+
+            # Get the start index for each particle type
+            s_start = np.sum(master_s_length[:master_ind])
+            s_len = master_s_length[master_ind]
+
+            prog_s_start = np.sum(prog_master_s_length[:prog_master_ind])
+            prog_s_len = prog_master_s_length[prog_master_ind]
+
+            # Get this galaxy's data
+            this_ini_ms = ini_ms[s_start: s_start + s_len]
+            prog_this_ini_ms = prog_ini_ms[
+                prog_s_start: prog_s_start + prog_s_len]
+
+            # Include these results for plotting
+            tot_hmrs.append(hmr)
+            tot_prog_hmrs.extend(prog_hmr)
+            feedback_energy.append(np.sum(1.74 * 10 ** 49 * this_ini_ms))
+            prog_feedback_energy.append(np.sum(1.74 * 10 ** 49 *
+                                               prog_this_ini_ms))
+            w.append(ws[ind])
+
+    hdf_master.close()
+
+    # Convert to arrays
+    tot_hmrs = np.array(tot_hmrs)
+    tot_prog_hmrs = np.array(tot_prog_hmrs)
+    feedback_energy = np.array(feedback_energy)
+    prog_feedback_energy = np.array(prog_feedback_energy)
+    w = np.array(w)
+
+    # Compute delta
+    delta_hmr = tot_hmrs - tot_prog_hmrs
+    delta_fb = feedback_energy / prog_feedback_energy
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+
+    # Plot the scatter
+    im = ax.scatter(delta_fb, delta_hmr, C=w, norm=weight_norm,
+                    cmap="plasma", marker=".")
+
+    # Axes labels
+    ax.set_xlabel("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
+    ax.set_ylabel("$E_\mathrm{bind}^\mathrm{B} / E_\mathrm{bind}^\mathrm{A}$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$\sum w_i$")
+
+    # Save figure
+    mkdir("plots/graph/")
+    fig.savefig("plots/graph/delta_hmr_fb.png",
                 bbox_inches="tight")
     plt.close(fig)
