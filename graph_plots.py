@@ -570,9 +570,6 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
         reg = "100"
         reg_int = -1
 
-        if snap != snaps[5]:
-            continue
-
         # Extract galaxy data from the sizes dict
         hmrs = stellar_data[snap]["HMRs"]
         print("There are %d galaxies" % len(hmrs))
@@ -646,35 +643,44 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
                 # Get other data from the master file
                 cops = snap_grp["Galaxy"]["COP"][...]
                 master_s_length = snap_grp["Galaxy"]["S_Length"][...]
-                master_s_pos = snap_grp["Particle"]["S_Coordinates"][...].T
+                master_s_pos = snap_grp["Particle"]["S_Coordinates"][...].T / \
+                    (1 + z)
                 ini_ms = snap_grp["Particle"]["S_MassInitial"][...]
                 s_mass = snap_grp["Particle"]["S_Mass"][...]
                 master_g_length = snap_grp["Galaxy"]["G_Length"][...]
-                master_g_pos = snap_grp["Particle"]["G_Coordinates"][...].T
+                master_g_pos = snap_grp["Particle"]["G_Coordinates"][...].T / \
+                    (1 + z)
                 g_mass = snap_grp["Particle"]["G_Mass"][...]
                 master_dm_length = snap_grp["Galaxy"]["DM_Length"][...]
-                master_dm_pos = snap_grp["Particle"]["DM_Coordinates"][...].T
+                master_dm_pos = snap_grp["Particle"]["DM_Coordinates"][...].T / (
+                    1 + z)
                 dm_mass = np.full(master_dm_pos.shape[0], mdm)
                 master_bh_length = snap_grp["Galaxy"]["BH_Length"][...]
-                master_bh_pos = snap_grp["Particle"]["BH_Coordinates"][...].T
+                master_bh_pos = snap_grp["Particle"]["BH_Coordinates"][...].T / (
+                    1 + z)
                 bh_mass = snap_grp["Particle"]["BH_Mass"][...]
                 prog_cops = prog_grp["Galaxy"]["COP"][...]
                 prog_master_s_length = prog_grp["Galaxy"]["S_Length"][...]
-                prog_master_s_pos = prog_grp["Particle"]["S_Coordinates"][...].T
+                prog_master_s_pos = prog_grp["Particle"]["S_Coordinates"][...].T / (
+                    1 + prog_z)
                 prog_ini_ms = prog_grp["Particle"]["S_MassInitial"][...]
                 prog_s_mass = prog_grp["Particle"]["S_Mass"][...]
                 prog_master_g_length = prog_grp["Galaxy"]["G_Length"][...]
-                prog_master_g_pos = prog_grp["Particle"]["G_Coordinates"][...].T
+                prog_master_g_pos = prog_grp["Particle"]["G_Coordinates"][...].T / (
+                    1 + prog_z)
                 prog_g_mass = prog_grp["Particle"]["G_Mass"][...]
                 prog_master_dm_length = prog_grp["Galaxy"]["DM_Length"][...]
-                prog_master_dm_pos = prog_grp["Particle"]["DM_Coordinates"][...].T
+                prog_master_dm_pos = prog_grp["Particle"]["DM_Coordinates"][...].T / (
+                    1 + prog_z)
                 prog_dm_mass = np.full(prog_master_dm_pos.shape[0], mdm)
                 prog_master_bh_length = prog_grp["Galaxy"]["BH_Length"][...]
-                prog_master_bh_pos = prog_grp["Particle"]["BH_Coordinates"][...].T
+                prog_master_bh_pos = prog_grp["Particle"]["BH_Coordinates"][...].T / (
+                    1 + prog_z)
                 prog_bh_mass = prog_grp["Particle"]["BH_Mass"][...]
 
             # Extract this galaxies information
             hmr = hmrs[ind]
+            cop = cops[ind]
             g, sg = grps[ind], subgrps[ind]
 
             # Whats the MEGA ID of this galaxy?
@@ -739,6 +745,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
             prog_g_len = prog_master_g_length[prog_master_ind]
             prog_dm_len = prog_master_dm_length[prog_master_ind]
             prog_bh_len = prog_master_bh_length[prog_master_ind]
+            prog_cop = prog_cops[prog_master_ind]
 
             # Get this galaxy's data
             this_s_pos = master_s_pos[s_start: s_start + s_len, :]
@@ -783,7 +790,6 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
                                 prog_bh_len]
             npart = np.sum(part_counts)
             prog_npart = np.sum(prog_part_counts)
-            print("Nparts: %d %d" % (prog_npart, npart))
             coords = np.zeros((npart, 3))
             prog_coords = np.zeros((prog_npart, 3))
             masses = np.zeros(npart)
@@ -824,9 +830,20 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
                     prog_coords[low: high, :] = pos
                     prog_masses[low: high] = ms
 
+            # Calculate radius and apply a 30 pkpc aperture
+            rs = np.sqrt((coords[:, 0] - cop[0]) ** 2
+                         + (coords[:, 1] - cop[1]) ** 2
+                         + (coords[:, 2] - cop[2]) ** 2)
+            prog_rs = np.sqrt((prog_coords[:, 0] - prog_cop[0]) ** 2
+                              + (prog_coords[:, 1] - prog_cop[1]) ** 2
+                              + (prog_coords[:, 2] - prog_cop[2]) ** 2)
+            okinds = rs < 0.03
+            prog_okinds = prog_rs < 0.03
+
             # Calcualte the binding energy
-            ebind = grav(coords, soft, masses, z, G)
-            prog_ebind = grav(prog_coords, prog_soft, prog_masses, prog_z, G)
+            ebind = grav(coords[okinds], soft, masses[okinds], z, G)
+            prog_ebind = grav(
+                prog_coords[prog_okinds], prog_soft, prog_masses[prog_okinds], prog_z, G)
 
             # Include these results for plotting
             tot_hmrs.append(hmr)
@@ -1265,6 +1282,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
                 # Extract this galaxies data
                 b = begins[this_ind]
                 nstar = lengths[this_ind]
+                app = apps[b: b + nstar]
                 this_ini_ms = np.sum(
                     ini_ms[b: b + nstar][okinds[b: b + nstar]]) * 10 ** 10
                 gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
@@ -1282,6 +1300,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
                 # Extract this galaxies data
                 b = begins[this_ind][0]
                 nstar = lengths[this_ind][0]
+                app = apps[b: b + nstar]
                 this_ini_ms = np.sum(
                     ini_ms[b: b + nstar][okinds[b: b + nstar]]) * 10 ** 10
                 gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10

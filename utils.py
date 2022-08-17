@@ -361,7 +361,7 @@ def grav(halo_poss, soft, masses, redshift, G):
                      / np.sqrt(dists + soft ** 2))
 
     # Compute GE at this redshift
-    GE = G * GE * (1 + redshift)
+    GE = G * GE
 
     return GE
 
