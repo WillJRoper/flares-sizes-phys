@@ -1902,10 +1902,12 @@ def plot_size_feedback(stellar_data, other_data, snaps, weight_norm, plt_type):
     ax = fig.add_subplot(111)
     ax.loglog()
 
+    okinds = np.logical_and(delta_fb > 0, delta_hmr > 0)
+
     # Plot the scatter
-    im = ax.hexbin(delta_fb, delta_hmr, gridsize=50,
+    im = ax.hexbin(delta_fb[okinds], delta_hmr[okinds], gridsize=50,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w, xscale="log", yscale="log",
+                   C=w[okinds], xscale="log", yscale="log",
                    reduce_C_function=np.sum, norm=weight_norm,
                    linewidths=0.2, cmap="plasma")
 
