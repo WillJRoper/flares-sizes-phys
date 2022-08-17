@@ -1271,6 +1271,8 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
                 graph[(g, sg, ind)]["Masses"].append(
                     mass[this_ind]
                 )
+                graph[(g, sg, ind)]["ssfr"].append(this_ini_ms / 100
+                                                   / mass[this_ind])
             else:
                 graph[(g, sg, ind)]["HMRs"].extend(
                     hmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
@@ -1278,8 +1280,8 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
                 graph[(g, sg, ind)]["Masses"].extend(
                     mass[this_ind]
                 )
-            graph[(g, sg, ind)]["ssfr"].append(this_ini_ms / 100
-                                               / mass[this_ind])
+                graph[(g, sg, ind)]["ssfr"].extend(this_ini_ms / 100
+                                                   / mass[this_ind])
 
             # Get the MEGA ID arrays for both snapshots
             mega_grps = mega_data[reg][snap]["group_number"]
