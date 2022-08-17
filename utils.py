@@ -360,10 +360,10 @@ def grav(halo_poss, soft, masses, redshift, G):
         GE += np.sum(masses[:i] * masses[i]
                      / np.sqrt(dists + soft ** 2))
 
-    # Convert GE to be in the same units as KE (M_sun km^2 s^-2)
-    GE = G * GE * (1 + redshift) * 1 / 3.086e+19
+    # Compute GE at this redshift
+    GE = G * GE * (1 + redshift)
 
-    return GE * u.M_sun * u.km ** 2 * u.s ** -2
+    return GE
 
 
 def grav_tree(tree, gas_poss, soft, masses, gas_ms, redshift, G):

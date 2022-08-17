@@ -570,7 +570,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
         reg = "100"
         reg_int = -1
 
-        if snap != snaps[4]:
+        if snap != snaps[5]:
             continue
 
         # Extract galaxy data from the sizes dict
@@ -826,7 +826,6 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
 
             # Calcualte the binding energy
             ebind = grav(coords, soft, masses, z, G)
-            print(ebind)
             prog_ebind = grav(prog_coords, prog_soft, prog_masses, prog_z, G)
 
             # Include these results for plotting
@@ -835,8 +834,8 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
             feedback_energy.append(np.sum(1.74 * 10 ** 49 * this_ini_ms))
             prog_feedback_energy.append(np.sum(1.74 * 10 ** 49 *
                                                prog_this_ini_ms))
-            binding_energy.append(ebind.value)
-            prog_binding_energy.append(prog_ebind.value)
+            binding_energy.append(ebind)
+            prog_binding_energy.append(prog_ebind)
             w.append(ws[ind])
 
     hdf_master.close()
