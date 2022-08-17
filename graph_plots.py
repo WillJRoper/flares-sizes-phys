@@ -1265,7 +1265,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
                 b = begins[this_ind]
                 nstar = lengths[this_ind]
                 this_ini_ms = np.sum(
-                    ini_ms[b: b + nstar][okinds[b: b + nstar]]) * 10 ** 10
+                    ini_ms[b: b + nstar][okinds[b: b + nstar]])
 
                 graph[(g, sg, ind)]["HMRs"].append(
                     hmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
@@ -1281,7 +1281,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
                 b = begins[this_ind][0]
                 nstar = lengths[this_ind][0]
                 this_ini_ms = np.sum(
-                    ini_ms[b: b + nstar][okinds[b: b + nstar]]) * 10 ** 10
+                    ini_ms[b: b + nstar][okinds[b: b + nstar]])
 
                 graph[(g, sg, ind)]["HMRs"].extend(
                     hmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
@@ -1634,7 +1634,7 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
     ax.set_ylabel("$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
 
     cbar = fig.colorbar(im)
-    cbar.set_label("$M_{\star} / M_\odot$")
+    cbar.set_label("$\sum w_i$")
 
     # # Draw legend
     # if len(no_prog_ssfr) > 0:
@@ -1666,7 +1666,7 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
     ax.set_ylabel("$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
 
     cbar = fig.colorbar(im)
-    cbar.set_label("$M_{\star} / M_\odot$")
+    cbar.set_label("$\sum w_i$")
 
     # Save figure
     mkdir("plots/graph/")
@@ -1885,7 +1885,7 @@ def plot_size_feedback(stellar_data, snaps, weight_norm):
     ax = fig.add_subplot(111)
 
     # Plot the scatter
-    im = ax.scatter(delta_fb, delta_hmr, C=w, norm=weight_norm,
+    im = ax.scatter(delta_fb, delta_hmr, c=w, norm=weight_norm,
                     cmap="plasma", marker=".")
 
     # Axes labels
