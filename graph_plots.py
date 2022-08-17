@@ -1725,9 +1725,6 @@ def plot_size_feedback(stellar_data, snaps, weight_norm):
         reg = "100"
         reg_int = -1
 
-        if snap != snaps[5]:
-            continue
-
         # Extract galaxy data from the sizes dict
         hmrs = stellar_data[snap]["HMRs"]
         print("There are %d galaxies" % len(hmrs))
