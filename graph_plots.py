@@ -1697,7 +1697,7 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
     plt.close(fig)
 
 
-def plot_size_feedback(stellar_data, snaps, weight_norm):
+def plot_size_feedback(stellar_data, snaps, weight_norm, plt_type):
 
     # Get the dark matter mass
     hdf = h5py.File("/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/G-EAGLE_00/"
@@ -1910,6 +1910,6 @@ def plot_size_feedback(stellar_data, snaps, weight_norm):
 
     # Save figure
     mkdir("plots/graph/")
-    fig.savefig("plots/graph/delta_hmr_fb.png",
+    fig.savefig("plots/graph/delta_hmr_fb_%s.png" % plt_type,
                 bbox_inches="tight")
     plt.close(fig)
