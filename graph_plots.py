@@ -1201,7 +1201,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                                        labelleft=False, labelright=False)
 
             if i == 0:
-                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star / M_\odot) < %.1f$"
+                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / M_\odot) < %.1f$"
                                      % (np.log10(mass_bin_edges[j]),
                                         np.log10(mass_bin_edges[j + 1])))
 
