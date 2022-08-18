@@ -120,8 +120,10 @@ try:
                     for ddkey in hdf[key][snap][dkey].keys():
                         data[key][snap][dkey][ddkey] = {}
                         for dddkey in hdf[key][snap][dkey][ddkey].keys():
+                            print(dddkey)
                             data[key][snap][dkey][ddkey][dddkey] = hdf[key][snap][dkey][ddkey][dddkey][...]
                 else:
+                    print(dkey)
                     data[key][snap][dkey] = hdf[key][snap][dkey][...]
 
     hdf.close()
