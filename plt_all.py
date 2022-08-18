@@ -120,7 +120,7 @@ try:
                     for ddkey in hdf[key][snap][dkey].keys():
                         data[key][snap][dkey][ddkey] = {}
                         for dddkey in hdf[key][snap][dkey][ddkey].keys():
-                            print(dddkey)
+                            print(dkey, ddkey, dddkey)
                             data[key][snap][dkey][ddkey][dddkey] = hdf[key][snap][dkey][ddkey][dddkey][...]
 
                 if dkey == "Particle":
