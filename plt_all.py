@@ -124,8 +124,9 @@ try:
                     for ddkey in data[key][snap][dkey].keys():
                         data_grp = snap_grp.create_group(dkey)
                         for dddkey in data[key][snap][dkey][ddkey]:
+                            print(dddkey, type(data[key][snap][dkey]))
                             arr = data[key][snap][dkey][ddkey][dddkey]
-                            data_grp.create_dataset(dkey, shape=arr.shape,
+                            data_grp.create_dataset(dddkey, shape=arr.shape,
                                                     dtype=arr.dtype, data=arr,
                                                     compression="gzip")
                 else:
