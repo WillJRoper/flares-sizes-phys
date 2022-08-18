@@ -120,10 +120,19 @@ try:
             snap_grp = type_grp.create_group(snap)
             for dkey in data[key][snap].keys():
                 print(dkey, type(data[key][snap][dkey]))
-                arr = data[key][snap][dkey]
-                snap_grp.create_dataset(dkey, shape=arr.shape,
-                                        dtype=arr.dtype, data=arr,
-                                        compression="gzip")
+                if type(data[key][snap][dkey]) is dict:
+                    for ddkey in data[key][snap][dkey].keys():
+                        data_grp = snap_grp.create_group(dkey)
+                        for dddkey in data[key][snap][dkey][ddkey]:
+                            arr = data[key][snap][dkey][ddkey][dddkey]
+                            data_grp.create_dataset(dkey, shape=arr.shape,
+                                                    dtype=arr.dtype, data=arr,
+                                                    compression="gzip")
+                else:
+                    arr = data[key][snap][dkey]
+                    snap_grp.create_dataset(dkey, shape=arr.shape,
+                                            dtype=arr.dtype, data=arr,
+                                            compression="gzip")
 
     hdf.close()
 
