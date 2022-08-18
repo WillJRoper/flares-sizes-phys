@@ -1167,6 +1167,9 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     size_bins = np.digitize(max_size_arr, size_bin_edges)
     mass_bins = np.digitize(max_mass_arr, mass_bin_edges)
 
+    print(np.unique(size_bins, return_counts=True))
+    print(np.unique(mass_bins, return_counts=True))
+
     # Define plot grid shape
     nrows = len(size_bin_edges) - 1
     ncols = len(mass_bin_edges) - 1
