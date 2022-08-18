@@ -2400,10 +2400,6 @@ def plot_formation_size_environ(stellar_data, snaps):
     # only the compact galaxies
     for ind in range(len(root_hmrs)):
 
-        # Skip if the galaxy isn't compact
-        if root_hmrs[ind] > 1:
-            continue
-
         # Get ID
         g, sg = root_grps[ind], root_subgrps[ind]
 
