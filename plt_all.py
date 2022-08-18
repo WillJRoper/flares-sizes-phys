@@ -109,14 +109,17 @@ try:
         data = pickle.load(f)
 
     # Open a hdf file to save this data
-    hdf = h5py.File("size_phys_data.pck", "w")
+    hdf = h5py.File("size_phys_data.hdf5", "w")
 
     # Loop over dictionary writing out data sets
     for key in data.keys():
+        print(key)
         type_grp = hdf.create_group(key)
         for snap in data[key].keys():
+            print(snap)
             snap_grp = type_grp.create_group(snap)
             for dkey in data[key][snap].keys():
+                print(dkey, type(data[key][snap][dkey]))
                 arr = data[key][snap][dkey]
                 snap_grp.create_dataset(dkey, shape=arr.shape,
                                         dtype=arr.dtype, data=arr,
