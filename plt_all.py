@@ -122,6 +122,13 @@ try:
                         for dddkey in hdf[key][snap][dkey][ddkey].keys():
                             print(dddkey)
                             data[key][snap][dkey][ddkey][dddkey] = hdf[key][snap][dkey][ddkey][dddkey][...]
+
+                if dkey == "Particle":
+                    for appkey in hdf[key][snap]["/Particle/Apertures/"].keys():
+                        data[key][snap][
+                            "/Particle/Apertures/" + appkey
+                        ] = hdf[key][snap][
+                            "/Particle/Apertures/" + appkey][...]
                 else:
                     print(dkey)
                     data[key][snap][dkey] = hdf[key][snap][dkey][...]
