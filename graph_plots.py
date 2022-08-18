@@ -864,7 +864,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
             for ind in range(rank_parts[rank], rank_parts[rank + 1]):
 
                 # Get this particle
-                pos_i = coords[ind]
+                pos_i = np.array([coords[ind, :], ])
                 mass_i = masses[ind]
 
                 # Get distances
@@ -878,7 +878,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
             for ind in range(prog_rank_parts[rank], prog_rank_parts[rank + 1]):
 
                 # Get this particle
-                pos_i = prog_coords[ind]
+                pos_i = np.array([prog_coords[ind, :], ])
                 mass_i = prog_masses[ind]
 
                 # Get distances
@@ -1150,12 +1150,26 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
         else:
             del graph[key]
 
+    # Create array of max sizes to bin
+    keys = list(graph.keys())
+    max_size_arr = np.zeros(len(keys))
+    max_mass_arr = np.zeros(len(keys))
+    for ind, key in enumerate(keys):
+        max_size_arr[ind] = max_size[key]
+        max_mass_arr[ind] = graph[key]["Masses"][0]
+
     # Define size bins
-    size_bins = np.logspace(10**-1.1, 10**1.1, 5)
+    size_bin_edges = np.logspace(
+        np.min(max_size_arr) - 0.01 * np.min(max_size_arr),
+        np.max(max_size_arr) + 0.01 * np.max(max_size_arr),
+        5)
+    mass_bin_edges = [10**8, 10**9, 10**10, np.max(max_mass_arr) + 10**8]
+    size_bins = np.digitize(max_size_arr, size_bin_edges)
+    mass_bins = np.digitize(max_mass_arr, mass_bin_edges)
 
     # Define plot grid shape
-    nrows = int((len(size_bins) - 1) / 2)
-    ncols = 2
+    nrows = len(size_bin_edges) - 1
+    ncols = len(mass_bin_edges) - 1
 
     # Set up plot
     fig = plt.figure(figsize=(3.5 * ncols + 0.1 * 3.5, 3.5 * nrows))
@@ -1170,54 +1184,62 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                     labeltop=False, labelbottom=False,
                     labelleft=False, labelright=False)
 
-    # Create grid bin reference
-    grid = [(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1), (3, 0), (3, 1)]
+    for i in range(nrows):
+        for j in range(ncols):
+            axes[i, j] = fig.add_subplot(gs[i, j])
+            axes[i, j].loglog()
+            axes[i, j].set_xlim(xlims)
+            axes[i, j].set_ylim(ylims)
+            if i < nrows - 1:
+                axes[i, j].tick_params(axis='x', top=False, bottom=False,
+                                       labeltop=False, labelbottom=False)
+            if j > 0:
+                axes[i, j].tick_params(axis='y', left=False, right=False,
+                                       labelleft=False, labelright=False)
 
-    for k in range(len(size_bins) - 1):
-        i, j = grid[k]
-        axes[i, j] = fig.add_subplot(gs[i, j])
-        axes[i, j].loglog()
-        axes[i, j].set_xlim(xlims)
-        axes[i, j].set_ylim(ylims)
-        if i < nrows - 1:
-            axes[i, j].tick_params(axis='x', top=False, bottom=False,
-                                   labeltop=False, labelbottom=False)
-        if j > 0:
-            axes[i, j].tick_params(axis='y', left=False, right=False,
-                                   labelleft=False, labelright=False)
+            if i == 0:
+                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star / M_\odot) < %.1f$"
+                                     % (np.log10(mass_bin_edges[j]),
+                                        np.log10(mass_bin_edges[j + 1])))
 
-    for k in range(len(size_bins) - 1):
-        i, j = grid[k]
+            if j == 0:
+                axes[i, j].annotate(
+                    "$%.1f \leq R_{1/2}^{\mathrm{form}} / [\mathrm{pkpc}] < %.1f$"
+                    % (size_bin_edges[i], size_bin_edges[i + 1]),
+                    xy=(0, 0.5), xytext=(-axes[i, j].yaxis.labelpad - 5, 0),
+                    xycoords=axes[i,
+                                  j].yaxis.label, textcoords='offset points',
+                    size='large', ha='right', va='center')
 
-        # Loop over graphs
-        ii = 0
-        for key in graph:
+    # Loop over graphs
+    ii = 0
+    for ind, key in enumerate(keys):
 
-            print("Plotting %d (%d, %d, %d) of %d" % (ii, key[0], key[1],
-                                                      key[2], len(graph)), end="\r")
+        print("Plotting %d (%d, %d, %d) of %d" % (ii, key[0], key[1],
+                                                  key[2], len(graph)), end="\r")
 
-            if size_bins[k] <= max_size[key] and size_bins[k + 1] > max_size[key]:
+        i, j = size_bins[ind], mass_bins[ind]
 
-                # Plot the scatter
-                im = axes[i, j].plot(graph[key]["Masses"], graph[key]["HMRs"],
-                                     color="grey", alpha=0.2, zorder=0)
-            ii += 1
+        # Plot the scatter
+        im = axes[i, j].plot(graph[key]["Masses"], graph[key]["HMRs"],
+                             color="grey", alpha=0.2, zorder=0)
+        ii += 1
 
-        # Loop over graphs
-        ii = 0
-        for key in graph:
+    # Loop over graphs
+    ii = 0
+    for ind, key in enumerate(keys):
 
-            print("Plotting %d (%d, %d, %d) of %d" % (ii, key[0], key[1],
-                                                      key[2], len(graph)), end="\r")
+        print("Plotting %d (%d, %d, %d) of %d" % (ii, key[0], key[1],
+                                                  key[2], len(graph)), end="\r")
 
-            if size_bins[k] <= max_size[key] and size_bins[k + 1] > max_size[key]:
+        i, j = size_bins[ind], mass_bins[ind]
 
-                # Plot the scatter
-                im = axes[i, j].scatter(graph[key]["Masses"], graph[key]["HMRs"],
-                                        marker=".", edgecolors="none", s=20,
-                                        c=graph[key]["z"], cmap="cmr.chroma",
-                                        alpha=0.8, zorder=1, norm=norm)
-            ii += 1
+        # Plot the scatter
+        im = axes[i, j].scatter(graph[key]["Masses"], graph[key]["HMRs"],
+                                marker=".", edgecolors="none", s=20,
+                                c=graph[key]["z"], cmap="cmr.chroma",
+                                alpha=0.8, zorder=1, norm=norm)
+        ii += 1
 
     # Axes labels
     for ax in axes[:, 0]:
