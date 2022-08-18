@@ -1160,10 +1160,10 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
 
     # Define size bins
     size_bin_edges = np.logspace(
-        np.min(max_size_arr) - 0.01 * np.min(max_size_arr),
-        np.max(max_size_arr) + 0.01 * np.max(max_size_arr),
+        np.min(max_size_arr) - 0.1 * np.min(max_size_arr),
+        np.max(max_size_arr) + 0.1 * np.max(max_size_arr),
         5)
-    mass_bin_edges = [10**8, 10**9, 10**10, np.max(max_mass_arr) + 10**8]
+    mass_bin_edges = [10**8, 10**9, 10**10, np.max(max_mass_arr) + 10**9]
     size_bins = np.digitize(max_size_arr, size_bin_edges)
     mass_bins = np.digitize(max_mass_arr, mass_bin_edges)
 
