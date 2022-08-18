@@ -102,23 +102,16 @@ if rank == 0:
     plot_subgrid_birth_den_vs_met()
     plot_virial_temp()
 
-if rank == 0:
+# Get the data we need
+try:
+    with open('data.pck', 'rb') as f:
+        data = pickle.load(f)
+except OSError:
+    data = get_data(flares_snaps, regions, stellar_data_fields, gas_data_fields,
+                    path)
+    with open('data.pck', 'wb') as f:
+        pickle.dump(data, f)
 
-    # Get the data we need
-    try:
-        with open('data.pck', 'rb') as f:
-            data = pickle.load(f)
-    except OSError:
-        data = get_data(flares_snaps, regions, stellar_data_fields, gas_data_fields,
-                        path)
-        with open('data.pck', 'wb') as f:
-            pickle.dump(data, f)
-
-else:
-    data = None
-
-# Communicate data
-data = comm.bcast(data, root=0)
 
 print("Got all data")
 
