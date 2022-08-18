@@ -2519,7 +2519,7 @@ def plot_formation_size_environ(stellar_data, snaps):
 
     im = ax.hexbin(form_z, form_size, gridsize=50,
                    mincnt=np.min(form_ovden) - (0.1 * np.min(form_ovden)),
-                   C=form_ovden, xscale="log", yscale="log",
+                   C=form_ovden, yscale="log",
                    reduce_C_function=np.mean,
                    linewidths=0.2, cmap="plasma")
 
