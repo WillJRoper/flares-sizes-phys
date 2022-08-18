@@ -559,7 +559,8 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
     # Loop over snapshots
     for snap, prog_snap in zip(current_snaps, prog_snaps):
 
-        print(snap, prog_snap)
+        if rank == 0:
+            print(snap, prog_snap)
 
         # Get redshift
         z = float(snap.split("z")[-1].replace("p", "."))
@@ -599,7 +600,8 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
                 continue
             if int(reg) != reg_int:
                 reg = str(reg_int).zfill(2)
-                print(reg)
+                if rank == 0:
+                    print(reg)
 
                 if reg_int == 18:
                     continue
