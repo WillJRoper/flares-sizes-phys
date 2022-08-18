@@ -1,6 +1,5 @@
 import numpy as np
 import h5py
-import pickle
 from matplotlib.colors import LogNorm
 
 from hmrs import *
@@ -105,35 +104,51 @@ if rank == 0:
 
 # Get the data we need
 try:
-    with open('data.pck', 'rb') as f:
-        data = pickle.load(f)
+    data = {}
+
+    # Open a hdf file to save this data
+    hdf = h5py.File("size_phys_data.hdf5", "r")
+
+    # Loop over dictionary writing out data sets
+    for key in hdf.keys():
+        data[key] = {}
+        for snap in hdf[key].keys():
+            data[key][snap] = {}
+            for dkey in hdf[key][snap].keys():
+                if dkey == "apertures":
+                    data[key][snap][dkey] = {}
+                    for ddkey in hdf[key][snap][dkey].keys():
+                        data[key][snap][dkey][ddkey] = {}
+                        for dddkey in hdf[key][snap][dkey][ddkey].keys():
+                            data[key][snap][dkey][ddkey][dddkey] = hdf[key][snap][dkey][ddkey][dddkey][...]
+                else:
+                    data[key][snap][dkey] = hdf[key][snap][dkey][...]
+
+    hdf.close()
+
+except OSError:
+    data = get_data(flares_snaps, regions, stellar_data_fields, gas_data_fields,
+                    path)
 
     # Open a hdf file to save this data
     hdf = h5py.File("size_phys_data.hdf5", "w")
 
     # Loop over dictionary writing out data sets
     for key in data.keys():
-        print(key)
         type_grp = hdf.create_group(key)
         for snap in data[key].keys():
-            print(snap)
             snap_grp = type_grp.create_group(snap)
             for dkey in data[key][snap].keys():
-                print(dkey, type(data[key][snap][dkey]))
                 if isinstance(data[key][snap][dkey], dict):
                     app_grp = snap_grp.create_group(dkey)
                     for ddkey in data[key][snap][dkey].keys():
-                        print(ddkey, type(data[key][snap][dkey][ddkey]))
                         if isinstance(data[key][snap][dkey][ddkey], dict):
                             data_grp = app_grp.create_group(ddkey)
                             for dddkey in data[key][snap][dkey][ddkey]:
-                                print(dddkey, type(
-                                    data[key][snap][dkey][ddkey][dddkey]))
                                 arr = data[key][snap][dkey][ddkey][dddkey]
                                 data_grp.create_dataset(str(dddkey), shape=arr.shape,
                                                         dtype=arr.dtype, data=arr,
                                                         compression="gzip")
-
                         else:
                             arr = data[key][snap][dkey][ddkey]
                             app_grp.create_dataset(str(ddkey), shape=arr.shape,
@@ -144,26 +159,6 @@ try:
                     snap_grp.create_dataset(dkey, shape=arr.shape,
                                             dtype=arr.dtype, data=arr,
                                             compression="gzip")
-
-    hdf.close()
-
-except OSError:
-    data = get_data(flares_snaps, regions, stellar_data_fields, gas_data_fields,
-                    path)
-
-    # Open a hdf file to save this data
-    hdf = h5py.File("size_phys_data.pck", "w")
-
-    # Loop over dictionary writing out data sets
-    for key in data.keys():
-        type_grp = hdf.create_group(key)
-        for snap in data[key].keys():
-            snap_grp = type_grp.create_group(snap)
-            for dkey in data[key][snap].keys():
-                arr = data[key][snap][dkey]
-                snap_grp.create_dataset(dkey, shape=arr.shape,
-                                        dtype=arr.dtype, data=arr,
-                                        compression="gzip")
 
     hdf.close()
 

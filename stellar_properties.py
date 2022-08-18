@@ -859,3 +859,29 @@ def plot_virial_temp():
     mkdir("plots/stellar_formprops/")
     fig.savefig("plots/stellar_formprops/virial_temp.png",
                 bbox_inches="tight")
+
+
+def birth_den_softening(stellar_data):
+
+    # Get birth redshift
+    birth_z = stellar_data["birth_z"]
+    birth_den = stellar_data["birth_density"]
+
+    # Define softening length
+    softs = 0.001802390 / (0.6777 * (1 + birth_z))
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+
+    # Plot scatter
+    ax.scatter(softs, birth_den, marker=".", s=10)
+
+    # Set labels
+    ax.set_xlabel("$\epsilon_\mathrm{form}$")
+    ax.set_ylabel(r"$\bar{n}_{\mathrm{H}} / \mathrm{cm}^{-3}$")
+
+    # Save figure
+    mkdir("plots/stellar_formprops/")
+    fig.savefig("plots/stellar_formprops/virial_temp.png",
+                bbox_inches="tight")
