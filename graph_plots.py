@@ -576,8 +576,9 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
 
         # Extract galaxy data from the sizes dict
         hmrs = stellar_data[snap]["HMRs"]
-        print("There are %d galaxies" % len(hmrs))
-        print("There are %d compact galaxies" % len(hmrs[hmrs < 1]))
+        if rank == 0:
+            print("There are %d galaxies" % len(hmrs))
+            print("There are %d compact galaxies" % len(hmrs[hmrs < 1]))
         prog_hmrs = stellar_data[prog_snap]["HMRs"]
         grps = stellar_data[snap]["Galaxy,GroupNumber"]
         subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"]

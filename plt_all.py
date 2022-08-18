@@ -1,4 +1,5 @@
 import numpy as np
+import h5py
 import pickle
 from matplotlib.colors import LogNorm
 
@@ -106,11 +107,42 @@ if rank == 0:
 try:
     with open('data.pck', 'rb') as f:
         data = pickle.load(f)
+
+    # Open a hdf file to save this data
+    hdf = h5py.File("size_phys_data.pck", "w")
+
+    # Loop over dictionary writing out data sets
+    for key in data.keys():
+        type_grp = hdf.create_group(key)
+        for snap in data[key].keys():
+            snap_grp = type_grp.create_group(snap)
+            for dkey in data[key][snap].keys():
+                arr = data[key][snap][dkey]
+                snap_grp.create_dataset(dkey, shape=arr.shape,
+                                        dtype=arr.dtype, data=arr,
+                                        compression="gzip")
+
+    hdf.close()
+
 except OSError:
     data = get_data(flares_snaps, regions, stellar_data_fields, gas_data_fields,
                     path)
-    with open('data.pck', 'wb') as f:
-        pickle.dump(data, f)
+
+    # Open a hdf file to save this data
+    hdf = h5py.File("size_phys_data.pck", "w")
+
+    # Loop over dictionary writing out data sets
+    for key in data.keys():
+        type_grp = hdf.create_group(key)
+        for snap in data[key].keys():
+            snap_grp = type_grp.create_group(snap)
+            for dkey in data[key][snap].keys():
+                arr = data[key][snap][dkey]
+                snap_grp.create_dataset(dkey, shape=arr.shape,
+                                        dtype=arr.dtype, data=arr,
+                                        compression="gzip")
+
+    hdf.close()
 
 
 print("Got all data")
