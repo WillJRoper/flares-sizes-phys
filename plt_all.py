@@ -121,13 +121,24 @@ try:
             for dkey in data[key][snap].keys():
                 print(dkey, type(data[key][snap][dkey]))
                 if isinstance(data[key][snap][dkey], dict):
-                    data_grp = snap_grp.create_group(dkey)
+                    app_grp = snap_grp.create_group(dkey)
                     for ddkey in data[key][snap][dkey].keys():
-                        print(ddkey)
-                        arr = data[key][snap][dkey][ddkey]
-                        data_grp.create_dataset(str(ddkey), shape=arr.shape,
-                                                dtype=arr.dtype, data=arr,
-                                                compression="gzip")
+                        print(ddkey, type(data[key][snap][dkey][ddkey]))
+                        if isinstance(data[key][snap][dkey][ddkey], dict):
+                            data_grp = app_grp.create_group(ddkey)
+                            for dddkey in data[key][snap][dkey][ddkey]:
+                                print(dddkey, type(
+                                    data[key][snap][dkey][ddkey][dddkey]))
+                                arr = data[key][snap][dkey][ddkey][dddkey]
+                                data_grp.create_dataset(str(dddkey), shape=arr.shape,
+                                                        dtype=arr.dtype, data=arr,
+                                                        compression="gzip")
+
+                        else:
+                            arr = data[key][snap][dkey][ddkey]
+                            app_grp.create_dataset(str(ddkey), shape=arr.shape,
+                                                   dtype=arr.dtype, data=arr,
+                                                   compression="gzip")
                 else:
                     arr = data[key][snap][dkey]
                     snap_grp.create_dataset(dkey, shape=arr.shape,
