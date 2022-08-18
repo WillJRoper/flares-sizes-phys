@@ -877,10 +877,12 @@ def birth_den_softening(stellar_data):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
-    ax.loglog()
+    ax1 = ax.twiny()
+    ax.semilogy()
 
     # Plot scatter
     ax.scatter(softs, birth_den, marker=".", s=10)
+    ax1.scatter(birth_z, birth_den, alpha=0)
 
     # Set labels
     ax.set_xlabel("$\epsilon_\mathrm{form} / [pMpc]$")

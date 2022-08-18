@@ -174,8 +174,6 @@ except OSError:
 
 print("Got all data")
 
-birth_den_softening(hdf["stellar"][flares_snaps[-1]])
-
 # # Make plots that require multiple redshifts
 # #sfr_radial_profile_mass(data["stellar"][flares_snaps[-1]], flares_snaps[-1])
 # # sfr_radial_profile_environ(data["stellar"][flares_snaps[-1]], flares_snaps[-1])
@@ -187,6 +185,8 @@ birth_den_softening(hdf["stellar"][flares_snaps[-1]])
 # plot_ssfr_mass_size_change(data["stellar"], flares_snaps, weight_norm)
 # plot_size_sfr_evo_grid(data["stellar"], flares_snaps)
 
+if rank == 0:
+    plot_size_mass_evo_grid_noncompact(hdf["stellar"], flares_snaps)
 plot_size_change_binding(
     hdf["stellar"], flares_snaps, weight_norm, comm, size, rank)
 if rank == 0:
