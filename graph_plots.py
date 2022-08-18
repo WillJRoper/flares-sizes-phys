@@ -14,6 +14,8 @@ import astropy.constants as const
 import eagle_IO.eagle_IO as eagle_io
 from utils import grav
 import cmasher as cmr
+from scipy.spatial.distance import cdist
+from mpi4py import MPI
 
 
 def plot_size_change(stellar_data, snaps, plt_type, weight_norm):
@@ -521,7 +523,7 @@ def plot_size_change_comp(stellar_data, gas_data, snaps, weight_norm):
     plt.close(fig)
 
 
-def plot_size_change_binding(stellar_data, snaps, weight_norm):
+def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, rank):
 
     # Get the dark matter mass
     hdf = h5py.File("/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/G-EAGLE_00/"
@@ -841,56 +843,119 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm):
             okinds = rs < 0.03
             prog_okinds = prog_rs < 0.03
 
-            # Calcualte the binding energy
-            ebind = grav(coords[okinds], soft, masses[okinds], z, G)
-            prog_ebind = grav(
-                prog_coords[prog_okinds], prog_soft, prog_masses[prog_okinds], prog_z, G)
+            # Get only particles within the aperture
+            coords = coords[okinds]
+            masses = masses[okinds]
+            prog_coords = prog_coords[prog_okinds]
+            prog_masses = prog_masses[prog_okinds]
 
-            # Include these results for plotting
-            tot_hmrs.append(hmr)
-            tot_prog_hmrs.extend(prog_hmr)
-            feedback_energy.append(np.sum(1.74 * 10 ** 49 * this_ini_ms))
-            prog_feedback_energy.append(np.sum(1.74 * 10 ** 49 *
-                                               prog_this_ini_ms))
-            binding_energy.append(ebind)
-            prog_binding_energy.append(prog_ebind)
-            w.append(ws[ind])
+            # Get the particles this rank has to handle
+            rank_parts = np.linspace(0, masses.size, nranks + 1)
+            prog_rank_parts = np.linspace(0, prog_masses.size, nranks + 1)
+
+            # Define gravitational binding energy
+            ebind = 0
+            prog_ebind = 0
+
+            # Loop over my particles
+            for ind in range(rank_parts[rank], rank_parts[rank + 1]):
+
+                # Get this particle
+                pos_i = coords[ind]
+                mass_i = masses[ind]
+
+                # Get distances
+                dists = cdist(pos_i, coords, metric="sqeuclidean")
+
+                # Add this contribution to the binding energy
+                ebind += np.sum(masses * mass_i
+                                / np.sqrt(dists + soft ** 2))
+
+            # Loop over my particles for progenitors
+            for ind in range(prog_rank_parts[rank], prog_rank_parts[rank + 1]):
+
+                # Get this particle
+                pos_i = prog_coords[ind]
+                mass_i = prog_masses[ind]
+
+                # Get distances
+                dists = cdist(pos_i, prog_coords, metric="sqeuclidean")
+
+                # Add this contribution to the binding energy
+                prog_ebind += np.sum(prog_masses * mass_i
+                                     / np.sqrt(dists + soft ** 2))
+
+            # Complete the calculation
+            ebind *= G / 2
+            prog_ebind *= G / 2
+
+            # Gather the results to the master
+            ebind = comm.reduce(ebind, op=MPI.SUM, root=0)
+            prog_ebind = comm.reduce(prog_ebind, op=MPI.SUM, root=0)
+
+            if rank == 0:
+
+                # Calculate stellar radii
+                star_rs = np.sqrt((this_s_pos[:, 0] - cop[0]) ** 2
+                                  + (this_s_pos[:, 1] - cop[1]) ** 2
+                                  + (this_s_pos[:, 2] - cop[2]) ** 2)
+                prog_star_rs = np.sqrt((prog_this_s_pos[:, 0] - prog_cop[0]) ** 2
+                                       + (prog_this_s_pos[:,
+                                                          1] - prog_cop[1]) ** 2
+                                       + (prog_this_s_pos[:, 2] - prog_cop[2]) ** 2)
+                okinds = star_rs < 0.03
+                prog_okinds = prog_star_rs < 0.03
+
+                # Include these results for plotting
+                tot_hmrs.append(hmr)
+                tot_prog_hmrs.extend(prog_hmr)
+                feedback_energy.append(
+                    np.sum(1.74 * 10 ** 49 * this_ini_ms[okinds]))
+                prog_feedback_energy.append(np.sum(1.74 * 10 ** 49 *
+                                                   prog_this_ini_ms[prog_okinds]))
+                binding_energy.append(ebind)
+                prog_binding_energy.append(prog_ebind)
+                w.append(ws[ind])
 
     hdf_master.close()
 
-    # Convert to arrays
-    tot_hmrs = np.array(tot_hmrs)
-    tot_prog_hmrs = np.array(tot_prog_hmrs)
-    feedback_energy = np.array(feedback_energy)
-    prog_feedback_energy = np.array(prog_feedback_energy)
-    binding_energy = np.array(binding_energy)
-    prog_binding_energy = np.array(prog_binding_energy)
-    w = np.array(w)
+    if rank == 0:
 
-    # Compute delta
-    delta_hmr = tot_hmrs - tot_prog_hmrs
-    delta_fb = feedback_energy / prog_feedback_energy
-    delta_eb = binding_energy / prog_binding_energy
+        # Convert to arrays
+        tot_hmrs = np.array(tot_hmrs)
+        tot_prog_hmrs = np.array(tot_prog_hmrs)
+        feedback_energy = np.array(feedback_energy)
+        prog_feedback_energy = np.array(prog_feedback_energy)
+        binding_energy = np.array(binding_energy)
+        prog_binding_energy = np.array(prog_binding_energy)
+        w = np.array(w)
 
-    # Set up plot
-    fig = plt.figure(figsize=(3.5, 3.5))
-    ax = fig.add_subplot(111)
+        # Compute delta
+        delta_hmr = tot_hmrs - tot_prog_hmrs
+        delta_fb = feedback_energy / prog_feedback_energy
+        delta_eb = binding_energy / prog_binding_energy
 
-    # Plot the scatter
-    im = ax.scatter(delta_eb, delta_fb, c=delta_hmr, cmap="plasma", marker=".")
+        # Set up plot
+        fig = plt.figure(figsize=(3.5, 3.5))
+        ax = fig.add_subplot(111)
 
-    # Axes labels
-    ax.set_xlabel("$E_\mathrm{fb}^\mathrm{B} / E_\mathrm{fb}^\mathrm{A}$")
-    ax.set_ylabel("$E_\mathrm{bind}^\mathrm{B} / E_\mathrm{bind}^\mathrm{A}$")
+        # Plot the scatter
+        im = ax.scatter(delta_eb, delta_fb, c=delta_hmr,
+                        cmap="plasma", marker=".")
 
-    cbar = fig.colorbar(im)
-    cbar.set_label("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
+        # Axes labels
+        ax.set_xlabel("$E_\mathrm{fb}^\mathrm{B} / E_\mathrm{fb}^\mathrm{A}$")
+        ax.set_ylabel(
+            "$E_\mathrm{bind}^\mathrm{B} / E_\mathrm{bind}^\mathrm{A}$")
 
-    # Save figure
-    mkdir("plots/graph/")
-    fig.savefig("plots/graph/delta_hmr_bind.png",
-                bbox_inches="tight")
-    plt.close(fig)
+        cbar = fig.colorbar(im)
+        cbar.set_label("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
+
+        # Save figure
+        mkdir("plots/graph/")
+        fig.savefig("plots/graph/delta_hmr_bind.png",
+                    bbox_inches="tight")
+        plt.close(fig)
 
 
 def plot_size_mass_evo_grid(stellar_data, snaps):
