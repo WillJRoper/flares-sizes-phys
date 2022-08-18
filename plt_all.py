@@ -126,7 +126,8 @@ print("Got all data")
 # plot_ssfr_mass_size_change(data["stellar"], flares_snaps, weight_norm)
 # plot_size_sfr_evo_grid(data["stellar"], flares_snaps)
 
-plot_size_change_binding(data["stellar"], flares_snaps, weight_norm)
+plot_size_change_binding(
+    data["stellar"], flares_snaps, weight_norm, comm, size, rank)
 if rank == 0:
     plot_size_mass_evo_grid(data["stellar"], flares_snaps)
     plot_size_feedback(data["stellar"], data["stellar"],

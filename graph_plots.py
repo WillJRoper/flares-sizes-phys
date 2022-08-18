@@ -937,6 +937,12 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
         delta_fb = feedback_energy / prog_feedback_energy
         delta_eb = binding_energy / prog_binding_energy
 
+        # Sort by decreasing size to overlay shrinking galaxies
+        sinds = np.argsort(delta_hmr)[::-1]
+        delta_hmr = delta_hmr[sinds]
+        delta_fb = delta_fb[sinds]
+        delta_eb = delta_eb[sinds]
+
         # Set up plot
         fig = plt.figure(figsize=(3.5, 3.5))
         ax = fig.add_subplot(111)
