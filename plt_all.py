@@ -122,7 +122,7 @@ try:
                 print(dkey, type(data[key][snap][dkey]))
                 if type(data[key][snap][dkey]) is dict:
                     for ddkey in data[key][snap][dkey].keys():
-                        data_grp = snap_grp.create_group(dkey)
+                        data_grp = snap_grp.create_group(ddkey)
                         for dddkey in data[key][snap][dkey][ddkey]:
                             print(dddkey, type(data[key][snap][dkey]))
                             arr = data[key][snap][dkey][ddkey][dddkey]
