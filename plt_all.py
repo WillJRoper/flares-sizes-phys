@@ -109,33 +109,29 @@ try:
     # Open a hdf file to save this data
     hdf = h5py.File("size_phys_data.hdf5", "r")
 
-    # Loop over dictionary writing out data sets
-    for key in hdf.keys():
-        data[key] = {}
-        for snap in hdf[key].keys():
-            data[key][snap] = {}
-            for dkey in hdf[key][snap].keys():
-                if dkey == "apertures":
-                    data[key][snap][dkey] = {}
-                    for ddkey in hdf[key][snap][dkey].keys():
-                        data[key][snap][dkey][ddkey] = {}
-                        for dddkey in hdf[key][snap][dkey][ddkey].keys():
-                            print(dkey, ddkey, dddkey)
-                            data[key][snap][dkey][ddkey][dddkey] = hdf[key][snap][dkey][ddkey][dddkey][...]
+    # # Loop over dictionary writing out data sets
+    # for key in hdf.keys():
+    #     data[key] = {}
+    #     for snap in hdf[key].keys():
+    #         data[key][snap] = {}
+    #         for dkey in hdf[key][snap].keys():
+    #             if dkey == "apertures":
+    #                 data[key][snap][dkey] = {}
+    #                 for ddkey in hdf[key][snap][dkey].keys():
+    #                     data[key][snap][dkey][ddkey] = {}
+    #                     for dddkey in hdf[key][snap][dkey][ddkey].keys():
+    #                         data[key][snap][dkey][ddkey][dddkey] = hdf[key][snap][dkey][ddkey][dddkey][...]
 
-                elif dkey == "Particle":
-                    print(dkey, hdf[key][snap]["Particle"].keys())
-                    for appkey in hdf[key][snap]["Particle/Apertures"].keys():
-                        print(appkey)
-                        data[key][snap][
-                            "/Particle/Apertures/" + appkey
-                        ] = hdf[key][snap][
-                            "Particle/Apertures/" + appkey][...]
-                else:
-                    print(dkey)
-                    data[key][snap][dkey] = hdf[key][snap][dkey][...]
+    #             elif dkey == "Particle":
+    #                 for appkey in hdf[key][snap]["Particle/Apertures"].keys():
+    #                     data[key][snap][
+    #                         "/Particle/Apertures/" + appkey
+    #                     ] = hdf[key][snap][
+    #                         "Particle/Apertures/" + appkey][...]
+    #             else:
+    #                 data[key][snap][dkey] = hdf[key][snap][dkey][...]
 
-    hdf.close()
+    # hdf.close()
 
 except OSError:
     data = get_data(flares_snaps, regions, stellar_data_fields, gas_data_fields,
@@ -173,10 +169,12 @@ except OSError:
 
     hdf.close()
 
+    # Open a hdf file to save this data
+    hdf = h5py.File("size_phys_data.hdf5", "r")
 
 print("Got all data")
 
-birth_den_softening(data["stellar"][flares_snaps[-1]])
+birth_den_softening(hdf["stellar"][flares_snaps[-1]])
 
 # # Make plots that require multiple redshifts
 # #sfr_radial_profile_mass(data["stellar"][flares_snaps[-1]], flares_snaps[-1])
@@ -190,56 +188,58 @@ birth_den_softening(data["stellar"][flares_snaps[-1]])
 # plot_size_sfr_evo_grid(data["stellar"], flares_snaps)
 
 plot_size_change_binding(
-    data["stellar"], flares_snaps, weight_norm, comm, size, rank)
+    hdf["stellar"], flares_snaps, weight_norm, comm, size, rank)
 if rank == 0:
-    plot_size_mass_evo_grid(data["stellar"], flares_snaps)
-    plot_size_feedback(data["stellar"], data["stellar"],
+    plot_size_mass_evo_grid(hdf["stellar"], flares_snaps)
+    plot_size_feedback(hdf["stellar"], hdf["stellar"],
                        flares_snaps, weight_norm, "stellar")
-    plot_size_feedback(data["gas"], data["stellar"],
+    plot_size_feedback(hdf["gas"], hdf["stellar"],
                        flares_snaps, weight_norm, "gas")
-    plot_size_change_comp(data["stellar"], data["gas"],
+    plot_size_change_comp(hdf["stellar"], hdf["gas"],
                           flares_snaps, weight_norm)
-    plot_size_change(data["stellar"], flares_snaps, "stellar", weight_norm)
-    plot_size_change(data["gas"], flares_snaps, "gas", weight_norm)
+    plot_size_change(hdf["stellar"], flares_snaps, "stellar", weight_norm)
+    plot_size_change(hdf["gas"], flares_snaps, "gas", weight_norm)
 
-    # # Plot the physics variation plots
-    # plot_hmr_phys_comp_grid_1kpc(flares_snaps[-1])
-    plot_potential(flares_snaps[-1])
-    plot_sfr_evo_comp(flares_snaps[-1])
-    plot_hmr_phys_comp_grid(flares_snaps[-1])
-    plot_birth_density_evo()
-    plot_birth_met_evo()
-    # plot_hmr_phys_comp(flares_snaps[-1])
-    # plot_gashmr_phys_comp(flares_snaps[-1])
+    # # # Plot the physics variation plots
+    # # plot_hmr_phys_comp_grid_1kpc(flares_snaps[-1])
+    # plot_potential(flares_snaps[-1])
+    # plot_sfr_evo_comp(flares_snaps[-1])
+    # plot_hmr_phys_comp_grid(flares_snaps[-1])
+    # plot_birth_density_evo()
+    # plot_birth_met_evo()
+    # # plot_hmr_phys_comp(flares_snaps[-1])
+    # # plot_gashmr_phys_comp(flares_snaps[-1])
 
-    print("Plotted Physics variations")
+    # print("Plotted Physics variations")
 
-    # Plot properties that are done at singular redshifts
-    snap = flares_snaps[-1]
-    #visualise_gas(data["stellar"][snap], data["gas"][snap], snap, path)
-    print("Created images")
-    #plot_sfr_evo(data["stellar"][snap], snap)
-    plot_birth_met(data["stellar"][snap], snap, weight_norm, path)
-    plot_birth_den(data["stellar"][snap], snap, weight_norm, path)
-    plot_eagle_birth_den_vs_met(data["stellar"][snap], snap, weight_norm, path)
-    plot_gal_birth_den_vs_met(data["stellar"][snap], snap, weight_norm, path)
-    print("Plotted stellar formation properties")
+    # # Plot properties that are done at singular redshifts
+    # snap = flares_snaps[-1]
+    # #visualise_gas(data["stellar"][snap], data["gas"][snap], snap, path)
+    # print("Created images")
+    # #plot_sfr_evo(data["stellar"][snap], snap)
+    # plot_birth_met(data["stellar"][snap], snap, weight_norm, path)
+    # plot_birth_den(data["stellar"][snap], snap, weight_norm, path)
+    # plot_eagle_birth_den_vs_met(data["stellar"][snap], snap, weight_norm, path)
+    # plot_gal_birth_den_vs_met(data["stellar"][snap], snap, weight_norm, path)
+    # print("Plotted stellar formation properties")
 
-    # Plot EVERYTHING else
-    for snap in flares_snaps:
+    # # Plot EVERYTHING else
+    # for snap in flares_snaps:
 
-        print("================ Plotting snap %s ================" % snap)
+    #     print("================ Plotting snap %s ================" % snap)
 
-        data["stellar"][snap]["density_cut"] = 10 ** 2.0
+    #     data["stellar"][snap]["density_cut"] = 10 ** 2.0
 
-        try:
-            plot_hmr_phys_comp(snap)
-        except ValueError:
-            continue
+    #     try:
+    #         plot_hmr_phys_comp(snap)
+    #     except ValueError:
+    #         continue
 
-        plot_stellar_hmr(data["stellar"][snap], snap, weight_norm)
-        plot_stellar_gas_hmr_comp(data["stellar"][snap], data["gas"][snap],
-                                  snap, weight_norm)
+    #     plot_stellar_hmr(data["stellar"][snap], snap, weight_norm)
+    #     plot_stellar_gas_hmr_comp(data["stellar"][snap], data["gas"][snap],
+    #                               snap, weight_norm)
 
 # for snap in eagle_snaps:
 #     plot_stellar_hmr("EAGLE", [0, ], snap, weight_norm)
+
+hdf.close()

@@ -89,17 +89,17 @@ def plot_size_change(stellar_data, snaps, plt_type, weight_norm):
         hdf_graph.close()
 
         # Extract galaxy data from the sizes dict
-        hmrs = stellar_data[snap]["HMRs"]
+        hmrs = stellar_data[snap]["HMRs"][...]
         print("There are %d galaxies" % len(hmrs))
         print("There are %d compact galaxies" % len(hmrs[hmrs < 1]))
-        prog_hmrs = stellar_data[prog_snap]["HMRs"]
-        grps = stellar_data[snap]["Galaxy,GroupNumber"]
-        subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"]
-        prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"]
-        prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"]
-        regions = stellar_data[snap]["regions"]
-        ws = stellar_data[snap]["weights"]
-        prog_regions = stellar_data[prog_snap]["regions"]
+        prog_hmrs = stellar_data[prog_snap]["HMRs"][...]
+        grps = stellar_data[snap]["Galaxy,GroupNumber"][...]
+        subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"][...]
+        prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"][...]
+        prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"][...]
+        regions = stellar_data[snap]["regions"][...]
+        ws = stellar_data[snap]["weights"][...]
+        prog_regions = stellar_data[prog_snap]["regions"][...]
 
         # Loop over galaxies
         for ind in range(len(hmrs)):
@@ -366,25 +366,25 @@ def plot_size_change_comp(stellar_data, gas_data, snaps, weight_norm):
         hdf_graph.close()
 
         # Extract galaxy data from the sizes dict
-        gas_hmrs = gas_data[snap]["HMRs"]
-        star_hmrs = stellar_data[snap]["HMRs"]
+        gas_hmrs = gas_data[snap]["HMRs"][...]
+        star_hmrs = stellar_data[snap]["HMRs"][...]
         print("There are %d galaxies (%d)" % (len(star_hmrs), len(gas_hmrs)))
         print("There are %d compact galaxies" % len(star_hmrs[star_hmrs < 1]))
-        star_prog_hmrs = stellar_data[prog_snap]["HMRs"]
-        star_grps = stellar_data[snap]["Galaxy,GroupNumber"]
-        star_subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"]
-        star_prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"]
-        star_prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"]
-        star_regions = stellar_data[snap]["regions"]
-        star_prog_regions = stellar_data[prog_snap]["regions"]
-        gas_prog_hmrs = gas_data[prog_snap]["HMRs"]
-        gas_grps = gas_data[snap]["Galaxy,GroupNumber"]
-        gas_subgrps = gas_data[snap]["Galaxy,SubGroupNumber"]
-        gas_prog_grps = gas_data[prog_snap]["Galaxy,GroupNumber"]
-        gas_prog_subgrps = gas_data[prog_snap]["Galaxy,SubGroupNumber"]
-        gas_regions = gas_data[snap]["regions"]
-        gas_prog_regions = gas_data[prog_snap]["regions"]
-        ws = stellar_data[snap]["weights"]
+        star_prog_hmrs = stellar_data[prog_snap]["HMRs"][...]
+        star_grps = stellar_data[snap]["Galaxy,GroupNumber"][...]
+        star_subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"][...]
+        star_prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"][...]
+        star_prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"][...]
+        star_regions = stellar_data[snap]["regions"][...]
+        star_prog_regions = stellar_data[prog_snap]["regions"][...]
+        gas_prog_hmrs = gas_data[prog_snap]["HMRs"][...]
+        gas_grps = gas_data[snap]["Galaxy,GroupNumber"][...]
+        gas_subgrps = gas_data[snap]["Galaxy,SubGroupNumber"][...]
+        gas_prog_grps = gas_data[prog_snap]["Galaxy,GroupNumber"][...]
+        gas_prog_subgrps = gas_data[prog_snap]["Galaxy,SubGroupNumber"][...]
+        gas_regions = gas_data[snap]["regions"][...]
+        gas_prog_regions = gas_data[prog_snap]["regions"][...]
+        ws = stellar_data[snap]["weights"][...]
 
         # Loop over galaxies
         for ind in range(len(star_hmrs)):
@@ -575,18 +575,18 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
         reg_int = -1
 
         # Extract galaxy data from the sizes dict
-        hmrs = stellar_data[snap]["HMRs"]
+        hmrs = stellar_data[snap]["HMRs"][...]
         if rank == 0:
             print("There are %d galaxies" % len(hmrs))
             print("There are %d compact galaxies" % len(hmrs[hmrs < 1]))
-        prog_hmrs = stellar_data[prog_snap]["HMRs"]
-        grps = stellar_data[snap]["Galaxy,GroupNumber"]
-        subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"]
-        prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"]
-        prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"]
-        regions = stellar_data[snap]["regions"]
-        ws = stellar_data[snap]["weights"]
-        prog_regions = stellar_data[prog_snap]["regions"]
+        prog_hmrs = stellar_data[prog_snap]["HMRs"][...]
+        grps = stellar_data[snap]["Galaxy,GroupNumber"][...]
+        subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"][...]
+        prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"][...]
+        prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"][...]
+        regions = stellar_data[snap]["regions"][...]
+        ws = stellar_data[snap]["weights"][...]
+        prog_regions = stellar_data[prog_snap]["regions"][...]
 
         # Loop over galaxies
         for ind in range(len(hmrs)):
@@ -982,11 +982,11 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     root_snap = snaps[-1]
 
     # Extract galaxy data from the sizes dict for the root snap
-    root_hmrs = stellar_data[root_snap]["HMRs"]
-    root_mass = stellar_data[root_snap]["mass"]
-    root_grps = stellar_data[root_snap]["Galaxy,GroupNumber"]
-    root_subgrps = stellar_data[root_snap]["Galaxy,SubGroupNumber"]
-    root_regions = stellar_data[root_snap]["regions"]
+    root_hmrs = stellar_data[root_snap]["HMRs"][...]
+    root_mass = stellar_data[root_snap]["mass"][...]
+    root_grps = stellar_data[root_snap]["Galaxy,GroupNumber"][...]
+    root_subgrps = stellar_data[root_snap]["Galaxy,SubGroupNumber"][...]
+    root_regions = stellar_data[root_snap]["regions"][...]
 
     # Define redshift norm
     norm = cm.Normalize(vmin=5, vmax=12)
@@ -1067,11 +1067,11 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
             z = float(snap.split("z")[-1].replace("p", "."))
 
             # Extract galaxy data from the sizes dict
-            hmrs = stellar_data[snap]["HMRs"]
-            mass = stellar_data[snap]["mass"]
-            prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"]
-            prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"]
-            prog_regions = stellar_data[prog_snap]["regions"]
+            hmrs = stellar_data[snap]["HMRs"][...]
+            mass = stellar_data[snap]["mass"][...]
+            prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"][...]
+            prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"][...]
+            prog_regions = stellar_data[prog_snap]["regions"][...]
 
             # Put this galaxy in the graph
             if snap == root_snap:
@@ -1283,11 +1283,11 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
     root_snap = snaps[-1]
 
     # Extract galaxy data from the sizes dict for the root snap
-    root_hmrs = stellar_data[root_snap]["HMRs"]
-    root_mass = stellar_data[root_snap]["mass"]
-    root_grps = stellar_data[root_snap]["Galaxy,GroupNumber"]
-    root_subgrps = stellar_data[root_snap]["Galaxy,SubGroupNumber"]
-    root_regions = stellar_data[root_snap]["regions"]
+    root_hmrs = stellar_data[root_snap]["HMRs"][...]
+    root_mass = stellar_data[root_snap]["mass"][...]
+    root_grps = stellar_data[root_snap]["Galaxy,GroupNumber"][...]
+    root_subgrps = stellar_data[root_snap]["Galaxy,SubGroupNumber"][...]
+    root_regions = stellar_data[root_snap]["regions"][...]
 
     # Define redshift norm
     norm = cm.Normalize(vmin=5, vmax=12)
@@ -1368,17 +1368,17 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
             z = float(snap.split("z")[-1].replace("p", "."))
 
             # Extract galaxy data from the sizes dict
-            hmrs = stellar_data[snap]["HMRs"]
-            mass = stellar_data[snap]["mass"]
-            prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"]
-            prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"]
-            prog_regions = stellar_data[prog_snap]["regions"]
-            ages = stellar_data[snap]["Particle,S_Age"]
-            ini_ms = stellar_data[snap]["Particle,S_MassInitial"]
-            begins = stellar_data[snap]["begin"]
-            apps = stellar_data[snap]["Particle/Apertures/Star,30"]
-            lengths = stellar_data[snap]["Galaxy,S_Length"]
-            ms = stellar_data[snap]["Particle,S_Mass"]
+            hmrs = stellar_data[snap]["HMRs"][...]
+            mass = stellar_data[snap]["mass"][...]
+            prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"][...]
+            prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"][...]
+            prog_regions = stellar_data[prog_snap]["regions"][...]
+            ages = stellar_data[snap]["Particle,S_Age"][...]
+            ini_ms = stellar_data[snap]["Particle,S_MassInitial"][...]
+            begins = stellar_data[snap]["begin"][...]
+            apps = stellar_data[snap]["Particle/Apertures/Star,30"][...]
+            lengths = stellar_data[snap]["Galaxy,S_Length"][...]
+            ms = stellar_data[snap]["Particle,S_Mass"][...]
 
             # Create boolean array identifying stars born in the last 100 Myrs
             # and are within the 30 pkpc aperture
@@ -1611,23 +1611,23 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
         reg_int = -1
 
         # Extract galaxy data from the sizes dict
-        hmrs = stellar_data[snap]["HMRs"]
+        hmrs = stellar_data[snap]["HMRs"][...]
         print("There are %d galaxies" % len(hmrs))
         print("There are %d compact galaxies" % len(hmrs[hmrs < 1]))
-        prog_hmrs = stellar_data[prog_snap]["HMRs"]
-        grps = stellar_data[snap]["Galaxy,GroupNumber"]
-        subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"]
-        prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"]
-        prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"]
-        regions = stellar_data[snap]["regions"]
-        ws = stellar_data[snap]["weights"]
-        prog_regions = stellar_data[prog_snap]["regions"]
-        ages = stellar_data[snap]["Particle,S_Age"] * 1000
-        ini_ms = stellar_data[snap]["Particle,S_MassInitial"] * 10 ** 10
-        begins = stellar_data[snap]["begin"]
-        apps = stellar_data[snap]["Particle/Apertures/Star,30"]
-        lengths = stellar_data[snap]["Galaxy,S_Length"]
-        ms = stellar_data[snap]["Particle,S_Mass"]
+        prog_hmrs = stellar_data[prog_snap]["HMRs"][...]
+        grps = stellar_data[snap]["Galaxy,GroupNumber"][...]
+        subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"][...]
+        prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"][...]
+        prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"][...]
+        regions = stellar_data[snap]["regions"][...]
+        ws = stellar_data[snap]["weights"][...]
+        prog_regions = stellar_data[prog_snap]["regions"][...]
+        ages = stellar_data[snap]["Particle,S_Age"][...] * 1000
+        ini_ms = stellar_data[snap]["Particle,S_MassInitial"][...] * 10 ** 10
+        begins = stellar_data[snap]["begin"][...]
+        apps = stellar_data[snap]["Particle/Apertures/Star,30"][...]
+        lengths = stellar_data[snap]["Galaxy,S_Length"][...]
+        ms = stellar_data[snap]["Particle,S_Mass"][...]
 
         # Create boolean array identifying stars born in the last 100 Myrs
         # and are within the 30 pkpc aperture
@@ -1853,18 +1853,18 @@ def plot_size_feedback(stellar_data, other_data, snaps, weight_norm, plt_type):
         reg_int = -1
 
         # Extract galaxy data from the sizes dict
-        hmrs = stellar_data[snap]["HMRs"]
-        cuton_hmrs = other_data[snap]["HMRs"]
+        hmrs = stellar_data[snap]["HMRs"][...]
+        cuton_hmrs = other_data[snap]["HMRs"][...]
         print("There are %d galaxies" % len(hmrs))
         print("There are %d compact galaxies" % len(hmrs[hmrs < 1]))
-        prog_hmrs = stellar_data[prog_snap]["HMRs"]
-        grps = stellar_data[snap]["Galaxy,GroupNumber"]
-        subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"]
-        prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"]
-        prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"]
-        regions = stellar_data[snap]["regions"]
-        ws = stellar_data[snap]["weights"]
-        prog_regions = stellar_data[prog_snap]["regions"]
+        prog_hmrs = stellar_data[prog_snap]["HMRs"][...]
+        grps = stellar_data[snap]["Galaxy,GroupNumber"][...]
+        subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"][...]
+        prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"][...]
+        prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"][...]
+        regions = stellar_data[snap]["regions"][...]
+        ws = stellar_data[snap]["weights"][...]
+        prog_regions = stellar_data[prog_snap]["regions"][...]
 
         # Loop over galaxies
         for ind in range(len(hmrs)):

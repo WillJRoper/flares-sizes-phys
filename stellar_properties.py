@@ -864,8 +864,12 @@ def plot_virial_temp():
 def birth_den_softening(stellar_data):
 
     # Get birth redshift
-    birth_z = stellar_data["birth_z"]
-    birth_den = stellar_data["birth_density"]
+    birth_z = stellar_data["birth_z"][...]
+    birth_den = stellar_data["birth_density"][...]
+
+    okinds = birth_z > 0
+    birth_z = birth_z[okinds]
+    birth_den = birth_den[okinds]
 
     # Define softening length
     softs = 0.001802390 / (0.6777 * (1 + birth_z))
@@ -873,12 +877,13 @@ def birth_den_softening(stellar_data):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
+    ax.loglog()
 
     # Plot scatter
     ax.scatter(softs, birth_den, marker=".", s=10)
 
     # Set labels
-    ax.set_xlabel("$\epsilon_\mathrm{form}$")
+    ax.set_xlabel("$\epsilon_\mathrm{form} / [pMpc]$")
     ax.set_ylabel(r"$\bar{n}_{\mathrm{H}} / \mathrm{cm}^{-3}$")
 
     # Save figure
