@@ -187,6 +187,7 @@ print("Got all data")
 
 if rank == 0:
     plot_size_mass_evo_grid_noncompact(hdf["stellar"], flares_snaps)
+    plot_formation_size_environ(hdf["stellar"], snaps)
 plot_size_change_binding(
     hdf["stellar"], flares_snaps, weight_norm, comm, size, rank)
 if rank == 0:

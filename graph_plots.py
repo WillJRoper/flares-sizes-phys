@@ -2334,3 +2334,198 @@ def plot_size_mass_evo_grid_noncompact(stellar_data, snaps):
     fig.savefig("plots/graph_plot/size_mass_evo_all_noncompact.png",
                 bbox_inches="tight")
     plt.close(fig)
+
+
+def plot_formation_size_environ(stellar_data, snaps):
+
+    # Open region overdensities
+    reg_ovdens = np.loadtxt("/cosma7/data/dp004/dc-rope1/FLARES/"
+                            "flares/region_overdensity.txt",
+                            dtype=float)
+
+    # Define paths
+    path = "/cosma/home/dp004/dc-rope1/cosma7/FLARES/flares-mergergraph/"
+    halo_base = path + "data/halos/MEGAFLARES_halos_<reg>_<snap>.hdf5"
+    graph_base = path + "data/dgraph/MEGAFLARES_graph_<reg>_<snap>.hdf5"
+
+    # Set up the dictionary to store the graph information
+    graph = {}
+    form_size = []
+    form_z = []
+    form_ovden = []
+
+    # Define root snapshot
+    root_snap = snaps[-1]
+
+    # Extract galaxy data from the sizes dict for the root snap
+    root_hmrs = stellar_data[root_snap]["HMRs"][...]
+    root_mass = stellar_data[root_snap]["mass"][...]
+    root_grps = stellar_data[root_snap]["Galaxy,GroupNumber"][...]
+    root_subgrps = stellar_data[root_snap]["Galaxy,SubGroupNumber"][...]
+    root_regions = stellar_data[root_snap]["regions"][...]
+
+    # Define redshift norm
+    norm = cm.Normalize(vmin=5, vmax=12)
+
+    # Create data dictionary to speed up walking
+    mega_data = {}
+    for reg_int in np.unique(root_regions):
+        if reg_int == 18:
+            continue
+        reg = str(reg_int).zfill(2)
+        mega_data[reg] = {}
+        for snap in snaps:
+            mega_data[reg][snap] = {}
+
+            # Open this new region
+            this_halo_base = halo_base.replace("<reg>", reg)
+            this_halo_base = this_halo_base.replace("<snap>", snap)
+            this_graph_base = graph_base.replace("<reg>", reg)
+            this_graph_base = this_graph_base.replace("<snap>", snap)
+            hdf_halo = h5py.File(this_halo_base, "r")
+            hdf_graph = h5py.File(this_graph_base, "r")
+
+            # Get the MEGA ID arrays for both snapshots
+            mega_data[reg][snap]["group_number"] = hdf_halo["group_number"][...]
+            mega_data[reg][snap]["subgroup_number"] = hdf_halo["subgroup_number"][...]
+
+            # Get the progenitor information
+            mega_data[reg][snap]["ProgHaloIDs"] = hdf_graph["ProgHaloIDs"][...]
+            mega_data[reg][snap]["prog_start_index"] = hdf_graph["prog_start_index"][...]
+
+            hdf_halo.close()
+            hdf_graph.close()
+
+    # Loop over galaxies and populate the root level of the graph with
+    # only the compact galaxies
+    for ind in range(len(root_hmrs)):
+
+        # Skip if the galaxy isn't compact
+        if root_hmrs[ind] < 1:
+            continue
+
+        # Get ID
+        g, sg = root_grps[ind], root_subgrps[ind]
+
+        # Make an entry in the dict for it
+        graph[(g, sg, ind)] = {"HMRs": [], "Masses": [], "z": []}
+
+    # Loop over these root galaxies and populate the rest of the graph
+    i = 0
+    for key in graph:
+
+        print("Walking %d (%d, %d, %d) of %d" % (i, key[0], key[1],
+                                                 key[2], len(graph)), end="\r")
+
+        # Extract IDs
+        g, sg, ind = key
+
+        # Get the region for this galaxy
+        reg_int = root_regions[ind]
+        if reg_int == 18:
+            continue
+        reg = str(reg_int).zfill(2)
+
+        # Set up the snapshot
+        snap_ind = len(snaps) - 1
+        snap = root_snap
+        prog_snap = snaps[snap_ind - 1]
+
+        # Set up looping variables
+        this_g, this_sg, this_ind = g, sg, ind
+
+        i += 1
+
+        # Loop until we don't have a progenitor to step to
+        while snap_ind >= 0:
+
+            # Get redshift
+            z = float(snap.split("z")[-1].replace("p", "."))
+
+            # Extract galaxy data from the sizes dict
+            hmrs = stellar_data[snap]["HMRs"][...]
+            mass = stellar_data[snap]["mass"][...]
+            prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"][...]
+            prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"][...]
+            prog_regions = stellar_data[prog_snap]["regions"][...]
+
+            # Put this galaxy in the graph
+            if snap == root_snap:
+                graph[(g, sg, ind)]["HMRs"].append(
+                    hmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
+                )
+                graph[(g, sg, ind)]["Masses"].append(
+                    mass[this_ind]
+                )
+            else:
+                graph[(g, sg, ind)]["HMRs"].extend(
+                    hmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
+                )
+                graph[(g, sg, ind)]["Masses"].extend(
+                    mass[this_ind]
+                )
+            graph[(g, sg, ind)]["z"].append(z)
+
+            # Get the MEGA ID arrays for both snapshots
+            mega_grps = mega_data[reg][snap]["group_number"]
+            mega_subgrps = mega_data[reg][snap]["subgroup_number"]
+            mega_prog_grps = mega_data[reg][prog_snap]["group_number"]
+            mega_prog_subgrps = mega_data[reg][prog_snap]["subgroup_number"]
+
+            # Get the progenitor information
+            prog_ids = mega_data[reg][snap]["ProgHaloIDs"]
+            start_index = mega_data[reg][snap]["prog_start_index"]
+
+            # Whats the MEGA ID of this galaxy?
+            mega_ind = np.where(np.logical_and(mega_grps == this_g,
+                                               mega_subgrps == this_sg))[0]
+
+            # Get the progenitor
+            start = start_index[mega_ind][0]
+            main_prog = prog_ids[start]
+
+            if start != 2**30:
+
+                # Get this progenitors group and subgroup ID
+                this_g = mega_prog_grps[main_prog]
+                this_sg = mega_prog_subgrps[main_prog]
+
+                # Get this progenitors index
+                this_ind = np.where(
+                    np.logical_and(prog_regions == reg_int,
+                                   np.logical_and(prog_grps == this_g,
+                                                  prog_subgrps == this_sg)))[0]
+
+                if this_ind.size == 0:
+                    break
+
+                # Set snapshots
+                snap_ind -= 1
+                snap = snaps[snap_ind]
+                prog_snap = snaps[snap_ind - 1]
+
+            else:
+                break
+
+        # Store results
+        form_z.append(graph[(g, sg, ind)]["z"][-1])
+        form_size.append(graph[(g, sg, ind)]["HMRs"][-1])
+        form_ovden.append(reg_ovdens[reg_int])
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+
+    ax.scatter(form_z, form_size, c=form_ovden, marker=".", alpha=0.7)
+
+    ax.set_xlabel("$z_\mathrm{form}$")
+    ax.set_ylabel("$R_{1/2}^\mathrm{form} / [\mathrm{pkpc}]$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$\log_{10}(1+\Delta)$")
+
+    # Save figure
+    mkdir("plots/graph_plot/")
+    fig.savefig("plots/graph_plot/formation_environment_size.png",
+                bbox_inches="tight")
+    plt.close(fig)
