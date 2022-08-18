@@ -2515,8 +2515,13 @@ def plot_formation_size_environ(stellar_data, snaps):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
+    ax.semilogy()
 
-    im = ax.scatter(form_z, form_size, c=form_ovden, marker=".", alpha=0.7)
+    im = ax.hexbin(form_z, form_size, gridsize=50,
+                   mincnt=np.min(form_ovden) - (0.1 * np.min(form_ovden)),
+                   C=form_ovden, xscale="log", yscale="log",
+                   reduce_C_function=np.mean,
+                   linewidths=0.2, cmap="plasma")
 
     ax.set_xlabel("$z_\mathrm{form}$")
     ax.set_ylabel("$R_{1/2}^\mathrm{form} / [\mathrm{pkpc}]$")
