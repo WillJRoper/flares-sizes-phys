@@ -118,7 +118,7 @@ else:
     data = None
 
 # Communicate data
-data = comm.bcast(data, source=0)
+data = comm.bcast(data, root=0)
 
 print("Got all data")
 
