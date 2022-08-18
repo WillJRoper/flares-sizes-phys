@@ -1223,6 +1223,10 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
 
         i, j = size_bins[ind], mass_bins[ind]
 
+        # Skip galaxies that fell outside the range
+        if i == -1 or j == -1:
+            continue
+
         # Plot the scatter
         im = axes[i, j].plot(graph[key]["Masses"], graph[key]["HMRs"],
                              color="grey", alpha=0.2, zorder=0)
@@ -1236,6 +1240,10 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                                                   key[2], len(graph)), end="\r")
 
         i, j = size_bins[ind], mass_bins[ind]
+
+        # Skip galaxies that fell outside the range
+        if i == -1 or j == -1:
+            continue
 
         # Plot the scatter
         im = axes[i, j].scatter(graph[key]["Masses"], graph[key]["HMRs"],
