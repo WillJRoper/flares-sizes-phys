@@ -852,8 +852,9 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
             prog_masses = prog_masses[prog_okinds]
 
             # Get the particles this rank has to handle
-            rank_parts = np.linspace(0, masses.size, nranks + 1)
-            prog_rank_parts = np.linspace(0, prog_masses.size, nranks + 1)
+            rank_parts = np.linspace(0, masses.size, nranks + 1, dtype=int)
+            prog_rank_parts = np.linspace(
+                0, prog_masses.size, nranks + 1, dtype=int)
 
             # Define gravitational binding energy
             ebind = 0
@@ -1141,7 +1142,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     max_size = {}
     for key in list(graph.keys()):
         if len(graph[key]["HMRs"]) > 1:
-            max_size[key] = graph[key]["HMRs"][0] - np.max(graph[key]["HMRs"])
+            max_size[key] = graph[key]["HMRs"][-1]
             if max_size[key] > max_hmr:
                 max_hmr = max_size[key]
             if max_size[key] < min_hmr:
@@ -1150,7 +1151,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
             del graph[key]
 
     # Define size bins
-    size_bins = np.linspace(-1.5, 0.2, 9)
+    size_bins = np.logspace(10**-1.1, 10**1.1, 5)
 
     # Define plot grid shape
     nrows = int((len(size_bins) - 1) / 2)
