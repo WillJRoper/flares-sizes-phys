@@ -123,7 +123,7 @@ try:
                             print(dkey, ddkey, dddkey)
                             data[key][snap][dkey][ddkey][dddkey] = hdf[key][snap][dkey][ddkey][dddkey][...]
 
-                if dkey == "Particle":
+                elif dkey == "Particle":
                     print(dkey, hdf[key][snap]["Particle"].keys())
                     for appkey in hdf[key][snap]["Particle/Apertures"].keys():
                         print(appkey)
