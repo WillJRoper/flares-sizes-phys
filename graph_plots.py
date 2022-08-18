@@ -861,11 +861,11 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
             prog_ebind = 0
 
             # Loop over my particles
-            for ind in range(rank_parts[rank], rank_parts[rank + 1]):
+            for pind in range(rank_parts[rank], rank_parts[rank + 1]):
 
                 # Get this particle
-                pos_i = np.array([coords[ind, :], ])
-                mass_i = masses[ind]
+                pos_i = np.array([coords[pind, :], ])
+                mass_i = masses[pind]
 
                 # Get distances
                 dists = cdist(pos_i, coords, metric="sqeuclidean")
@@ -875,11 +875,11 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
                                 / np.sqrt(dists + soft ** 2))
 
             # Loop over my particles for progenitors
-            for ind in range(prog_rank_parts[rank], prog_rank_parts[rank + 1]):
+            for pind in range(prog_rank_parts[rank], prog_rank_parts[rank + 1]):
 
                 # Get this particle
-                pos_i = np.array([prog_coords[ind, :], ])
-                mass_i = prog_masses[ind]
+                pos_i = np.array([prog_coords[pind, :], ])
+                mass_i = prog_masses[pind]
 
                 # Get distances
                 dists = cdist(pos_i, prog_coords, metric="sqeuclidean")
