@@ -883,5 +883,5 @@ def birth_den_softening(stellar_data):
 
     # Save figure
     mkdir("plots/stellar_formprops/")
-    fig.savefig("plots/stellar_formprops/virial_temp.png",
+    fig.savefig("plots/stellar_formprops/softening_density_comparison.png",
                 bbox_inches="tight")

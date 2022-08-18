@@ -165,6 +165,8 @@ except OSError:
 
 print("Got all data")
 
+birth_den_softening(data["stellar"][flares_snaps[-1]])
+
 # # Make plots that require multiple redshifts
 # #sfr_radial_profile_mass(data["stellar"][flares_snaps[-1]], flares_snaps[-1])
 # # sfr_radial_profile_environ(data["stellar"][flares_snaps[-1]], flares_snaps[-1])
