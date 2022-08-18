@@ -130,7 +130,7 @@ try:
                         data[key][snap][
                             "/Particle/Apertures/" + appkey
                         ] = hdf[key][snap][
-                            "/Particle/Apertures/" + appkey][...]
+                            "Particle/Apertures/" + appkey][...]
                 else:
                     print(dkey)
                     data[key][snap][dkey] = hdf[key][snap][dkey][...]
