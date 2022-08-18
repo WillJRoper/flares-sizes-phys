@@ -1212,7 +1212,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                     xy=(0, 0.5), xytext=(-axes[i, j].yaxis.labelpad - 5, 0),
                     xycoords=axes[i,
                                   j].yaxis.label, textcoords='offset points',
-                    size='large', ha='right', va='center')
+                    size='large', ha='right', va='center', rotation=90)
 
     # Loop over graphs
     ii = 0
