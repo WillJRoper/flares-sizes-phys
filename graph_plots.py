@@ -2771,7 +2771,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
             prog_rs = prog_rs[prog_pinds][prog_sinds] * 10**3
 
             print(prog_s_pids[prog_pinds][prog_sinds])
-            print(s_inds[pinds][sinds])
+            print(s_pids[pinds][sinds])
 
             # Include these results for plotting
             tot_hmrs.extend(np.full(len(rs), hmr))
