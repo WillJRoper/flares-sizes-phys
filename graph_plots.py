@@ -2770,7 +2770,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
             prog_sinds = np.argsort(prog_s_pids[prog_pinds])
             prog_rs = prog_rs[prog_pinds][prog_sinds] * 10**3
 
-            print(prog_s_inds[prog_pinds][prog_sinds])
+            print(prog_s_pids[prog_pinds][prog_sinds])
             print(s_inds[pinds][sinds])
 
             # Include these results for plotting
