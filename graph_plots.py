@@ -2566,8 +2566,8 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     tot_rs = []
     tot_ssfrs = []
     w = []
-    tot_cop = []
-    prog_tot_cop = []
+    tot_cops = []
+    prog_tot_cops = []
 
     # Open the master file
     hdf_master = h5py.File(master_base, "r")
