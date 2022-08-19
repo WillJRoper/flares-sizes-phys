@@ -2759,8 +2759,8 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
             ssfr = np.sum(s_inims[s_age < 0.1]) / 0.1 / s_m
 
             # Store cops
-            tot_cops.append(cop)
-            prog_tot_cops.append(prog_cop)
+            tot_cops.append(cop * (1 + z))
+            prog_tot_cops.append(prog_cop * (1 + prog_z))
             tot_mass.append(s_m)
 
             # Get the particles present in the previous snapshot
