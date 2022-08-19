@@ -2568,6 +2568,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     w = []
     tot_cops = []
     prog_tot_cops = []
+    tot_mass = []
 
     # Open the master file
     hdf_master = h5py.File(master_base, "r")
@@ -2760,6 +2761,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
             # Store cops
             tot_cops.append(cop)
             prog_tot_cops.append(prog_cop)
+            tot_mass.append(s_m)
 
             # Get the particles present in the previous snapshot
             common, prog_pinds, pinds = np.intersect1d(prog_s_pids, s_pids,
@@ -2798,6 +2800,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     w = np.array(w)
     tot_cops = np.array(tot_cops)
     prog_tot_cops = np.array(prog_tot_cops)
+    tot_mass = np.array(tot_mass)
 
     # Compute delta
     delta_hmr = tot_hmrs / tot_prog_hmrs
@@ -2895,8 +2898,8 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     okinds = np.logical_and(tot_rs > 0, delta_rs > 0)
 
     # Plot the scatter
-    im = ax.scatter(delta_cop, delta_rs, c=tot_ssfrs,
-                    cmap="plasma", marker=".", norm=cm.LogNorm())
+    im = ax.scatter(delta_cop, tot_mass,
+                    marker=".")
 
     # Axes labels
     ax.set_xlabel("$\Delta \mathrm{COP}$")
