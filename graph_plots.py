@@ -2740,11 +2740,6 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
             prog_rs = np.sqrt((prog_coords[:, 0] - prog_cop[0]) ** 2
                               + (prog_coords[:, 1] - prog_cop[1]) ** 2
                               + (prog_coords[:, 2] - prog_cop[2]) ** 2)
-            prog_okinds = prog_rs < 0.03
-
-            # Apply mask
-            prog_rs = prog_rs[prog_okinds]
-            prog_s_pids = prog_s_pids[prog_okinds]
 
             # Get this galaxy's data
             coords = master_s_pos[s_start: s_start + s_len, :]
@@ -2867,7 +2862,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
-    ax.semilogx()
+    ax.loglog()
 
     okinds = np.logical_and(tot_rs > 0, delta_rs > 0)
 
