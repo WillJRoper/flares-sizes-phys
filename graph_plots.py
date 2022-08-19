@@ -2657,6 +2657,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
                 # Get other data from the master file
                 cops = snap_grp["Galaxy"]["COP"][...].T / (1 + z)
                 master_s_length = snap_grp["Galaxy"]["S_Length"][...]
+                print(snap_grp["Galaxy"]["SFR_aperture"]["30"].keys())
                 master_sfr = snap_grp["Galaxy"]["SFR_aperture"]["30"]["100"][...] * 10 ** 9
                 master_s_mass = snap_grp["Galaxy"]["Mstar_aperture"]["30"][...] * 10 ** 10
                 master_s_pos = snap_grp["Particle"]["S_Coordinates"][...].T / \
