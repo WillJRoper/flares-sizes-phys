@@ -2797,7 +2797,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
 
     # Compute delta
     delta_hmr = tot_hmrs / tot_prog_hmrs
-    delta_rs = tot_rs / prog_tot_rs
+    delta_rs = tot_rs - prog_tot_rs
     relative_rs = tot_rs / tot_hmrs
     delta_cop = np.sqrt((tot_cops[:, 0] - prog_tot_cops[:, 0]) ** 2
                         + (tot_cops[:, 1] - prog_tot_cops[:, 1]) ** 2
