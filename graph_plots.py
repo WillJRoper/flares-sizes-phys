@@ -2561,9 +2561,9 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     # Initialise lists for storing results
     tot_hmrs = []
     tot_prog_hmrs = []
-    prog_rs = []
-    rs = []
-    ssfrs = []
+    tot_prog_rs = []
+    tot_rs = []
+    tot_ssfrs = []
     w = []
 
     # Open the master file
