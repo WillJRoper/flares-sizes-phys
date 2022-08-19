@@ -2659,7 +2659,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
                 cops = snap_grp["Galaxy"]["COP"][...].T / (1 + z)
                 master_s_length = snap_grp["Galaxy"]["S_Length"][...]
                 master_s_age = snap_grp["Particle"]["S_Age"][...]
-                master_s_inim = snap_grp["Particle"]["S_Age"][...]
+                master_s_inim = snap_grp["Particle"]["S_MassInitial"][...] * 10 ** 10
                 master_app = snap_grp["Particle"]["Apertures/Star/30"][...]
                 master_s_mass = snap_grp["Galaxy"]["Mstar_aperture"]["30"][...] * 10 ** 10
                 master_s_pos = snap_grp["Particle"]["S_Coordinates"][...].T / \
@@ -2769,7 +2769,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
             sinds = np.argsort(s_pids[pinds])
             rs = rs[sinds] * 10**3
             prog_sinds = np.argsort(prog_s_pids[prog_pinds])
-            prog_rs = prog_rs[prog_pinds][sinds] * 10**3
+            prog_rs = prog_rs[prog_pinds][prog_sinds] * 10**3
 
             # Include these results for plotting
             tot_hmrs.extend(np.full(len(rs), hmr))
