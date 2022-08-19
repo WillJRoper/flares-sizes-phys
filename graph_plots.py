@@ -2793,7 +2793,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
 
     # Compute delta
     delta_hmr = tot_hmrs / tot_prog_hmrs
-    delta_rs = tot_rs / prog_tot_rs
+    delta_rs = tot_rs - prog_tot_rs
     relative_rs = tot_rs / tot_hmrs
 
     # Sort by decreasing size to overlay shrinking galaxies
@@ -2855,7 +2855,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
-    ax.loglog()
+    ax.semilogx()
 
     okinds = np.logical_and(tot_rs > 0, delta_rs > 0)
 
