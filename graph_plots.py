@@ -2659,19 +2659,17 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
                 prog_master_subgrps = prog_grp["Galaxy"]["SubGroupNumber"][...]
 
                 # Get other data from the master file
-                cops = snap_grp["Galaxy"]["COP"][...].T / (1 + z)
+                cops = snap_grp["Galaxy"]["COP"][...].T
                 master_s_length = snap_grp["Galaxy"]["S_Length"][...]
                 master_s_age = snap_grp["Particle"]["S_Age"][...]
                 master_s_inim = snap_grp["Particle"]["S_MassInitial"][...] * 10 ** 10
                 master_app = snap_grp["Particle"]["Apertures/Star/30"][...]
                 master_s_mass = snap_grp["Galaxy"]["Mstar_aperture"]["30"][...] * 10 ** 10
-                master_s_pos = snap_grp["Particle"]["S_Coordinates"][...].T / \
-                    (1 + z)
+                master_s_pos = snap_grp["Particle"]["S_Coordinates"][...].T
                 master_s_pids = snap_grp["Particle"]["S_Index"][...]
-                prog_cops = prog_grp["Galaxy"]["COP"][...].T / (1 + prog_z)
+                prog_cops = prog_grp["Galaxy"]["COP"][...].T
                 prog_master_s_length = prog_grp["Galaxy"]["S_Length"][...]
-                prog_master_s_pos = prog_grp["Particle"]["S_Coordinates"][...].T / (
-                    1 + prog_z)
+                prog_master_s_pos = prog_grp["Particle"]["S_Coordinates"][...].T
                 prog_master_s_pids = prog_grp["Particle"]["S_Index"][...]
 
             # Extract this galaxies information
@@ -2759,8 +2757,8 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
             ssfr = np.sum(s_inims[s_age < 0.1]) / 0.1 / s_m
 
             # Store cops
-            tot_cops.append(cop * (1 + z))
-            prog_tot_cops.append(prog_cop * (1 + prog_z))
+            tot_cops.append(cop)
+            prog_tot_cops.append(prog_cop)
             tot_mass.append(s_m)
 
             # Get the particles present in the previous snapshot
@@ -2804,7 +2802,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
 
     # Compute delta
     delta_hmr = tot_hmrs / tot_prog_hmrs
-    delta_rs = tot_rs - prog_tot_rs
+    delta_rs = tot_rs / prog_tot_rs
     relative_rs = tot_rs / tot_hmrs
     delta_cop = np.sqrt((tot_cops[:, 0] - prog_tot_cops[:, 0]) ** 2
                         + (tot_cops[:, 1] - prog_tot_cops[:, 1]) ** 2
@@ -2878,7 +2876,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
                     cmap="plasma", marker=".", norm=cm.LogNorm())
 
     # Axes labels
-    ax.set_xlabel("$R_\star^\mathrm{B} / [\mathrm{pkpc}]$")
+    ax.set_xlabel("$R_\star^\mathrm{B} / [\mathrm{ckpc}]$")
     ax.set_ylabel("$R_\star^\mathrm{B} / R_\star^\mathrm{A}$")
 
     cbar = fig.colorbar(im)
@@ -2893,7 +2891,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
-    ax.semilogy()
+    ax.loglog()
 
     okinds = np.logical_and(tot_rs > 0, delta_rs > 0)
 
