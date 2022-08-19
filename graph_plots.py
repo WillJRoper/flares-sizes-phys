@@ -2747,19 +2747,19 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
             s_pids = master_s_pids[s_start: s_start + s_len]
 
             # Get the particles present in the previous snapshot
-            _, _, parts_in_common = np.intersect1d(prog_s_pids, s_pids,
-                                                   assume_unique=True,
-                                                   return_indices=True)
+            _, prog_pinds, pinds = np.intersect1d(prog_s_pids, s_pids,
+                                                  assume_unique=True,
+                                                  return_indices=True)
 
             # Calculate radius and apply a 30 pkpc aperture
-            rs = np.sqrt((coords[parts_in_common, 0] - cop[0]) ** 2
-                         + (coords[parts_in_common, 1] - cop[1]) ** 2
-                         + (coords[parts_in_common, 2] - cop[2]) ** 2)
+            rs = np.sqrt((coords[pinds, 0] - cop[0]) ** 2
+                         + (coords[pinds, 1] - cop[1]) ** 2
+                         + (coords[pinds, 2] - cop[2]) ** 2)
 
             # Include these results for plotting
             tot_hmrs.extend(np.full(len(rs), hmr))
             tot_prog_hmrs.extend(np.full(len(rs), prog_hmr))
-            tot_prog_rs.extend(prog_rs)
+            tot_prog_rs.extend(prog_rs[prog_pinds])
             tot_rs.extend(rs)
             tot_ssfrs.extend(np.full(len(rs), ssfr))
             w.extend(np.full(len(rs), ws[ind]))
