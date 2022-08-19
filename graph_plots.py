@@ -928,8 +928,6 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
 
     if rank == 0:
 
-        norm = cm.TwoSlopeNorm(vcenter=0)
-
         # Convert to arrays
         tot_hmrs = np.array(tot_hmrs)
         tot_prog_hmrs = np.array(tot_prog_hmrs)
@@ -943,6 +941,9 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
         delta_hmr = tot_hmrs - tot_prog_hmrs
         delta_fb = feedback_energy / prog_feedback_energy
         delta_eb = binding_energy / prog_binding_energy
+
+        norm = cm.TwoSlopeNorm(vmin=delta_hmr.min(), vcenter=0,
+                               vmax=delta_hmr.max())
 
         # Sort by decreasing size to overlay shrinking galaxies
         sinds = np.argsort(delta_hmr)[::-1]
@@ -2657,7 +2658,9 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
                 # Get other data from the master file
                 cops = snap_grp["Galaxy"]["COP"][...].T / (1 + z)
                 master_s_length = snap_grp["Galaxy"]["S_Length"][...]
-                master_sfr = snap_grp["Galaxy"]["SFR_aperture"]["30"]["100Myr"][...] * 10 ** 9
+                master_s_age = snap_grp["Particle"]["S_Age"][...]
+                master_s_inim = snap_grp["Particle"]["S_Age"][...]
+                master_app = snap_grp["Particle"]["Apertures/Star/30"][...]
                 master_s_mass = snap_grp["Galaxy"]["Mstar_aperture"]["30"][...] * 10 ** 10
                 master_s_pos = snap_grp["Particle"]["S_Coordinates"][...].T / \
                     (1 + z)
@@ -2720,7 +2723,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
             s_start = np.sum(master_s_length[:master_ind])
             s_len = master_s_length[master_ind]
             cop = cops[master_ind]
-            ssfr = master_sfr[master_ind] / master_s_mass[master_ind]
+            s_m = master_s_mass[master_ind]
 
             prog_s_start = np.sum(prog_master_s_length[:prog_master_ind])
             prog_s_len = prog_master_s_length[prog_master_ind]
@@ -2745,6 +2748,12 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
             # Get this galaxy's data
             coords = master_s_pos[s_start: s_start + s_len, :]
             s_pids = master_s_pids[s_start: s_start + s_len]
+            app = master_app[s_start: s_start + s_len]
+            s_age = master_s_age[s_start: s_start + s_len][app]
+            s_inims = master_s_inim[s_start: s_start + s_len][app]
+
+            # Calculate sSFR
+            ssfr = np.sum(s_inims[s_age < 0.1]) / 0.1 / s_m
 
             # Get the particles present in the previous snapshot
             _, prog_pinds, pinds = np.intersect1d(prog_s_pids, s_pids,
@@ -2756,10 +2765,16 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
                          + (coords[pinds, 1] - cop[1]) ** 2
                          + (coords[pinds, 2] - cop[2]) ** 2)
 
+            # Sort the radii
+            sinds = np.argsort(s_pids[pinds])
+            rs = rs[sinds] * 10**3
+            prog_sinds = np.argsort(prog_s_pids[prog_pinds])
+            prog_rs = prog_rs[prog_pinds][sinds] * 10**3
+
             # Include these results for plotting
             tot_hmrs.extend(np.full(len(rs), hmr))
             tot_prog_hmrs.extend(np.full(len(rs), prog_hmr))
-            tot_prog_rs.extend(prog_rs[prog_pinds])
+            tot_prog_rs.extend(prog_rs)
             tot_rs.extend(rs)
             tot_ssfrs.extend(np.full(len(rs), ssfr))
             w.extend(np.full(len(rs), ws[ind]))
@@ -2803,7 +2818,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     ax.set_ylabel("$R_\star^\mathrm{B} / R_\star^\mathrm{A}$")
 
     cbar = fig.colorbar(im)
-    cbar.set_label("$\mathrm{sSFR} / [\mathrm{Myr}^{-1}]$")
+    cbar.set_label("$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
 
     # Save figure
     mkdir("plots/graph/")
@@ -2827,7 +2842,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     ax.set_ylabel("$R_\star^\mathrm{B} / R_\star^\mathrm{A}$")
 
     cbar = fig.colorbar(im)
-    cbar.set_label("$\mathrm{sSFR} / [\mathrm{Myr}^{-1}]$")
+    cbar.set_label("$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
 
     # Save figure
     mkdir("plots/graph/")
@@ -2851,7 +2866,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     ax.set_ylabel("$R_\star^\mathrm{B} / R_\star^\mathrm{A}$")
 
     cbar = fig.colorbar(im)
-    cbar.set_label("$\mathrm{sSFR} / [\mathrm{Myr}^{-1}]$")
+    cbar.set_label("$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
 
     # Save figure
     mkdir("plots/graph/")
