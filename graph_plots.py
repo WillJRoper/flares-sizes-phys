@@ -2770,9 +2770,9 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
 
             # Sort the radii
             sinds = np.argsort(s_pids[pinds])
-            rs = rs[sinds] * 10**3
+            rs = rs[sinds]
             prog_sinds = np.argsort(prog_s_pids[prog_pinds])
-            prog_rs = prog_rs[prog_pinds][prog_sinds] * 10**3
+            prog_rs = prog_rs[prog_pinds][prog_sinds]
 
             # Include these results for plotting
             tot_hmrs.extend(np.full(len(rs), hmr))
@@ -2796,7 +2796,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     tot_mass = np.array(tot_mass)
 
     # Compute delta
-    delta_hmr = tot_hmrs / tot_prog_hmrs
+    delta_hmr = tot_hmrs - tot_prog_hmrs
     delta_rs = tot_rs - prog_tot_rs
     relative_rs = tot_rs / tot_hmrs
     delta_cop = np.sqrt((tot_cops[:, 0] - prog_tot_cops[:, 0]) ** 2
@@ -2814,7 +2814,6 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
-    ax.loglog()
 
     okinds = np.logical_and(delta_hmr > 0, delta_rs > 0)
 
@@ -2838,7 +2837,6 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
-    ax.loglog()
 
     okinds = np.logical_and(relative_rs > 0, delta_rs > 0)
 
@@ -2862,7 +2860,6 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
-    ax.loglog()
 
     okinds = np.logical_and(tot_rs > 0, delta_rs > 0)
 
@@ -2886,7 +2883,6 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
-    ax.loglog()
 
     okinds = np.logical_and(tot_rs > 0, delta_rs > 0)
 
