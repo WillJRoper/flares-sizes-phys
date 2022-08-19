@@ -2566,6 +2566,8 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     tot_rs = []
     tot_ssfrs = []
     w = []
+    tot_cop = []
+    prog_tot_cop = []
 
     # Open the master file
     hdf_master = h5py.File(master_base, "r")
@@ -2755,6 +2757,10 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
             # Calculate sSFR
             ssfr = np.sum(s_inims[s_age < 0.1]) / 0.1 / s_m
 
+            # Store cops
+            tot_cops.append(cop)
+            prog_tot_cops.append(prog_cop)
+
             # Get the particles present in the previous snapshot
             common, prog_pinds, pinds = np.intersect1d(prog_s_pids, s_pids,
                                                        return_indices=True)
@@ -2790,11 +2796,16 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     prog_tot_rs = np.array(tot_prog_rs)
     tot_ssfrs = np.array(tot_ssfrs)
     w = np.array(w)
+    tot_cops = np.array(tot_cops)
+    prog_tot_cops = np.array(prog_tot_cops)
 
     # Compute delta
     delta_hmr = tot_hmrs / tot_prog_hmrs
     delta_rs = tot_rs - prog_tot_rs
     relative_rs = tot_rs / tot_hmrs
+    delta_cop = np.sqrt((tot_cops[:, 0] - prog_tot_cops[:, 0]) ** 2
+                        + (tot_cops[:, 1] - prog_tot_cops[:, 1]) ** 2
+                        + (tot_cops[:, 2] - prog_tot_cops[:, 2]) ** 2)
 
     # Sort by decreasing size to overlay shrinking galaxies
     sinds = np.argsort(tot_ssfrs)[::-1]
@@ -2873,5 +2884,29 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     # Save figure
     mkdir("plots/graph/")
     fig.savefig("plots/graph/delta_rs_R.png",
+                bbox_inches="tight")
+    plt.close(fig)
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+    ax.semilogx()
+
+    okinds = np.logical_and(tot_rs > 0, delta_rs > 0)
+
+    # Plot the scatter
+    im = ax.scatter(delta_cop, delta_rs, c=tot_ssfrs,
+                    cmap="plasma", marker=".", norm=cm.LogNorm())
+
+    # Axes labels
+    ax.set_xlabel("$\Delta \mathrm{COP}$")
+    ax.set_ylabel("$R_\star^\mathrm{B} / R_\star^\mathrm{A}$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
+
+    # Save figure
+    mkdir("plots/graph/")
+    fig.savefig("plots/graph/delta_rs_COP.png",
                 bbox_inches="tight")
     plt.close(fig)
