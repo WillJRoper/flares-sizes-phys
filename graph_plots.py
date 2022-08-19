@@ -2740,6 +2740,9 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
             prog_rs = np.sqrt((prog_coords[:, 0] - prog_cop[0]) ** 2
                               + (prog_coords[:, 1] - prog_cop[1]) ** 2
                               + (prog_coords[:, 2] - prog_cop[2]) ** 2)
+            okinds = prog_rs < 0.03
+            prog_rs = prog_rs[okinds]
+            prog_s_pids = prog_s_pids[okinds]
 
             # Get this galaxy's data
             coords = master_s_pos[s_start: s_start + s_len, :]
@@ -2755,6 +2758,14 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
             tot_cops.append(cop)
             prog_tot_cops.append(prog_cop)
             tot_mass.append(s_m)
+
+            # Calculate radius and apply a 30 pkpc aperture
+            rs = np.sqrt((coords[:, 0] - cop[0]) ** 2
+                         + (coords[:, 1] - cop[1]) ** 2
+                         + (coords[:, 2] - cop[2]) ** 2)
+            okinds = rs < 0.03
+            rs = rs[okinds]
+            s_pids = s_pids[okinds]
 
             # Get the particles present in the previous snapshot
             common, prog_pinds, pinds = np.intersect1d(prog_s_pids, s_pids,
@@ -2796,8 +2807,8 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     tot_mass = np.array(tot_mass)
 
     # Compute delta
-    delta_hmr = tot_hmrs - tot_prog_hmrs
-    delta_rs = tot_rs - prog_tot_rs
+    delta_hmr = tot_hmrs / tot_prog_hmrs
+    delta_rs = tot_rs / prog_tot_rs
     relative_rs = tot_rs / tot_hmrs
     delta_cop = np.sqrt((tot_cops[:, 0] - prog_tot_cops[:, 0]) ** 2
                         + (tot_cops[:, 1] - prog_tot_cops[:, 1]) ** 2
@@ -2814,6 +2825,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
+    ax.loglog()
 
     okinds = np.logical_and(delta_hmr > 0, delta_rs > 0)
 
@@ -2837,6 +2849,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
+    ax.loglog()
 
     okinds = np.logical_and(relative_rs > 0, delta_rs > 0)
 
@@ -2860,6 +2873,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
+    ax.loglog()
 
     okinds = np.logical_and(tot_rs > 0, delta_rs > 0)
 
@@ -2883,6 +2897,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
+    ax.loglog()
 
     okinds = np.logical_and(tot_rs > 0, delta_rs > 0)
 
