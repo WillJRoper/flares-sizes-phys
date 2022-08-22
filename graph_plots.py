@@ -2785,13 +2785,21 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
             prog_sinds = np.argsort(prog_s_pids[prog_pinds])
             prog_rs = prog_rs[prog_pinds][prog_sinds]
 
+            # # Include these results for plotting
+            # tot_hmrs.extend(np.full(len(rs), hmr))
+            # tot_prog_hmrs.extend(np.full(len(rs), prog_hmr))
+            # tot_prog_rs.extend(prog_rs)
+            # tot_rs.extend(rs)
+            # tot_ssfrs.extend(np.full(len(rs), ssfr))
+            # w.extend(np.full(len(rs), ws[ind]))
+
             # Include these results for plotting
-            tot_hmrs.extend(np.full(len(rs), hmr))
-            tot_prog_hmrs.extend(np.full(len(rs), prog_hmr))
-            tot_prog_rs.extend(prog_rs)
-            tot_rs.extend(rs)
-            tot_ssfrs.extend(np.full(len(rs), ssfr))
-            w.extend(np.full(len(rs), ws[ind]))
+            tot_hmrs.append(hmr)
+            tot_prog_hmrs.append(prog_hmr)
+            tot_prog_rs.append(np.mean(prog_rs))
+            tot_rs.append(np.mean(rs))
+            tot_ssfrs.append(ssfr)
+            w.append(ws[ind])
 
     hdf_master.close()
 
