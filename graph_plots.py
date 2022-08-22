@@ -2795,7 +2795,7 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
 
             # Include these results for plotting
             tot_hmrs.append(hmr)
-            tot_prog_hmrs.append(prog_hmr)
+            tot_prog_hmrs.extend(prog_hmr)
             tot_prog_rs.append(np.mean(prog_rs))
             tot_rs.append(np.mean(rs))
             tot_ssfrs.append(ssfr)
