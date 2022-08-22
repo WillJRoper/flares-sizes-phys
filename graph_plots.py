@@ -941,6 +941,8 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
         delta_hmr = tot_hmrs - tot_prog_hmrs
         delta_fb = feedback_energy / prog_feedback_energy
         delta_eb = binding_energy / prog_binding_energy
+        delta_prog = prog_binding_energy / prog_feedback_energy
+        delta_current = binding_energy / feedback_energy
 
         norm = cm.TwoSlopeNorm(vmin=delta_hmr.min(), vcenter=0,
                                vmax=delta_hmr.max())
@@ -950,6 +952,8 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
         delta_hmr = delta_hmr[sinds]
         delta_fb = delta_fb[sinds]
         delta_eb = delta_eb[sinds]
+        delta_prog = delta_prog[sinds]
+        delta_current = delta_current[sinds]
 
         # Set up plot
         fig = plt.figure(figsize=(3.5, 3.5))
@@ -973,6 +977,32 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
         # Save figure
         mkdir("plots/graph/")
         fig.savefig("plots/graph/delta_hmr_bind.png",
+                    bbox_inches="tight")
+        plt.close(fig)
+
+        # Set up plot
+        fig = plt.figure(figsize=(3.5, 3.5))
+        ax = fig.add_subplot(111)
+        ax.loglog()
+
+        okinds = np.logical_and(delta_eb > 0, delta_fb > 0)
+
+        # Plot the scatter
+        im = ax.scatter(delta_prog, delta_current, c=delta_hmr,
+                        cmap="coolwarm", marker=".", norm=norm)
+
+        # Axes labels
+        ax.set_xlabel(
+            "$E_\mathrm{bind}^\mathrm{A} / E_\mathrm{fb}^\mathrm{A}$")
+        ax.set_ylabel(
+            "$E_\mathrm{bind}^\mathrm{B} / E_\mathrm{fb}^\mathrm{B}$")
+
+        cbar = fig.colorbar(im)
+        cbar.set_label("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
+
+        # Save figure
+        mkdir("plots/graph/")
+        fig.savefig("plots/graph/delta_hmr_bind_fbratio.png",
                     bbox_inches="tight")
         plt.close(fig)
 
