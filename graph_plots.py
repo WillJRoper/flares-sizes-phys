@@ -2821,6 +2821,8 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
     delta_cop = np.sqrt((tot_cops[:, 0] - prog_tot_cops[:, 0]) ** 2
                         + (tot_cops[:, 1] - prog_tot_cops[:, 1]) ** 2
                         + (tot_cops[:, 2] - prog_tot_cops[:, 2]) ** 2)
+    print(delta_hmr.size, delta_rs.size)
+    print(delta_rs)
 
     # Sort by decreasing size to overlay shrinking galaxies
     sinds = np.argsort(tot_ssfrs)[::-1]
