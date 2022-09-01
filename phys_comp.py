@@ -876,7 +876,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
     ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
 
     # Define physics variations directories
-    types = ["G-EAGLE_00", "FLARES_00_REF", "FLARES_00_highFBlim",
+    types = ["flares_00", "FLARES_00_REF", "FLARES_00_highFBlim",
              "FLARES_00_medFBlim", "FLARES_00_slightFBlim",
              "FLARES_00_instantFB", "FLARES_00_noZSFthresh"]
 
@@ -941,6 +941,8 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
         path = ini_path.replace("<type>", t)
 
+        print(path)
+
         reg_zs, reg_mets = get_nonmaster_evo_data(
             path, snap, y_key="PartType4/SmoothedMetallicity")
 
@@ -964,7 +966,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
     ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
 
     # Define physics variations directories
-    types = ["G-EAGLE_00", "FLARES_00_REF", "FLARES_00_highFBlim",
+    types = ["flares_00", "FLARES_00_REF", "FLARES_00_highFBlim",
              "FLARES_00_medFBlim", "FLARES_00_slightFBlim",
              "FLARES_00_instantFB", "FLARES_00_noZSFthresh"]
 
@@ -1028,6 +1030,8 @@ def plot_birth_den_vary(stellar_data, snap, path):
     for (ind, t), l in zip(enumerate(types), labels):
 
         path = ini_path.replace("<type>", t)
+
+        print(path)
 
         reg_zs, reg_dens = get_nonmaster_evo_data(
             path, snap, y_key="PartType4/BirthDensity")
