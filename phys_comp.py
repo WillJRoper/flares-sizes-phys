@@ -868,3 +868,165 @@ def plot_potential(snap):
     mkdir("plots/physics_vary/")
     fig.savefig("plots/physics_vary/potential_energy_%s.png" % snap,
                 bbox_inches="tight")
+
+
+def plot_birth_met_vary(stellar_data, snap, path):
+
+    # Define the path
+    ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
+
+    # Define physics variations directories
+    types = ["G-EAGLE_00", "FLARES_00_REF", "FLARES_00_highFBlim",
+             "FLARES_00_medFBlim", "FLARES_00_slightFBlim",
+             "FLARES_00_instantFB", "FLARES_00_noZSFthresh"]
+
+    # Define labels for each
+    labels = ["AGNdT9", "REF", "$f_{\mathrm{th, max}}=10$",
+              "$f_{\mathrm{th, max}}=6$", "$f_{\mathrm{th, max}}=4$",
+              "InstantFB", "$Z^0$"]
+
+    # Define plot dimensions
+    nrows = 3
+    ncols = 3
+
+    # Define norm
+    norm = cm.LogNorm(vmin=1, vmax=1000)
+
+    # Set up the plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    gs = gridspec.GridSpec(nrows=nrows, ncols=ncols + 1,
+                           width_ratios=[20, ] * ncols + [1, ])
+    gs.update(wspace=0.0, hspace=0.0)
+    axes = []
+    cax = fig.add_subplot(gs[:, -1])
+
+    for i in range(nrows):
+        for j in range(ncols):
+
+            # Create axis
+            ax = fig.add_subplot(gs[i, j])
+            ax.semilogy()
+
+            # Include labels
+            if j == 0:
+                ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
+            if i == nrows - 1:
+                ax.set_xlabel(r"$z_{\mathrm{birth}}$")
+
+            # Remove unnecessary ticks
+            if j > 0:
+                axes[i].tick_params("y", left=False, right=False,
+                                    labelleft=False, labelright=False)
+            if i < nrows - 1:
+                axes[i].tick_params("x", top=False, bottom=False,
+                                    labeltop=False, labelbottom=False)
+
+            # Set axis limits
+            ax.set_ylim(10**-4.8, 1)
+            ax.set_xlim(4.75, 20)
+
+            # Label axis
+            ax.text(0.95, 0.9, labels[i * ncols + j],
+                    bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
+                              alpha=0.8),
+                    transform=ax.transAxes, horizontalalignment='right',
+                    fontsize=8)
+
+            axes.append(ax)
+
+    for (ind, t), l in zip(enumerate(types), labels):
+
+        path = ini_path.replace("<type>", t)
+
+        reg_zs, reg_mets = get_nonmaster_evo_data(
+            path, snap, y_key="PartType4/SmoothedMetallicity")
+
+        axes[ind].hexbin(reg_zs, reg_mets, mincnt=1, gridsize=50, yscale="log",
+                         linewidth=0.2, cmap="plasma", norm=norm)
+
+    # Save figure
+    mkdir("plots/physics_vary/")
+    fig.savefig("plots/physics_vary/stellar_birthZ_%s.png" % snap,
+                bbox_inches="tight")
+
+
+def plot_birth_den_vary(stellar_data, snap, path):
+
+    # Define the path
+    ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
+
+    # Define physics variations directories
+    types = ["G-EAGLE_00", "FLARES_00_REF", "FLARES_00_highFBlim",
+             "FLARES_00_medFBlim", "FLARES_00_slightFBlim",
+             "FLARES_00_instantFB", "FLARES_00_noZSFthresh"]
+
+    # Define labels for each
+    labels = ["AGNdT9", "REF", "$f_{\mathrm{th, max}}=10$",
+              "$f_{\mathrm{th, max}}=6$", "$f_{\mathrm{th, max}}=4$",
+              "InstantFB", "$Z^0$"]
+
+    # Define plot dimensions
+    nrows = 3
+    ncols = 3
+
+    # Define norm
+    norm = cm.LogNorm(vmin=1, vmax=1000)
+
+    # Set up the plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    gs = gridspec.GridSpec(nrows=nrows, ncols=ncols + 1,
+                           width_ratios=[20, ] * ncols + [1, ])
+    gs.update(wspace=0.0, hspace=0.0)
+    axes = []
+    cax = fig.add_subplot(gs[:, -1])
+
+    for i in range(nrows):
+        for j in range(ncols):
+
+            # Create axis
+            ax = fig.add_subplot(gs[i, j])
+            ax.semilogy()
+
+            # Include labels
+            if j == 0:
+                ax.set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
+            if i == nrows - 1:
+                ax.set_xlabel(r"$z_{\mathrm{birth}}$")
+
+            # Remove unnecessary ticks
+            if j > 0:
+                axes[i].tick_params("y", left=False, right=False,
+                                    labelleft=False, labelright=False)
+            if i < nrows - 1:
+                axes[i].tick_params("x", top=False, bottom=False,
+                                    labeltop=False, labelbottom=False)
+
+            # Set axis limits
+            ax.set_ylim(10 ** -0.8, 10 ** 6.5)
+            ax.set_xlim(4.75, 20)
+
+            # Label axis
+            ax.text(0.95, 0.9, labels[i * ncols + j],
+                    bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
+                              alpha=0.8),
+                    transform=ax.transAxes, horizontalalignment='right',
+                    fontsize=8)
+
+            axes.append(ax)
+
+    for (ind, t), l in zip(enumerate(types), labels):
+
+        path = ini_path.replace("<type>", t)
+
+        reg_zs, reg_dens = get_nonmaster_evo_data(
+            path, snap, y_key="PartType4/BirthDensity")
+
+        axes[ind].hexbin(reg_zs, reg_dens, mincnt=1, gridsize=50, yscale="log",
+                         linewidth=0.2, cmap="plasma", norm=norm)
+
+    # Save figure
+    mkdir("plots/physics_varyo/")
+    fig.savefig("plots/physics_vary/stellar_birthden_%s.png" % snap,
+                bbox_inches="tight")
+
+    return stellar_data
