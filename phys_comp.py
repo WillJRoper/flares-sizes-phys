@@ -1100,7 +1100,7 @@ def plot_ssfr_mass_vary(snap):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=1, vmax=20)
+    norm = LogNorm(vmin=1, vmax=10)
 
     # Define hexbin extent
     extent = [8, 11.5, 0, 15]
