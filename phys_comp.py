@@ -876,15 +876,16 @@ def plot_birth_met_vary(stellar_data, snap, path):
     ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
 
     # Define physics variations directories
-    types = ["flares_00", "FLARES_00_REF", "FLARES_00_highFBlim",
-             "FLARES_00_medFBlim", "FLARES_00_slightFBlim",
-             "FLARES_00_instantFB", "FLARES_00_noZSFthresh"]
+    types = ["flares_00", "FLARES_00_REF",
+             "FLARES_00_instantFB", "FLARES_00_noZSFthresh",
+             "FLARES_00_slightFBlim", "FLARES_00_medFBlim",
+             "FLARES_00_highFBlim"]
 
     # Define labels for each
-    labels = ["AGNdT9", "REF", "SKIP", "$f_{\mathrm{th, max}}=10$",
-              "$f_{\mathrm{th, max}}=6$", "$f_{\mathrm{th, max}}=4$",
-              "InstantFB", "$Z^0$"]
-
+    labels = ["AGNdT9", "REF", "SKIP",
+              "InstantFB", "$Z^0$", "SKIP",
+              "$f_{\mathrm{th, max}}=4$", "$f_{\mathrm{th, max}}=6$",
+              "$f_{\mathrm{th, max}}=10$"]
     # Define plot dimensions
     nrows = 3
     ncols = 3
@@ -898,7 +899,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
                            width_ratios=[20, ] * ncols + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
     axes = []
-    cax = fig.add_subplot(gs[:, -1])
+    cax = fig.add_subplot(gs[-1, -1])
 
     for i in range(nrows):
         for j in range(ncols):
@@ -968,14 +969,16 @@ def plot_birth_den_vary(stellar_data, snap, path):
     ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
 
     # Define physics variations directories
-    types = ["flares_00", "FLARES_00_REF", "FLARES_00_highFBlim",
-             "FLARES_00_medFBlim", "FLARES_00_slightFBlim",
-             "FLARES_00_instantFB", "FLARES_00_noZSFthresh"]
+    types = ["flares_00", "FLARES_00_REF",
+             "FLARES_00_instantFB", "FLARES_00_noZSFthresh",
+             "FLARES_00_slightFBlim", "FLARES_00_medFBlim",
+             "FLARES_00_highFBlim"]
 
     # Define labels for each
-    labels = ["AGNdT9", "REF", "SKIP", "$f_{\mathrm{th, max}}=10$",
-              "$f_{\mathrm{th, max}}=6$", "$f_{\mathrm{th, max}}=4$",
-              "InstantFB", "$Z^0$"]
+    labels = ["AGNdT9", "REF", "SKIP",
+              "InstantFB", "$Z^0$", "SKIP",
+              "$f_{\mathrm{th, max}}=4$", "$f_{\mathrm{th, max}}=6$",
+              "$f_{\mathrm{th, max}}=10$"]
 
     # Define plot dimensions
     nrows = 3
@@ -990,7 +993,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
                            width_ratios=[20, ] * ncols + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
     axes = []
-    cax = fig.add_subplot(gs[:, -1])
+    cax = fig.add_subplot(gs[-1, -1])
 
     for i in range(nrows):
         for j in range(ncols):
@@ -1074,14 +1077,16 @@ def plot_ssfr_mass_vary(snap):
     ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
 
     # Define physics variations directories
-    types = ["flares_00", "FLARES_00_REF", "FLARES_00_highFBlim",
-             "FLARES_00_medFBlim", "FLARES_00_slightFBlim",
-             "FLARES_00_instantFB", "FLARES_00_noZSFthresh"]
+    types = ["flares_00", "FLARES_00_REF",
+             "FLARES_00_instantFB", "FLARES_00_noZSFthresh",
+             "FLARES_00_slightFBlim", "FLARES_00_medFBlim",
+             "FLARES_00_highFBlim"]
 
     # Define labels for each
-    labels = ["AGNdT9", "REF", "SKIP", "$f_{\mathrm{th, max}}=10$",
-              "$f_{\mathrm{th, max}}=6$", "$f_{\mathrm{th, max}}=4$",
-              "InstantFB", "$Z^0$"]
+    labels = ["AGNdT9", "REF", "SKIP",
+              "InstantFB", "$Z^0$", "SKIP",
+              "$f_{\mathrm{th, max}}=4$", "$f_{\mathrm{th, max}}=6$",
+              "$f_{\mathrm{th, max}}=10$"]
 
     # Define plot dimensions
     nrows = 3
@@ -1096,7 +1101,7 @@ def plot_ssfr_mass_vary(snap):
                            width_ratios=[20, ] * ncols + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
     axes = []
-    cax = fig.add_subplot(gs[:, -1])
+    cax = fig.add_subplot(gs[-1, -1])
 
     for i in range(nrows):
         for j in range(ncols):
@@ -1230,7 +1235,6 @@ def plot_ssfr_mass_vary(snap):
             rs = np.sqrt(this_coords[:, 0] ** 2
                          + this_coords[:, 1] ** 2
                          + this_coords[:, 2] ** 2)
-            print(rs)
 
             # Get only particles within the aperture
             rokinds = rs < 30
