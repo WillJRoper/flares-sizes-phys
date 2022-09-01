@@ -908,7 +908,6 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
             # Create axis
             ax = fig.add_subplot(gs[i, j])
-            ax.semilogy()
 
             # Include labels
             if j == 0:
@@ -947,7 +946,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
             path, snap, y_key="PartType4/SmoothedMetallicity")
 
         im = axes[ind].hexbin(reg_zs, reg_mets, mincnt=1, gridsize=50,
-                              yscale="log", linewidth=0.2, cmap="plasma",
+                              linewidth=0.2, cmap="plasma",
                               norm=norm)
 
     # Set up colorbar
