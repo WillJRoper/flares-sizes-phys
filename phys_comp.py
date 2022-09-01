@@ -941,8 +941,13 @@ def plot_birth_met_vary(stellar_data, snap, path):
         reg_zs, reg_mets = get_nonmaster_evo_data(
             path, snap, y_key="PartType4/SmoothedMetallicity")
 
-        axes[ind].hexbin(reg_zs, reg_mets, mincnt=1, gridsize=50, yscale="log",
-                         linewidth=0.2, cmap="plasma", norm=norm)
+        im = axes[ind].hexbin(reg_zs, reg_mets, mincnt=1, gridsize=50,
+                              yscale="log", linewidth=0.2, cmap="plasma",
+                              norm=norm)
+
+    # Set up colorbar
+    cbar = fig.colorbar(im, cax)
+    cbar.set_label("$N$")
 
     # Save figure
     mkdir("plots/physics_vary/")
@@ -1021,8 +1026,13 @@ def plot_birth_den_vary(stellar_data, snap, path):
         reg_zs, reg_dens = get_nonmaster_evo_data(
             path, snap, y_key="PartType4/BirthDensity")
 
-        axes[ind].hexbin(reg_zs, reg_dens, mincnt=1, gridsize=50, yscale="log",
-                         linewidth=0.2, cmap="plasma", norm=norm)
+        im = axes[ind].hexbin(reg_zs, reg_dens, mincnt=1, gridsize=50,
+                              yscale="log", linewidth=0.2, cmap="plasma",
+                              norm=norm)
+
+    # Set up colorbar
+    cbar = fig.colorbar(im, cax)
+    cbar.set_label("$N$")
 
     # Save figure
     mkdir("plots/physics_varyo/")
