@@ -876,7 +876,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
     ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
 
     # Define physics variations directories
-    types = ["flares_00_templink", "FLARES_00_REF",
+    types = ["flares_00", "FLARES_00_REF",
              "FLARES_00_instantFB", "FLARES_00_noZSFthresh",
              "FLARES_00_slightFBlim", "FLARES_00_medFBlim",
              "FLARES_00_highFBlim"]
@@ -972,7 +972,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
     ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
 
     # Define physics variations directories
-    types = ["flares_00_templink", "FLARES_00_REF",
+    types = ["flares_00", "FLARES_00_REF",
              "FLARES_00_instantFB", "FLARES_00_noZSFthresh",
              "FLARES_00_slightFBlim", "FLARES_00_medFBlim",
              "FLARES_00_highFBlim"]
@@ -1085,7 +1085,7 @@ def plot_ssfr_mass_vary(snap):
     ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
 
     # Define physics variations directories
-    types = ["flares_00_templink", "FLARES_00_REF",
+    types = ["flares_00", "FLARES_00_REF",
              "FLARES_00_instantFB", "FLARES_00_noZSFthresh",
              "FLARES_00_slightFBlim", "FLARES_00_medFBlim",
              "FLARES_00_highFBlim"]
@@ -1106,14 +1106,21 @@ def plot_ssfr_mass_vary(snap):
 
     # Define hexbin extent
     extent = [8, 11.5, 0, 15]
+    extent1 = [-1.1, 1.1, 0, 15]
 
-    # Set up the plot
+    # Set up the plots
     fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
+    fig1 = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
     gs = gridspec.GridSpec(nrows=nrows, ncols=ncols + 1,
                            width_ratios=[20, ] * ncols + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
+    gs1 = gridspec.GridSpec(nrows=nrows, ncols=ncols + 1,
+                            width_ratios=[20, ] * ncols + [1, ])
+    gs1.update(wspace=0.0, hspace=0.0)
     axes = []
     cax = fig.add_subplot(gs[-1, -1])
+    axes1 = []
+    cax1 = fig.add_subplot(gs1[-1, -1])
 
     for i in range(nrows):
         for j in range(ncols):
@@ -1126,24 +1133,33 @@ def plot_ssfr_mass_vary(snap):
 
             # Create axis
             ax = fig.add_subplot(gs[i, j])
+            ax1 = fig1.add_subplot(gs1[i, j])
 
             # Include labels
             if j == 0:
                 ax.set_ylabel(r"$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
+                ax1.set_ylabel(r"$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
             if i == nrows - 1:
                 ax.set_xlabel(r"$M_\star / M_\odot$")
+                ax1.set_xlabel(r"$R_{1/2} / [\mathrm{pkpc}]$")
 
             # Remove unnecessary ticks
             if j > 0:
                 ax.tick_params("y", left=False, right=False,
                                labelleft=False, labelright=False)
+                ax1.tick_params("y", left=False, right=False,
+                                labelleft=False, labelright=False)
             if i < nrows - 1:
                 ax.tick_params("x", top=False, bottom=False,
                                labeltop=False, labelbottom=False)
+                ax1.tick_params("x", top=False, bottom=False,
+                                labeltop=False, labelbottom=False)
 
             # Set axis limits
             ax.set_ylim(extent[2], extent[3])
             ax.set_xlim(10**extent[0], 10**extent[1])
+            ax1.set_ylim(extent1[2], extent1[3])
+            ax1.set_xlim(10**extent1[0], 10**extent1[1])
 
             # Label axis
             ax.text(0.95, 0.9, labels[i * ncols + j],
@@ -1151,8 +1167,14 @@ def plot_ssfr_mass_vary(snap):
                               alpha=0.8),
                     transform=ax.transAxes, horizontalalignment='right',
                     fontsize=8)
+            ax1.text(0.95, 0.9, labels[i * ncols + j],
+                     bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
+                               alpha=0.8),
+                     transform=ax1.transAxes, horizontalalignment='right',
+                     fontsize=8)
 
             axes.append(ax)
+            axes1.append(ax1)
 
     for (ind, t), l in zip(enumerate(types), labels):
 
@@ -1165,6 +1187,11 @@ def plot_ssfr_mass_vary(snap):
                                    "Subhalo/ApertureMeasurements/Mass/030kpc",
                                    noH=True, physicalUnits=True,
                                    numThreads=8)[:, 4] * 10 ** 10
+        hmrs = eagle_io.read_array("SUBFIND", path.replace("<type>", t),
+                                   snap,
+                                   "Subhalo/HalfMassRad",
+                                   noH=True, physicalUnits=True,
+                                   numThreads=8)[:, 4] * 10 ** 3
         cops = eagle_io.read_array("SUBFIND", path.replace("<type>", t),
                                    snap,
                                    "Subhalo/CentreOfPotential",
@@ -1208,11 +1235,12 @@ def plot_ssfr_mass_vary(snap):
                                            numThreads=8)
 
         # Apply some cuts
-        mokinds = mass > 10**8
+        mokinds = mass > 10**8.5
         mass = mass[mokinds]
         cops = cops[mokinds, :]
         grps = grps[mokinds]
         subgrps = subgrps[mokinds]
+        hmrs = hmrs[mokinds]
 
         # Compute the birth redshift
         birth_z = (1 / birth_a) - 1
@@ -1228,6 +1256,7 @@ def plot_ssfr_mass_vary(snap):
         # Set up array to store sfrs
         ssfrs = []
         ms = []
+        plt_hmrs = []
 
         # Loop over galaxies
         for igal in range(mass.size):
@@ -1237,6 +1266,7 @@ def plot_ssfr_mass_vary(snap):
             cop = cops[igal, :]
             g = grps[igal]
             sg = subgrps[igal]
+            hmr = hmrs[igal]
 
             # Get this galaxies stars
             sokinds = np.logical_and(part_grps == g, part_subgrps == sg)
@@ -1252,22 +1282,27 @@ def plot_ssfr_mass_vary(snap):
             rokinds = rs < 30
             this_ini_mass = this_ini_mass[rokinds]
 
-            if rs[rokinds].size < 100:
-                continue
-
             # Compute and store ssfr
             ssfrs.append(np.sum(this_ini_mass) / 0.1 / m)
             ms.append(m)
+            plt_hmrs.append(hmr)
 
         im = axes[ind].hexbin(ms, ssfrs, mincnt=1, gridsize=50,
                               xscale="log", linewidth=0.2,
                               cmap="plasma", norm=norm, extent=extent)
+        im1 = axes1[ind].hexbin(plt_hmrs, ssfrs, mincnt=1, gridsize=50,
+                                xscale="log", linewidth=0.2,
+                                cmap="plasma", norm=norm, extent=extent)
 
     # Set up colorbar
     cbar = fig.colorbar(im, cax)
     cbar.set_label("$N$")
+    cbar1 = fig1.colorbar(im1, cax1)
+    cbar1.set_label("$N$")
 
     # Save figure
     mkdir("plots/physics_vary/")
     fig.savefig("plots/physics_vary/sfr_mass_%s.png" % snap,
                 bbox_inches="tight")
+    fig1.savefig("plots/physics_vary/sfr_hmr_%s.png" % snap,
+                 bbox_inches="tight")
