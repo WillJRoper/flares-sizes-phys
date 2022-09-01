@@ -918,11 +918,11 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
             # Remove unnecessary ticks
             if j > 0:
-                axes[i].tick_params("y", left=False, right=False,
-                                    labelleft=False, labelright=False)
+                ax.tick_params("y", left=False, right=False,
+                               labelleft=False, labelright=False)
             if i < nrows - 1:
-                axes[i].tick_params("x", top=False, bottom=False,
-                                    labeltop=False, labelbottom=False)
+                ax.tick_params("x", top=False, bottom=False,
+                               labeltop=False, labelbottom=False)
 
             # Set axis limits
             ax.set_ylim(10**-4.8, 1)
