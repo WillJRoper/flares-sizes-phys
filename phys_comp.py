@@ -1202,7 +1202,8 @@ def plot_ssfr_mass_vary(snap):
         part_subgrps = part_subgrps[okinds]
 
         # Set up array to store sfrs
-        ssfrs = np.zeros_like(mass)
+        ssfrs = []
+        ms = []
 
         # Loop over galaxies
         for igal in range(mass.size):
@@ -1212,6 +1213,9 @@ def plot_ssfr_mass_vary(snap):
             cop = cops[igal, :]
             g = grps[igal]
             sg = subgrps[igal]
+
+            if m == 0:
+                continue
 
             # Get this galaxies stars
             sokinds = np.logical_and(part_grps == g, part_subgrps == sg)
@@ -1227,8 +1231,12 @@ def plot_ssfr_mass_vary(snap):
             rokinds = rs < 30
             this_ini_mass = this_ini_mass[rokinds]
 
+            if this_ini_mass.size < 100:
+                continue
+
             # Compute and store ssfr
-            ssfrs[igal] = np.sum(this_ini_mass) / 100 / m
+            ssfrs.append(np.sum(this_ini_mass) / 100 / m)
+            ms.append(m)
 
         im = axes[ind].hexbin(mass, ssfrs, mincnt=1, gridsize=50,
                               yscale="log", xscale="log", linewidth=0.2,
