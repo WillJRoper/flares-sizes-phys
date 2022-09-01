@@ -982,8 +982,8 @@ def plot_birth_met_vary(stellar_data, snap, path):
     # Set up the plot
     fig = plt.figure(figsize=(len(labels) * 3.5, len(labels) * 3.5))
     gs = gridspec.GridSpec(nrows=len(labels) + 1, ncols=len(labels) + 1,
-                           width_ratios=[20, ] * ncols + [1, ],
-                           height_ratios=[1, ] + [20, ])
+                           width_ratios=[20, ] * len(labels) + [1, ],
+                           height_ratios=[1, ] + [20, ] * len(labels))
     gs.update(wspace=0.0, hspace=0.0)
     axes = np.zeros((len(labels), len(labels)))
     cax1 = fig.add_subplot(gs[-1, -1])
