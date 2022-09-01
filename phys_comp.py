@@ -876,7 +876,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
     ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
 
     # Define physics variations directories
-    types = ["flares_00", "FLARES_00_REF",
+    types = ["flares_00_templink", "FLARES_00_REF",
              "FLARES_00_instantFB", "FLARES_00_noZSFthresh",
              "FLARES_00_slightFBlim", "FLARES_00_medFBlim",
              "FLARES_00_highFBlim"]
@@ -969,7 +969,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
     ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
 
     # Define physics variations directories
-    types = ["flares_00", "FLARES_00_REF",
+    types = ["flares_00_templink", "FLARES_00_REF",
              "FLARES_00_instantFB", "FLARES_00_noZSFthresh",
              "FLARES_00_slightFBlim", "FLARES_00_medFBlim",
              "FLARES_00_highFBlim"]
@@ -1077,7 +1077,7 @@ def plot_ssfr_mass_vary(snap):
     ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
 
     # Define physics variations directories
-    types = ["flares_00", "FLARES_00_REF",
+    types = ["flares_00_templink", "FLARES_00_REF",
              "FLARES_00_instantFB", "FLARES_00_noZSFthresh",
              "FLARES_00_slightFBlim", "FLARES_00_medFBlim",
              "FLARES_00_highFBlim"]
@@ -1085,7 +1085,8 @@ def plot_ssfr_mass_vary(snap):
     # Define labels for each
     labels = ["AGNdT9", "REF", "SKIP",
               "InstantFB", "$Z^0$", "SKIP",
-              "$f_{\mathrm{th, max}}=4$", "$f_{\mathrm{th, max}}=6$",
+              "$f_{\mathrm{th, max}}=4$",
+              "$f_{\mathrm{th, max}}=6$",
               "$f_{\mathrm{th, max}}=10$"]
 
     # Define plot dimensions
