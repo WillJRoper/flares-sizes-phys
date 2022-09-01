@@ -1109,7 +1109,7 @@ def plot_ssfr_mass_vary(snap):
 
             # Create axis
             ax = fig.add_subplot(gs[i, j])
-            ax.semilogy()
+            ax.loglog()
 
             # Include labels
             if j == 0:
@@ -1126,8 +1126,8 @@ def plot_ssfr_mass_vary(snap):
                                labeltop=False, labelbottom=False)
 
             # Set axis limits
-            ax.set_ylim(10 ** -0.8, 10 ** 6.5)
-            ax.set_xlim(4.75, 20)
+            ax.set_ylim(10 ** -2.1, 1)
+            ax.set_xlim(10**8, 10**11.5)
 
             # Label axis
             ax.text(0.95, 0.9, labels[i * ncols + j],
