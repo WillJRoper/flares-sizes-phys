@@ -1290,7 +1290,7 @@ def plot_ssfr_mass_vary(snap):
                               cmap="plasma", norm=norm, extent=extent)
         im1 = axes1[ind].hexbin(plt_hmrs, ssfrs, mincnt=1, gridsize=50,
                                 xscale="log", linewidth=0.2,
-                                cmap="plasma", norm=norm, extent=extent)
+                                cmap="plasma", norm=norm, extent=extent1)
 
     # Set up colorbar
     cbar = fig.colorbar(im, cax)
