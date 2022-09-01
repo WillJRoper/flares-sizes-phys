@@ -1113,7 +1113,7 @@ def plot_ssfr_mass_vary(snap):
 
             # Include labels
             if j == 0:
-                ax.set_ylabel(r"$\mathrm{sSFR} / [\mathrm{Myr}^{-1}]$")
+                ax.set_ylabel(r"$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
             if i == nrows - 1:
                 ax.set_xlabel(r"$M_\star / M_\odot$")
 
@@ -1242,7 +1242,7 @@ def plot_ssfr_mass_vary(snap):
                 continue
 
             # Compute and store ssfr
-            ssfrs.append(np.sum(this_ini_mass) / 100 / m)
+            ssfrs.append(np.sum(this_ini_mass) / 0.1 / m)
             ms.append(m)
 
         im = axes[ind].hexbin(ms, ssfrs, mincnt=1, gridsize=50,
