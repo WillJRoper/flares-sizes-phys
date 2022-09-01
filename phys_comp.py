@@ -1029,7 +1029,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
             axes[i, j] = ax
 
-            elif j == i:
+            if j == i:
                 im = axes[i, j].hexbin(hex_dict[ti]["zs"], hex_dict[ti]["mets"],
                                       mincnt=1, gridsize=50, linewidth=0.2,
                                       cmap="plasma", norm=norm, extent=extent)
