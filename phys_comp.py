@@ -1118,7 +1118,7 @@ def plot_ssfr_mass_vary(snap):
     axes = []
     cax = fig.add_subplot(gs[-1, -1])
     axes1 = []
-    cax1 = fig.add_subplot(gs1[-1, -1])
+    cax1 = fig1.add_subplot(gs1[-1, -1])
 
     for i in range(nrows):
         for j in range(ncols):
