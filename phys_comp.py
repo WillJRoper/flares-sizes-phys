@@ -881,7 +881,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
              "FLARES_00_instantFB", "FLARES_00_noZSFthresh"]
 
     # Define labels for each
-    labels = ["AGNdT9", "REF", "$f_{\mathrm{th, max}}=10$",
+    labels = ["AGNdT9", "REF", "SKIP", "$f_{\mathrm{th, max}}=10$",
               "$f_{\mathrm{th, max}}=6$", "$f_{\mathrm{th, max}}=4$",
               "InstantFB", "$Z^0$"]
 
@@ -890,10 +890,10 @@ def plot_birth_met_vary(stellar_data, snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=1, vmax=1000)
+    norm = LogNorm(vmin=1, vmax=10000)
 
     # Set up the plot
-    fig = plt.figure(figsize=(3.5, 3.5))
+    fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
     gs = gridspec.GridSpec(nrows=nrows, ncols=ncols + 1,
                            width_ratios=[20, ] * ncols + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
@@ -904,6 +904,9 @@ def plot_birth_met_vary(stellar_data, snap, path):
         for j in range(ncols):
 
             if i * ncols + j >= len(labels):
+                continue
+
+            if labels[i * ncols + j] == "SKIP":
                 continue
 
             # Create axis
@@ -970,7 +973,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
              "FLARES_00_instantFB", "FLARES_00_noZSFthresh"]
 
     # Define labels for each
-    labels = ["AGNdT9", "REF", "$f_{\mathrm{th, max}}=10$",
+    labels = ["AGNdT9", "REF", "SKIP", "$f_{\mathrm{th, max}}=10$",
               "$f_{\mathrm{th, max}}=6$", "$f_{\mathrm{th, max}}=4$",
               "InstantFB", "$Z^0$"]
 
@@ -979,10 +982,10 @@ def plot_birth_den_vary(stellar_data, snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=1, vmax=1000)
+    norm = LogNorm(vmin=1, vmax=10000)
 
     # Set up the plot
-    fig = plt.figure(figsize=(3.5, 3.5))
+    fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
     gs = gridspec.GridSpec(nrows=nrows, ncols=ncols + 1,
                            width_ratios=[20, ] * ncols + [1, ])
     gs.update(wspace=0.0, hspace=0.0)
@@ -993,6 +996,9 @@ def plot_birth_den_vary(stellar_data, snap, path):
         for j in range(ncols):
 
             if i * ncols + j >= len(labels):
+                continue
+
+            if labels[i * ncols + j] == "SKIP":
                 continue
 
             # Create axis
@@ -1034,6 +1040,10 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
         reg_zs, reg_dens = get_nonmaster_evo_data(
             path, snap, y_key="PartType4/BirthDensity")
+
+        # Convert density to hydrogen number density
+        reg_dens = (reg_dens * 10**10
+                    * Msun / Mpc ** 3 / mh).to(1 / cm ** 3).value
 
         im = axes[ind].hexbin(reg_zs, reg_dens, mincnt=1, gridsize=50,
                               yscale="log", linewidth=0.2, cmap="plasma",
