@@ -1079,6 +1079,8 @@ def plot_ssfr_mass_vary(snap):
     z_100 = z_at_value(cosmo.age, cosmo.age(z) - (0.1 * u.Gyr),
                        zmin=0, zmax=50)
 
+    print(z, z_100)
+
     # Define the path
     ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
 
@@ -1251,11 +1253,10 @@ def plot_ssfr_mass_vary(snap):
             rokinds = rs < 30
             this_ini_mass = this_ini_mass[rokinds]
 
-            if rs[rokinds].size < 100:
-                continue
+            # if rs[rokinds].size < 100:
+            #     continue
 
             # Compute and store ssfr
-            print(np.sum(this_ini_mass), m, np.sum(this_ini_mass) / 0.1 / m)
             ssfrs.append(np.sum(this_ini_mass) / 0.1 / m)
             ms.append(m)
 
