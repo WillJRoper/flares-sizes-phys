@@ -186,6 +186,7 @@ print("Got all data")
 # plot_size_sfr_evo_grid(data["stellar"], flares_snaps)
 
 if rank == 0:
+    plot_ssfr_mass_vary(flares_snaps[-1])
     plot_birth_den_vary(hdf["stellar"], flares_snaps[-1], path)
     plot_birth_met_vary(hdf["stellar"], flares_snaps[-1], path)
     # plot_size_mass_evo_grid_noncompact(hdf["stellar"], flares_snaps)
