@@ -1221,9 +1221,6 @@ def plot_ssfr_mass_vary(snap):
             g = grps[igal]
             sg = subgrps[igal]
 
-            if m == 0:
-                continue
-
             # Get this galaxies stars
             sokinds = np.logical_and(part_grps == g, part_subgrps == sg)
             this_coords = coords[sokinds, :] - cop
@@ -1238,7 +1235,7 @@ def plot_ssfr_mass_vary(snap):
             rokinds = rs < 30
             this_ini_mass = this_ini_mass[rokinds]
 
-            if this_ini_mass.size < 100:
+            if rs[rokinds].size < 100:
                 continue
 
             # Compute and store ssfr
