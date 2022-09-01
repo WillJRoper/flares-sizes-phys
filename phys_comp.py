@@ -927,7 +927,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
                                labeltop=False, labelbottom=False)
 
             # Set axis limits
-            ax.set_ylim(10**-4.8, 1)
+            ax.set_ylim(10**-6, 0.1)
             ax.set_xlim(4.75, 20)
 
             # Label axis
