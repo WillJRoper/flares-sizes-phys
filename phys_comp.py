@@ -1190,6 +1190,13 @@ def plot_ssfr_mass_vary(snap):
                                            noH=True, physicalUnits=True,
                                            numThreads=8)
 
+        # Apply some cuts
+        mokinds = mass > 10**8
+        mass = mass[mokinds]
+        cops = cops[mokinds, :]
+        grps = grps[mokinds]
+        subgrps = subgrps[mokinds]
+
         # Compute the birth redshift
         birth_z = (1 / birth_a) - 1
 
