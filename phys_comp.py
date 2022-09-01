@@ -893,6 +893,9 @@ def plot_birth_met_vary(stellar_data, snap, path):
     # Define norm
     norm = LogNorm(vmin=1, vmax=10000)
 
+    # Define hexbin extent
+    extent = [4.6, 22, 0, 0.15]
+
     # Set up the plot
     fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
     gs = gridspec.GridSpec(nrows=nrows, ncols=ncols + 1,
@@ -928,8 +931,8 @@ def plot_birth_met_vary(stellar_data, snap, path):
                                labeltop=False, labelbottom=False)
 
             # Set axis limits
-            ax.set_ylim(0, 0.1)
-            ax.set_xlim(4.75, 20)
+            ax.set_ylim(extent[2], extent[3])
+            ax.set_xlim(extent[0], extent[1])
 
             # Label axis
             ax.text(0.95, 0.9, labels[i * ncols + j],
@@ -951,7 +954,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
         im = axes[ind].hexbin(reg_zs, reg_mets, mincnt=1, gridsize=50,
                               linewidth=0.2, cmap="plasma",
-                              norm=norm)
+                              norm=norm, extent=extent)
 
     # Set up colorbar
     cbar = fig.colorbar(im, cax)
@@ -986,6 +989,9 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
     # Define norm
     norm = LogNorm(vmin=1, vmax=10000)
+
+    # Define hexbin extent
+    extent = [4.6, 22, 10**-2.2, 10**6.5]
 
     # Set up the plot
     fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
@@ -1023,8 +1029,8 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                labeltop=False, labelbottom=False)
 
             # Set axis limits
-            ax.set_ylim(10 ** -0.8, 10 ** 6.5)
-            ax.set_xlim(4.75, 20)
+            ax.set_ylim(extent[2], extent[3])
+            ax.set_xlim(extent[0], extent[1])
 
             # Label axis
             ax.text(0.95, 0.9, labels[i * ncols + j],
@@ -1050,7 +1056,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
         im = axes[ind].hexbin(reg_zs, reg_dens, mincnt=1, gridsize=50,
                               yscale="log", linewidth=0.2, cmap="plasma",
-                              norm=norm)
+                              norm=norm, extent=extent)
 
     # Set up colorbar
     cbar = fig.colorbar(im, cax)
@@ -1096,6 +1102,9 @@ def plot_ssfr_mass_vary(snap):
     # Define norm
     norm = LogNorm(vmin=1, vmax=100)
 
+    # Define hexbin extent
+    extent = [10**8, 10**11.5, 10**-2.1, 1.2]
+
     # Set up the plot
     fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
     gs = gridspec.GridSpec(nrows=nrows, ncols=ncols + 1,
@@ -1132,8 +1141,8 @@ def plot_ssfr_mass_vary(snap):
                                labeltop=False, labelbottom=False)
 
             # Set axis limits
-            ax.set_ylim(10 ** -2.1, 1)
-            ax.set_xlim(10**8, 10**11.5)
+            ax.set_ylim(extent[2], extent[3])
+            ax.set_xlim(extent[0], extent[1])
 
             # Label axis
             ax.text(0.95, 0.9, labels[i * ncols + j],
@@ -1190,7 +1199,8 @@ def plot_ssfr_mass_vary(snap):
                                         "PartType4/GroupNumber",
                                         noH=True, physicalUnits=True,
                                         numThreads=8)
-        part_subgrps = eagle_io.read_array("PARTDATA", path.replace("<type>", t),
+        part_subgrps = eagle_io.read_array("PARTDATA",
+                                           path.replace("<type>", t),
                                            snap,
                                            "PartType4/SubGroupNumber",
                                            noH=True, physicalUnits=True,
@@ -1245,12 +1255,13 @@ def plot_ssfr_mass_vary(snap):
                 continue
 
             # Compute and store ssfr
+            print(np.sum(this_ini_mass), m)
             ssfrs.append(np.sum(this_ini_mass) / 0.1 / m)
             ms.append(m)
 
         im = axes[ind].hexbin(ms, ssfrs, mincnt=1, gridsize=50,
                               yscale="log", xscale="log", linewidth=0.2,
-                              cmap="plasma", norm=norm)
+                              cmap="plasma", norm=norm, extent=extent)
 
     # Set up colorbar
     cbar = fig.colorbar(im, cax)
