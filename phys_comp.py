@@ -894,7 +894,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
     norm = LogNorm(vmin=1, vmax=10000)
 
     # Define hexbin extent
-    extent = [4.6, 22, 0, 0.12]
+    extent = [4.6, 22, 0, 0.19]
 
     # Set up the plot
     fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
@@ -1105,7 +1105,7 @@ def plot_ssfr_mass_vary(snap):
     norm = LogNorm(vmin=1, vmax=100)
 
     # Define hexbin extent
-    extent = [8, 11.5, 10**-2.1, 15]
+    extent = [8, 11.5, 0, 15]
 
     # Set up the plot
     fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
@@ -1217,10 +1217,8 @@ def plot_ssfr_mass_vary(snap):
         # Compute the birth redshift
         birth_z = (1 / birth_a) - 1
 
-        ages = calc_ages(z, birth_a)
-
         # Get only particles born since z_100
-        okinds = ages < 100
+        okinds = birth_z < z_100
         birth_z = birth_z[okinds]
         ini_mass = ini_mass[okinds]
         coords = coords[okinds, :]
