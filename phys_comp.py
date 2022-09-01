@@ -894,7 +894,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
     norm = LogNorm(vmin=1, vmax=50000)
 
     # Define hexbin extent
-    extent = [4.6, 22, 0, 0.19]
+    extent = [4.6, 22, 0, 0.119]
 
     # Set up the plot
     fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
