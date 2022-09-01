@@ -1230,6 +1230,7 @@ def plot_ssfr_mass_vary(snap):
             rs = np.sqrt(this_coords[:, 0] ** 2
                          + this_coords[:, 1] ** 2
                          + this_coords[:, 2] ** 2)
+            print(rs)
 
             # Get only particles within the aperture
             rokinds = rs < 30
