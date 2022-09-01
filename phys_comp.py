@@ -1245,7 +1245,7 @@ def plot_ssfr_mass_vary(snap):
             ssfrs.append(np.sum(this_ini_mass) / 100 / m)
             ms.append(m)
 
-        im = axes[ind].hexbin(mass, ssfrs, mincnt=1, gridsize=50,
+        im = axes[ind].hexbin(ms, ssfrs, mincnt=1, gridsize=50,
                               yscale="log", xscale="log", linewidth=0.2,
                               cmap="plasma", norm=norm)
 
