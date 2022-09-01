@@ -894,7 +894,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
     norm = LogNorm(vmin=1, vmax=10000)
 
     # Define hexbin extent
-    extent = [4.6, 22, 0, 0.15]
+    extent = [4.6, 22, 0, 0.12]
 
     # Set up the plot
     fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
@@ -991,7 +991,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
     norm = LogNorm(vmin=1, vmax=10000)
 
     # Define hexbin extent
-    extent = [4.6, 22, -2.2, 6.5]
+    extent = [4.6, 22, -2.2, 5.5]
 
     # Set up the plot
     fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
@@ -1076,7 +1076,7 @@ def plot_ssfr_mass_vary(snap):
     z = float(snap.split("z")[-1].replace("p", "."))
 
     # What redshift was 100 Myrs ago?
-    z_100 = z_at_value(cosmo.age, cosmo.age(z) - (100 * u.Myr),
+    z_100 = z_at_value(cosmo.age, cosmo.age(z) - (0.1 * u.Gyr),
                        zmin=0, zmax=50)
 
     # Define the path
@@ -1103,7 +1103,7 @@ def plot_ssfr_mass_vary(snap):
     norm = LogNorm(vmin=1, vmax=100)
 
     # Define hexbin extent
-    extent = [8, 11.5, -2.1, np.log10(1.2)]
+    extent = [8, 11.5, -2.1, np.log10(15)]
 
     # Set up the plot
     fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
