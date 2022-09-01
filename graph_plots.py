@@ -326,6 +326,8 @@ def plot_size_change_comp(stellar_data, gas_data, snaps, weight_norm):
     tot_hmrs = {"star": [], "gas": []}
     tot_prog_hmrs = {"star": [], "gas": []}
     tot_cont = []
+    tot_gas_mass = []
+    tot_prog_gas_mass = []
     w = []
 
     # Loop over snapshots
@@ -484,6 +486,7 @@ def plot_size_change_comp(stellar_data, gas_data, snaps, weight_norm):
             tot_prog_hmrs["star"].extend(star_prog_hmr)
             tot_hmrs["gas"].append(gas_hmr)
             tot_prog_hmrs["gas"].extend(gas_prog_hmr)
+            tot_gas_mass
             w.append(ws[ind])
 
     # Convert to arrays
@@ -985,11 +988,14 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
         ax = fig.add_subplot(111)
         ax.loglog()
 
-        okinds = np.logical_and(delta_eb > 0, delta_fb > 0)
+        okinds = np.logical_and(delta_prog > 0, delta_current > 0)
 
         # Plot the scatter
-        im = ax.scatter(delta_prog, delta_current, c=delta_hmr,
-                        cmap="coolwarm", marker=".", norm=norm)
+        im = ax.hexbin(delta_prog[okinds], delta_current[okinds],  gridsize=50,
+                       mincnt=np.min(w) - (0.1 * np.min(w)),
+                       C=delta_hmr[okinds], xscale="log", yscale="log",
+                       reduce_C_function=np.mean, norm=weight_norm,
+                       linewidths=0.2, cmap="plasma")
 
         # Axes labels
         ax.set_xlabel(

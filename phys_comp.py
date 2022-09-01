@@ -1243,14 +1243,14 @@ def plot_ssfr_mass_vary(snap):
             this_coords = coords[sokinds, :] - cop
             this_ini_mass = ini_mass[sokinds]
 
-            # # Compute stellar radii
-            # rs = np.sqrt(this_coords[:, 0] ** 2
-            #              + this_coords[:, 1] ** 2
-            #              + this_coords[:, 2] ** 2)
+            # Compute stellar radii
+            rs = np.sqrt(this_coords[:, 0] ** 2
+                         + this_coords[:, 1] ** 2
+                         + this_coords[:, 2] ** 2)
 
-            # # Get only particles within the aperture
-            # rokinds = rs < 30
-            # this_ini_mass = this_ini_mass[rokinds]
+            # Get only particles within the aperture
+            rokinds = rs < 30
+            this_ini_mass = this_ini_mass[rokinds]
 
             # if rs[rokinds].size < 100:
             #     continue
