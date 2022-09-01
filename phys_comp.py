@@ -1252,15 +1252,14 @@ def plot_ssfr_mass_vary(snap):
             rokinds = rs < 30
             this_ini_mass = this_ini_mass[rokinds]
 
-            # if rs[rokinds].size < 100:
-            #     continue
+            if rs[rokinds].size < 100:
+                continue
 
             # Compute and store ssfr
             ssfrs.append(np.sum(this_ini_mass) / 0.1 / m)
             ms.append(m)
 
         im = axes[ind].hexbin(ms, ssfrs, mincnt=1, gridsize=50,
-
                               xscale="log", linewidth=0.2,
                               cmap="plasma", norm=norm, extent=extent)
 
