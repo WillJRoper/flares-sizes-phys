@@ -890,7 +890,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
     ncols = 3
 
     # Define norm
-    norm = cm.LogNorm(vmin=1, vmax=1000)
+    norm = LogNorm(vmin=1, vmax=1000)
 
     # Set up the plot
     fig = plt.figure(figsize=(3.5, 3.5))
@@ -970,7 +970,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
     ncols = 3
 
     # Define norm
-    norm = cm.LogNorm(vmin=1, vmax=1000)
+    norm = LogNorm(vmin=1, vmax=1000)
 
     # Set up the plot
     fig = plt.figure(figsize=(3.5, 3.5))
