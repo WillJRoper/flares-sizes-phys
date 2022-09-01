@@ -1079,8 +1079,6 @@ def plot_ssfr_mass_vary(snap):
     z_100 = z_at_value(cosmo.age, cosmo.age(z) - (0.1 * u.Gyr),
                        zmin=0, zmax=50)
 
-    print(z, z_100)
-
     # Define the path
     ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
 
@@ -1102,7 +1100,7 @@ def plot_ssfr_mass_vary(snap):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=1, vmax=100)
+    norm = LogNorm(vmin=1, vmax=20)
 
     # Define hexbin extent
     extent = [8, 11.5, 0, 15]
