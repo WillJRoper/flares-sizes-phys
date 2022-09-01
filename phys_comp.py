@@ -903,6 +903,9 @@ def plot_birth_met_vary(stellar_data, snap, path):
     for i in range(nrows):
         for j in range(ncols):
 
+            if i * ncols + j >= len(labels):
+                continue
+
             # Create axis
             ax = fig.add_subplot(gs[i, j])
             ax.semilogy()
@@ -987,6 +990,9 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
     for i in range(nrows):
         for j in range(ncols):
+
+            if i * ncols + j >= len(labels):
+                continue
 
             # Create axis
             ax = fig.add_subplot(gs[i, j])
