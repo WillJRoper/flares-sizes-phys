@@ -991,7 +991,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
     norm = LogNorm(vmin=1, vmax=10000)
 
     # Define hexbin extent
-    extent = [4.6, 22, 10**-2.2, 10**6.5]
+    extent = [4.6, 22, -2.2, 6.5]
 
     # Set up the plot
     fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
@@ -1029,7 +1029,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                labeltop=False, labelbottom=False)
 
             # Set axis limits
-            ax.set_ylim(extent[2], extent[3])
+            ax.set_ylim(10**extent[2], 10**extent[3])
             ax.set_xlim(extent[0], extent[1])
 
             # Label axis
@@ -1103,7 +1103,7 @@ def plot_ssfr_mass_vary(snap):
     norm = LogNorm(vmin=1, vmax=100)
 
     # Define hexbin extent
-    extent = [10**8, 10**11.5, 10**-2.1, 1.2]
+    extent = [8, 11.5, -2.1, np.log10(1.2)]
 
     # Set up the plot
     fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
@@ -1141,8 +1141,8 @@ def plot_ssfr_mass_vary(snap):
                                labeltop=False, labelbottom=False)
 
             # Set axis limits
-            ax.set_ylim(extent[2], extent[3])
-            ax.set_xlim(extent[0], extent[1])
+            ax.set_ylim(10**extent[2], 10**extent[3])
+            ax.set_xlim(10**extent[0], 10**extent[1])
 
             # Label axis
             ax.text(0.95, 0.9, labels[i * ncols + j],
@@ -1255,7 +1255,7 @@ def plot_ssfr_mass_vary(snap):
                 continue
 
             # Compute and store ssfr
-            print(np.sum(this_ini_mass), m)
+            print(np.sum(this_ini_mass), m, np.sum(this_ini_mass) / 0.1 / m)
             ssfrs.append(np.sum(this_ini_mass) / 0.1 / m)
             ms.append(m)
 
