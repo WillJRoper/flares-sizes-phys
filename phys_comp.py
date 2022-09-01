@@ -7,7 +7,7 @@ import eagle_IO.eagle_IO as eagle_io
 from flare import plt as flareplt
 from unyt import mh, cm, Gyr, g, Msun, Mpc
 from utils import mkdir, plot_meidan_stat, get_nonmaster_evo_data
-from utils import get_nonmaster_centred_data, grav_enclosed
+from utils import get_nonmaster_centred_data, grav_enclosed, calc_ages
 import astropy.units as u
 import astropy.constants as const
 from astropy.cosmology import Planck18 as cosmo, z_at_value
@@ -1217,8 +1217,10 @@ def plot_ssfr_mass_vary(snap):
         # Compute the birth redshift
         birth_z = (1 / birth_a) - 1
 
+        ages = calc_ages(z, birth_a)
+
         # Get only particles born since z_100
-        okinds = birth_z < z_100
+        okinds = ages < 100
         birth_z = birth_z[okinds]
         ini_mass = ini_mass[okinds]
         coords = coords[okinds, :]
