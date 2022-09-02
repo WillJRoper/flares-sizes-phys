@@ -957,7 +957,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
         reg_zs, reg_mets = get_nonmaster_evo_data(
             path, snap, y_key="PartType4/SmoothedMetallicity")
 
-        im = axes[ind].hexbin(reg_zs, reg_mets, mincnt=1, gridsize=50,
+        im = axes[ind].hexbin(reg_zs, reg_mets, mincnt=0, gridsize=50,
                               linewidth=0.2, cmap="plasma",
                               norm=norm, extent=extent)
 
@@ -1031,7 +1031,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
             if j == i:
                 im = axes[i, j].hexbin(hex_dict[ti]["zs"], hex_dict[ti]["mets"],
-                                       mincnt=1, gridsize=50, linewidth=0.2,
+                                       mincnt=0, gridsize=50, linewidth=0.2,
                                        cmap="plasma", norm=norm, extent=extent)
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax1)
