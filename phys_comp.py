@@ -1237,7 +1237,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                        extent=extent)
                 im.set_array((hex_dict[ti]["h"] / np.sum(hex_dict[ti]["h"]))
                              - (hex_dict[tj]["h"] / np.sum(hex_dict[tj]["h"])))
-                print(im.get_array())
+                print(np.min(im.get_array()), np.max(im.get_array()))
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
                 cbar.set_label("$P_i - P_j$")
