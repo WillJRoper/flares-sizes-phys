@@ -1043,7 +1043,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
                                        extent=extent)
                 im.set_array(hex_dict[ti]["h"] - hex_dict[tj]["h"])
                 # Set up colorbar
-                cbar = fig.colorbar(im, cax2)
+                cbar = fig.colorbar(im, cax2, oreintation="horizontal")
                 cbar.set_label("$N_i - N_j$")
 
     fig.savefig("plots/physics_vary/stellar_birthZ_residual.png",
@@ -1188,14 +1188,14 @@ def plot_birth_den_vary(stellar_data, snap, path):
             # Include labels
             if j == 0:
                 ax.set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
-            if i == nrows - 1:
+            if i == len(labels) - 1:
                 ax.set_xlabel(r"$z_{\mathrm{birth}}$")
 
             # Remove unnecessary ticks
             if j > 0:
                 ax.tick_params("y", left=False, right=False,
                                labelleft=False, labelright=False)
-            if i < nrows - 1:
+            if i < len(labels) - 1:
                 ax.tick_params("x", top=False, bottom=False,
                                labeltop=False, labelbottom=False)
 
@@ -1205,11 +1205,11 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
             # Label axis
             if j == 0:
-                ax.text(-0.15, 0.5, labels[i],
+                ax.text(-0.25, 0.5, labels[i],
                         transform=ax.transAxes, horizontalalignment='center',
                         fontsize=8, rotation=90)
-            if i == len(labels):
-                ax.text(0.5, -0.15, labels[j],
+            if i == len(labels) - 1:
+                ax.text(0.5, -0.25, labels[j],
                         transform=ax.transAxes, horizontalalignment='center',
                         fontsize=8)
 
@@ -1229,7 +1229,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                        extent=extent)
                 im.set_array(hex_dict[ti]["h"] - hex_dict[tj]["h"])
                 # Set up colorbar
-                cbar = fig.colorbar(im, cax2)
+                cbar = fig.colorbar(im, cax2, oreintation="horizontal")
                 cbar.set_label("$N_i - N_j$")
 
     fig.savefig("plots/physics_vary/stellar_birthden_residual.png",
