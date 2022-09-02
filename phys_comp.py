@@ -893,7 +893,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
     # Define norm
     norm = LogNorm(vmin=1, vmax=50000)
-    resi_norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
+    resi_norm = TwoSlopeNorm(vmin=-1, vcenter=0, vmax=1)
 
     # Define hexbin extent
     extent = [4.6, 22, 0, 0.119]
@@ -1077,7 +1077,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
     # Define norm
     norm=LogNorm(vmin=1, vmax=50000)
-    resi_norm=TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
+    resi_norm=TwoSlopeNorm(vmin=-1, vcenter=0, vmax=1)
 
     # Define hexbin extent
     extent=[4.6, 22, -2.2, 5.5]
@@ -1236,6 +1236,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                        extent=extent)
                 im.set_array((hex_dict[ti]["h"] / np.sum(hex_dict[ti]["h"])
                               - ()hex_dict[tj]["h"] / np.sum(hex_dict[tj]["h"]))
+                print(im.get_array()Pu)
                 # Set up colorbar
                 cbar=fig.colorbar(im, cax2, orientation="horizontal")
                 cbar.set_label("$P_i - P_j$")
