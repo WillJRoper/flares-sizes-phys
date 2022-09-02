@@ -1043,7 +1043,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
                                        extent=extent)
                 im.set_array(hex_dict[ti]["h"] - hex_dict[tj]["h"])
                 # Set up colorbar
-                cbar = fig.colorbar(im, cax2, oreintation="horizontal")
+                cbar = fig.colorbar(im, cax2, orientation="horizontal")
                 cbar.set_label("$N_i - N_j$")
 
     fig.savefig("plots/physics_vary/stellar_birthZ_residual.png",
@@ -1216,20 +1216,24 @@ def plot_birth_den_vary(stellar_data, snap, path):
             axes[i, j] = ax
 
             if j == i:
-                im = axes[i, j].hexbin(hex_dict[ti]["zs"], hex_dict[ti]["dens"],
+                im = axes[i, j].hexbin(hex_dict[ti]["zs"],
+                                       hex_dict[ti]["dens"],
                                        mincnt=0, gridsize=50, linewidth=0.2,
-                                       cmap="plasma", norm=norm, extent=extent)
+                                       yscale="log", cmap="plasma", norm=norm,
+                                       extent=extent)
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax1)
                 cbar.set_label("$N$")
             else:
-                im = axes[i, j].hexbin(hex_dict[ti]["zs"], hex_dict[ti]["dens"],
+                im = axes[i, j].hexbin(hex_dict[ti]["zs"],
+                                       hex_dict[ti]["dens"],
                                        gridsize=50, linewidth=0.2,
-                                       cmap="coolwarm", norm=resi_norm,
+                                       yscale="log", cmap="coolwarm",
+                                       norm=resi_norm,
                                        extent=extent)
                 im.set_array(hex_dict[ti]["h"] - hex_dict[tj]["h"])
                 # Set up colorbar
-                cbar = fig.colorbar(im, cax2, oreintation="horizontal")
+                cbar = fig.colorbar(im, cax2, orientation="horizontal")
                 cbar.set_label("$N_i - N_j$")
 
     fig.savefig("plots/physics_vary/stellar_birthden_residual.png",
