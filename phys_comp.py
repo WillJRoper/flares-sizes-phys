@@ -1041,8 +1041,11 @@ def plot_birth_met_vary(stellar_data, snap, path):
                                        gridsize=50, linewidth=0.2,
                                        cmap="coolwarm", norm=resi_norm,
                                        extent=extent)
-                im.set_array((hex_dict[ti]["h"] / np.sum(hex_dict[ti]["h"]))
-                             - (hex_dict[tj]["h"] / np.sum(hex_dict[tj]["h"])))
+                new_arr = ((hex_dict[ti]["h"] / np.sum(hex_dict[ti]["h"]))
+                           - (hex_dict[tj]["h"] / np.sum(hex_dict[tj]["h"])))
+                new_arr[np.logical_and(hex_dict[ti]["h"] == 0,
+                                       hex_dict[tj]["h"] == 0)] = np.nan
+                im.set_array(new_arr)
 
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
@@ -1235,9 +1238,12 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                        yscale="log", cmap="coolwarm",
                                        norm=resi_norm,
                                        extent=extent)
-                im.set_array((hex_dict[ti]["h"] / np.sum(hex_dict[ti]["h"]))
-                             - (hex_dict[tj]["h"] / np.sum(hex_dict[tj]["h"])))
-                print(np.min(im.get_array()), np.max(im.get_array()))
+                new_arr = ((hex_dict[ti]["h"] / np.sum(hex_dict[ti]["h"]))
+                           - (hex_dict[tj]["h"] / np.sum(hex_dict[tj]["h"])))
+                new_arr[np.logical_and(hex_dict[ti]["h"] == 0,
+                                       hex_dict[tj]["h"] == 0)] = np.nan
+                im.set_array(new_arr)
+
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
                 cbar.set_label("$P_i - P_j$")
