@@ -1413,7 +1413,7 @@ def plot_birth_denmet_vary(snap, path):
                     mets = hex_dict[ti]["mets"]
 
                     okinds = np.logical_and(
-                        np.logical_and(zs >= zbins[i], zs < zbins[i + 1]),
+                        np.logical_and(zs >= zbins[zi], zs < zbins[zi + 1]),
                         np.logical_and(dens > 0, mets > 0))
 
                     im = axes[i, j].hexbin(dens[okinds],
