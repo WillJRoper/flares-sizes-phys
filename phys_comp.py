@@ -893,7 +893,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
     # Define norm
     norm = LogNorm(vmin=1, vmax=50000)
-    resi_norm = TwoSlopeNorm(vmin=-25000, vcenter=0, vmax=25000)
+    resi_norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
 
     # Define hexbin extent
     extent = [4.6, 22, 0, 0.119]
@@ -1019,11 +1019,11 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
             # Label axis
             if j == 0:
-                ax.text(-0.25, 0.45, labels[i],
+                ax.text(-0.5, 0.4, labels[i],
                         transform=ax.transAxes, horizontalalignment='center',
                         fontsize=12, rotation=90)
             if i == len(labels) - 1:
-                ax.text(0.5, -0.25, labels[j],
+                ax.text(0.5, -0.5, labels[j],
                         transform=ax.transAxes, horizontalalignment='center',
                         fontsize=12)
 
@@ -1078,7 +1078,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
     # Define norm
     norm = LogNorm(vmin=1, vmax=50000)
-    resi_norm = TwoSlopeNorm(vmin=-2, vcenter=0, vmax=2)
+    resi_norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
 
     # Define hexbin extent
     extent = [4.6, 22, -2.2, 5.5]
@@ -1209,13 +1209,13 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
             # Label axis
             if j == 0:
-                ax.text(-0.25, 0.45, labels[i],
+                ax.text(-0.5, 0.4, labels[i],
                         transform=ax.transAxes, horizontalalignment='center',
-                        fontsize=8, rotation=90)
+                        fontsize=12, rotation=90)
             if i == len(labels) - 1:
-                ax.text(0.5, -0.25, labels[j],
+                ax.text(0.5, -0.5, labels[j],
                         transform=ax.transAxes, horizontalalignment='center',
-                        fontsize=8)
+                        fontsize=12)
 
             axes[i, j] = ax
 
