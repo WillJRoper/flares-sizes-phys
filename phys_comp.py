@@ -1002,14 +1002,14 @@ def plot_birth_met_vary(stellar_data, snap, path):
             # Include labels
             if j == 0:
                 ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
-            if i == nrows - 1:
+            if i == len(labels) - 1:
                 ax.set_xlabel(r"$z_{\mathrm{birth}}$")
 
             # Remove unnecessary ticks
             if j > 0:
                 ax.tick_params("y", left=False, right=False,
                                labelleft=False, labelright=False)
-            if i < nrows - 1:
+            if i < len(labels) - 1:
                 ax.tick_params("x", top=False, bottom=False,
                                labeltop=False, labelbottom=False)
 
@@ -1019,13 +1019,13 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
             # Label axis
             if j == 0:
-                ax.text(-0.15, 0.5, labels[i],
+                ax.text(-0.25, 0.5, labels[i],
                         transform=ax.transAxes, horizontalalignment='center',
-                        fontsize=8, rotation=90)
-            if i == len(labels):
-                ax.text(0.5, -0.15, labels[j],
+                        fontsize=12, rotation=90)
+            if i == len(labels) - 1:
+                ax.text(0.5, -0.25, labels[j],
                         transform=ax.transAxes, horizontalalignment='center',
-                        fontsize=8)
+                        fontsize=12)
 
             axes[i, j] = ax
 
@@ -1045,6 +1045,8 @@ def plot_birth_met_vary(stellar_data, snap, path):
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
                 cbar.set_label("$N_i - N_j$")
+                cbar.ax.xaxis.set_ticks_position('top')
+                cbar.ax.xaxis.set_label_position('top')
 
     fig.savefig("plots/physics_vary/stellar_birthZ_residual.png",
                 bbox_inches="tight")
@@ -1200,7 +1202,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                labeltop=False, labelbottom=False)
 
             # Set axis limits
-            ax.set_ylim(extent[2], extent[3])
+            ax.set_ylim(10**extent[2], 10**extent[3])
             ax.set_xlim(extent[0], extent[1])
 
             # Label axis
@@ -1235,6 +1237,8 @@ def plot_birth_den_vary(stellar_data, snap, path):
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
                 cbar.set_label("$N_i - N_j$")
+                cbar.ax.xaxis.set_ticks_position('top')
+                cbar.ax.xaxis.set_label_position('top')
 
     fig.savefig("plots/physics_vary/stellar_birthden_residual.png",
                 bbox_inches="tight")
