@@ -1241,7 +1241,6 @@ def plot_birth_den_vary(stellar_data, snap, path):
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
                 cbar.set_label("$P_i - P_j$")
-                cbar.ax.xaxis.set_ticks_positi
                 cbar.ax.xaxis.set_ticks_position('top')
                 cbar.ax.xaxis.set_label_position('top')
 
