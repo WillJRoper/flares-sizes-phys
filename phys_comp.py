@@ -980,7 +980,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
               "$f_{\mathrm{th, max}}=10$"]
 
     # Set up the plot
-    fig = plt.figure(figsize=(len(labels) * 3.5, len(labels) * 3.5))
+    fig = plt.figure(figsize=(len(labels) * 2.75, len(labels) * 2.75))
     gs = gridspec.GridSpec(nrows=len(labels) + 1, ncols=len(labels) + 1,
                            width_ratios=[20, ] * len(labels) + [1, ],
                            height_ratios=[1, ] + [20, ] * len(labels))
@@ -1019,7 +1019,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
             # Label axis
             if j == 0:
-                ax.text(-0.25, 0.5, labels[i],
+                ax.text(-0.25, 0.45, labels[i],
                         transform=ax.transAxes, horizontalalignment='center',
                         fontsize=12, rotation=90)
             if i == len(labels) - 1:
@@ -1169,7 +1169,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
               "$f_{\mathrm{th, max}}=10$"]
 
     # Set up the plot
-    fig = plt.figure(figsize=(len(labels) * 3.5, len(labels) * 3.5))
+    fig = plt.figure(figsize=(len(labels) * 2.75, len(labels) * 2.75))
     gs = gridspec.GridSpec(nrows=len(labels) + 1, ncols=len(labels) + 1,
                            width_ratios=[20, ] * len(labels) + [1, ],
                            height_ratios=[1, ] + [20, ] * len(labels))
@@ -1208,7 +1208,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
             # Label axis
             if j == 0:
-                ax.text(-0.25, 0.5, labels[i],
+                ax.text(-0.25, 0.45, labels[i],
                         transform=ax.transAxes, horizontalalignment='center',
                         fontsize=8, rotation=90)
             if i == len(labels) - 1:
