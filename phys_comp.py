@@ -1,7 +1,7 @@
 import h5py
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.colors import LogNorm, Normalize
+from matplotlib.colors import LogNorm, TwoSlopeNorm
 import matplotlib.gridspec as gridspec
 import eagle_IO.eagle_IO as eagle_io
 from flare import plt as flareplt
@@ -893,7 +893,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
     # Define norm
     norm = LogNorm(vmin=1, vmax=50000)
-    resi_norm = Normalize(vmin=-25000, vmax=25000)
+    resi_norm = TwoSlopeNorm(vmin=-25000, vcenter=0, vmax=25000)
 
     # Define hexbin extent
     extent = [4.6, 22, 0, 0.119]
@@ -1039,7 +1039,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
             else:
                 im = axes[i, j].hexbin(hex_dict[ti]["zs"], hex_dict[ti]["mets"],
                                        gridsize=50, linewidth=0.2,
-                                       cmap="plasma", norm=resi_norm,
+                                       cmap="coolwarm", norm=resi_norm,
                                        extent=extent)
                 im.set_array(hex_dict[ti]["h"] - hex_dict[tj]["h"])
                 # Set up colorbar
@@ -1074,6 +1074,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
     # Define norm
     norm = LogNorm(vmin=1, vmax=50000)
+    resi_norm = TwoSlopeNorm(vmin=-25000, vcenter=0, vmax=25000)
 
     # Define hexbin extent
     extent = [4.6, 22, -2.2, 5.5]
@@ -1126,6 +1127,9 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
             axes.append(ax)
 
+    # Initialise a dictionary to store the hexbins
+    hex_dict = {}
+
     for (ind, t), l in zip(enumerate(types), labels):
 
         path = ini_path.replace("<type>", t)
@@ -1139,9 +1143,11 @@ def plot_birth_den_vary(stellar_data, snap, path):
         reg_dens = (reg_dens * 10**10
                     * Msun / Mpc ** 3 / mh).to(1 / cm ** 3).value
 
-        im = axes[ind].hexbin(reg_zs, reg_dens, mincnt=1, gridsize=50,
+        im = axes[ind].hexbin(reg_zs, reg_dens, mincnt=0, gridsize=50,
                               yscale="log", linewidth=0.2, cmap="plasma",
                               norm=norm, extent=extent)
+
+        hex_dict[t] = {"zs": reg_zs, "dens": reg_dens, "h": im.get_array()}
 
     # Set up colorbar
     cbar = fig.colorbar(im, cax)
@@ -1151,8 +1157,84 @@ def plot_birth_den_vary(stellar_data, snap, path):
     mkdir("plots/physics_vary/")
     fig.savefig("plots/physics_vary/stellar_birthden_%s.png" % snap,
                 bbox_inches="tight")
+    plt.close(fig)
 
-    return stellar_data
+    # Redefine labels for each
+    labels = ["AGNdT9", "REF",
+              "InstantFB", "$Z^0$",
+              "$f_{\mathrm{th, max}}=4$", "$f_{\mathrm{th, max}}=6$",
+              "$f_{\mathrm{th, max}}=10$"]
+
+    # Set up the plot
+    fig = plt.figure(figsize=(len(labels) * 3.5, len(labels) * 3.5))
+    gs = gridspec.GridSpec(nrows=len(labels) + 1, ncols=len(labels) + 1,
+                           width_ratios=[20, ] * len(labels) + [1, ],
+                           height_ratios=[1, ] + [20, ] * len(labels))
+    gs.update(wspace=0.0, hspace=0.0)
+    axes = np.zeros((len(labels), len(labels)), dtype=object)
+    cax1 = fig.add_subplot(gs[-1, -1])
+    cax2 = fig.add_subplot(gs[0, 0])
+
+    # Loop over models and construct corner plot
+    for i, ti in enumerate(types):
+        for j, tj in enumerate(types):
+
+            if j > i:
+                continue
+
+            # Create axis
+            ax = fig.add_subplot(gs[i + 1, j])
+
+            # Include labels
+            if j == 0:
+                ax.set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
+            if i == nrows - 1:
+                ax.set_xlabel(r"$z_{\mathrm{birth}}$")
+
+            # Remove unnecessary ticks
+            if j > 0:
+                ax.tick_params("y", left=False, right=False,
+                               labelleft=False, labelright=False)
+            if i < nrows - 1:
+                ax.tick_params("x", top=False, bottom=False,
+                               labeltop=False, labelbottom=False)
+
+            # Set axis limits
+            ax.set_ylim(extent[2], extent[3])
+            ax.set_xlim(extent[0], extent[1])
+
+            # Label axis
+            if j == 0:
+                ax.text(-0.15, 0.5, labels[i],
+                        transform=ax.transAxes, horizontalalignment='center',
+                        fontsize=8, rotation=90)
+            if i == len(labels):
+                ax.text(0.5, -0.15, labels[j],
+                        transform=ax.transAxes, horizontalalignment='center',
+                        fontsize=8)
+
+            axes[i, j] = ax
+
+            if j == i:
+                im = axes[i, j].hexbin(hex_dict[ti]["zs"], hex_dict[ti]["dens"],
+                                       mincnt=0, gridsize=50, linewidth=0.2,
+                                       cmap="plasma", norm=norm, extent=extent)
+                # Set up colorbar
+                cbar = fig.colorbar(im, cax1)
+                cbar.set_label("$N$")
+            else:
+                im = axes[i, j].hexbin(hex_dict[ti]["zs"], hex_dict[ti]["dens"],
+                                       gridsize=50, linewidth=0.2,
+                                       cmap="coolwarm", norm=resi_norm,
+                                       extent=extent)
+                im.set_array(hex_dict[ti]["h"] - hex_dict[tj]["h"])
+                # Set up colorbar
+                cbar = fig.colorbar(im, cax2)
+                cbar.set_label("$N_i - N_j$")
+
+    fig.savefig("plots/physics_vary/stellar_birthden_residual.png",
+                bbox_inches="tight")
+    plt.close(fig)
 
 
 def plot_ssfr_mass_vary(snap):
