@@ -1019,11 +1019,11 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
             # Label axis
             if j == 0:
-                ax.text(-0.5, 0.4, labels[i],
-                        transform=ax.transAxes, horizontalalignment='center',
+                ax.text(-0.3, 0.5, labels[i],
+                        transform=ax.transAxes, verticalalignment='center',
                         fontsize=12, rotation=90)
             if i == len(labels) - 1:
-                ax.text(0.5, -0.5, labels[j],
+                ax.text(0.5, -0.3, labels[j],
                         transform=ax.transAxes, horizontalalignment='center',
                         fontsize=12)
 
@@ -1209,11 +1209,11 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
             # Label axis
             if j == 0:
-                ax.text(-0.5, 0.4, labels[i],
-                        transform=ax.transAxes, horizontalalignment='center',
+                ax.text(-0.3, 0.5, labels[i],
+                        transform=ax.transAxes, verticalalignment='center',
                         fontsize=12, rotation=90)
             if i == len(labels) - 1:
-                ax.text(0.5, -0.5, labels[j],
+                ax.text(0.5, -0.3, labels[j],
                         transform=ax.transAxes, horizontalalignment='center',
                         fontsize=12)
 
