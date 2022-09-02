@@ -1041,10 +1041,11 @@ def plot_birth_met_vary(stellar_data, snap, path):
                                        gridsize=50, linewidth=0.2,
                                        cmap="coolwarm", norm=resi_norm,
                                        extent=extent)
-                im.set_array(hex_dict[ti]["h"] - hex_dict[tj]["h"])
+                im.set_array(hex_dict[ti]["h"] - hex_dict[tj]["h"]
+                             / np.sum(hex_dict[ti]["h"]))
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
-                cbar.set_label("$N_i - N_j$")
+                cbar.set_label("$(N_i - N_j) / N_{i,\mathrm{tot}}$")
                 cbar.ax.xaxis.set_ticks_position('top')
                 cbar.ax.xaxis.set_label_position('top')
 
@@ -1076,7 +1077,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
     # Define norm
     norm = LogNorm(vmin=1, vmax=50000)
-    resi_norm = TwoSlopeNorm(vmin=-25000, vcenter=0, vmax=25000)
+    resi_norm = TwoSlopeNorm(vmin=-2, vcenter=0, vmax=2)
 
     # Define hexbin extent
     extent = [4.6, 22, -2.2, 5.5]
@@ -1233,10 +1234,11 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                        yscale="log", cmap="coolwarm",
                                        norm=resi_norm,
                                        extent=extent)
-                im.set_array(hex_dict[ti]["h"] - hex_dict[tj]["h"])
+                im.set_array((hex_dict[ti]["h"] - hex_dict[tj]["h"])
+                             / np.sum(hex_dict[ti]["h"]))
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
-                cbar.set_label("$N_i - N_j$")
+                cbar.set_label("$(N_i - N_j) / N_{i,\mathrm{tot}}$")
                 cbar.ax.xaxis.set_ticks_position('top')
                 cbar.ax.xaxis.set_label_position('top')
 
