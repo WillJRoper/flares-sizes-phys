@@ -1065,7 +1065,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
-                cbar.set_label("$P_{i} / P_{j}$")
+                cbar.set_label("$\log_{10}(P_{i} / P_{j})$")
                 cbar.ax.xaxis.set_ticks_position('top')
                 cbar.ax.xaxis.set_label_position('top')
 
@@ -1267,7 +1267,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
-                cbar.set_label("$P_{i} / P_{j}$")
+                cbar.set_label("$\log_{10}(P_{i} / P_{j})$")
                 cbar.ax.xaxis.set_ticks_position('top')
                 cbar.ax.xaxis.set_label_position('top')
 
@@ -1496,7 +1496,7 @@ def plot_birth_denmet_vary(snap, path):
 
                     # Set up colorbar
                     cbar = fig.colorbar(im, cax2, orientation="horizontal")
-                    cbar.set_label("$P_{i} / P_{j}$")
+                    cbar.set_label("$\log_{10}(P_{i} / P_{j})$")
                     cbar.ax.xaxis.set_ticks_position('top')
                     cbar.ax.xaxis.set_label_position('top')
 
