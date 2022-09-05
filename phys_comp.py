@@ -892,8 +892,8 @@ def plot_birth_met_vary(stellar_data, snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=0.1, vmax=50)
-    resi_norm = TwoSlopeNorm(vmin=-25, vcenter=0, vmax=25)
+    norm = LogNorm(vmin=10**-2, vmax=10)
+    resi_norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
 
     # Define hexbin extent
     extent = [4.6, 22, 0, 0.119]
@@ -1091,8 +1091,8 @@ def plot_birth_den_vary(stellar_data, snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=0.1, vmax=50)
-    resi_norm = TwoSlopeNorm(vmin=-25, vcenter=0, vmax=25)
+    norm = LogNorm(vmin=10**-2, vmax=10)
+    resi_norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
 
     # Define hexbin extent
     extent = [4.6, 22, -2.2, 5.5]
@@ -1333,8 +1333,8 @@ def plot_birth_denmet_vary(snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=0.1, vmax=50)
-    resi_norm = TwoSlopeNorm(vmin=-25, vcenter=0, vmax=25)
+    norm = LogNorm(vmin=10**-2, vmax=10)
+    resi_norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
 
     # Define hexbin extent
     extent = [-2.9, 6.8, 0, 0.119]
