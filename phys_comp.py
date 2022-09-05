@@ -12,6 +12,7 @@ import astropy.units as u
 import astropy.constants as const
 from astropy.cosmology import Planck18 as cosmo, z_at_value
 from scipy.spatial import cKDTree
+import cmasher as cmr
 
 
 def plot_birth_density_evo():
@@ -894,6 +895,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
     # Define norm
     norm = LogNorm(vmin=1, vmax=50000)
     resi_norm = TwoSlopeNorm(vmin=-3, vcenter=0, vmax=3)
+    outlier_norm = TwoSlopeNorm(vmin=-10, vcenter=0, vmax=10)
 
     # Define hexbin extent
     extent = [4.6, 22, 0, 0.119]
@@ -1038,21 +1040,28 @@ def plot_birth_met_vary(stellar_data, snap, path):
                 im = axes[i, j].hexbin(hex_dict[ti]["zs"],
                                        hex_dict[ti]["mets"],
                                        gridsize=50, linewidth=0.2,
-                                       cmap="coolwarm",
-                                       extent=extent)
+                                       cmap="cmr.guppy",
+                                       extent=extent, zorder=1)
                 hi = hex_dict[ti]["h"]
                 hj = hex_dict[tj]["h"]
                 hokinds = np.logical_and(hi == 0,
                                          hj == 0)
                 new_arr = np.log10((hi / np.sum(hi)) / (hj / np.sum(hj)))
+                bkg_arr = np.full_like(new_arr, np.nan)
                 print(np.min(new_arr), np.max(new_arr))
                 hi_okinds = np.logical_and(hi > 0, hj == 0)
                 hj_okinds = np.logical_and(hi == 0, hj > 0)
                 new_arr[hokinds] = np.nan
-                new_arr[hi_okinds] = 10
-                new_arr[hj_okinds] = -10
+                bkg_arr[hi_okinds] = 10
+                bkg_arr[hj_okinds] = -10
                 im.set_array(new_arr)
                 im.set_norm(resi_norm)
+
+                axes[i, j].hexbin(hex_dict[ti]["zs"],
+                                  hex_dict[ti]["mets"],
+                                  gridsize=50, linewidth=0.2,
+                                  cmap="BrBG", norm=outlier_norm,
+                                  extent=extent, zorder=0)
 
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
