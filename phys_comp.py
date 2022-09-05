@@ -1043,11 +1043,14 @@ def plot_birth_met_vary(stellar_data, snap, path):
                                        extent=extent)
                 hi = hex_dict[ti]["h"]
                 hj = hex_dict[tj]["h"]
-                sig = np.sqrt(np.std(hi) ** 2 + np.std(hj) ** 2)
+                hokinds = np.logical_and(hi == 0,
+                                         hj == 0)
+                sig = np.sqrt(np.std(hi[hokinds]) **
+                              2 + np.std(hj[hokinds]) ** 2)
                 new_arr = ((hi / np.sum(hi)) - (hj / np.sum(hj))) / sig
-                print(np.std(hi), np.std(hj), np.min(new_arr), np.max(new_arr))
-                new_arr[np.logical_and(hi == 0,
-                                       hj == 0)] = np.nan
+                print(np.std(hi[hokinds]), np.std(hj[hokinds]),
+                      np.min(new_arr), np.max(new_arr))
+                new_arr[hokinds] = np.nan
                 im.set_array(new_arr)
 
                 # Set up colorbar
@@ -1243,11 +1246,14 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                        extent=extent)
                 hi = hex_dict[ti]["h"]
                 hj = hex_dict[tj]["h"]
-                sig = np.sqrt(np.std(hi) ** 2 + np.std(hj) ** 2)
+                hokinds = np.logical_and(hi == 0,
+                                         hj == 0)
+                sig = np.sqrt(np.std(hi[hokinds]) **
+                              2 + np.std(hj[hokinds]) ** 2)
                 new_arr = ((hi / np.sum(hi)) - (hj / np.sum(hj))) / sig
-                print(np.std(hi), np.std(hj), np.min(new_arr), np.max(new_arr))
-                new_arr[np.logical_and(hi == 0,
-                                       hj == 0)] = np.nan
+                print(np.std(hi[hokinds]), np.std(hj[hokinds]),
+                      np.min(new_arr), np.max(new_arr))
+                new_arr[hokinds] = np.nan
                 im.set_array(new_arr)
 
                 # Set up colorbar
@@ -1466,14 +1472,16 @@ def plot_birth_denmet_vary(snap, path):
                                            cmap="coolwarm",
                                            norm=resi_norm,
                                            extent=extent)
-                    hi = hex_dict[ti]["h_%.2f" % zbins[zi]]
-                    hj = hex_dict[tj]["h_%.2f" % zbins[zi]]
-                    sig = np.sqrt(np.std(hi) ** 2 + np.std(hj) ** 2)
+                    hi = hex_dict[ti]["h"]
+                    hj = hex_dict[tj]["h"]
+                    hokinds = np.logical_and(hi == 0,
+                                             hj == 0)
+                    sig = np.sqrt(np.std(hi[hokinds]) **
+                                  2 + np.std(hj[hokinds]) ** 2)
                     new_arr = ((hi / np.sum(hi)) - (hj / np.sum(hj))) / sig
-                    print(np.std(hi), np.std(hj), np.min(
-                        new_arr), np.max(new_arr))
-                    new_arr[np.logical_and(hi == 0,
-                                           hj == 0)] = np.nan
+                    print(np.std(hi[hokinds]), np.std(hj[hokinds]),
+                          np.min(new_arr), np.max(new_arr))
+                    new_arr[hokinds] = np.nan
                     im.set_array(new_arr)
 
                     # Set up colorbar
