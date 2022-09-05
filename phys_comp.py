@@ -1472,8 +1472,8 @@ def plot_birth_denmet_vary(snap, path):
                                            cmap="coolwarm",
                                            norm=resi_norm,
                                            extent=extent)
-                    hi = hex_dict[ti]["h"]
-                    hj = hex_dict[tj]["h"]
+                    hi = hex_dict[ti]["h_%.2f" % zbins[zi]]
+                    hj = hex_dict[tj]["h_%.2f" % zbins[zi]]
                     hokinds = np.logical_and(hi == 0,
                                              hj == 0)
                     sig = np.sqrt(np.std(hi[hokinds]) **
