@@ -1313,7 +1313,7 @@ def plot_birth_denmet_vary(snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=1, vmax=50000)
+    norm = LogNorm(vmin=1, vmax=5000)
     resi_norm = TwoSlopeNorm(vmin=-0.01, vcenter=0, vmax=0.01)
 
     # Define hexbin extent
@@ -1460,10 +1460,10 @@ def plot_birth_denmet_vary(snap, path):
                                - (im_j.get_array() / np.sum(im_j.get_array())))
                     new_arr[np.logical_and(im_i.get_array() == 0,
                                            im_j.get_array() == 0)] = np.nan
-                    im.set_array(new_arr)
+                    im_i.set_array(new_arr)
 
                     # Set up colorbar
-                    cbar = fig.colorbar(im, cax2, orientation="horizontal")
+                    cbar = fig.colorbar(im_i, cax2, orientation="horizontal")
                     cbar.set_label("$P_i - P_j$")
                     cbar.ax.xaxis.set_ticks_position('top')
                     cbar.ax.xaxis.set_label_position('top')
