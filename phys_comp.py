@@ -1061,8 +1061,8 @@ def plot_birth_met_vary(stellar_data, snap, path):
                 im1 = axes[i, j].hexbin(hex_dict[ti]["zs"],
                                         hex_dict[ti]["mets"],
                                         gridsize=30, linewidth=0.2,
-                                        cmap="cmr.neon",
-                                        extent=extent, alpha=0.5)
+                                        cmap="cmr.guppy",
+                                        extent=extent, alpha=0.2)
                 im1.set_array(bkg_arr)
                 im1.set_norm(resi_norm)
 
@@ -1276,8 +1276,8 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                         hex_dict[ti]["dens"],
                                         gridsize=30, linewidth=0.2,
                                         yscale="log",
-                                        cmap="cmr.neon", norm=outlier_norm,
-                                        extent=extent, alpha=0.5)
+                                        cmap="cmr.guppy", norm=outlier_norm,
+                                        extent=extent, alpha=0.2)
                 im1.set_array(bkg_arr)
                 im1.set_norm(resi_norm)
 
