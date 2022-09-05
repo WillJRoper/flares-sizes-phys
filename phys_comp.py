@@ -898,7 +898,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
     outlier_norm = TwoSlopeNorm(vmin=-10.01, vcenter=0, vmax=10)
 
     # Define hexbin extent
-    extent = [4.6, 2, 0, np.log10(0.119 + 1)]
+    extent = [4.6, 25, 0, 0.119]
 
     # Set up the plot
     fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
@@ -935,7 +935,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
                                labeltop=False, labelbottom=False)
 
             # Set axis limits
-            ax.set_ylim(10**extent[2], 10**extent[3])
+            ax.set_ylim(extent[2], extent[3])
             ax.set_xlim(extent[0], extent[1])
 
             # Label axis
@@ -961,7 +961,6 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
         im = axes[ind].hexbin(reg_zs, reg_mets + 1, mincnt=0, gridsize=30,
                               linewidth=0.2, cmap="plasma",
-                              yscale="log",
                               norm=norm, extent=extent)
 
         hex_dict[t] = {"zs": reg_zs, "mets": reg_mets, "h": im.get_array()}
@@ -1001,7 +1000,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
             # Include labels
             if j == 0:
-                ax.set_ylabel(r"$Z_{\mathrm{birth}} + 1$")
+                ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
             if i == len(labels) - 1:
                 ax.set_xlabel(r"$z_{\mathrm{birth}}$")
 
@@ -1031,8 +1030,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
             if j == i:
                 im = axes[i, j].hexbin(hex_dict[ti]["zs"],
-                                       hex_dict[ti]["mets"] + 1,
-                                       yscale="log",
+                                       hex_dict[ti]["mets"],
                                        mincnt=0, gridsize=30, linewidth=0.2,
                                        norm=norm,  cmap="plasma", extent=extent)
 
@@ -1041,9 +1039,9 @@ def plot_birth_met_vary(stellar_data, snap, path):
                 cbar.set_label("$N$")
             else:
                 im = axes[i, j].hexbin(hex_dict[ti]["zs"],
-                                       hex_dict[ti]["mets"] + 1,
+                                       hex_dict[ti]["mets"],
                                        gridsize=30, linewidth=0.2,
-                                       cmap="cmr.guppy", yscale="log",
+                                       cmap="cmr.prisenvlag",
                                        extent=extent)
                 hi = hex_dict[ti]["h"]
                 hj = hex_dict[tj]["h"]
@@ -1061,9 +1059,9 @@ def plot_birth_met_vary(stellar_data, snap, path):
                 im.set_norm(resi_norm)
 
                 im1 = axes[i, j].hexbin(hex_dict[ti]["zs"],
-                                        hex_dict[ti]["mets"] + 1,
+                                        hex_dict[ti]["mets"],
                                         gridsize=30, linewidth=0.2,
-                                        cmap="binary", yscale="log",
+                                        cmap="cmr.neutral",
                                         extent=extent)
                 im1.set_array(bkg_arr)
                 im1.set_norm(resi_norm)
@@ -1256,7 +1254,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                        hex_dict[ti]["dens"],
                                        gridsize=30, linewidth=0.2,
                                        yscale="log",
-                                       cmap="cmr.guppy",
+                                       cmap="cmr.prisenvlag",
                                        extent=extent)
                 hi = hex_dict[ti]["h"]
                 hj = hex_dict[tj]["h"]
@@ -1277,7 +1275,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                         hex_dict[ti]["dens"],
                                         gridsize=30, linewidth=0.2,
                                         yscale="log",
-                                        cmap="binary", norm=outlier_norm,
+                                        cmap="cmr.neutral", norm=outlier_norm,
                                         extent=extent)
                 im1.set_array(bkg_arr)
                 im1.set_norm(resi_norm)
@@ -1356,7 +1354,7 @@ def plot_birth_denmet_vary(snap, path):
     outlier_norm = TwoSlopeNorm(vmin=-10.01, vcenter=0, vmax=10)
 
     # Define hexbin extent
-    extent = [-2.9, 6.8, 0, np.log10(0.119 + 1)]
+    extent = [-2.9, 6.8, 0, 0.119]
 
     # Initialise a dictionary to store the hexbins
     hex_dict = {}
@@ -1395,9 +1393,9 @@ def plot_birth_denmet_vary(snap, path):
                 reg_dens > 0)
 
             im = plt.hexbin(reg_dens[okinds],
-                            reg_mets[okinds] + 1,
+                            reg_mets[okinds],
                             gridsize=30, linewidth=0.2,
-                            xscale="log", yscale="log",
+                            xscale="log",
                             cmap="coolwarm",
                             extent=extent)
 
@@ -1433,7 +1431,7 @@ def plot_birth_denmet_vary(snap, path):
 
                 # Include labels
                 if j == 0:
-                    ax.set_ylabel(r"$Z_{\mathrm{birth}} + 1$")
+                    ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
                 if i == len(labels) - 1:
                     ax.set_xlabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
 
@@ -1446,7 +1444,7 @@ def plot_birth_denmet_vary(snap, path):
                                    labeltop=False, labelbottom=False)
 
                 # Set axis limits
-                ax.set_ylim(10**extent[2], 10**extent[3])
+                ax.set_ylim(extent[2], extent[3])
                 ax.set_xlim(10**extent[0], 10**extent[1])
 
                 # Label axis
@@ -1472,10 +1470,10 @@ def plot_birth_denmet_vary(snap, path):
                         dens > 0)
 
                     im = axes[i, j].hexbin(dens[okinds],
-                                           mets[okinds] + 1,
+                                           mets[okinds],
                                            mincnt=0, gridsize=30,
                                            linewidth=0.2, norm=norm,
-                                           xscale="log", yscale="log",
+                                           xscale="log",
                                            cmap="plasma",
                                            extent=extent)
 
@@ -1493,10 +1491,10 @@ def plot_birth_denmet_vary(snap, path):
                             zs >= zbins[zi], zs < zbins[zi + 1]),
                         dens > 0)
 
-                    im = axes[i, j].hexbin(dens[okinds], mets[okinds] + 1,
+                    im = axes[i, j].hexbin(dens[okinds], mets[okinds],
                                            gridsize=30, linewidth=0.2,
-                                           xscale="log", yscale="log",
-                                           cmap="cmr.guppy",
+                                           xscale="log",
+                                           cmap="cmr.prisenvlag",
                                            extent=extent)
                     hi = hex_dict[ti]["h_%.2f" % zbins[zi]]
                     hj = hex_dict[tj]["h_%.2f" % zbins[zi]]
@@ -1514,10 +1512,10 @@ def plot_birth_denmet_vary(snap, path):
                     im.set_norm(resi_norm)
 
                     im1 = axes[i, j].hexbin(dens[okinds],
-                                            mets[okinds] + 1,
-                                            xscale="log", yscale="log",
+                                            mets[okinds],
+                                            xscale="log",
                                             gridsize=30, linewidth=0.2,
-                                            cmap="binary", norm=outlier_norm,
+                                            cmap="cmr.neutral", norm=outlier_norm,
                                             extent=extent)
                     im1.set_array(bkg_arr)
                     im1.set_norm(resi_norm)
