@@ -1041,7 +1041,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
                 im = axes[i, j].hexbin(hex_dict[ti]["zs"],
                                        hex_dict[ti]["mets"],
                                        gridsize=30, linewidth=0.2,
-                                       cmap="cmr.prisenvlag",
+                                       cmap="cmr.prinsenvlag",
                                        extent=extent)
                 hi = hex_dict[ti]["h"]
                 hj = hex_dict[tj]["h"]
@@ -1254,7 +1254,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                        hex_dict[ti]["dens"],
                                        gridsize=30, linewidth=0.2,
                                        yscale="log",
-                                       cmap="cmr.prisenvlag",
+                                       cmap="cmr.prinsenvlag",
                                        extent=extent)
                 hi = hex_dict[ti]["h"]
                 hj = hex_dict[tj]["h"]
@@ -1494,7 +1494,7 @@ def plot_birth_denmet_vary(snap, path):
                     im = axes[i, j].hexbin(dens[okinds], mets[okinds],
                                            gridsize=30, linewidth=0.2,
                                            xscale="log",
-                                           cmap="cmr.prisenvlag",
+                                           cmap="cmr.prinsenvlag",
                                            extent=extent)
                     hi = hex_dict[ti]["h_%.2f" % zbins[zi]]
                     hj = hex_dict[tj]["h_%.2f" % zbins[zi]]
