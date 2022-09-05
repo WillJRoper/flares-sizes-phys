@@ -959,7 +959,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
         reg_zs, reg_mets = get_nonmaster_evo_data(
             path, snap, y_key="PartType4/SmoothedMetallicity")
 
-        im = axes[ind].hexbin(reg_zs, reg_mets + 1, mincnt=0, gridsize=30,
+        im = axes[ind].hexbin(reg_zs, reg_mets, mincnt=0, gridsize=30,
                               linewidth=0.2, cmap="plasma",
                               norm=norm, extent=extent)
 
