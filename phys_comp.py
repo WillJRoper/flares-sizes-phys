@@ -893,7 +893,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
     # Define norm
     norm = LogNorm(vmin=1, vmax=50000)
-    resi_norm = TwoSlopeNorm(vmin=-0.01, vcenter=0, vmax=0.01)
+    resi_norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
 
     # Define hexbin extent
     extent = [4.6, 22, 0, 0.119]
@@ -1041,15 +1041,18 @@ def plot_birth_met_vary(stellar_data, snap, path):
                                        gridsize=50, linewidth=0.2,
                                        cmap="coolwarm", norm=resi_norm,
                                        extent=extent)
-                new_arr = ((hex_dict[ti]["h"] / np.sum(hex_dict[ti]["h"]))
-                           - (hex_dict[tj]["h"] / np.sum(hex_dict[tj]["h"])))
-                new_arr[np.logical_and(hex_dict[ti]["h"] == 0,
-                                       hex_dict[tj]["h"] == 0)] = np.nan
+                hi = hex_dict[ti]["h"]
+                hj = hex_dict[tj]["h"]
+                sig = np.sqrt(np.std(hi) ** 2 + np.std(hj) ** 2)
+                new_arr = ((hi / np.sum(hi)) - (hj / np.sum(hj)) / sig)
+                new_arr[np.logical_and(hi == 0,
+                                       hj == 0)] = np.nan
                 im.set_array(new_arr)
+                print(np.min(new_arr), np.max(new_arr))
 
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
-                cbar.set_label("$P_i - P_j$")
+                cbar.set_label("$(P_i - P_j) / \sigma$")
                 cbar.ax.xaxis.set_ticks_position('top')
                 cbar.ax.xaxis.set_label_position('top')
 
@@ -1081,7 +1084,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
     # Define norm
     norm = LogNorm(vmin=1, vmax=50000)
-    resi_norm = TwoSlopeNorm(vmin=-0.01, vcenter=0, vmax=0.01)
+    resi_norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
 
     # Define hexbin extent
     extent = [4.6, 22, -2.2, 5.5]
@@ -1238,15 +1241,18 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                        yscale="log", cmap="coolwarm",
                                        norm=resi_norm,
                                        extent=extent)
-                new_arr = ((hex_dict[ti]["h"] / np.sum(hex_dict[ti]["h"]))
-                           - (hex_dict[tj]["h"] / np.sum(hex_dict[tj]["h"])))
-                new_arr[np.logical_and(hex_dict[ti]["h"] == 0,
-                                       hex_dict[tj]["h"] == 0)] = np.nan
+                hi = hex_dict[ti]["h"]
+                hj = hex_dict[tj]["h"]
+                sig = np.sqrt(np.std(hi) ** 2 + np.std(hj) ** 2)
+                new_arr = ((hi / np.sum(hi)) - (hj / np.sum(hj)) / sig)
+                new_arr[np.logical_and(hi == 0,
+                                       hj == 0)] = np.nan
                 im.set_array(new_arr)
+                print(np.min(new_arr), np.max(new_arr))
 
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
-                cbar.set_label("$P_i - P_j$")
+                cbar.set_label("$(P_i - P_j) / \sigma$")
                 cbar.ax.xaxis.set_ticks_position('top')
                 cbar.ax.xaxis.set_label_position('top')
 
@@ -1314,7 +1320,7 @@ def plot_birth_denmet_vary(snap, path):
 
     # Define norm
     norm = LogNorm(vmin=1, vmax=50000)
-    resi_norm = TwoSlopeNorm(vmin=-0.01, vcenter=0, vmax=0.01)
+    resi_norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
 
     # Define hexbin extent
     extent = [-2.9, 6.8, 0, 0.119]
@@ -1462,14 +1468,16 @@ def plot_birth_denmet_vary(snap, path):
                                            extent=extent)
                     hi = hex_dict[ti]["h_%.2f" % zbins[zi]]
                     hj = hex_dict[tj]["h_%.2f" % zbins[zi]]
-                    new_arr = (hi / np.sum(hi)) - (hj / np.sum(hj))
+                    sig = np.sqrt(np.std(hi) ** 2 + np.std(hj) ** 2)
+                    new_arr = ((hi / np.sum(hi)) - (hj / np.sum(hj)) / sig)
                     new_arr[np.logical_and(hi == 0,
                                            hj == 0)] = np.nan
                     im.set_array(new_arr)
+                    print(np.min(new_arr), np.max(new_arr))
 
                     # Set up colorbar
                     cbar = fig.colorbar(im, cax2, orientation="horizontal")
-                    cbar.set_label("$P_i - P_j$")
+                    cbar.set_label("$(P_i - P_j) / \sigma$")
                     cbar.ax.xaxis.set_ticks_position('top')
                     cbar.ax.xaxis.set_label_position('top')
 
