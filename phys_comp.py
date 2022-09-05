@@ -898,7 +898,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
     outlier_norm = TwoSlopeNorm(vmin=-10.01, vcenter=0, vmax=10)
 
     # Define hexbin extent
-    extent = [4.6, 22, 0, 0.119]
+    extent = [4.6, 22, 1, 0.119 + 1]
 
     # Set up the plot
     fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
@@ -935,7 +935,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
                                labeltop=False, labelbottom=False)
 
             # Set axis limits
-            ax.set_ylim(extent[2], extent[3])
+            ax.set_ylim(10**extent[2], 10**extent[3])
             ax.set_xlim(extent[0], extent[1])
 
             # Label axis
@@ -1355,7 +1355,7 @@ def plot_birth_denmet_vary(snap, path):
     outlier_norm = TwoSlopeNorm(vmin=-10.01, vcenter=0, vmax=10)
 
     # Define hexbin extent
-    extent = [-2.9, 6.8, 0, 0.119]
+    extent = [-2.9, 6.8, 1, 0.119 + 1]
 
     # Initialise a dictionary to store the hexbins
     hex_dict = {}
@@ -1445,7 +1445,7 @@ def plot_birth_denmet_vary(snap, path):
                                    labeltop=False, labelbottom=False)
 
                 # Set axis limits
-                ax.set_ylim(extent[2], extent[3])
+                ax.set_ylim(10**extent[2], 10**extent[3])
                 ax.set_xlim(10**extent[0], 10**extent[1])
 
                 # Label axis
