@@ -1045,10 +1045,10 @@ def plot_birth_met_vary(stellar_data, snap, path):
                 hj = hex_dict[tj]["h"]
                 sig = np.sqrt(np.std(hi) ** 2 + np.std(hj) ** 2)
                 new_arr = ((hi / np.sum(hi)) - (hj / np.sum(hj)) / sig)
+                print(np.min(new_arr), np.max(new_arr))
                 new_arr[np.logical_and(hi == 0,
                                        hj == 0)] = np.nan
                 im.set_array(new_arr)
-                print(np.min(new_arr), np.max(new_arr))
 
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
@@ -1245,10 +1245,10 @@ def plot_birth_den_vary(stellar_data, snap, path):
                 hj = hex_dict[tj]["h"]
                 sig = np.sqrt(np.std(hi) ** 2 + np.std(hj) ** 2)
                 new_arr = ((hi / np.sum(hi)) - (hj / np.sum(hj)) / sig)
+                print(np.min(new_arr), np.max(new_arr))
                 new_arr[np.logical_and(hi == 0,
                                        hj == 0)] = np.nan
                 im.set_array(new_arr)
-                print(np.min(new_arr), np.max(new_arr))
 
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
@@ -1470,10 +1470,10 @@ def plot_birth_denmet_vary(snap, path):
                     hj = hex_dict[tj]["h_%.2f" % zbins[zi]]
                     sig = np.sqrt(np.std(hi) ** 2 + np.std(hj) ** 2)
                     new_arr = ((hi / np.sum(hi)) - (hj / np.sum(hj)) / sig)
+                    print(np.min(new_arr), np.max(new_arr))
                     new_arr[np.logical_and(hi == 0,
                                            hj == 0)] = np.nan
                     im.set_array(new_arr)
-                    print(np.min(new_arr), np.max(new_arr))
 
                     # Set up colorbar
                     cbar = fig.colorbar(im, cax2, orientation="horizontal")
