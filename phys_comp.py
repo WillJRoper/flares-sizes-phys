@@ -895,7 +895,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
     # Define norm
     norm = LogNorm(vmin=1, vmax=50000)
     resi_norm = TwoSlopeNorm(vmin=-3, vcenter=0, vmax=3)
-    outlier_norm = TwoSlopeNorm(vmin=-10, vcenter=0, vmax=10)
+    outlier_norm = TwoSlopeNorm(vmin=-10.01, vcenter=0, vmax=10)
 
     # Define hexbin extent
     extent = [4.6, 22, 0, 0.119]
@@ -959,7 +959,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
         reg_zs, reg_mets = get_nonmaster_evo_data(
             path, snap, y_key="PartType4/SmoothedMetallicity")
 
-        im = axes[ind].hexbin(reg_zs, reg_mets, mincnt=0, gridsize=50,
+        im = axes[ind].hexbin(reg_zs, reg_mets, mincnt=0, gridsize=30,
                               linewidth=0.2, cmap="plasma",
                               norm=norm, extent=extent)
 
@@ -1030,7 +1030,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
             if j == i:
                 im = axes[i, j].hexbin(hex_dict[ti]["zs"], hex_dict[ti]["mets"],
-                                       mincnt=0, gridsize=50, linewidth=0.2,
+                                       mincnt=0, gridsize=30, linewidth=0.2,
                                        norm=norm,  cmap="plasma", extent=extent)
 
                 # Set up colorbar
@@ -1039,7 +1039,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
             else:
                 im = axes[i, j].hexbin(hex_dict[ti]["zs"],
                                        hex_dict[ti]["mets"],
-                                       gridsize=50, linewidth=0.2,
+                                       gridsize=30, linewidth=0.2,
                                        cmap="cmr.guppy",
                                        extent=extent, zorder=1)
                 hi = hex_dict[ti]["h"]
@@ -1059,7 +1059,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
                 axes[i, j].hexbin(hex_dict[ti]["zs"],
                                   hex_dict[ti]["mets"],
-                                  gridsize=50, linewidth=0.2,
+                                  gridsize=30, linewidth=0.2,
                                   cmap="BrBG", norm=outlier_norm,
                                   extent=extent, zorder=0)
 
@@ -1098,6 +1098,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
     # Define norm
     norm = LogNorm(vmin=1, vmax=50000)
     resi_norm = TwoSlopeNorm(vmin=-3, vcenter=0, vmax=3)
+    outlier_norm = TwoSlopeNorm(vmin=-10.01, vcenter=0, vmax=10)
 
     # Define hexbin extent
     extent = [4.6, 22, -2.2, 5.5]
@@ -1166,7 +1167,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
         reg_dens = (reg_dens * 10**10
                     * Msun / Mpc ** 3 / mh).to(1 / cm ** 3).value
 
-        im = axes[ind].hexbin(reg_zs, reg_dens, mincnt=0, gridsize=50,
+        im = axes[ind].hexbin(reg_zs, reg_dens, mincnt=0, gridsize=30,
                               yscale="log", linewidth=0.2, cmap="plasma",
                               extent=extent)
 
@@ -1239,7 +1240,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
                 im = axes[i, j].hexbin(hex_dict[ti]["zs"],
                                        hex_dict[ti]["dens"],
                                        yscale="log",
-                                       mincnt=0, gridsize=50, linewidth=0.2,
+                                       mincnt=0, gridsize=30, linewidth=0.2,
                                        norm=norm,  cmap="plasma", extent=extent)
 
                 # Set up colorbar
@@ -1248,22 +1249,30 @@ def plot_birth_den_vary(stellar_data, snap, path):
             else:
                 im = axes[i, j].hexbin(hex_dict[ti]["zs"],
                                        hex_dict[ti]["dens"],
-                                       gridsize=50, linewidth=0.2,
-                                       yscale="log", cmap="coolwarm",
-                                       extent=extent)
+                                       gridsize=30, linewidth=0.2,
+                                       yscale="log",
+                                       cmap="cmr.guppy",
+                                       extent=extent, zorder=1)
                 hi = hex_dict[ti]["h"]
                 hj = hex_dict[tj]["h"]
                 hokinds = np.logical_and(hi == 0,
                                          hj == 0)
                 new_arr = np.log10((hi / np.sum(hi)) / (hj / np.sum(hj)))
+                bkg_arr = np.full_like(new_arr, np.nan)
                 print(np.min(new_arr), np.max(new_arr))
                 hi_okinds = np.logical_and(hi > 0, hj == 0)
                 hj_okinds = np.logical_and(hi == 0, hj > 0)
                 new_arr[hokinds] = np.nan
-                new_arr[hi_okinds] = 10
-                new_arr[hj_okinds] = -10
+                bkg_arr[hi_okinds] = 10
+                bkg_arr[hj_okinds] = -10
                 im.set_array(new_arr)
                 im.set_norm(resi_norm)
+
+                axes[i, j].hexbin(hex_dict[ti]["zs"],
+                                  hex_dict[ti]["dens"],
+                                  gridsize=30, linewidth=0.2,
+                                  cmap="BrBG", norm=outlier_norm,
+                                  extent=extent, zorder=0)
 
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
@@ -1336,6 +1345,7 @@ def plot_birth_denmet_vary(snap, path):
     # Define norm
     norm = LogNorm(vmin=1, vmax=50000)
     resi_norm = TwoSlopeNorm(vmin=-3, vcenter=0, vmax=3)
+    outlier_norm = TwoSlopeNorm(vmin=-10.01, vcenter=0, vmax=10)
 
     # Define hexbin extent
     extent = [-2.9, 6.8, 0, 0.119]
@@ -1378,7 +1388,7 @@ def plot_birth_denmet_vary(snap, path):
 
             im = plt.hexbin(reg_dens[okinds],
                             reg_mets[okinds],
-                            gridsize=50, linewidth=0.2,
+                            gridsize=30, linewidth=0.2,
                             xscale="log",
                             cmap="coolwarm",
                             extent=extent)
@@ -1455,7 +1465,7 @@ def plot_birth_denmet_vary(snap, path):
 
                     im = axes[i, j].hexbin(dens[okinds],
                                            mets[okinds],
-                                           mincnt=0, gridsize=50,
+                                           mincnt=0, gridsize=30,
                                            linewidth=0.2, norm=norm,
                                            xscale="log",
                                            cmap="plasma",
@@ -1476,23 +1486,30 @@ def plot_birth_denmet_vary(snap, path):
                         dens > 0)
 
                     im = axes[i, j].hexbin(dens[okinds], mets[okinds],
-                                           gridsize=50, linewidth=0.2,
+                                           gridsize=30, linewidth=0.2,
                                            xscale="log",
-                                           cmap="coolwarm",
+                                           cmap="cmr.guppy",
                                            extent=extent)
                     hi = hex_dict[ti]["h_%.2f" % zbins[zi]]
                     hj = hex_dict[tj]["h_%.2f" % zbins[zi]]
                     hokinds = np.logical_and(hi == 0,
                                              hj == 0)
                     new_arr = np.log10((hi / np.sum(hi)) / (hj / np.sum(hj)))
+                    bkg_arr = np.full_like(new_arr, np.nan)
                     print(np.min(new_arr), np.max(new_arr))
                     hi_okinds = np.logical_and(hi > 0, hj == 0)
                     hj_okinds = np.logical_and(hi == 0, hj > 0)
                     new_arr[hokinds] = np.nan
-                    new_arr[hi_okinds] = 10
-                    new_arr[hj_okinds] = -10
+                    bkg_arr[hi_okinds] = 10
+                    bkg_arr[hj_okinds] = -10
                     im.set_array(new_arr)
                     im.set_norm(resi_norm)
+
+                    axes[i, j].hexbin(dens[okinds],
+                                      mets[okinds],
+                                      gridsize=30, linewidth=0.2,
+                                      cmap="BrBG", norm=outlier_norm,
+                                      extent=extent, zorder=0)
 
                     # Set up colorbar
                     cbar = fig.colorbar(im, cax2, orientation="horizontal")
