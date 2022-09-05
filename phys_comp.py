@@ -892,8 +892,8 @@ def plot_birth_met_vary(stellar_data, snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=1, vmax=50000)
-    resi_norm = TwoSlopeNorm(vmin=-3, vcenter=0, vmax=3)
+    norm = LogNorm(vmin=1, vmax=50000, clip=True)
+    resi_norm = TwoSlopeNorm(vmin=-3, vcenter=0, vmax=3, clip=True)
 
     # Define hexbin extent
     extent = [4.6, 22, 0, 0.119]
@@ -986,8 +986,8 @@ def plot_birth_met_vary(stellar_data, snap, path):
                            height_ratios=[1, ] + [20, ] * len(labels))
     gs.update(wspace=0.0, hspace=0.0)
     axes = np.zeros((len(labels), len(labels)), dtype=object)
-    cax1 = fig.add_subplot(gs[-1, -1])
-    cax2 = fig.add_subplot(gs[0, 0])
+    cax1 = fig.add_subplot(gs[:, -1])
+    cax2 = fig.add_subplot(gs[0, :])
 
     # Loop over models and construct corner plot
     for i, ti in enumerate(types):
@@ -1042,11 +1042,15 @@ def plot_birth_met_vary(stellar_data, snap, path):
                                        extent=extent)
                 hi = hex_dict[ti]["h"]
                 hj = hex_dict[tj]["h"]
-                hokinds = ~np.logical_and(hi == 0,
-                                          hj == 0)
+                hokinds = np.logical_and(hi == 0,
+                                         hj == 0)
                 new_arr = np.log10((hi / np.sum(hi)) / (hj / np.sum(hj)))
                 print(np.min(new_arr), np.max(new_arr))
-                new_arr[~hokinds] = np.nan
+                hi_okinds = np.logical_and(hi > 0, hj == 0)
+                hj_okinds = np.logical_and(hi == 0, hj > 0)
+                new_arr[hokinds] = np.nan
+                new_arr[hi_okinds] = 10
+                new_arr[hj_okinds] = -10
                 im.set_array(new_arr)
                 im.set_norm(resi_norm)
 
@@ -1083,8 +1087,8 @@ def plot_birth_den_vary(stellar_data, snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=1, vmax=50000)
-    resi_norm = TwoSlopeNorm(vmin=-3, vcenter=0, vmax=3)
+    norm = LogNorm(vmin=1, vmax=50000, clip=True)
+    resi_norm = TwoSlopeNorm(vmin=-3, vcenter=0, vmax=3, clip=True)
 
     # Define hexbin extent
     extent = [4.6, 22, -2.2, 5.5]
@@ -1182,8 +1186,8 @@ def plot_birth_den_vary(stellar_data, snap, path):
                            height_ratios=[1, ] + [20, ] * len(labels))
     gs.update(wspace=0.0, hspace=0.0)
     axes = np.zeros((len(labels), len(labels)), dtype=object)
-    cax1 = fig.add_subplot(gs[-1, -1])
-    cax2 = fig.add_subplot(gs[0, 0])
+    cax1 = fig.add_subplot(gs[:, -1])
+    cax2 = fig.add_subplot(gs[0, :])
 
     # Loop over models and construct corner plot
     for i, ti in enumerate(types):
@@ -1240,11 +1244,15 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                        extent=extent)
                 hi = hex_dict[ti]["h"]
                 hj = hex_dict[tj]["h"]
-                hokinds = ~np.logical_and(hi == 0,
-                                          hj == 0)
+                hokinds = np.logical_and(hi == 0,
+                                         hj == 0)
                 new_arr = np.log10((hi / np.sum(hi)) / (hj / np.sum(hj)))
                 print(np.min(new_arr), np.max(new_arr))
-                new_arr[~hokinds] = np.nan
+                hi_okinds = np.logical_and(hi > 0, hj == 0)
+                hj_okinds = np.logical_and(hi == 0, hj > 0)
+                new_arr[hokinds] = np.nan
+                new_arr[hi_okinds] = 10
+                new_arr[hj_okinds] = -10
                 im.set_array(new_arr)
                 im.set_norm(resi_norm)
 
@@ -1317,8 +1325,8 @@ def plot_birth_denmet_vary(snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=1, vmax=50000)
-    resi_norm = TwoSlopeNorm(vmin=-3, vcenter=0, vmax=3)
+    norm = LogNorm(vmin=1, vmax=50000, clip=True)
+    resi_norm = TwoSlopeNorm(vmin=-3, vcenter=0, vmax=3, clip=True)
 
     # Define hexbin extent
     extent = [-2.9, 6.8, 0, 0.119]
@@ -1386,8 +1394,8 @@ def plot_birth_denmet_vary(snap, path):
                                height_ratios=[1, ] + [20, ] * len(labels))
         gs.update(wspace=0.0, hspace=0.0)
         axes = np.zeros((len(labels), len(labels)), dtype=object)
-        cax1 = fig.add_subplot(gs[-1, -1])
-        cax2 = fig.add_subplot(gs[0, 0])
+        cax1 = fig.add_subplot(gs[:, -1])
+        cax2 = fig.add_subplot(gs[0, :])
 
         # Loop over models and construct corner plot
         for i, ti in enumerate(types):
@@ -1465,11 +1473,15 @@ def plot_birth_denmet_vary(snap, path):
                                            extent=extent)
                     hi = hex_dict[ti]["h_%.2f" % zbins[zi]]
                     hj = hex_dict[tj]["h_%.2f" % zbins[zi]]
-                    hokinds = ~np.logical_and(hi == 0,
-                                              hj == 0)
+                    hokinds = np.logical_and(hi == 0,
+                                             hj == 0)
                     new_arr = np.log10((hi / np.sum(hi)) / (hj / np.sum(hj)))
                     print(np.min(new_arr), np.max(new_arr))
-                    new_arr[~hokinds] = np.nan
+                    hi_okinds = np.logical_and(hi > 0, hj == 0)
+                    hj_okinds = np.logical_and(hi == 0, hj > 0)
+                    new_arr[hokinds] = np.nan
+                    new_arr[hi_okinds] = 10
+                    new_arr[hj_okinds] = -10
                     im.set_array(new_arr)
                     im.set_norm(resi_norm)
 
