@@ -1043,7 +1043,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
                                        hex_dict[ti]["mets"] + 1,
                                        gridsize=30, linewidth=0.2,
                                        cmap="cmr.guppy", yscale="log",
-                                       extent=extent, zorder=1)
+                                       extent=extent)
                 hi = hex_dict[ti]["h"]
                 hj = hex_dict[tj]["h"]
                 hokinds = np.logical_and(hi == 0,
@@ -1063,7 +1063,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
                                         hex_dict[ti]["mets"] + 1,
                                         gridsize=30, linewidth=0.2,
                                         cmap="binary", yscale="log",
-                                        extent=extent, zorder=0)
+                                        extent=extent)
                 im1.set_array(bkg_arr)
                 im1.set_norm(resi_norm)
 
@@ -1256,7 +1256,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                        gridsize=30, linewidth=0.2,
                                        yscale="log",
                                        cmap="cmr.guppy",
-                                       extent=extent, zorder=1)
+                                       extent=extent)
                 hi = hex_dict[ti]["h"]
                 hj = hex_dict[tj]["h"]
                 hokinds = np.logical_and(hi == 0,
@@ -1277,7 +1277,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
                                         gridsize=30, linewidth=0.2,
                                         yscale="log",
                                         cmap="binary", norm=outlier_norm,
-                                        extent=extent, zorder=0)
+                                        extent=extent)
                 im1.set_array(bkg_arr)
                 im1.set_norm(resi_norm)
 
@@ -1508,7 +1508,7 @@ def plot_birth_denmet_vary(snap, path):
                     hj_okinds = np.logical_and(hi == 0, hj > 0)
                     new_arr[hokinds] = np.nan
                     bkg_arr[hi_okinds] = 10
-                    bkg_arr[hj_okinds] = 10
+                    bkg_arr[hj_okinds] = -10
                     im.set_array(new_arr)
                     im.set_norm(resi_norm)
 
@@ -1517,7 +1517,7 @@ def plot_birth_denmet_vary(snap, path):
                                             xscale="log", yscale="log",
                                             gridsize=30, linewidth=0.2,
                                             cmap="binary", norm=outlier_norm,
-                                            extent=extent, zorder=0)
+                                            extent=extent)
                     im1.set_array(bkg_arr)
                     im1.set_norm(resi_norm)
 
