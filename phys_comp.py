@@ -1071,8 +1071,9 @@ def plot_birth_met_vary(stellar_data, snap, path):
                 cbar.set_label("$\log_{10}(P_{i} / P_{j})$")
                 cbar.ax.xaxis.set_ticks_position('top')
                 cbar.ax.xaxis.set_label_position('top')
-                cbar.set_ticks([-2, -1, 0, 1, 2])
-                cbar.set_ticklabels(["$\leq-2$", "-1", "0", "1", "$2\leq$"])
+                cbar.ax.xaxis.set_ticks([-2, -1, 0, 1, 2])
+                cbar.ax.xaxis.set_ticklabels(
+                    ["$\leq-2$", "-1", "0", "1", "$2\leq$"])
 
     fig.savefig("plots/physics_vary/stellar_birthZ_residual.png",
                 bbox_inches="tight")
@@ -1287,8 +1288,9 @@ def plot_birth_den_vary(stellar_data, snap, path):
                 cbar.set_label("$\log_{10}(P_{i} / P_{j})$")
                 cbar.ax.xaxis.set_ticks_position('top')
                 cbar.ax.xaxis.set_label_position('top')
-                cbar.set_ticks([-2, -1, 0, 1, 2])
-                cbar.set_ticklabels(["$\leq-2$", "-1", "0", "1", "$2\leq$"])
+                cbar.ax.xaxis.set_ticks([-2, -1, 0, 1, 2])
+                cbar.ax.xaxis.set_ticklabels(
+                    ["$\leq-2$", "-1", "0", "1", "$2\leq$"])
 
     fig.savefig("plots/physics_vary/stellar_birthden_residual.png",
                 bbox_inches="tight")
@@ -1529,8 +1531,8 @@ def plot_birth_denmet_vary(snap, path):
                     cbar.set_label("$\log_{10}(P_{i} / P_{j})$")
                     cbar.ax.xaxis.set_ticks_position('top')
                     cbar.ax.xaxis.set_label_position('top')
-                    cbar.set_ticks([-2, -1, 0, 1, 2])
-                    cbar.set_ticklabels(
+                    cbar.ax.xaxis.set_ticks([-2, -1, 0, 1, 2])
+                    cbar.ax.xaxis.set_ticklabels(
                         ["$\leq-2$", "-1", "0", "1", "$2\leq$"])
 
         spath = ("plots/physics_vary/"
