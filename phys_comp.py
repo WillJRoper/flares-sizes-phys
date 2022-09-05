@@ -959,8 +959,9 @@ def plot_birth_met_vary(stellar_data, snap, path):
         reg_zs, reg_mets = get_nonmaster_evo_data(
             path, snap, y_key="PartType4/SmoothedMetallicity")
 
-        im = axes[ind].hexbin(reg_zs, reg_mets, mincnt=0, gridsize=30,
+        im = axes[ind].hexbin(reg_zs, reg_mets + 1, mincnt=0, gridsize=30,
                               linewidth=0.2, cmap="plasma",
+                              yscale="log",
                               norm=norm, extent=extent)
 
         hex_dict[t] = {"zs": reg_zs, "mets": reg_mets, "h": im.get_array()}
@@ -1394,9 +1395,9 @@ def plot_birth_denmet_vary(snap, path):
                 reg_dens > 0)
 
             im = plt.hexbin(reg_dens[okinds],
-                            reg_mets[okinds],
+                            reg_mets[okinds] + 1,
                             gridsize=30, linewidth=0.2,
-                            xscale="log",
+                            xscale="log", yscale="log",
                             cmap="coolwarm",
                             extent=extent)
 
