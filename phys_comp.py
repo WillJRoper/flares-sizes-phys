@@ -1057,11 +1057,13 @@ def plot_birth_met_vary(stellar_data, snap, path):
                 im.set_array(new_arr)
                 im.set_norm(resi_norm)
 
-                axes[i, j].hexbin(hex_dict[ti]["zs"],
-                                  hex_dict[ti]["mets"],
-                                  gridsize=30, linewidth=0.2,
-                                  cmap="BrBG", norm=outlier_norm,
-                                  extent=extent, zorder=0)
+                im1 = axes[i, j].hexbin(hex_dict[ti]["zs"],
+                                        hex_dict[ti]["mets"],
+                                        gridsize=30, linewidth=0.2,
+                                        cmap="BrBG",
+                                        extent=extent, zorder=0)
+                im1.set_array(bkg_arr)
+                im1.set_norm(resi_norm)
 
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
@@ -1268,11 +1270,14 @@ def plot_birth_den_vary(stellar_data, snap, path):
                 im.set_array(new_arr)
                 im.set_norm(resi_norm)
 
-                axes[i, j].hexbin(hex_dict[ti]["zs"],
-                                  hex_dict[ti]["dens"],
-                                  gridsize=30, linewidth=0.2,
-                                  cmap="BrBG", norm=outlier_norm,
-                                  extent=extent, zorder=0)
+                im1 = axes[i, j].hexbin(hex_dict[ti]["zs"],
+                                        hex_dict[ti]["dens"],
+                                        gridsize=30, linewidth=0.2,
+                                        yscale="log",
+                                        cmap="BrBG", norm=outlier_norm,
+                                        extent=extent, zorder=0)
+                im1.set_array(bkg_arr)
+                im1.set_norm(resi_norm)
 
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
@@ -1505,11 +1510,14 @@ def plot_birth_denmet_vary(snap, path):
                     im.set_array(new_arr)
                     im.set_norm(resi_norm)
 
-                    axes[i, j].hexbin(dens[okinds],
-                                      mets[okinds],
-                                      gridsize=30, linewidth=0.2,
-                                      cmap="BrBG", norm=outlier_norm,
-                                      extent=extent, zorder=0)
+                    im1 = axes[i, j].hexbin(dens[okinds],
+                                            mets[okinds],
+                                            xscale="log",
+                                            gridsize=30, linewidth=0.2,
+                                            cmap="BrBG", norm=outlier_norm,
+                                            extent=extent, zorder=0)
+                    im1.set_array(bkg_arr)
+                    im1.set_norm(resi_norm)
 
                     # Set up colorbar
                     cbar = fig.colorbar(im, cax2, orientation="horizontal")
