@@ -894,7 +894,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
     # Define norm
     norm = LogNorm(vmin=1, vmax=50000)
-    resi_norm = TwoSlopeNorm(vmin=-3, vcenter=0, vmax=3)
+    resi_norm = TwoSlopeNorm(vmin=-2, vcenter=0, vmax=2)
     outlier_norm = TwoSlopeNorm(vmin=-10.01, vcenter=0, vmax=10)
 
     # Define hexbin extent
@@ -1071,6 +1071,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
                 cbar.set_label("$\log_{10}(P_{i} / P_{j})$")
                 cbar.ax.xaxis.set_ticks_position('top')
                 cbar.ax.xaxis.set_label_position('top')
+                cbar.set_ticklabels(["$\leq-2$", "0", "2\leq"])
 
     fig.savefig("plots/physics_vary/stellar_birthZ_residual.png",
                 bbox_inches="tight")
@@ -1100,7 +1101,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
     # Define norm
     norm = LogNorm(vmin=1, vmax=50000)
-    resi_norm = TwoSlopeNorm(vmin=-3, vcenter=0, vmax=3)
+    resi_norm = TwoSlopeNorm(vmin=-2, vcenter=0, vmax=2)
     outlier_norm = TwoSlopeNorm(vmin=-10.01, vcenter=0, vmax=10)
 
     # Define hexbin extent
@@ -1285,6 +1286,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
                 cbar.set_label("$\log_{10}(P_{i} / P_{j})$")
                 cbar.ax.xaxis.set_ticks_position('top')
                 cbar.ax.xaxis.set_label_position('top')
+                cbar.set_ticklabels(["$\leq-2$", "0", "2\leq"])
 
     fig.savefig("plots/physics_vary/stellar_birthden_residual.png",
                 bbox_inches="tight")
@@ -1350,7 +1352,7 @@ def plot_birth_denmet_vary(snap, path):
 
     # Define norm
     norm = LogNorm(vmin=1, vmax=50000)
-    resi_norm = TwoSlopeNorm(vmin=-3, vcenter=0, vmax=3)
+    resi_norm = TwoSlopeNorm(vmin=-2, vcenter=0, vmax=2)
     outlier_norm = TwoSlopeNorm(vmin=-10.01, vcenter=0, vmax=10)
 
     # Define hexbin extent
@@ -1525,6 +1527,7 @@ def plot_birth_denmet_vary(snap, path):
                     cbar.set_label("$\log_{10}(P_{i} / P_{j})$")
                     cbar.ax.xaxis.set_ticks_position('top')
                     cbar.ax.xaxis.set_label_position('top')
+                    cbar.set_ticklabels(["$\leq-2$", "0", "2\leq"])
 
         spath = ("plots/physics_vary/"
                  "stellar_birthdenmet_residual_%.1f-%.1f.png" % (zbins[zi],
