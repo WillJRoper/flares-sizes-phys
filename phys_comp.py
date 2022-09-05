@@ -892,7 +892,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=10**-2, vmax=10)
+    norm = LogNorm(vmin=1, vmax=50000)
     resi_norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
 
     # Define hexbin extent
@@ -993,9 +993,6 @@ def plot_birth_met_vary(stellar_data, snap, path):
     for i, ti in enumerate(types):
         for j, tj in enumerate(types):
 
-            if j > i:
-                continue
-
             # Create axis
             ax = fig.add_subplot(gs[i + 1, j])
 
@@ -1032,15 +1029,11 @@ def plot_birth_met_vary(stellar_data, snap, path):
             if j == i:
                 im = axes[i, j].hexbin(hex_dict[ti]["zs"], hex_dict[ti]["mets"],
                                        mincnt=0, gridsize=50, linewidth=0.2,
-                                       cmap="plasma", extent=extent)
-                h = im.get_array()
-                new_arr = h / np.sum(h) * 100
-                im.set_array(new_arr)
-                im.set_norm(norm)
+                                       norm=norm,  cmap="plasma", extent=extent)
 
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax1)
-                cbar.set_label("$N (\%)$")
+                cbar.set_label("$N$")
             else:
                 im = axes[i, j].hexbin(hex_dict[ti]["zs"],
                                        hex_dict[ti]["mets"],
@@ -1051,8 +1044,8 @@ def plot_birth_met_vary(stellar_data, snap, path):
                 hj = hex_dict[tj]["h"]
                 hokinds = ~np.logical_and(hi == 0,
                                           hj == 0)
-                new_arr = ((hi / np.sum(hi)) * 100 -
-                           (hj / np.sum(hj)) * 100)
+                new_arr = ((hi / np.sum(hi)) -
+                           (hj / np.sum(hj))) / (hi / np.sum(hi))
                 print(np.min(new_arr), np.max(new_arr))
                 new_arr[~hokinds] = np.nan
                 im.set_array(new_arr)
@@ -1060,7 +1053,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
 
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
-                cbar.set_label("$\Delta (\%)$")
+                cbar.set_label("$\Delta P_{ij} / P_{i}$")
                 cbar.ax.xaxis.set_ticks_position('top')
                 cbar.ax.xaxis.set_label_position('top')
 
@@ -1091,7 +1084,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=10**-2, vmax=10)
+    norm = LogNorm(vmin=1, vmax=50000)
     resi_norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
 
     # Define hexbin extent
@@ -1197,9 +1190,6 @@ def plot_birth_den_vary(stellar_data, snap, path):
     for i, ti in enumerate(types):
         for j, tj in enumerate(types):
 
-            if j > i:
-                continue
-
             # Create axis
             ax = fig.add_subplot(gs[i + 1, j])
 
@@ -1236,37 +1226,31 @@ def plot_birth_den_vary(stellar_data, snap, path):
             if j == i:
                 im = axes[i, j].hexbin(hex_dict[ti]["zs"],
                                        hex_dict[ti]["dens"],
+                                       yscale="log",
                                        mincnt=0, gridsize=50, linewidth=0.2,
-                                       yscale="log", cmap="plasma",
-                                       extent=extent)
-                h = im.get_array()
-                new_arr = h / np.sum(h) * 100
-                im.set_array(new_arr)
-                im.set_norm(norm)
+                                       norm=norm,  cmap="plasma", extent=extent)
 
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax1)
-                cbar.set_label("$N (\%)$")
+                cbar.set_label("$N$")
             else:
                 im = axes[i, j].hexbin(hex_dict[ti]["zs"],
                                        hex_dict[ti]["dens"],
                                        gridsize=50, linewidth=0.2,
                                        yscale="log", cmap="coolwarm",
-                                       norm=resi_norm,
                                        extent=extent)
-                hi = hex_dict[ti]["h"]
-                hj = hex_dict[tj]["h"]
                 hokinds = ~np.logical_and(hi == 0,
                                           hj == 0)
-                new_arr = ((hi / np.sum(hi)) * 100 -
-                           (hj / np.sum(hj)) * 100)
+                new_arr = ((hi / np.sum(hi)) -
+                           (hj / np.sum(hj))) / (hi / np.sum(hi))
                 print(np.min(new_arr), np.max(new_arr))
                 new_arr[~hokinds] = np.nan
                 im.set_array(new_arr)
+                im.set_norm(resi_norm)
 
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
-                cbar.set_label("$\Delta (\%)$")
+                cbar.set_label("$\Delta P_{ij} / P_{i}$")
                 cbar.ax.xaxis.set_ticks_position('top')
                 cbar.ax.xaxis.set_label_position('top')
 
@@ -1333,7 +1317,7 @@ def plot_birth_denmet_vary(snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=10**-2, vmax=10)
+    norm = LogNorm(vmin=1, vmax=50000)
     resi_norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
 
     # Define hexbin extent
@@ -1409,9 +1393,6 @@ def plot_birth_denmet_vary(snap, path):
         for i, ti in enumerate(types):
             for j, tj in enumerate(types):
 
-                if j > i:
-                    continue
-
                 # Create axis
                 ax = fig.add_subplot(gs[i + 1, j])
 
@@ -1457,18 +1438,16 @@ def plot_birth_denmet_vary(snap, path):
 
                     im = axes[i, j].hexbin(dens[okinds],
                                            mets[okinds],
-                                           mincnt=0, gridsize=50, linewidth=0.2,
-                                           xscale="log",
+                                           mincnt=0, gridsize=50,
+                                           linewidth=0.2, norm=norm,
+                                           scale="log",
                                            cmap="plasma",
                                            extent=extent)
-                    h = im.get_array()
-                    new_arr = h / np.sum(h) * 100
-                    im.set_array(new_arr)
-                    im.set_norm(norm)
 
-                    # Set up colorbar
-                    cbar = fig.colorbar(im, cax1)
-                    cbar.set_label("$N (\%)$")
+                # Set up colorbar
+                cbar = fig.colorbar(im, cax1)
+                cbar.set_label("$N$")
+
                 else:
 
                     zs = hex_dict[ti]["zs"]
@@ -1483,21 +1462,21 @@ def plot_birth_denmet_vary(snap, path):
                                            gridsize=50, linewidth=0.2,
                                            xscale="log",
                                            cmap="coolwarm",
-                                           norm=resi_norm,
                                            extent=extent)
                     hi = hex_dict[ti]["h_%.2f" % zbins[zi]]
                     hj = hex_dict[tj]["h_%.2f" % zbins[zi]]
                     hokinds = ~np.logical_and(hi == 0,
                                               hj == 0)
-                    new_arr = ((hi / np.sum(hi)) * 100 -
-                               (hj / np.sum(hj)) * 100)
+                    new_arr = ((hi / np.sum(hi)) -
+                               (hj / np.sum(hj))) / (hi / np.sum(hi))
                     print(np.min(new_arr), np.max(new_arr))
                     new_arr[~hokinds] = np.nan
                     im.set_array(new_arr)
+                    im.set_norm(resi_norm)
 
                     # Set up colorbar
                     cbar = fig.colorbar(im, cax2, orientation="horizontal")
-                    cbar.set_label("$\Delta (\%)$")
+                    cbar.set_label("$\Delta P_{ij} / P_{i}$")
                     cbar.ax.xaxis.set_ticks_position('top')
                     cbar.ax.xaxis.set_label_position('top')
 
