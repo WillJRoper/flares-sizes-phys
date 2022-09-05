@@ -1032,7 +1032,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
             if j == i:
                 im = axes[i, j].hexbin(hex_dict[ti]["zs"], hex_dict[ti]["mets"],
                                        mincnt=0, gridsize=50, linewidth=0.2,
-                                       cmap="plasma", norm=norm, extent=extent)
+                                       cmap="plasma", extent=extent)
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax1)
                 cbar.set_label("$N$")
@@ -1152,7 +1152,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
 
         im = axes[ind].hexbin(reg_zs, reg_dens, mincnt=0, gridsize=50,
                               yscale="log", linewidth=0.2, cmap="plasma",
-                              norm=norm, extent=extent)
+                              extent=extent)
 
         hex_dict[t] = {"zs": reg_zs, "dens": reg_dens, "h": im.get_array()}
 
@@ -1313,11 +1313,11 @@ def plot_birth_denmet_vary(snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=1, vmax=5000)
+    norm = LogNorm(vmin=1, vmax=50000)
     resi_norm = TwoSlopeNorm(vmin=-0.01, vcenter=0, vmax=0.01)
 
     # Define hexbin extent
-    extent = [-2.9, 6.8, -5.9, 0]
+    extent = [-2.9, 6.8, 0, 0.119]
 
     # Initialise a dictionary to store the hexbins
     hex_dict = {}
@@ -1347,11 +1347,30 @@ def plot_birth_denmet_vary(snap, path):
 
         hex_dict[t] = {"zs": birth_z, "dens": reg_dens, "mets": reg_mets}
 
+        # Loop over redshift bins
+        for zi in range(len(zbins) - 1):
+
+            okinds = np.logical_and(
+                np.logical_and(reg_zs >= zbins[zi],
+                               reg_zs < zbins[zi + 1]),
+                reg_dens > 0)
+
+            im = plt.hexbin(reg_dens[okinds],
+                            reg_mets[okinds],
+                            gridsize=50, linewidth=0.2,
+                            xscale="log",
+                            cmap="coolwarm",
+                            extent=extent)
+
+            hex_dict[t]["h_%.2f" % zbins[zi]] = im.get_array()
+
     # Redefine labels for each
     labels = ["AGNdT9", "REF",
               "InstantFB", "$Z^0$",
               "$f_{\mathrm{th, max}}=4$", "$f_{\mathrm{th, max}}=6$",
               "$f_{\mathrm{th, max}}=10$"]
+
+    plt.close()
 
     # Loop over redshift bins
     for zi in range(len(zbins) - 1):
@@ -1378,9 +1397,9 @@ def plot_birth_denmet_vary(snap, path):
 
                 # Include labels
                 if j == 0:
-                    ax.set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
+                    ax.set_ylabel(r"$Z_{\mathrm{birth}}$")
                 if i == len(labels) - 1:
-                    ax.set_xlabel(r"$z_{\mathrm{birth}}$")
+                    ax.set_xlabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
 
                 # Remove unnecessary ticks
                 if j > 0:
@@ -1391,7 +1410,7 @@ def plot_birth_denmet_vary(snap, path):
                                    labeltop=False, labelbottom=False)
 
                 # Set axis limits
-                ax.set_ylim(10**extent[2], 10**extent[3])
+                ax.set_ylim(extent[2], extent[3])
                 ax.set_xlim(10**extent[0], 10**extent[1])
 
                 # Label axis
@@ -1414,12 +1433,12 @@ def plot_birth_denmet_vary(snap, path):
 
                     okinds = np.logical_and(
                         np.logical_and(zs >= zbins[zi], zs < zbins[zi + 1]),
-                        np.logical_and(dens > 0, mets > 0))
+                        dens > 0)
 
                     im = axes[i, j].hexbin(dens[okinds],
                                            mets[okinds],
                                            mincnt=0, gridsize=50, linewidth=0.2,
-                                           yscale="log", xscale="log",
+                                           xscale="log",
                                            cmap="plasma", norm=norm,
                                            extent=extent)
                     # Set up colorbar
@@ -1427,43 +1446,29 @@ def plot_birth_denmet_vary(snap, path):
                     cbar.set_label("$N$")
                 else:
 
-                    zs_i = hex_dict[ti]["zs"]
-                    dens_i = hex_dict[ti]["dens"]
-                    mets_i = hex_dict[ti]["mets"]
-                    okinds_i = np.logical_and(
+                    zs = hex_dict[ti]["zs"]
+                    dens = hex_dict[ti]["dens"]
+                    mets = hex_dict[ti]["mets"]
+                    okinds = np.logical_and(
                         np.logical_and(
-                            zs_i >= zbins[zi], zs_i < zbins[zi + 1]),
-                        np.logical_and(dens_i > 0, mets_i > 0))
-                    zs_j = hex_dict[tj]["zs"]
-                    dens_j = hex_dict[tj]["dens"]
-                    mets_j = hex_dict[tj]["mets"]
-                    okinds_j = np.logical_and(
-                        np.logical_and(
-                            zs_j >= zbins[zi], zs_j < zbins[zi + 1]),
-                        np.logical_and(dens_j > 0, mets_j > 0))
+                            zs >= zbins[zi], zs < zbins[zi + 1]),
+                        dens > 0)
 
-                    im_i = axes[i, j].hexbin(dens_i[okinds_i],
-                                             mets_i[okinds_i],
-                                             gridsize=50, linewidth=0.2,
-                                             yscale="log", xscale="log",
-                                             cmap="coolwarm",
-                                             norm=resi_norm,
-                                             extent=extent)
-                    im_j = plt.hexbin(dens_j[okinds_j],
-                                      mets_j[okinds_j],
-                                      gridsize=50, linewidth=0.2,
-                                      yscale="log", xscale="log",
-                                      cmap="coolwarm",
-                                      norm=resi_norm,
-                                      extent=extent)
-                    new_arr = ((im_i.get_array() / np.sum(im_i.get_array()))
-                               - (im_j.get_array() / np.sum(im_j.get_array())))
-                    new_arr[np.logical_and(im_i.get_array() == 0,
-                                           im_j.get_array() == 0)] = np.nan
-                    im_i.set_array(new_arr)
+                    im = axes[i, j].hexbin(dens[okinds], mets[okinds],
+                                           gridsize=50, linewidth=0.2,
+                                           xscale="log",
+                                           cmap="coolwarm",
+                                           norm=resi_norm,
+                                           extent=extent)
+                    hi = hex_dict[ti]["h_%.2f" % zbins[zi]]
+                    hj = hex_dict[tj]["h_%.2f" % zbins[zi]]
+                    new_arr = (hi / np.sum(hi)) - (hj / np.sum(hj))
+                    new_arr[np.logical_and(hi == 0,
+                                           hj == 0)] = np.nan
+                    im.set_array(new_arr)
 
                     # Set up colorbar
-                    cbar = fig.colorbar(im_i, cax2, orientation="horizontal")
+                    cbar = fig.colorbar(im, cax2, orientation="horizontal")
                     cbar.set_label("$P_i - P_j$")
                     cbar.ax.xaxis.set_ticks_position('top')
                     cbar.ax.xaxis.set_label_position('top')
