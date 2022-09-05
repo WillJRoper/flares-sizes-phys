@@ -892,7 +892,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=1, vmax=50000, clip=True)
+    norm = LogNorm(vmin=1, vmax=50000)
     resi_norm = TwoSlopeNorm(vmin=-3, vcenter=0, vmax=3)
 
     # Define hexbin extent
@@ -980,7 +980,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
               "$f_{\mathrm{th, max}}=10$"]
 
     # Set up the plot
-    fig = plt.figure(figsize=(len(labels) * 2.75, len(labels) * 2.75))
+    fig = plt.figure(figsize=(len(labels) * 2.5, len(labels) * 2.5))
     gs = gridspec.GridSpec(nrows=len(labels) + 1, ncols=len(labels) + 1,
                            width_ratios=[20, ] * len(labels) + [1, ],
                            height_ratios=[1, ] + [20, ] * len(labels))
@@ -1087,7 +1087,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=1, vmax=50000, clip=True)
+    norm = LogNorm(vmin=1, vmax=50000)
     resi_norm = TwoSlopeNorm(vmin=-3, vcenter=0, vmax=3)
 
     # Define hexbin extent
@@ -1180,7 +1180,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
               "$f_{\mathrm{th, max}}=10$"]
 
     # Set up the plot
-    fig = plt.figure(figsize=(len(labels) * 2.75, len(labels) * 2.75))
+    fig = plt.figure(figsize=(len(labels) * 2.5, len(labels) * 2.5))
     gs = gridspec.GridSpec(nrows=len(labels) + 1, ncols=len(labels) + 1,
                            width_ratios=[20, ] * len(labels) + [1, ],
                            height_ratios=[1, ] + [20, ] * len(labels))
@@ -1325,7 +1325,7 @@ def plot_birth_denmet_vary(snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=1, vmax=50000, clip=True)
+    norm = LogNorm(vmin=1, vmax=50000)
     resi_norm = TwoSlopeNorm(vmin=-3, vcenter=0, vmax=3)
 
     # Define hexbin extent
@@ -1388,7 +1388,7 @@ def plot_birth_denmet_vary(snap, path):
     for zi in range(len(zbins) - 1):
 
         # Set up the plot
-        fig = plt.figure(figsize=(len(labels) * 2.75, len(labels) * 2.75))
+        fig = plt.figure(figsize=(len(labels) * 2.5, len(labels) * 2.5))
         gs = gridspec.GridSpec(nrows=len(labels) + 1, ncols=len(labels) + 1,
                                width_ratios=[20, ] * len(labels) + [1, ],
                                height_ratios=[1, ] + [20, ] * len(labels))
