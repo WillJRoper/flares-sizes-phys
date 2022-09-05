@@ -892,7 +892,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=0, vmax=50)
+    norm = LogNorm(vmin=0.1, vmax=50)
     resi_norm = TwoSlopeNorm(vmin=-25, vcenter=0, vmax=25)
 
     # Define hexbin extent
@@ -1042,7 +1042,8 @@ def plot_birth_met_vary(stellar_data, snap, path):
                 cbar = fig.colorbar(im, cax1)
                 cbar.set_label("$N (\%)$")
             else:
-                im = axes[i, j].hexbin(hex_dict[ti]["zs"], hex_dict[ti]["mets"],
+                im = axes[i, j].hexbin(hex_dict[ti]["zs"],
+                                       hex_dict[ti]["mets"],
                                        gridsize=50, linewidth=0.2,
                                        cmap="coolwarm",
                                        extent=extent)
@@ -1055,6 +1056,7 @@ def plot_birth_met_vary(stellar_data, snap, path):
                 print(np.min(new_arr), np.max(new_arr))
                 new_arr[~hokinds] = np.nan
                 im.set_array(new_arr)
+                im.set_norm(resi_norm)
 
                 # Set up colorbar
                 cbar = fig.colorbar(im, cax2, orientation="horizontal")
@@ -1089,7 +1091,7 @@ def plot_birth_den_vary(stellar_data, snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=0, vmax=50)
+    norm = LogNorm(vmin=0.1, vmax=50)
     resi_norm = TwoSlopeNorm(vmin=-25, vcenter=0, vmax=25)
 
     # Define hexbin extent
@@ -1331,7 +1333,7 @@ def plot_birth_denmet_vary(snap, path):
     ncols = 3
 
     # Define norm
-    norm = LogNorm(vmin=0, vmax=50)
+    norm = LogNorm(vmin=0.1, vmax=50)
     resi_norm = TwoSlopeNorm(vmin=-25, vcenter=0, vmax=25)
 
     # Define hexbin extent
