@@ -1444,9 +1444,9 @@ def plot_birth_denmet_vary(snap, path):
                                            cmap="plasma",
                                            extent=extent)
 
-                # Set up colorbar
-                cbar = fig.colorbar(im, cax1)
-                cbar.set_label("$N$")
+                    # Set up colorbar
+                    cbar = fig.colorbar(im, cax1)
+                    cbar.set_label("$N$")
 
                 else:
 
