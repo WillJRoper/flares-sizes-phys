@@ -1440,7 +1440,7 @@ def plot_birth_denmet_vary(snap, path):
                                            mets[okinds],
                                            mincnt=0, gridsize=50,
                                            linewidth=0.2, norm=norm,
-                                           scale="log",
+                                           xscale="log",
                                            cmap="plasma",
                                            extent=extent)
 
