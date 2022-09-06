@@ -9,6 +9,7 @@ from phys_comp import *
 from spatial_dist import *
 from compute_props import get_data
 from graph_plots import *
+from energy import *
 
 import mpi4py
 import numpy as np
@@ -27,7 +28,7 @@ status = MPI.Status()  # get MPI status object
 weight_norm = LogNorm(vmin=10 ** -4, vmax=1)
 
 # Define raw data path for FLARES and EAGLE
-path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/G-EAGLE_<reg>/data/"
+path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/flares_<reg>/data/"
 agndt9_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
 ref_path = "/cosma7/data/Eagle/ScienceRuns/Planck1/L0100N1504/PE/REFERENCE/data"
 
@@ -195,6 +196,7 @@ if rank == 0:
     plot_formation_size_environ(hdf["stellar"], flares_snaps)
 plot_size_change_binding(
     hdf["stellar"], flares_snaps, weight_norm, comm, size, rank)
+plot_binding_energy(hdf, snaps, weight_norm, comm, size, rank)
 if rank == 0:
     plot_size_mass_evo_grid(hdf["stellar"], flares_snaps)
     plot_size_feedback(hdf["stellar"], hdf["stellar"],

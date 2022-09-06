@@ -1577,8 +1577,8 @@ def plot_ssfr_mass_vary(snap):
     norm = LogNorm(vmin=1, vmax=10)
 
     # Define hexbin extent
-    extent = [8, 11.5, 5, 11]
-    extent1 = [-1.5, 1.5, 5, 11]
+    extent = [8, 11.5, 7, 12]
+    extent1 = [-1.5, 1.5, 7, 12]
 
     # Set up the plots
     fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
