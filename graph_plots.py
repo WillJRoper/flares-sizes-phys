@@ -1854,7 +1854,7 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
 def plot_size_feedback(stellar_data, other_data, snaps, weight_norm, plt_type):
 
     # Get the dark matter mass
-    hdf = h5py.File("/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/G-EAGLE_00/"
+    hdf = h5py.File("/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/flares_00/"
                     "data/snapshot_000_z015p000/snap_000_z015p000.0.hdf5")
     mdm = hdf["Header"].attrs["MassTable"][1]
     hdf.close()
@@ -2580,7 +2580,7 @@ def plot_formation_size_environ(stellar_data, snaps):
 def plot_size_change_starpos(stellar_data, snaps, weight_norm):
 
     # Get the dark matter mass
-    hdf = h5py.File("/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/G-EAGLE_00/"
+    hdf = h5py.File("/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/flares_00/"
                     "data/snapshot_000_z015p000/snap_000_z015p000.0.hdf5")
     mdm = hdf["Header"].attrs["MassTable"][1]
     hdf.close()
