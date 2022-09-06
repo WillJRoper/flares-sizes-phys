@@ -1609,8 +1609,8 @@ def plot_ssfr_mass_vary(snap):
 
             # Include labels
             if j == 0:
-                ax.set_ylabel(r"$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
-                ax1.set_ylabel(r"$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
+                ax.set_ylabel(r"$\mathrm{SFR} / [M_\odot\mathrm{Gyr}^{-1}]$")
+                ax1.set_ylabel(r"$\mathrm{SFR} / [M_\odot\mathrm{Gyr}^{-1}]$")
             if i == nrows - 1:
                 ax.set_xlabel(r"$M_\star / M_\odot$")
                 ax1.set_xlabel(r"$R_{1/2} / [\mathrm{pkpc}]$")
@@ -1755,7 +1755,7 @@ def plot_ssfr_mass_vary(snap):
             this_ini_mass = this_ini_mass[rokinds]
 
             # Compute and store ssfr
-            ssfrs.append(np.sum(this_ini_mass) / 0.1 / m)
+            ssfrs.append(np.sum(this_ini_mass) / 0.1)
             ms.append(m)
             plt_hmrs.append(hmr)
 
