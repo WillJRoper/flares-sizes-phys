@@ -1759,10 +1759,16 @@ def plot_ssfr_mass_vary(snap):
             ms.append(m)
             plt_hmrs.append(hmr)
 
-        im = axes[ind].hexbin(ms, ssfrs, mincnt=1, gridsize=50,
+        # Convert to arrays
+        ssfrs = np.array(ssfrs)
+        ms = np.array(ms)
+        plt_hmrs = np.array(plt_hmrs)
+        okinds = ssfrs > 0
+
+        im = axes[ind].hexbin(ms[okinds], ssfrs[okinds], mincnt=1, gridsize=50,
                               xscale="log", yscale="log", linewidth=0.2,
                               cmap="plasma", norm=norm, extent=extent)
-        im1 = axes1[ind].hexbin(plt_hmrs, ssfrs, mincnt=1, gridsize=50,
+        im1 = axes1[ind].hexbin(plt_hmrs[okinds], ssfrs[okinds], mincnt=1, gridsize=50,
                                 xscale="log", yscale="log", linewidth=0.2,
                                 cmap="plasma", norm=norm, extent=extent1)
 
