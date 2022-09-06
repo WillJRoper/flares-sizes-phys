@@ -1577,8 +1577,8 @@ def plot_ssfr_mass_vary(snap):
     norm = LogNorm(vmin=1, vmax=10)
 
     # Define hexbin extent
-    extent = [8, 11.5, 0, 15]
-    extent1 = [-1.5, 1.5, 0, 15]
+    extent = [8, 11.5, 5, 11]
+    extent1 = [-1.5, 1.5, 5, 11]
 
     # Set up the plots
     fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
@@ -1628,9 +1628,9 @@ def plot_ssfr_mass_vary(snap):
                                 labeltop=False, labelbottom=False)
 
             # Set axis limits
-            ax.set_ylim(extent[2], extent[3])
+            ax.set_ylim(10**extent[2], 10**extent[3])
             ax.set_xlim(10**extent[0], 10**extent[1])
-            ax1.set_ylim(extent1[2], extent1[3])
+            ax1.set_ylim(10**extent1[2], 10**extent1[3])
             ax1.set_xlim(10**extent1[0], 10**extent1[1])
 
             # Label axis
@@ -1760,10 +1760,10 @@ def plot_ssfr_mass_vary(snap):
             plt_hmrs.append(hmr)
 
         im = axes[ind].hexbin(ms, ssfrs, mincnt=1, gridsize=50,
-                              xscale="log", linewidth=0.2,
+                              xscale="log", yscale="log", linewidth=0.2,
                               cmap="plasma", norm=norm, extent=extent)
         im1 = axes1[ind].hexbin(plt_hmrs, ssfrs, mincnt=1, gridsize=50,
-                                xscale="log", linewidth=0.2,
+                                xscale="log", yscale="log", linewidth=0.2,
                                 cmap="plasma", norm=norm, extent=extent1)
 
     # Set up colorbar
