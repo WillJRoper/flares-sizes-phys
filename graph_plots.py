@@ -529,7 +529,7 @@ def plot_size_change_comp(stellar_data, gas_data, snaps, weight_norm):
 def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, rank):
 
     # Get the dark matter mass
-    hdf = h5py.File("/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/G-EAGLE_00/"
+    hdf = h5py.File("/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/flares_00/"
                     "data/snapshot_000_z015p000/snap_000_z015p000.0.hdf5")
     mdm = hdf["Header"].attrs["MassTable"][1]
     hdf.close()
