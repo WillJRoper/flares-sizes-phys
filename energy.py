@@ -222,7 +222,7 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             ebind *= G / 2 * u.Msun * u.Mpc ** 2 * u.Myr ** -2
 
             # Convert binding energy units
-            ebind = ebind.to(u.erg)
+            ebind = ebind.to(u.erg).value
 
             # Gather the results to the master
             ebind = comm.reduce(ebind, op=MPI.SUM, root=0)
