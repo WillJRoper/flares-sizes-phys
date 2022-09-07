@@ -219,7 +219,7 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
                                 / np.sqrt(dists + soft ** 2))
 
             # Complete the calculation
-            ebind *= G / 2 * u.Msun * u.Mpc ** 2 / u.Myr
+            ebind *= G / 2 * u.Msun * u.Mpc ** 2 * u.Myr ** -2
 
             # Convert binding energy units
             ebind = ebind.to(u.erg)
