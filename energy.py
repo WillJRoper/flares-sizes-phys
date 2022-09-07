@@ -104,7 +104,7 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
                 master_g_length = snap_grp["Galaxy"]["G_Length"][...]
                 master_g_pos = snap_grp["Particle"]["G_Coordinates"][...].T / \
                     (1 + z)
-                master_g_vel = snap_grp["Particle"]["G_Vel"][...]
+                master_g_vel = snap_grp["Particle"]["G_Vel"][...].T
                 g_mass = snap_grp["Particle"]["G_Mass"][...]
                 master_dm_length = snap_grp["Galaxy"]["DM_Length"][...]
                 master_dm_pos = snap_grp["Particle"]["DM_Coordinates"][...].T / (
