@@ -233,21 +233,21 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
                 star_rs = np.sqrt((this_s_pos[:, 0] - cop[0]) ** 2
                                   + (this_s_pos[:, 1] - cop[1]) ** 2
                                   + (this_s_pos[:, 2] - cop[2]) ** 2)
-                okinds = star_rs < 0.03
+                s_okinds = star_rs < 0.03
 
                 # Include these results for plotting
                 tot_hmrs.append(hmr)
                 feedback_energy.append(
-                    np.sum(1.74 * 10 ** 49 * this_ini_ms[okinds]))
+                    np.sum(1.74 * 10 ** 49 * this_ini_ms[s_okinds]))
                 binding_energy.append(ebind)
                 w.append(ws[ind])
                 gal_masses.append(smass)
                 disps.append(np.std(this_g_vel))
-                all_okinds = rs < 2 * hmr
-                okinds = gas_rs < 2 * hmr
+                all_okinds = rs[okinds] < 2 * hmr
+                okinds = gas_rs[g_okinds] < 2 * hmr
                 virial_param.append(
                     5 * np.std(
-                        (this_g_vel[okinds] * u.km / u.s).to(u.Mpc / u.Myr))
+                        (this_g_vel[okinds] * u.km / u.s).to(u.Mpc / u.Myr).value)
                     * 2 * hmr / (G * np.sum(masses[all_okinds]))
                 )
 
