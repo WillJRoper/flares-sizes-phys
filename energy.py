@@ -64,7 +64,7 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
 
         # Extract galaxy data from the sizes dict
         hmrs = data["stellar"][snap]["HMRs"][...]
-        stellar_mass = data["stellar"]["mass"][...]
+        stellar_mass = data["stellar"][snap]["mass"][...]
         regions = data["stellar"][snap]["regions"][...]
         ws = data["stellar"][snap]["weights"][...]
         grps = data["stellar"][snap]["Galaxy,GroupNumber"][...]
