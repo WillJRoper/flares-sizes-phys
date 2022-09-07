@@ -194,9 +194,9 @@ if rank == 0:
     # plot_size_mass_evo_grid_noncompact(hdf["stellar"], flares_snaps)
     plot_size_change_starpos(hdf["stellar"], flares_snaps, weight_norm)
     plot_formation_size_environ(hdf["stellar"], flares_snaps)
+plot_binding_energy(hdf, flares_snaps, weight_norm, comm, size, rank)
 plot_size_change_binding(
     hdf["stellar"], flares_snaps, weight_norm, comm, size, rank)
-plot_binding_energy(hdf, snaps, weight_norm, comm, size, rank)
 if rank == 0:
     plot_size_mass_evo_grid(hdf["stellar"], flares_snaps)
     plot_size_feedback(hdf["stellar"], hdf["stellar"],
