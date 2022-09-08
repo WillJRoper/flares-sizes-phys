@@ -63,7 +63,7 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             continue
 
         # Extract galaxy data from the sizes dict
-        hmrs = data["stellar"][snap]["HMRs"][...]
+        hmrs = data["stellar"][snap]["HMRs"][...] / 1000
         stellar_mass = data["stellar"][snap]["mass"][...]
         regions = data["stellar"][snap]["regions"][...]
         ws = data["stellar"][snap]["weights"][...]
@@ -99,21 +99,21 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
                 master_s_length = snap_grp["Galaxy"]["S_Length"][...]
                 master_s_pos = snap_grp["Particle"]["S_Coordinates"][...].T / \
                     (1 + z)
-                ini_ms = snap_grp["Particle"]["S_MassInitial"][...]
-                s_mass = snap_grp["Particle"]["S_Mass"][...]
+                ini_ms = snap_grp["Particle"]["S_MassInitial"][...] * 10 ** 10
+                s_mass = snap_grp["Particle"]["S_Mass"][...] * 10 ** 10
                 master_g_length = snap_grp["Galaxy"]["G_Length"][...]
                 master_g_pos = snap_grp["Particle"]["G_Coordinates"][...].T / \
                     (1 + z)
                 master_g_vel = snap_grp["Particle"]["G_Vel"][...].T
-                g_mass = snap_grp["Particle"]["G_Mass"][...]
+                g_mass = snap_grp["Particle"]["G_Mass"][...] * 10 ** 10
                 master_dm_length = snap_grp["Galaxy"]["DM_Length"][...]
                 master_dm_pos = snap_grp["Particle"]["DM_Coordinates"][...].T / (
                     1 + z)
-                dm_mass = np.full(master_dm_pos.shape[0], mdm)
+                dm_mass = np.full(master_dm_pos.shape[0], mdm * 10 ** 10)
                 master_bh_length = snap_grp["Galaxy"]["BH_Length"][...]
                 master_bh_pos = snap_grp["Particle"]["BH_Coordinates"][...].T / (
                     1 + z)
-                bh_mass = snap_grp["Particle"]["BH_Mass"][...]
+                bh_mass = snap_grp["Particle"]["BH_Mass"][...] * 10 ** 10
 
             # Extract this galaxies information
             hmr = hmrs[ind]
@@ -247,7 +247,8 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
                 okinds = gas_rs[g_okinds] < 2 * hmr
                 virial_param.append(
                     5 * np.std(
-                        (this_g_vel[okinds] * u.km / u.s).to(u.Mpc / u.Myr).value)
+                        (this_g_vel[okinds] * u.km / u.s).to(u.Mpc
+                                                             / u.Myr).value)
                     * 2 * hmr / (G * np.sum(masses[all_okinds]))
                 )
 
