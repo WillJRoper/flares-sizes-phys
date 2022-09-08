@@ -590,12 +590,12 @@ def plot_virial_param(data, snaps, weight_norm):
         # Set up plot
         fig = plt.figure(figsize=(3.5, 3.5))
         ax = fig.add_subplot(111)
-        ax.semilogx()
+        ax.loglog()
 
         # Plot the scatter
         im = ax.hexbin(gal_masses, virial_params,  gridsize=50,
                        mincnt=np.min(w) - (0.1 * np.min(w)),
-                       C=w, xscale="log",
+                       C=w, xscale="log", yscale="log",
                        reduce_C_function=np.sum, norm=weight_norm,
                        linewidths=0.2, cmap="plasma")
 
