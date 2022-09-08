@@ -319,6 +319,31 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             ax.loglog()
 
             # Plot the scatter
+            im = ax.hexbin(tot_hmrs * 1000, binding_energy / feedback_energy,
+                           gridsize=50, mincnt=np.min(w) - (0.1 * np.min(w)),
+                           C=w, xscale="log", yscale="log",
+                           reduce_C_function=np.sum, norm=weight_norm,
+                           linewidths=0.2, cmap="plasma")
+
+            # Axes labels
+            ax.set_xlabel("$R_{1/2 / [\mathrm{pkpc}]}$")
+            ax.set_ylabel("$E_\mathrm{bind} / E_\mathrm{fb}$")
+
+            cbar = fig.colorbar(im)
+            cbar.set_label("$\sum w_i$")
+
+            # Save figure
+            mkdir("plots/energy/")
+            fig.savefig("plots/energy/mass_energyratio_%s.png" % snap,
+                        bbox_inches="tight")
+            plt.close(fig)
+
+            # Set up plot
+            fig = plt.figure(figsize=(3.5, 3.5))
+            ax = fig.add_subplot(111)
+            ax.loglog()
+
+            # Plot the scatter
             im = ax.hexbin(disps, binding_energy,  gridsize=50,
                            mincnt=np.min(w) - (0.1 * np.min(w)),
                            C=w, xscale="log", yscale="log",
