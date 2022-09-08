@@ -557,7 +557,7 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
     hdf_master = h5py.File(master_base, "r")
 
     # Physical constants
-    G = (const.G.to(u.Mpc ** 3 * u.M_sun ** -1 * u.yr ** -2)).value
+    G = (const.G.to(u.Mpc ** 3 * u.M_sun ** -1 * u.Myr ** -2)).value
 
     # Loop over snapshots
     for snap, prog_snap in zip(current_snaps, prog_snaps):
@@ -657,38 +657,39 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
                 master_s_length = snap_grp["Galaxy"]["S_Length"][...]
                 master_s_pos = snap_grp["Particle"]["S_Coordinates"][...].T / \
                     (1 + z)
-                ini_ms = snap_grp["Particle"]["S_MassInitial"][...]
-                s_mass = snap_grp["Particle"]["S_Mass"][...]
+                ini_ms = snap_grp["Particle"]["S_MassInitial"][...] * 10 ** 10
+                s_mass = snap_grp["Particle"]["S_Mass"][...] * 10 ** 10
                 master_g_length = snap_grp["Galaxy"]["G_Length"][...]
                 master_g_pos = snap_grp["Particle"]["G_Coordinates"][...].T / \
                     (1 + z)
-                g_mass = snap_grp["Particle"]["G_Mass"][...]
+                g_mass = snap_grp["Particle"]["G_Mass"][...] * 10 ** 10
                 master_dm_length = snap_grp["Galaxy"]["DM_Length"][...]
                 master_dm_pos = snap_grp["Particle"]["DM_Coordinates"][...].T / (
                     1 + z)
-                dm_mass = np.full(master_dm_pos.shape[0], mdm)
+                dm_mass = np.full(master_dm_pos.shape[0], mdm * 10 ** 10)
                 master_bh_length = snap_grp["Galaxy"]["BH_Length"][...]
                 master_bh_pos = snap_grp["Particle"]["BH_Coordinates"][...].T / (
                     1 + z)
-                bh_mass = snap_grp["Particle"]["BH_Mass"][...]
+                bh_mass = snap_grp["Particle"]["BH_Mass"][...] * 10 ** 10
                 prog_cops = prog_grp["Galaxy"]["COP"][...].T / (1 + prog_z)
                 prog_master_s_length = prog_grp["Galaxy"]["S_Length"][...]
                 prog_master_s_pos = prog_grp["Particle"]["S_Coordinates"][...].T / (
                     1 + prog_z)
-                prog_ini_ms = prog_grp["Particle"]["S_MassInitial"][...]
-                prog_s_mass = prog_grp["Particle"]["S_Mass"][...]
+                prog_ini_ms = prog_grp["Particle"]["S_MassInitial"][...] * 10 ** 10
+                prog_s_mass = prog_grp["Particle"]["S_Mass"][...] * 10 ** 10
                 prog_master_g_length = prog_grp["Galaxy"]["G_Length"][...]
                 prog_master_g_pos = prog_grp["Particle"]["G_Coordinates"][...].T / (
                     1 + prog_z)
-                prog_g_mass = prog_grp["Particle"]["G_Mass"][...]
+                prog_g_mass = prog_grp["Particle"]["G_Mass"][...] * 10 ** 10
                 prog_master_dm_length = prog_grp["Galaxy"]["DM_Length"][...]
                 prog_master_dm_pos = prog_grp["Particle"]["DM_Coordinates"][...].T / (
                     1 + prog_z)
-                prog_dm_mass = np.full(prog_master_dm_pos.shape[0], mdm)
+                prog_dm_mass = np.full(
+                    prog_master_dm_pos.shape[0], mdm * 10 ** 10)
                 prog_master_bh_length = prog_grp["Galaxy"]["BH_Length"][...]
                 prog_master_bh_pos = prog_grp["Particle"]["BH_Coordinates"][...].T / (
                     1 + prog_z)
-                prog_bh_mass = prog_grp["Particle"]["BH_Mass"][...]
+                prog_bh_mass = prog_grp["Particle"]["BH_Mass"][...] * 10 ** 10
 
             # Extract this galaxies information
             hmr = hmrs[ind]
@@ -896,8 +897,12 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
                                      / np.sqrt(dists + soft ** 2))
 
             # Complete the calculation
-            ebind *= G / 2
-            prog_ebind *= G / 2
+            ebind *= G / 2 * u.Msun * u.Mpc ** 2 * u.Myr ** -2
+            prog_ebind *= G / 2 * u.Msun * u.Mpc ** 2 * u.Myr ** -2
+
+            # Convert binding energy units
+            ebind = ebind.to(u.erg).value
+            prog_ebind = prog_ebind.to(u.erg).value
 
             # Gather the results to the master
             ebind = comm.reduce(ebind, op=MPI.SUM, root=0)
@@ -966,8 +971,12 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
         okinds = np.logical_and(delta_eb > 0, delta_fb > 0)
 
         # Plot the scatter
-        im = ax.scatter(delta_eb, delta_fb, c=delta_hmr,
-                        cmap="coolwarm", marker=".", norm=norm)
+        # Plot the scatter
+        im = ax.hexbin(delta_eb[okinds], delta_fb[okinds],  gridsize=50,
+                       mincnt=np.min(w) - (0.1 * np.min(w)),
+                       C=delta_hmr[okinds], xscale="log", yscale="log",
+                       reduce_C_function=np.mean, norm=norm,
+                       linewidths=0.2, cmap="coolwarm")
 
         # Axes labels
         ax.set_xlabel("$E_\mathrm{fb}^\mathrm{B} / E_\mathrm{fb}^\mathrm{A}$")
@@ -994,8 +1003,8 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
         im = ax.hexbin(delta_prog[okinds], delta_current[okinds],  gridsize=50,
                        mincnt=np.min(w) - (0.1 * np.min(w)),
                        C=delta_hmr[okinds], xscale="log", yscale="log",
-                       reduce_C_function=np.mean, norm=weight_norm,
-                       linewidths=0.2, cmap="plasma")
+                       reduce_C_function=np.mean, norm=norm,
+                       linewidths=0.2, cmap="coolwarm")
 
         # Axes labels
         ax.set_xlabel(
