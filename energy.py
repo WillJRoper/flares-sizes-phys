@@ -523,7 +523,7 @@ def plot_virial_param(data, snaps, weight_norm):
             this_s_vel = master_s_vel[s_start: s_start + s_len, :]
             this_dm_vel = master_dm_vel[dm_start: dm_start + dm_len, :]
             this_g_vel = master_g_vel[g_start: g_start + g_len, :]
-            this_bh_vel = np.full(bh_len, np.nan)
+            this_bh_vel = np.full((bh_len, 3), np.nan)
 
             # Combine coordiantes and masses into a single array
             part_counts = [g_len,
