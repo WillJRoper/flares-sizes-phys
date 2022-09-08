@@ -480,7 +480,6 @@ def plot_virial_param(data, snaps, weight_norm):
                 master_bh_length = snap_grp["Galaxy"]["BH_Length"][...]
                 master_bh_pos = snap_grp["Particle"]["BH_Coordinates"][...].T / (
                     1 + z)
-                master_bh_vel = snap_grp["Particle"]["BH_Vel"][...].T
                 bh_mass = snap_grp["Particle"]["BH_Mass"][...] * 10 ** 10
 
             # Extract this galaxies information
@@ -524,7 +523,7 @@ def plot_virial_param(data, snaps, weight_norm):
             this_s_vel = master_s_vel[s_start: s_start + s_len, :]
             this_dm_vel = master_dm_vel[dm_start: dm_start + dm_len, :]
             this_g_vel = master_g_vel[g_start: g_start + g_len, :]
-            this_bh_vel = master_bh_vel[s_start: bh_start + bh_len, :]
+            this_bh_vel = np.full(bh_len, np.nan)
 
             # Combine coordiantes and masses into a single array
             part_counts = [g_len,
@@ -576,7 +575,7 @@ def plot_virial_param(data, snaps, weight_norm):
             disps.append(np.std(this_g_vel))
             okinds = rs < 2 * hmr
             virial_param.append(
-                5 * np.std(
+                5 * np.nanstd(
                     (vels[okinds] * u.km / u.s).to(u.Mpc / u.Myr).value)
                 * 2 * hmr / (G * np.sum(masses[okinds]))
             )
