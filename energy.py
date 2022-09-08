@@ -573,7 +573,7 @@ def plot_virial_param(data, snaps, weight_norm):
             w.append(ws[ind])
             gal_masses.append(smass)
             disps.append(np.std(this_g_vel))
-            okinds = rs < 2 * hmr
+            okinds = rs < 0.001
             virial_param.append(
                 5 * np.nanstd(
                     (vels[okinds] * u.km / u.s).to(u.Mpc / u.Myr).value)**2
