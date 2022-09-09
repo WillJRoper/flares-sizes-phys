@@ -188,8 +188,8 @@ print("Got all data")
 
 if rank == 0:
     #plot_birth_denmet_vary(flares_snaps[-1], path)
-    plot_ssfr_mass_vary(flares_snaps[-1])
     plot_weighted_gas_size_mass_vary(flares_snaps[-1])
+    plot_ssfr_mass_vary(flares_snaps[-1])
 #plot_birth_den_vary(hdf["stellar"], flares_snaps[-1], path)
 #plot_birth_met_vary(hdf["stellar"], flares_snaps[-1], path)
 # plot_size_mass_evo_grid_noncompact(hdf["stellar"], flares_snaps)

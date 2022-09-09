@@ -1993,7 +1993,7 @@ def plot_weighted_gas_size_mass_vary(snap):
             tot = np.sum(weighted_mass)
             half = tot / 2
             sinds = np.argsort(rs)
-            rs = [sinds]
+            rs = rs[sinds]
             weighted_mass = weighted_mass[sinds]
             summed_mass = np.cumsum(weighted_mass)
             g_hmr = rs[np.argmin(np.abs(summed_mass - half))]
