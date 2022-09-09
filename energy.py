@@ -363,31 +363,6 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
                         bbox_inches="tight")
             plt.close(fig)
 
-            # Set up plot
-            fig = plt.figure(figsize=(3.5, 3.5))
-            ax = fig.add_subplot(111)
-            ax.semilogx()
-
-            # Plot the scatter
-            im = ax.hexbin(gal_masses, virial_params,  gridsize=50,
-                           mincnt=np.min(w) - (0.1 * np.min(w)),
-                           C=w, xscale="log",
-                           reduce_C_function=np.sum, norm=weight_norm,
-                           linewidths=0.2, cmap="plasma")
-
-            # Axes labels
-            ax.set_xlabel("$M_\star / M_\odot$")
-            ax.set_ylabel(r"$\alpha$")
-
-            cbar = fig.colorbar(im)
-            cbar.set_label("$\sum w_i$")
-
-            # Save figure
-            mkdir("plots/energy/")
-            fig.savefig("plots/energy/mass_virparam_%s.png" % snap,
-                        bbox_inches="tight")
-            plt.close(fig)
-
     hdf_master.close()
 
 
