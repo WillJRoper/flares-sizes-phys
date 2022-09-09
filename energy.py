@@ -41,6 +41,7 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
         tot_hmrs = []
         binding_energy = []
         feedback_energy = []
+        kinetic_energy = []
         disps = []
         gal_masses = []
         w = []
@@ -96,9 +97,11 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
 
                 # Get other data from the master file
                 cops = snap_grp["Galaxy"]["COP"][...].T / (1 + z)
+                vel_cops = snap_grp["Galaxy"]["Velocity"][...].T
                 master_s_length = snap_grp["Galaxy"]["S_Length"][...]
                 master_s_pos = snap_grp["Particle"]["S_Coordinates"][...].T / \
                     (1 + z)
+                master_s_vel = snap_grp["Particle"]["S_Vel"][...].T
                 ini_ms = snap_grp["Particle"]["S_MassInitial"][...] * 10 ** 10
                 s_mass = snap_grp["Particle"]["S_Mass"][...] * 10 ** 10
                 master_g_length = snap_grp["Galaxy"]["G_Length"][...]
@@ -109,6 +112,7 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
                 master_dm_length = snap_grp["Galaxy"]["DM_Length"][...]
                 master_dm_pos = snap_grp["Particle"]["DM_Coordinates"][...].T / (
                     1 + z)
+                master_dm_vel = snap_grp["Particle"]["DM_Vel"][...].T
                 dm_mass = np.full(master_dm_pos.shape[0], mdm * 10 ** 10)
                 master_bh_length = snap_grp["Galaxy"]["BH_Length"][...]
                 master_bh_pos = snap_grp["Particle"]["BH_Coordinates"][...].T / (
@@ -142,6 +146,7 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             dm_len = master_dm_length[master_ind]
             bh_len = master_bh_length[master_ind]
             cop = cops[master_ind, :]
+            vel_cop = vel_cops[master_ind, :]
 
             # Get this galaxy's data
             this_s_pos = master_s_pos[s_start: s_start + s_len, :]
@@ -153,7 +158,10 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             this_dm_mass = dm_mass[dm_start: dm_start + dm_len]
             this_bh_mass = bh_mass[bh_start: bh_start + bh_len]
             this_ini_ms = ini_ms[s_start: s_start + s_len]
+            this_s_vel = master_s_vel[s_start: s_start + s_len, :]
+            this_dm_vel = master_dm_vel[dm_start: dm_start + dm_len, :]
             this_g_vel = master_g_vel[g_start: g_start + g_len, :]
+            this_bh_vel = np.full((bh_len, 3), np.nan)
 
             # Combine coordiantes and masses into a single array
             part_counts = [g_len,
@@ -164,16 +172,19 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             npart = np.sum(part_counts)
             coords = np.zeros((npart, 3))
             masses = np.zeros(npart)
+            vels = np.zeros((npart, 3))
 
             # Create lists of particle type data
             lst_coords = (this_g_pos, this_dm_pos, [], [],
                           this_s_pos, this_bh_pos)
+            lst_vels = (this_g_vel, this_dm_vel, [], [],
+                        this_s_vel, this_bh_vel)
             lst_masses = (this_g_mass, this_dm_mass, [], [],
                           this_s_mass, this_bh_mass)
 
             # Construct combined arrays
-            for pos, ms, ipart in zip(lst_coords, lst_masses,
-                                      range(len(part_counts))):
+            for pos, ms, v, ipart in zip(lst_coords, lst_masses, lst_vels,
+                                         range(len(part_counts))):
                 if ipart > 0:
                     low = part_counts[ipart - 1]
                     high = part_counts[ipart - 1] + part_counts[ipart]
@@ -182,6 +193,7 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
                 if part_counts[ipart] > 0:
                     coords[low:  high, :] = pos
                     masses[low: high] = ms
+                    vels[low:  high, :] = v
 
             # Calculate radius and apply a 30 pkpc aperture
             rs = np.sqrt((coords[:, 0] - cop[0]) ** 2
@@ -197,6 +209,7 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             # Get only particles within the aperture
             coords = coords[okinds]
             masses = masses[okinds]
+            vels = vels[okinds]
 
             # Get the particles this rank has to handle
             rank_parts = np.linspace(0, masses.size, nranks + 1, dtype=int)
@@ -229,6 +242,9 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
 
             if rank == 0:
 
+                # Calculate kinetic energy (NOTE need the hubble flow!)
+                ke = np.nansum(0.5 * masses * (vels - vel_cop) ** 2)
+
                 # Calculate stellar radii
                 star_rs = np.sqrt((this_s_pos[:, 0] - cop[0]) ** 2
                                   + (this_s_pos[:, 1] - cop[1]) ** 2
@@ -240,17 +256,10 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
                 feedback_energy.append(
                     np.sum(1.74 * 10 ** 49 * this_ini_ms[s_okinds]))
                 binding_energy.append(ebind)
+                kinetic_energy.append(ke)
                 w.append(ws[ind])
                 gal_masses.append(smass)
                 disps.append(np.std(this_g_vel))
-                all_okinds = rs[okinds] < 2 * hmr
-                okinds = gas_rs[g_okinds] < 2 * hmr
-                virial_param.append(
-                    5 * np.std(
-                        (this_g_vel[okinds] * u.km / u.s).to(u.Mpc
-                                                             / u.Myr).value)
-                    * 2 * hmr / (G * np.sum(masses[all_okinds]))
-                )
 
         if rank == 0:
 
@@ -258,10 +267,10 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             tot_hmrs = np.array(tot_hmrs)
             feedback_energy = np.array(feedback_energy)
             binding_energy = np.array(binding_energy)
+            kinetic_energy = np.array(kinetic_energy)
             w = np.array(w)
             gal_masses = np.array(gal_masses)
             disps = np.array(disps)
-            virial_params = np.array(virial_param)
 
             # Set up plot
             fig = plt.figure(figsize=(3.5, 3.5))
@@ -360,6 +369,56 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             # Save figure
             mkdir("plots/energy/")
             fig.savefig("plots/energy/disp_energy_%s.png" % snap,
+                        bbox_inches="tight")
+            plt.close(fig)
+
+            # Set up plot
+            fig = plt.figure(figsize=(3.5, 3.5))
+            ax = fig.add_subplot(111)
+            ax.loglog()
+
+            # Plot the scatter
+            im = ax.hexbin(gal_masses, kinetic_energy / binding_energy,
+                           gridsize=50, mincnt=np.min(w) - (0.1 * np.min(w)),
+                           C=w, xscale="log", yscale="log",
+                           reduce_C_function=np.sum, norm=weight_norm,
+                           linewidths=0.2, cmap="plasma")
+
+            # Axes labels
+            ax.set_xlabel("$M_\star / M_\odot$")
+            ax.set_ylabel("$E_{\mathrm{KE}} / E_\mathrm{bind}$")
+
+            cbar = fig.colorbar(im)
+            cbar.set_label("$\sum w_i$")
+
+            # Save figure
+            mkdir("plots/energy/")
+            fig.savefig("plots/energy/mass_kinenergyratio_%s.png" % snap,
+                        bbox_inches="tight")
+            plt.close(fig)
+
+            # Set up plot
+            fig = plt.figure(figsize=(3.5, 3.5))
+            ax = fig.add_subplot(111)
+            ax.loglog()
+
+            # Plot the scatter
+            im = ax.hexbin(tot_hmrs * 1000, kinetic_energy / binding_energy,
+                           gridsize=50, mincnt=np.min(w) - (0.1 * np.min(w)),
+                           C=w, xscale="log", yscale="log",
+                           reduce_C_function=np.sum, norm=weight_norm,
+                           linewidths=0.2, cmap="plasma")
+
+            # Axes labels
+            ax.set_xlabel("$R_{1/2 / [\mathrm{pkpc}]}$")
+            ax.set_ylabel("$E_{\mathrm{KE}} / E_\mathrm{bind}$")
+
+            cbar = fig.colorbar(im)
+            cbar.set_label("$\sum w_i$")
+
+            # Save figure
+            mkdir("plots/energy/")
+            fig.savefig("plots/energy/hmr_kinenergyratio_%s.png" % snap,
                         bbox_inches="tight")
             plt.close(fig)
 
