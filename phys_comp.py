@@ -1784,3 +1784,249 @@ def plot_ssfr_mass_vary(snap):
                 bbox_inches="tight")
     fig1.savefig("plots/physics_vary/sfr_hmr_%s.png" % snap,
                  bbox_inches="tight")
+
+
+def plot_weighted_gas_size_mass_vary(snap):
+
+    # Define redshift
+    z = float(snap.split("z")[-1].replace("p", "."))
+
+    # What redshift was 100 Myrs ago?
+    z_100 = z_at_value(cosmo.age, cosmo.age(z) - (0.1 * u.Gyr),
+                       zmin=0, zmax=50)
+
+    # Define the path
+    ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/<type>/data/"
+
+    # Define physics variations directories
+    types = ["flares_00", "FLARES_00_REF",
+             "FLARES_00_instantFB", "FLARES_00_noZSFthresh",
+             "FLARES_00_slightFBlim", "FLARES_00_medFBlim",
+             "FLARES_00_highFBlim"]
+
+    # Define labels for each
+    labels = ["AGNdT9", "REF", "SKIP",
+              "InstantFB", "$Z^0$", "SKIP",
+              "$f_{\mathrm{th, max}}=4$",
+              "$f_{\mathrm{th, max}}=6$",
+              "$f_{\mathrm{th, max}}=10$"]
+
+    # Define plot dimensions
+    nrows = 3
+    ncols = 3
+
+    # Define norm
+    norm = LogNorm(vmin=1, vmax=10)
+
+    # Define hexbin extent
+    extent = [8, 11.5, -1.5, 1.5]
+    extent1 = [8, 11.5, -3, 2]
+
+    # Set up the plots
+    fig = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
+    fig1 = plt.figure(figsize=(nrows * 3.5, ncols * 3.5))
+    gs = gridspec.GridSpec(nrows=nrows, ncols=ncols + 1,
+                           width_ratios=[20, ] * ncols + [1, ])
+    gs.update(wspace=0.0, hspace=0.0)
+    gs1 = gridspec.GridSpec(nrows=nrows, ncols=ncols + 1,
+                            width_ratios=[20, ] * ncols + [1, ])
+    gs1.update(wspace=0.0, hspace=0.0)
+    axes = []
+    cax = fig.add_subplot(gs[-1, -1])
+    axes1 = []
+    cax1 = fig1.add_subplot(gs1[-1, -1])
+
+    for i in range(nrows):
+        for j in range(ncols):
+
+            if i * ncols + j >= len(labels):
+                continue
+
+            if labels[i * ncols + j] == "SKIP":
+                continue
+
+            # Create axis
+            ax = fig.add_subplot(gs[i, j])
+            ax1 = fig1.add_subplot(gs1[i, j])
+
+            # Include labels
+            if j == 0:
+                ax.set_ylabel(r"$R_{1/2} / [\mathrm{pkpc}]$")
+                ax1.set_ylabel(r"$R_{\gas,1/2} / R_{\star,1/2}$")
+            if i == nrows - 1:
+                ax.set_xlabel(r"$M_\star / M_\odot$")
+                ax1.set_xlabel(r"$M_\star / M_\odot$")
+
+            # Remove unnecessary ticks
+            if j > 0:
+                ax.tick_params("y", left=False, right=False,
+                               labelleft=False, labelright=False)
+                ax1.tick_params("y", left=False, right=False,
+                                labelleft=False, labelright=False)
+            if i < nrows - 1:
+                ax.tick_params("x", top=False, bottom=False,
+                               labeltop=False, labelbottom=False)
+                ax1.tick_params("x", top=False, bottom=False,
+                                labeltop=False, labelbottom=False)
+
+            # Set axis limits
+            ax.set_ylim(10**extent[2], 10**extent[3])
+            ax.set_xlim(10**extent[0], 10**extent[1])
+            ax1.set_ylim(10**extent1[2], 10**extent1[3])
+            ax1.set_xlim(10**extent1[0], 10**extent1[1])
+
+            # Label axis
+            ax.text(0.95, 0.9, labels[i * ncols + j],
+                    bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
+                              alpha=0.8),
+                    transform=ax.transAxes, horizontalalignment='right',
+                    fontsize=8)
+            ax1.text(0.95, 0.9, labels[i * ncols + j],
+                     bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
+                               alpha=0.8),
+                     transform=ax1.transAxes, horizontalalignment='right',
+                     fontsize=8)
+
+            axes.append(ax)
+            axes1.append(ax1)
+
+    for (ind, t), l in zip(enumerate(types), labels):
+
+        path = ini_path.replace("<type>", t)
+
+        print(path)
+
+        mass = eagle_io.read_array("SUBFIND", path.replace("<type>", t),
+                                   snap,
+                                   "Subhalo/ApertureMeasurements/Mass/030kpc",
+                                   noH=True, physicalUnits=True,
+                                   numThreads=8)[:, 4] * 10 ** 10
+        hmrs = eagle_io.read_array("SUBFIND", path.replace("<type>", t),
+                                   snap,
+                                   "Subhalo/HalfMassRad",
+                                   noH=True, physicalUnits=True,
+                                   numThreads=8)[:, 4] * 10 ** 3
+        cops = eagle_io.read_array("SUBFIND", path.replace("<type>", t),
+                                   snap,
+                                   "Subhalo/CentreOfPotential",
+                                   noH=True, physicalUnits=True,
+                                   numThreads=8) * 1000
+        grps = eagle_io.read_array("SUBFIND", path.replace("<type>", t),
+                                   snap,
+                                   "Subhalo/GroupNumber",
+                                   noH=True, physicalUnits=True,
+                                   numThreads=8)
+        subgrps = eagle_io.read_array("SUBFIND", path.replace("<type>", t),
+                                      snap,
+                                      "Subhalo/SubGroupNumber",
+                                      noH=True, physicalUnits=True,
+                                      numThreads=8)
+        g_den = eagle_io.read_array("PARTDATA", path.replace("<type>", t),
+                                    snap,
+                                    "PartType0/Density",
+                                    noH=True, physicalUnits=True,
+                                    numThreads=8)
+        g_mass = eagle_io.read_array("PARTDATA", path.replace("<type>", t),
+                                     snap,
+                                     "PartType0/Mass",
+                                     noH=True, physicalUnits=True,
+                                     numThreads=8)
+        coords = eagle_io.read_array("PARTDATA", path.replace("<type>", t),
+                                     snap,
+                                     "PartType0/Coordinates",
+                                     noH=True, physicalUnits=True,
+                                     numThreads=8) * 1000
+        part_grps = eagle_io.read_array("PARTDATA", path.replace("<type>", t),
+                                        snap,
+                                        "PartType0/GroupNumber",
+                                        noH=True, physicalUnits=True,
+                                        numThreads=8)
+        part_subgrps = eagle_io.read_array("PARTDATA",
+                                           path.replace("<type>", t),
+                                           snap,
+                                           "PartType0/SubGroupNumber",
+                                           noH=True, physicalUnits=True,
+                                           numThreads=8)
+
+        # Apply some cuts
+        mokinds = mass > 10**8
+        mass = mass[mokinds]
+        cops = cops[mokinds, :]
+        grps = grps[mokinds]
+        subgrps = subgrps[mokinds]
+        hmrs = hmrs[mokinds]
+
+        # Set up array to store sfrs
+        w_hmrs = []
+        s_hmrs = []
+        ms = []
+
+        # Loop over galaxies
+        for igal in range(mass.size):
+
+            # Get galaxy data
+            m = mass[igal]
+            cop = cops[igal, :]
+            g = grps[igal]
+            sg = subgrps[igal]
+            hmr = hmrs[igal]
+
+            # Get this galaxies stars
+            gokinds = np.logical_and(part_grps == g, part_subgrps == sg)
+            this_coords = coords[gokinds, :] - cop
+            this_den = g_den[gokinds]
+            this_gmass = g_mass[gokinds]
+
+            # Compute stellar radii
+            rs = np.sqrt(this_coords[:, 0] ** 2
+                         + this_coords[:, 1] ** 2
+                         + this_coords[:, 2] ** 2)
+
+            # Get only particles within the aperture
+            rokinds = rs < 30
+            rs = rs[rokinds]
+            this_den = this_den[rokinds]
+            this_gmass = this_gmass[rokinds]
+
+            # Calculate weighted hmr
+            weighted_mass = this_gmass * this_den / np.sum(this_den)
+            tot = np.sum(weighted_mass)
+            half = tot / 2
+            sinds = np.argsort(rs)
+            rs = [sinds]
+            weighted_mass = weighted_mass[sinds]
+            summed_mass = np.cumsum(weighted_mass)
+            g_hmr = rs[np.argmin(np.abs(summed_mass - half))]
+
+            # Compute and store ssfr
+            w_hmrs.append(g_hmr)
+            ms.append(m)
+            s_hmrs.append(hmr)
+
+        # Convert to arrays
+        w_hmrs = np.array(w_hmrs)
+        ms = np.array(ms)
+        s_hmrs = np.array(s_hmrs)
+
+        okinds = np.logical_and(w_hmrs > 0, s_hmrs > 0)
+
+        im = axes[ind].hexbin(ms[okinds], w_hmrs[okinds], mincnt=1, gridsize=50,
+                              xscale="log", yscale="log", linewidth=0.2,
+                              cmap="plasma", norm=norm, extent=extent)
+        im1 = axes1[ind].hexbin(ms[okinds], w_hmrs[okinds] / s_hmrs[okinds],
+                                mincnt=1, gridsize=50,
+                                xscale="log", yscale="log", linewidth=0.2,
+                                cmap="plasma", norm=norm, extent=extent1)
+
+    # Set up colorbar
+    cbar = fig.colorbar(im, cax)
+    cbar.set_label("$N$")
+    cbar1 = fig1.colorbar(im1, cax1)
+    cbar1.set_label("$N$")
+
+    # Save figure
+    mkdir("plots/physics_vary/")
+    fig.savefig("plots/physics_vary/weight_gas_hmr_mass_%s.png" % snap,
+                bbox_inches="tight")
+    fig1.savefig("plots/physics_vary/weight_gas_hmr_ratio_mass%s.png" % snap,
+                 bbox_inches="tight")
