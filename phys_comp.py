@@ -1901,6 +1901,11 @@ def plot_weighted_gas_size_mass_vary(snap):
                                    "Subhalo/ApertureMeasurements/Mass/030kpc",
                                    noH=True, physicalUnits=True,
                                    numThreads=8)[:, 4] * 10 ** 10
+        gal_gmass = eagle_io.read_array("SUBFIND", path.replace("<type>", t),
+                                        snap,
+                                        "Subhalo/ApertureMeasurements/Mass/030kpc",
+                                        noH=True, physicalUnits=True,
+                                        numThreads=8)[:, 0] * 10 ** 10
         hmrs = eagle_io.read_array("SUBFIND", path.replace("<type>", t),
                                    snap,
                                    "Subhalo/HalfMassRad",
@@ -1949,7 +1954,7 @@ def plot_weighted_gas_size_mass_vary(snap):
                                            numThreads=8)
 
         # Apply some cuts
-        mokinds = mass > 10**8
+        mokinds = np.logical_and(mass > 10**8, gal_gmass > 10**8)
         mass = mass[mokinds]
         cops = cops[mokinds, :]
         grps = grps[mokinds]
