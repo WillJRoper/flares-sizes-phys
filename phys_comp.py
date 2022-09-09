@@ -1707,7 +1707,7 @@ def plot_ssfr_mass_vary(snap):
                                            numThreads=8)
 
         # Apply some cuts
-        mokinds = mass > 10**8.5
+        mokinds = mass > 10**8
         mass = mass[mokinds]
         cops = cops[mokinds, :]
         grps = grps[mokinds]
