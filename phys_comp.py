@@ -1852,7 +1852,7 @@ def plot_weighted_gas_size_mass_vary(snap):
             # Include labels
             if j == 0:
                 ax.set_ylabel(r"$R_{1/2} / [\mathrm{pkpc}]$")
-                ax1.set_ylabel(r"$R_{\gas,1/2} / R_{\star,1/2}$")
+                ax1.set_ylabel(r"$R_{gas,1/2} / R_{\star,1/2}$")
             if i == nrows - 1:
                 ax.set_xlabel(r"$M_\star / M_\odot$")
                 ax1.set_xlabel(r"$M_\star / M_\odot$")
