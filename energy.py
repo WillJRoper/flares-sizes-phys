@@ -204,12 +204,12 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
                              + (this_g_pos[:, 1] - cop[1]) ** 2
                              + (this_g_pos[:, 2] - cop[2]) ** 2)
             g_okinds = gas_rs < 0.03
-            this_g_vel = this_g_vel[g_okinds]
+            this_g_vel = this_g_vel[g_okinds, :]
 
             # Get only particles within the aperture
-            coords = coords[okinds]
+            coords = coords[okinds, :]
             masses = masses[okinds]
-            vels = vels[okinds]
+            vels = vels[okinds, :]
 
             # Get the particles this rank has to handle
             rank_parts = np.linspace(0, masses.size, nranks + 1, dtype=int)
@@ -243,7 +243,7 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             if rank == 0:
 
                 # Calculate kinetic energy (NOTE need the hubble flow!)
-                ke = np.nansum(0.5 * masses * (vels - vel_cop) ** 2)
+                ke = np.nansum(0.5 * masses * np.var(vels) ** 2)
 
                 # Calculate stellar radii
                 star_rs = np.sqrt((this_s_pos[:, 0] - cop[0]) ** 2
