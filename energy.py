@@ -161,7 +161,7 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             this_s_vel = master_s_vel[s_start: s_start + s_len, :]
             this_dm_vel = master_dm_vel[dm_start: dm_start + dm_len, :]
             this_g_vel = master_g_vel[g_start: g_start + g_len, :]
-            this_bh_vel = np.full((bh_len, 3), np.nan)
+            this_bh_vel = np.zeros((bh_len, 3))
 
             # Combine coordiantes and masses into a single array
             part_counts = [g_len,
@@ -243,7 +243,9 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             if rank == 0:
 
                 # Calculate kinetic energy (NOTE need the hubble flow!)
-                ke = np.nansum(0.5 * masses * np.var(vels) ** 2)
+                ke = np.sum(0.5 * masses * np.var(vels))
+                ke *= u.M_sun * u.km ** 2 * u.s**-2
+                ke = ke.to(u.erg).value
 
                 # Calculate stellar radii
                 star_rs = np.sqrt((this_s_pos[:, 0] - cop[0]) ** 2
