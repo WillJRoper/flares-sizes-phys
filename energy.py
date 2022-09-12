@@ -377,10 +377,13 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             ax = fig.add_subplot(111)
             ax.loglog()
 
+            okinds = np.logical_and(kinetic_energy > 0, binding_energy > 0)
+
             # Plot the scatter
-            im = ax.hexbin(gal_masses, kinetic_energy / binding_energy,
+            im = ax.hexbin(gal_masses[okinds],
+                           kinetic_energy[okinds] / binding_energy[okinds],
                            gridsize=50, mincnt=np.min(w) - (0.1 * np.min(w)),
-                           C=w, xscale="log", yscale="log",
+                           C=w[okinds], xscale="log", yscale="log",
                            reduce_C_function=np.sum, norm=weight_norm,
                            linewidths=0.2, cmap="plasma")
 
