@@ -2013,20 +2013,29 @@ def plot_weighted_gas_size_mass_vary(snap):
         ms = np.array(ms)
         s_hmrs = np.array(s_hmrs)
 
+        # Define bins
+        bin_edges = np.logspace(extent[0], extent[1], 20)
+
         okinds = np.logical_and(w_hmrs > 0, s_hmrs > 0)
 
         im = axes[ind].hexbin(ms[okinds], w_hmrs[okinds], mincnt=1, gridsize=50,
                               xscale="log", yscale="log", linewidth=0.2,
                               cmap="plasma", norm=norm, extent=extent)
+        plot_meidan_stat(ms[okinds], w_hmrs[okinds],
+                         np.ones(w_hmr[okinds].size),
+                         axes[ind], "", "r", bin_edges)
         im1 = axes1[ind].hexbin(ms[okinds], w_hmrs[okinds] / s_hmrs[okinds],
                                 mincnt=1, gridsize=50,
                                 xscale="log", yscale="log", linewidth=0.2,
                                 cmap="plasma", norm=norm, extent=extent1)
+        plot_meidan_stat((ms[okinds], w_hmrs[okinds] / s_hmrs[okinds],
+                          np.ones(w_hmr[okinds].size),
+                          axes1[ind], "", "r", bin_edges)
 
     # Set up colorbar
-    cbar = fig.colorbar(im, cax)
+    cbar=fig.colorbar(im, cax)
     cbar.set_label("$N$")
-    cbar1 = fig1.colorbar(im1, cax1)
+    cbar1=fig1.colorbar(im1, cax1)
     cbar1.set_label("$N$")
 
     # Save figure
