@@ -1940,7 +1940,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
     plt.close(fig)
 
 
-def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
+def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
 
     # Define paths
     path = "/cosma/home/dp004/dc-rope1/cosma7/FLARES/flares-mergergraph/"
@@ -1954,6 +1954,8 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
     # Initialise lists for storing results
     tot_hmrs = []
     tot_prog_hmrs = []
+    tot_hmrs_gas = []
+    tot_prog_hmrs_gas = []
     tot_mass = []
     tot_ssfr = []
     no_prog_mass = []
@@ -1986,9 +1988,11 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
 
         # Extract galaxy data from the sizes dict
         hmrs = stellar_data[snap]["HMRs"][...]
+        ghmrs = gas_data[snap]["HMRs"][...]
         print("There are %d galaxies" % len(hmrs))
         print("There are %d compact galaxies" % len(hmrs[hmrs < 1]))
         prog_hmrs = stellar_data[prog_snap]["HMRs"][...]
+        prog_ghmrs = gas_data[prog_snap]["HMRs"][...]
         grps = stellar_data[snap]["Galaxy,GroupNumber"][...]
         subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"][...]
         prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"][...]
@@ -2063,6 +2067,7 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
 
             # Extract this galaxies information
             hmr = hmrs[ind]
+            ghmr = ghmrs[ind]
             g, sg = grps[ind], subgrps[ind]
 
             # Whats the MEGA ID of this galaxy?
@@ -2090,6 +2095,7 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
                                               prog_subgrps == prog_sg))
             )[0]
             prog_hmr = prog_hmrs[flares_ind]
+            prog_ghmr = prog_ghmrs[flares_ind]
 
             if prog_hmr.size == 0:
                 no_prog_ssfr.append(ssfr)
@@ -2098,7 +2104,9 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
 
             # Include these results for plotting
             tot_hmrs.append(hmr)
-            tot_prog_hmrs.extend(prog_hmr)
+            tot_prog_hmrs.extend(prog_ghmr)
+            tot_hmrs_gas.append(hmr)
+            tot_prog_hmrs_gas.extend(prog_ghmr)
             tot_mass.append(gal_m)
             tot_ssfr.append(ssfr)
             w.append(ws[ind])
@@ -2106,6 +2114,8 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
     # Convert to arrays
     tot_hmrs = np.array(tot_hmrs)
     tot_prog_hmrs = np.array(tot_prog_hmrs)
+    tot_hmrs_gas = np.array(tot_hmrs_gas)
+    tot_prog_hmrs_gas = np.array(tot_prog_hmrs_gas)
     tot_ssfr = np.array(tot_ssfr)
     tot_mass = np.array(tot_mass)
     w = np.array(w)
@@ -2115,6 +2125,7 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
 
     # Define delta
     delta_hmr = tot_hmrs / tot_prog_hmrs
+    delta_ghmr = tot_hmrs_gas / tot_prog_hmrs_gas
 
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
@@ -2148,6 +2159,41 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
     # Save figure
     mkdir("plots/graph/")
     fig.savefig("plots/graph/delta_hmr_ssfr_mass.png",
+                bbox_inches="tight")
+    plt.close(fig)
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+    ax.loglog()
+
+    okinds = np.logical_and(tot_mass > 0, tot_ssfr > 0)
+
+    # Plot the scatter
+    im = ax.hexbin(delta_ghmr[okinds], tot_ssfr[okinds],  gridsize=50,
+                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                   C=w[okinds], xscale="log", yscale="log",
+                   reduce_C_function=np.sum, norm=weight_norm,
+                   linewidths=0.2, cmap="plasma")
+    # if len(no_prog_ssfr) > 0:
+    #     okinds = np.logical_and(no_prog_mass > 0, no_prog_ssfr > 0)
+    #     ax.scatter(delta_hmr[okinds], tot_ssfr[okinds], s=2,
+    #                marker="s", color="k", label="Recent")
+
+    # Axes labels
+    ax.set_xlabel("$R_{1/2}^{B} / R_{1/2}^{A}$")
+    ax.set_ylabel("$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$\sum w_i$")
+
+    # # Draw legend
+    # if len(no_prog_ssfr) > 0:
+    #     ax.legend()
+
+    # Save figure
+    mkdir("plots/graph/")
+    fig.savefig("plots/graph/gas_delta_hmr_ssfr_mass.png",
                 bbox_inches="tight")
     plt.close(fig)
 
