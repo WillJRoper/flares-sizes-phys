@@ -192,6 +192,8 @@ if rank == 0:
     # plot_weighted_gas_size_mass_vary(flares_snaps[-1])
     plot_gas_size_mass_evo_grid(hdf["stellar"], hdf["gas"],
                                 flares_snaps)
+    plot_gas_size_gasmass_evo_grid(hdf["stellar"], hdf["gas"],
+                                   flares_snaps)
 # plot_ssfr_mass_vary(flares_snaps[-1])
 #plot_birth_den_vary(hdf["stellar"], flares_snaps[-1], path)
 #plot_birth_met_vary(hdf["stellar"], flares_snaps[-1], path)
