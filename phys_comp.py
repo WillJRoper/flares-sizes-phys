@@ -2022,14 +2022,14 @@ def plot_weighted_gas_size_mass_vary(snap):
                               xscale="log", yscale="log", linewidth=0.2,
                               cmap="plasma", norm=norm, extent=extent)
         plot_meidan_stat(ms[okinds], w_hmrs[okinds],
-                         np.ones(w_hmr[okinds].size),
+                         np.ones(w_hmrs[okinds].size),
                          axes[ind], "", "r", bin_edges)
         im1 = axes1[ind].hexbin(ms[okinds], w_hmrs[okinds] / s_hmrs[okinds],
                                 mincnt=1, gridsize=50,
                                 xscale="log", yscale="log", linewidth=0.2,
                                 cmap="plasma", norm=norm, extent=extent1)
         plot_meidan_stat(ms[okinds], w_hmrs[okinds] / s_hmrs[okinds],
-                         np.ones(w_hmr[okinds].size),
+                         np.ones(w_hmrs[okinds].size),
                          axes1[ind], "", "r", bin_edges)
 
     # Set up colorbar
