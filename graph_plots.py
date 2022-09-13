@@ -1396,7 +1396,7 @@ def plot_gas_size_mass_evo_grid(stellar_data, gas_data, snaps):
         g, sg = root_grps[ind], root_subgrps[ind]
 
         # Make an entry in the dict for it
-        graph[(g, sg, ind)] = {"HMRs": [], "Masses": [], "z": []}
+        graph[(g, sg, ind)] = {"HMRs": [], "gHMRs": [], "Masses": [], "z": []}
 
     # Loop over these root galaxies and populate the rest of the graph
     i = 0
@@ -1431,7 +1431,8 @@ def plot_gas_size_mass_evo_grid(stellar_data, gas_data, snaps):
             z = float(snap.split("z")[-1].replace("p", "."))
 
             # Extract galaxy data from the sizes dict
-            hmrs = gas_data[snap]["HMRs"][...]
+            ghmrs = gas_data[snap]["HMRs"][...]
+            hmrs = stellar_data[snap]["HMRs"][...]
             mass = stellar_data[snap]["mass"][...]
             prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"][...]
             prog_subgrps = stellar_data[prog_snap]["Galaxy,SubGroupNumber"][...]
@@ -1442,12 +1443,18 @@ def plot_gas_size_mass_evo_grid(stellar_data, gas_data, snaps):
                 graph[(g, sg, ind)]["HMRs"].append(
                     hmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
                 )
+                graph[(g, sg, ind)]["gHMRs"].append(
+                    ghmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
+                )
                 graph[(g, sg, ind)]["Masses"].append(
                     mass[this_ind]
                 )
             else:
                 graph[(g, sg, ind)]["HMRs"].extend(
                     hmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
+                )
+                graph[(g, sg, ind)]["gHMRs"].extend(
+                    ghmrs[this_ind]  # / stellar_data[root_snap]["HMRs"][ind]
                 )
                 graph[(g, sg, ind)]["Masses"].extend(
                     mass[this_ind]
@@ -1496,7 +1503,7 @@ def plot_gas_size_mass_evo_grid(stellar_data, gas_data, snaps):
                 break
 
     # Set up plot parameters
-    ylims = (10**-1.3, 10**1.3)
+    ylims = (10**-1.5, 10**1.5)
     xlims = (10**8, 10**11.5)
 
     # Define mins and maxs for binning
@@ -1593,7 +1600,7 @@ def plot_gas_size_mass_evo_grid(stellar_data, gas_data, snaps):
             continue
 
         # Plot the scatter
-        im = axes[i, j].plot(graph[key]["Masses"], graph[key]["HMRs"],
+        im = axes[i, j].plot(graph[key]["Masses"], graph[key]["gHMRs"],
                              color="grey", alpha=0.2, zorder=0)
         ii += 1
 
@@ -1611,7 +1618,7 @@ def plot_gas_size_mass_evo_grid(stellar_data, gas_data, snaps):
             continue
 
         # Plot the scatter
-        im = axes[i, j].scatter(graph[key]["Masses"], graph[key]["HMRs"],
+        im = axes[i, j].scatter(graph[key]["Masses"], graph[key]["gHMRs"],
                                 marker=".", edgecolors="none", s=20,
                                 c=graph[key]["z"], cmap="cmr.chroma",
                                 alpha=0.8, zorder=1, norm=norm)
@@ -1619,7 +1626,7 @@ def plot_gas_size_mass_evo_grid(stellar_data, gas_data, snaps):
 
     # Axes labels
     for ax in axes[:, 0]:
-        ax.set_ylabel("$R_{1/2\star} / [\mathrm{pkpc}]$")
+        ax.set_ylabel("$R_{1/2}^\mathrm{gas} / [\mathrm{pkpc}]$")
     for ax in axes[-1, :]:
         ax.set_xlabel("$M_{\star} / M_{\odot}$")
 
