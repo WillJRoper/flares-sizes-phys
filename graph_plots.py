@@ -47,6 +47,9 @@ def plot_size_change(stellar_data, snaps, plt_type, weight_norm):
 
         print(snap, prog_snap)
 
+        if snap != current_snaps[-1]:
+            continue
+
         # Get redshift
         z = float(snap.split("z")[-1].replace("p", "."))
 
@@ -335,6 +338,9 @@ def plot_size_change_comp(stellar_data, gas_data, snaps, weight_norm):
 
         print(snap, prog_snap)
 
+        if snap != current_snaps[-1]:
+            continue
+
         # Open region 0 initially
         reg = "00"
         print(reg)
@@ -561,6 +567,9 @@ def plot_size_change_binding(stellar_data, snaps, weight_norm, comm, nranks, ran
 
     # Loop over snapshots
     for snap, prog_snap in zip(current_snaps, prog_snaps):
+
+        if snap != current_snaps[-1]:
+            continue
 
         if rank == 0:
             print(snap, prog_snap)
@@ -1649,6 +1658,9 @@ def plot_ssfr_mass_size_change(stellar_data, snaps, weight_norm):
     # Loop over snapshots
     for snap, prog_snap in zip(current_snaps, prog_snaps):
 
+        if snap != current_snaps[-1]:
+            continue
+
         print(snap, prog_snap)
 
         # Get redshift
@@ -1895,6 +1907,9 @@ def plot_size_feedback(stellar_data, other_data, snaps, weight_norm, plt_type):
 
     # Loop over snapshots
     for snap, prog_snap in zip(current_snaps, prog_snaps):
+
+        if snap != current_snaps[-1]:
+            continue
 
         print(snap, prog_snap)
 
@@ -2620,6 +2635,9 @@ def plot_size_change_starpos(stellar_data, snaps, weight_norm):
 
     # Loop over snapshots
     for snap, prog_snap in zip(current_snaps, prog_snaps):
+
+        if snap != current_snaps[-1]:
+            continue
 
         print(snap, prog_snap)
 
