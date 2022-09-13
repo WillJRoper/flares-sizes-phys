@@ -243,7 +243,7 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             if rank == 0:
 
                 # Calculate kinetic energy (NOTE need the hubble flow!)
-                ke = np.sum(0.5 * masses * np.var(vels))
+                ke = np.sum(0.5 * masses * np.var(vels, axis=-1))
                 ke *= u.M_sun * u.km ** 2 * u.s**-2
                 ke = ke.to(u.erg).value
 
