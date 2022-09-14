@@ -209,7 +209,8 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             # Get only particles within the aperture
             coords = coords[okinds, :]
             masses = masses[okinds]
-            vels = vels[okinds, :]
+            vels = vels[okinds, :] - vel_cop
+            v_squ = vels[:, 0] ** 2 + vels[:, 1] ** 2 + vels[:, 2] ** 2
 
             # Get the particles this rank has to handle
             rank_parts = np.linspace(0, masses.size, nranks + 1, dtype=int)
@@ -243,7 +244,7 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             if rank == 0:
 
                 # Calculate kinetic energy (NOTE need the hubble flow!)
-                ke = np.sum(0.5 * masses * np.var(vels, axis=-1))
+                ke = np.sum(0.5 * masses * v_squ)
                 ke *= u.M_sun * u.km ** 2 * u.s**-2
                 ke = ke.to(u.erg).value
 
