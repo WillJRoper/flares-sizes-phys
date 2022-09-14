@@ -1936,7 +1936,7 @@ def plot_gas_size_gasmass_evo_grid(stellar_data, gas_data, snaps):
     for ax in axes[:, 0]:
         ax.set_ylabel("$R_{1/2}^\mathrm{gas} / [\mathrm{pkpc}]$")
     for ax in axes[-1, :]:
-        ax.set_xlabel("$M_{\star} / M_{\odot}$")
+        ax.set_xlabel("$M_{\mathrm{gas}} / M_{\odot}$")
 
     cbar = fig.colorbar(im, cax)
     cbar.set_label("$z$")
@@ -2470,15 +2470,8 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                 bbox_inches="tight")
     plt.close(fig)
 
-    # Set up plot
-    fig = plt.figure(figsize=(3.5, 3.5))
-    ax = fig.add_subplot(111)
-    ax.loglog()
-
-    okinds = np.logical_and(tot_mass > 0, tot_ssfr > 0)
-
     # Plot the scatter
-    im = ax.hexbin(delta_ghmr[okinds], tot_ssfr[okinds],  gridsize=50,
+    im = ax.hexbin(delta_hmr[okinds], tot_ssfr[okinds],  gridsize=50,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
                    C=w[okinds], xscale="log", yscale="log",
                    reduce_C_function=np.sum, norm=weight_norm,
@@ -2501,7 +2494,42 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
 
     # Save figure
     mkdir("plots/graph/")
-    fig.savefig("plots/graph/gas_delta_hmr_ssfr_mass.png",
+    fig.savefig("plots/graph/delta_hmr_ssfr_mass.png",
+                bbox_inches="tight")
+    plt.close(fig)
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+    ax.loglog()
+
+    okinds = np.logical_and(tot_mass > 0, tot_ssfr > 0)
+
+    # Plot the scatter
+    im = ax.hexbin(delta_ghmr[okinds], delta_hmr[okinds],  gridsize=50,
+                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                   C=w[okinds], xscale="log", yscale="log",
+                   reduce_C_function=np.sum, norm=weight_norm,
+                   linewidths=0.2, cmap="plasma")
+    # if len(no_prog_ssfr) > 0:
+    #     okinds = np.logical_and(no_prog_mass > 0, no_prog_ssfr > 0)
+    #     ax.scatter(delta_hmr[okinds], tot_ssfr[okinds], s=2,
+    #                marker="s", color="k", label="Recent")
+
+    # Axes labels
+    ax.set_xlabel("$R_{1/2, \mathrm{g}}^{B} / R_{1/2, \mathrm{g}}^{A}$")
+    ax.set_ylabel("$R_{1/2, \star}^{B} / R_{1/2, \star}^{A}$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$\sum w_i$")
+
+    # # Draw legend
+    # if len(no_prog_ssfr) > 0:
+    #     ax.legend()
+
+    # Save figure
+    mkdir("plots/graph/")
+    fig.savefig("plots/graph/gas_delta_hmr_stellar_delta_hmr.png",
                 bbox_inches="tight")
     plt.close(fig)
 
