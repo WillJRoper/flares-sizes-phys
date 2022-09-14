@@ -2412,8 +2412,8 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
 
             # Include these results for plotting
             tot_hmrs.append(hmr)
-            tot_prog_hmrs.extend(prog_ghmr)
-            tot_hmrs_gas.append(hmr)
+            tot_prog_hmrs.extend(prog_hmr)
+            tot_hmrs_gas.append(ghmr)
             tot_prog_hmrs_gas.extend(prog_ghmr)
             tot_mass.append(gal_m)
             tot_ssfr.append(ssfr)
