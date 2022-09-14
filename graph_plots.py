@@ -2470,34 +2470,6 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                 bbox_inches="tight")
     plt.close(fig)
 
-    # Plot the scatter
-    im = ax.hexbin(delta_hmr[okinds], tot_ssfr[okinds],  gridsize=50,
-                   mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w[okinds], xscale="log", yscale="log",
-                   reduce_C_function=np.sum, norm=weight_norm,
-                   linewidths=0.2, cmap="plasma")
-    # if len(no_prog_ssfr) > 0:
-    #     okinds = np.logical_and(no_prog_mass > 0, no_prog_ssfr > 0)
-    #     ax.scatter(delta_hmr[okinds], tot_ssfr[okinds], s=2,
-    #                marker="s", color="k", label="Recent")
-
-    # Axes labels
-    ax.set_xlabel("$R_{1/2}^{B} / R_{1/2}^{A}$")
-    ax.set_ylabel("$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
-
-    cbar = fig.colorbar(im)
-    cbar.set_label("$\sum w_i$")
-
-    # # Draw legend
-    # if len(no_prog_ssfr) > 0:
-    #     ax.legend()
-
-    # Save figure
-    mkdir("plots/graph/")
-    fig.savefig("plots/graph/delta_hmr_ssfr_mass.png",
-                bbox_inches="tight")
-    plt.close(fig)
-
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
