@@ -2503,7 +2503,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     ax = fig.add_subplot(111)
     ax.loglog()
 
-    okinds = np.logical_and(tot_mass > 0, tot_ssfr > 0)
+    okinds = np.logical_and(delta_ghmr > 0, delta_hmr > 0)
 
     # Plot the scatter
     im = ax.hexbin(delta_ghmr[okinds], delta_hmr[okinds],  gridsize=50,
