@@ -116,7 +116,7 @@ def plot_eagle_stellar_hmr(snap):
     ax.set_ylabel("$R_{1/2} / [\mathrm{pkpc}]$")
 
     cbar = fig.colorbar(im)
-    cbar.set_label("$\sum w_{i}$")
+    cbar.set_label("$N$")
 
     # Save figure
     mkdir("plots/stellar_hmr/")
