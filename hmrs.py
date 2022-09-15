@@ -86,7 +86,7 @@ def plot_eagle_stellar_hmr(snap):
     snap_grp = hdf[snap]
 
     # Define arrays to store computations
-    hmrs = snap_grp["Galaxy/HalfMassRad"][:, 4]
+    hmrs = snap_grp["Galaxy/HalfMassRad"][:, 4] * 1e3
     mass = snap_grp["Galaxy/Mstar_aperture/30"][...] * 10 ** 10
     hdf.close()
 
