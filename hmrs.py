@@ -91,10 +91,11 @@ def plot_eagle_stellar_hmr(snap):
                                snap,
                                "Subhalo/ApertureMeasurements/Mass/030kpc",
                                noH=True, physicalUnits=True,
-                               numThreads=8)[:, 4] * 10 ** 10    # Remove galaxies without stars
-    okinds = np.logical_and(mass > 0, hmrs > 0)
+                               numThreads=8)[:, :] * 10 ** 10    # Remove galaxies without stars
+    okinds = np.logical_and(mass[:, 4] > 0, hmrs > 0)
+    okinds = np.logical_and(okinds, mass[:, 0] > 0)
     print("Galaxies before spurious cut: %d" % mass.size)
-    mass = mass[okinds]
+    mass = mass[okinds, 4]
     hmrs = hmrs[okinds]
     print("Galaxies after spurious cut: %d" % mass.size)
 
@@ -106,7 +107,7 @@ def plot_eagle_stellar_hmr(snap):
     # Plot stellar_data
     im = ax.hexbin(mass, hmrs, gridsize=30,
                    mincnt=1, norm=LogNorm(),
-                   extent=[8, 11.2, -1, 1.3],
+                   extent=[8, 11.2, -1, 1.5],
                    reduce_C_function=np.sum, xscale='log', yscale='log',
                    linewidths=0.2, cmap='viridis')
 
