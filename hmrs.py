@@ -87,9 +87,9 @@ def plot_eagle_stellar_hmr(snap):
 
     # Define arrays to store computations
     print(snap_grp.keys())
-    hmrs = snap_grp["HalfMassRad"][...]
+    hmrs = snap_grp["Galaxy/HalfMassRad"][...]
     print(hmrs.shape)
-    mass = snap_grp["Mstar_aperture/30"][...] * 10 ** 10
+    mass = snap_grp["Galaxy/Mstar_aperture/30"][...] * 10 ** 10
     hdf.close()
 
     # Remove galaxies without stars
