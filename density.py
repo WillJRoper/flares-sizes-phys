@@ -6,7 +6,9 @@ import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
 from utils import calc_3drad, calc_light_mass_rad, mkdir, plot_meidan_stat, age2z
-from unyt import mh, cm, Gyr, g, Msun, kpc
+from unyt import mh, cm, Gyr, g, Msun, kpc, Mpc
+import eagle_IO.eagle_IO as eagle_io
+import pandas as pd
 
 os.environ['FLARE'] = '/cosma7/data/dp004/dc-wilk2/flare'
 mpl.use('Agg')
@@ -166,6 +168,153 @@ def plot_stellar_density_grid(stellar_data, snap, weight_norm):
     # Save figure
     mkdir("plots/density/")
     fig.savefig("plots/density/stellar_density_grid_hmr_%s.png" % snap,
+                bbox_inches="tight")
+
+    plt.close(fig)
+
+
+def plot_gas_density_mass(regions, snap, path, weight_norm):
+
+    # Load weights
+    df = pd.read_csv('../weight_files/weights_grid.txt')
+    weights = np.array(df['weights'])
+
+    # Create lists for results
+    masses = []
+    dens = []
+    w = []
+
+    # Loop over regions
+    for reg in regions:
+
+        mass = eagle_io.read_array("SUBFIND", path.replace("<reg>", reg),
+                                   snap,
+                                   "Subhalo/ApertureMeasurements/Mass/030kpc",
+                                   noH=True, physicalUnits=True,
+                                   numThreads=8)[:, 4] * 10 ** 10
+        gal_gmass = eagle_io.read_array("SUBFIND", path.replace("<type>", t),
+                                        snap,
+                                        "Subhalo/ApertureMeasurements/Mass/030kpc",
+                                        noH=True, physicalUnits=True,
+                                        numThreads=8)[:, 0] * 10 ** 10
+        hmrs = eagle_io.read_array("SUBFIND", path.replace("<reg>", reg),
+                                   snap,
+                                   "Subhalo/HalfMassRad",
+                                   noH=True, physicalUnits=True,
+                                   numThreads=8)[:, 4] * 10 ** 3
+        cops = eagle_io.read_array("SUBFIND", path.replace("<reg>", reg),
+                                   snap,
+                                   "Subhalo/CentreOfPotential",
+                                   noH=True, physicalUnits=True,
+                                   numThreads=8) * 1000
+        grps = eagle_io.read_array("SUBFIND", path.replace("<reg>", reg),
+                                   snap,
+                                   "Subhalo/GroupNumber",
+                                   noH=True, physicalUnits=True,
+                                   numThreads=8)
+        subgrps = eagle_io.read_array("SUBFIND", path.replace("<reg>", reg),
+                                      snap,
+                                      "Subhalo/SubGroupNumber",
+                                      noH=True, physicalUnits=True,
+                                      numThreads=8)
+        g_den = eagle_io.read_array("PARTDATA", path.replace("<reg>", reg),
+                                    snap,
+                                    "PartType0/Density",
+                                    noH=True, physicalUnits=True,
+                                    numThreads=8)
+        g_mass = eagle_io.read_array("PARTDATA", path.replace("<reg>", reg),
+                                     snap,
+                                     "PartType0/Mass",
+                                     noH=True, physicalUnits=True,
+                                     numThreads=8)
+        coords = eagle_io.read_array("PARTDATA", path.replace("<reg>", reg),
+                                     snap,
+                                     "PartType0/Coordinates",
+                                     noH=True, physicalUnits=True,
+                                     numThreads=8) * 1000
+        part_grps = eagle_io.read_array("PARTDATA", path.replace("<reg>", reg),
+                                        snap,
+                                        "PartType0/GroupNumber",
+                                        noH=True, physicalUnits=True,
+                                        numThreads=8)
+        part_subgrps = eagle_io.read_array("PARTDATA",
+                                           path.replace("<reg>", reg),
+                                           snap,
+                                           "PartType0/SubGroupNumber",
+                                           noH=True, physicalUnits=True,
+                                           numThreads=8)
+
+        # Apply some cuts
+        mokinds = np.logical_and(mass > 10**8, gal_gmass > 10**8)
+        mass = mass[mokinds]
+        cops = cops[mokinds, :]
+        grps = grps[mokinds]
+        subgrps = subgrps[mokinds]
+        hmrs = hmrs[mokinds]
+
+        # Loop over galaxies
+        for igal in range(mass.size):
+
+            # Get galaxy data
+            m = mass[igal]
+            cop = cops[igal, :]
+            g = grps[igal]
+            sg = subgrps[igal]
+            hmr = hmrs[igal]
+
+            # Get this galaxies stars
+            gokinds = np.logical_and(part_grps == g, part_subgrps == sg)
+            this_coords = coords[gokinds, :] - cop
+            this_den = g_den[gokinds]
+            this_gmass = g_mass[gokinds]
+
+            # Compute stellar radii
+            rs = np.sqrt(this_coords[:, 0] ** 2
+                         + this_coords[:, 1] ** 2
+                         + this_coords[:, 2] ** 2)
+
+            # Get only particles within the aperture
+            rokinds = rs < 30
+            rs = rs[rokinds]
+            this_den = this_den[rokinds]
+            this_gmass = this_gmass[rokinds]
+
+            # Calculate and store results for this halo
+            dens.append(this_gmass * this_den / np.sum(this_gmass))
+            masses.append(m)
+            w.append(weights[int(reg)])
+
+    # Convert to arrays
+    dens = (np.array(dens) * 10**10
+            * Msun / Mpc ** 3 / mh).to(1 / cm ** 3).value
+    masses = np.array(masses)
+    w = np.array(w)
+
+    # Remove spurious objects
+    okinds = dens > 0
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+    ax.loglog()
+
+    # Plot stellar_data
+    im = ax.hexbin(mass[okinds], dens[okinds], gridsize=30,
+                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                   C=w[okinds], reduce_C_function=np.sum,
+                   xscale='log', yscale='log',
+                   norm=weight_norm, linewidths=0.2, cmap='viridis')
+
+    # Label axes
+    ax.set_xlabel("$M_\star / M_\odot$")
+    ax.set_ylabel(r"$n_{\mathrm{H}} / \mathrm{cm}^{-3}$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$\sum w_{i}$")
+
+    # Save figure
+    mkdir("plots/density/")
+    fig.savefig("plots/density/gas_density_mass_relation_%s.png" % snap,
                 bbox_inches="tight")
 
     plt.close(fig)

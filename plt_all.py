@@ -3,7 +3,7 @@ import h5py
 from matplotlib.colors import LogNorm
 
 from hmrs import *
-from density import plot_stellar_density_grid
+from density import *
 from stellar_properties import *
 from phys_comp import *
 from spatial_dist import *
@@ -100,6 +100,7 @@ eagle_snaps = list(snaps)
 
 # PLot the indicative birth density vs metallicity plot
 if rank == 0:
+    plot_gas_density_mass(regions, "010_z005p000", path, weight_norm)
     for snap in ['019_z001p004', '026_z000p183', '028_z000p000']:
         plot_eagle_stellar_hmr(snap)
     plot_subgrid_birth_den_vs_met()
