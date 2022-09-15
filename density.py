@@ -192,7 +192,7 @@ def plot_gas_density_mass(regions, snap, path, weight_norm):
                                    "Subhalo/ApertureMeasurements/Mass/030kpc",
                                    noH=True, physicalUnits=True,
                                    numThreads=8)[:, 4] * 10 ** 10
-        gal_gmass = eagle_io.read_array("SUBFIND", path.replace("<type>", t),
+        gal_gmass = eagle_io.read_array("SUBFIND", path.replace("<reg>", reg),
                                         snap,
                                         "Subhalo/ApertureMeasurements/Mass/030kpc",
                                         noH=True, physicalUnits=True,
