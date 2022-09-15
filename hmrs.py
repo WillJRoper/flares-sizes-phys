@@ -104,8 +104,8 @@ def plot_eagle_stellar_hmr(snap):
 
     # Plot stellar_data
     im = ax.hexbin(mass, hmrs, gridsize=30,
-                   mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w, extent=[8, 11.2, -1, 1.3],
+                   mincnt=1,
+                   extent=[8, 11.2, -1, 1.3],
                    reduce_C_function=np.sum, xscale='log', yscale='log',
                    linewidths=0.2, cmap='viridis')
 
