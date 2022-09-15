@@ -77,6 +77,54 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     plt.close(fig)
 
 
+def plot_eagle_stellar_hmr(snap):
+
+    master_base = "/cosma7/data/dp004/dc-payy1/my_files/flares_pipeline/data1/EAGLE_REF_sp_info.hdf5"
+
+    # Open HDF5 file
+    hdf = h5py.File(master_base, "r")
+    snap_grp = hdf[snap]
+
+    # Define arrays to store computations
+    hmrs = snap_grp["HalfMassRad"][...]
+    print(hmrs.shape)
+    mass = snap_grp["Mstar_aperture/30"][...] * 10 ** 10
+    hdf.close()
+
+    # Remove galaxies without stars
+    okinds = np.logical_and(mass > 0, hmrs > 0)
+    print("Galaxies before spurious cut: %d" % mass.size)
+    mass = mass[okinds]
+    hmrs = hmrs[okinds]
+    print("Galaxies after spurious cut: %d" % mass.size)
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+    ax.loglog()
+
+    # Plot stellar_data
+    im = ax.hexbin(mass, hmrs, gridsize=30,
+                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                   C=w, extent=[8, 11.2, -1, 1.3],
+                   reduce_C_function=np.sum, xscale='log', yscale='log',
+                   linewidths=0.2, cmap='viridis')
+
+    # Label axes
+    ax.set_xlabel("$M_\star / M_\odot$")
+    ax.set_ylabel("$R_{1/2} / [\mathrm{pkpc}]$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$\sum w_{i}$")
+
+    # Save figure
+    mkdir("plots/stellar_hmr/")
+    fig.savefig("plots/stellar_hmr/stellar_hmr_%s_eagle.png" % snap,
+                bbox_inches="tight")
+
+    plt.close(fig)
+
+
 def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
 
     # Define arrays to store computations
