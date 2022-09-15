@@ -79,18 +79,19 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
 
 def plot_eagle_stellar_hmr(snap):
 
-    master_base = "/cosma7/data/dp004/dc-payy1/my_files/flares_pipeline/data1/EAGLE_REF_sp_info.hdf5"
+    path = "/cosma7/data/Eagle/ScienceRuns/Planck1/L0100N1504/PE/REFERENCE/data"
 
-    # Open HDF5 file
-    hdf = h5py.File(master_base, "r")
-    snap_grp = hdf[snap]
-
-    # Define arrays to store computations
-    hmrs = snap_grp["Galaxy/HalfMassRad"][:, 4] * 1e3
-    mass = snap_grp["Galaxy/Mstar_aperture/30"][...] * 10 ** 10
-    hdf.close()
-
-    # Remove galaxies without stars
+    # Get the arrays from the raw data files
+    hmrs = eagle_io.read_array('SUBFIND', path,
+                               snap,
+                               'Subhalo/HalfMassRad',
+                               noH=True, physicalUnits=True,
+                               numThreads=8)[:, 0] * 1000
+    mass = eagle_io.read_array("SUBFIND", path,
+                               snap,
+                               "Subhalo/ApertureMeasurements/Mass/030kpc",
+                               noH=True, physicalUnits=True,
+                               numThreads=8)[:, 4] * 10 ** 10    # Remove galaxies without stars
     okinds = np.logical_and(mass > 0, hmrs > 0)
     print("Galaxies before spurious cut: %d" % mass.size)
     mass = mass[okinds]

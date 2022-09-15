@@ -100,7 +100,8 @@ eagle_snaps = list(snaps)
 
 # PLot the indicative birth density vs metallicity plot
 if rank == 0:
-    plot_eagle_stellar_hmr('019_z001p004')
+    for snap in ['019_z001p004', '026_z000p183', '028_z000p000']:
+        plot_eagle_stellar_hmr(snap)
     plot_subgrid_birth_den_vs_met()
     plot_virial_temp()
 
