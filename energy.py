@@ -199,11 +199,11 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             rs = np.sqrt((coords[:, 0] - cop[0]) ** 2
                          + (coords[:, 1] - cop[1]) ** 2
                          + (coords[:, 2] - cop[2]) ** 2)
-            okinds = rs < 0.001
+            okinds = rs < 0.03
             gas_rs = np.sqrt((this_g_pos[:, 0] - cop[0]) ** 2
                              + (this_g_pos[:, 1] - cop[1]) ** 2
                              + (this_g_pos[:, 2] - cop[2]) ** 2)
-            g_okinds = gas_rs < 0.001
+            g_okinds = gas_rs < 0.03
             this_g_vel = this_g_vel[g_okinds, :]
 
             # Get only particles within the aperture
