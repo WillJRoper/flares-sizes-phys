@@ -91,8 +91,13 @@ def plot_eagle_stellar_hmr(snap):
                                snap,
                                "Subhalo/ApertureMeasurements/Mass/030kpc",
                                noH=True, physicalUnits=True,
-                               numThreads=8)[:, :] * 10 ** 10    # Remove galaxies without stars
-    okinds = np.logical_and(mass[:, 4] > 0, hmrs > 0)
+                               numThreads=8)[:, :] * 10 ** 10
+    slen = eagle_io.read_array("SUBFIND", path,
+                               snap,
+                               "Subhalo/SubLengthType",
+                               noH=True, physicalUnits=True,
+                               numThreads=8)[:, 4]
+    okinds = np.logical_and(slen > 100, hmrs > 0)
     okinds = np.logical_and(okinds, mass[:, 0] > 0)
     print("Galaxies before spurious cut: %d" % mass.size)
     mass = mass[okinds, 4]
