@@ -86,7 +86,7 @@ def plot_eagle_stellar_hmr(snap):
                                snap,
                                'Subhalo/HalfMassRad',
                                noH=True, physicalUnits=True,
-                               numThreads=8)[:, 0] * 1000
+                               numThreads=8)[:, 4] * 1000
     mass = eagle_io.read_array("SUBFIND", path,
                                snap,
                                "Subhalo/ApertureMeasurements/Mass/030kpc",
