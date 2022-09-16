@@ -289,7 +289,7 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
 
             # Axes labels
             ax.set_xlabel("$M_\star / M_\odot$")
-            ax.set_ylabel("$E_\mathrm{bind}$")
+            ax.set_ylabel("$E_\mathrm{bind} / [\mathrm{erg}]$")
 
             cbar = fig.colorbar(im)
             cbar.set_label("$\sum w_i$")
@@ -364,7 +364,7 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
 
             # Axes labels
             ax.set_xlabel("$\sigma_{\mathrm{gas}}$")
-            ax.set_ylabel("$E_\mathrm{bind}$")
+            ax.set_ylabel("$E_\mathrm{bind} / [\mathrm{erg}]$")
 
             cbar = fig.colorbar(im)
             cbar.set_label("$\sum w_i$")
