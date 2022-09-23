@@ -99,12 +99,12 @@ for s in pre_snaps:
 eagle_snaps = list(snaps)
 
 # PLot the indicative birth density vs metallicity plot
-if rank == 0:
-    plot_gas_density_mass(regions, "010_z005p000", path, weight_norm)
-    for snap in ['019_z001p004', '026_z000p183', '028_z000p000']:
-        plot_eagle_stellar_hmr(snap)
-    plot_subgrid_birth_den_vs_met()
-    plot_virial_temp()
+# if rank == 0:
+#     plot_gas_density_mass(regions, "010_z005p000", path, weight_norm)
+#     for snap in ['019_z001p004', '026_z000p183', '028_z000p000']:
+#         plot_eagle_stellar_hmr(snap)
+#     plot_subgrid_birth_den_vs_met()
+#     plot_virial_temp()
 
 # Get the data we need
 try:
@@ -186,8 +186,8 @@ print("Got all data")
 # print("Plotted SFR profiles")
 
 # PLot graph plots
-plot_ssfr_mass_size_change(
-    hdf["stellar"], hdf["gas"], flares_snaps, weight_norm)
+# plot_ssfr_mass_size_change(
+#     hdf["stellar"], hdf["gas"], flares_snaps, weight_norm)
 # plot_size_sfr_evo_grid(data["stellar"], flares_snaps)
 
 if rank == 0:
