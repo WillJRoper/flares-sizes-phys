@@ -191,6 +191,7 @@ plot_ssfr_mass_size_change(
 # plot_size_sfr_evo_grid(data["stellar"], flares_snaps)
 
 if rank == 0:
+    plot_virial_param_profile(hdf, flares_snaps, weight_norm)
     #plot_birth_denmet_vary(flares_snaps[-1], path)
     # plot_weighted_gas_size_mass_vary(flares_snaps[-1])
     plot_gas_size_mass_evo_grid(hdf["stellar"], hdf["gas"],
