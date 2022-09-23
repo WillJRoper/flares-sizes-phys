@@ -672,7 +672,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
     G = (const.G.to(u.Mpc ** 3 * u.M_sun ** -1 * u.Myr ** -2)).value
 
     # Define radial bins
-    r_bins = np.logspace(-5, np.log10(30), 50)
+    r_bins = np.logspace(-5, np.log10(30), 30)
     rbin_cents = (r_bins[:-1] + r_bins[1:]) / 2
 
     # Define mass bins
@@ -707,8 +707,6 @@ def plot_virial_param_profile(data, snaps, weight_norm):
         ws = data["stellar"][snap]["weights"][...]
         grps = data["stellar"][snap]["Galaxy,GroupNumber"][...]
         subgrps = data["stellar"][snap]["Galaxy,SubGroupNumber"][...]
-        print("There are %d galaxies" % len(hmrs))
-        print("There are %d compact galaxies" % len(hmrs[hmrs < 1]))
 
         # Loop over galaxies
         for ind in range(len(hmrs)):
