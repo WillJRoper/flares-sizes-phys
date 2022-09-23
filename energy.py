@@ -672,11 +672,11 @@ def plot_virial_param_profile(data, snaps, weight_norm):
     G = (const.G.to(u.Mpc ** 3 * u.M_sun ** -1 * u.Myr ** -2)).value
 
     # Define radial bins
-    r_bins = np.linspace(0, 30 / 1000, 100)
+    r_bins = np.logspace(-4, np.log10(30), 30)
     rbin_cents = (r_bins[:-1] + r_bins[1:]) / 2
 
     # Define mass bins
-    m_bins = np.logspace(8, 11.5, 10)
+    m_bins = np.logspace(8, 11.5, 20)
 
     # Loop over snapshots
     for snap in snaps:
@@ -853,7 +853,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
         w = np.array(w)
         gal_masses = np.array(gal_masses)
         virial_params = np.array(virial_params)
-        prof_rs = np.array(prof_rs)
+        prof_rs = np.array(prof_rs) * 1000
 
         # Define the mass normalisation for the colormap
         norm = cm.LogNorm(vmin=10 ** 8, vmax=10 ** 11.5)
@@ -881,7 +881,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
                 continue
 
             # Plot this profile
-            plot_meidan_stat(prof_rs[okinds] * 1000,
+            plot_meidan_stat(prof_rs[okinds],
                              virial_params[okinds], w[okinds],
                              ax, lab="", color=cmap(norm(m_cent)), bins=r_bins)
 
