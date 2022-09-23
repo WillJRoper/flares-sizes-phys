@@ -686,7 +686,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
         gal_masses = []
         w = []
         virial_params = []
-        rs = []
+        prof_rs = []
 
         print(snap)
 
@@ -847,13 +847,13 @@ def plot_virial_param_profile(data, snaps, weight_norm):
                         (vels[okinds] * u.km / u.s).to(u.Mpc / u.Myr).value)**2
                     * r / (G * np.sum(masses[okinds]))
                 )
-                rs.append(r)
+                prof_rs.append(r)
 
         # Convert to arrays
         w = np.array(w)
         gal_masses = np.array(gal_masses)
         virial_params = np.array(virial_params)
-        rs = np.array(rs)
+        prof_rs = np.array(prof_rs)
 
         # Define the mass normalisation for the colormap
         norm = cm.LogNorm(vmin=10 ** 8, vmax=10 ** 11.5)
@@ -878,7 +878,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
                                     gal_masses < mhigh)
 
             # Plot this profile
-            plot_meidan_stat(rs[okinds], virial_params[okinds], w[okinds],
+            plot_meidan_stat(prof_rs[okinds], virial_params[okinds], w[okinds],
                              ax, lab="", color=cmap(norm(m_cent)), bins=r_bins)
 
         # Axes labels
