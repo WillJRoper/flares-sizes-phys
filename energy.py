@@ -888,7 +888,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
         ax.set_xlabel("$R / [\mathrm{pkpc}]$")
         ax.set_ylabel(r"$\alpha(<R)$")
 
-        cbar = fig.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap))
+        cbar = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap))
         cbar.set_label("$M_\star / M_\odot$")
 
         # Save figure
