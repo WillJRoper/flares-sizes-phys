@@ -877,6 +877,9 @@ def plot_virial_param_profile(data, snaps, weight_norm):
             okinds = np.logical_and(gal_masses >= mlow,
                                     gal_masses < mhigh)
 
+            if len(w[okinds]) == 0:
+                continue
+
             # Plot this profile
             plot_meidan_stat(prof_rs[okinds], virial_params[okinds], w[okinds],
                              ax, lab="", color=cmap(norm(m_cent)), bins=r_bins)
