@@ -834,7 +834,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
                          + (coords[:, 2] - cop[2]) ** 2)
 
             # Loop over radial bins
-            for r in rbin_cents:
+            for r in rs:
 
                 # Get the particles in tbis aperture
                 okinds = rs < r
@@ -881,7 +881,8 @@ def plot_virial_param_profile(data, snaps, weight_norm):
                 continue
 
             # Plot this profile
-            plot_meidan_stat(prof_rs[okinds], virial_params[okinds], w[okinds],
+            plot_meidan_stat(prof_rs[okinds] * 1000,
+                             virial_params[okinds], w[okinds],
                              ax, lab="", color=cmap(norm(m_cent)), bins=r_bins)
 
         # Axes labels
