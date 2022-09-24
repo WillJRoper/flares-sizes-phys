@@ -831,19 +831,25 @@ def plot_virial_param_profile(data, snaps, weight_norm):
                          + (coords[:, 1] - cop[1]) ** 2
                          + (coords[:, 2] - cop[2]) ** 2)
 
-            # Loop over radial bins
-            for r in rs:
+            # Sort particles
+            sinds = np.argsort(rs)
+            rs = rs[sinds]
+            vels = vels[sinds]
+            masses = masses[sinds]
 
-                # Get the particles in tbis aperture
-                okinds = rs < r
+            # Loop over radial bins
+            for r_ind, r in enumerate(rs):
+
+                if r_ind == 0:
+                    continue
 
                 # Include these results for plotting
                 w.append(ws[ind])
                 gal_masses.append(smass)
                 virial_params.append(
                     5 * np.nanstd(
-                        (vels[okinds] * u.km / u.s).to(u.Mpc / u.Myr).value)**2
-                    * r / (G * np.sum(masses[okinds]))
+                        (vels[:r_ind] * u.km / u.s).to(u.Mpc / u.Myr).value)**2
+                    * r / (G * np.sum(masses[:r_ind]))
                 )
                 prof_rs.append(r)
 
