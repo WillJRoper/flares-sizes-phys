@@ -697,7 +697,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
         z = float(snap.split("z")[-1].replace("p", "."))
 
         # Define softening length
-        soft = 0.001802390 / (0.6777 * (1 + z))
+        soft = 0.001802390 / (0.6777 * (1 + z)) * 1000
 
         # Set fake region IDs
         reg = "100"
