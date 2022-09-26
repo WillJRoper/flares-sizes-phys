@@ -676,7 +676,9 @@ def plot_virial_param_profile(data, snaps, weight_norm):
     rbin_cents = (r_bins[:-1] + r_bins[1:]) / 2
 
     # Define mass bins
-    m_bins = np.logspace(8, 11.5, 30)
+    m_bins = np.array([10**8, 10**8.5, 10**8.65, 10**8.8, 10**8.95,
+                       10**9.05, 10**9.25, 10**9.5, 10**10, 10**10.5,
+                       10**11, 10**11.5])
 
     # Loop over snapshots
     for snap in snaps:
