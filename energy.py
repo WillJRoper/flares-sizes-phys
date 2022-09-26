@@ -834,9 +834,9 @@ def plot_virial_param_profile(data, snaps, weight_norm):
             com = np.average(coords, weights=masses, axis=0)
 
             # Calculate radius and apply a 30 pkpc aperture
-            rs = np.sqrt((coords[:, 0] - cop[0]) ** 2
-                         + (coords[:, 1] - cop[1]) ** 2
-                         + (coords[:, 2] - cop[2]) ** 2)
+            rs = np.sqrt((coords[:, 0] - com[0]) ** 2
+                         + (coords[:, 1] - com[1]) ** 2
+                         + (coords[:, 2] - com[2]) ** 2)
 
             # Sort particles
             sinds = np.argsort(rs)
