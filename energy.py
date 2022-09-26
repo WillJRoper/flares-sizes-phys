@@ -672,7 +672,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
     G = (const.G.to(u.Mpc ** 3 * u.M_sun ** -1 * u.Myr ** -2)).value
 
     # Define radial bins
-    r_bins = np.logspace(-5, np.log10(30), 30)
+    r_bins = np.logspace(-5, np.log10(30), 100)
     rbin_cents = (r_bins[:-1] + r_bins[1:]) / 2
 
     # Define mass bins
@@ -838,18 +838,17 @@ def plot_virial_param_profile(data, snaps, weight_norm):
             masses = masses[sinds]
 
             # Loop over radial bins
-            for r_ind, r in enumerate(rs):
+            for r_ind, r in enumerate(rbin_cents):
 
-                if r_ind == 0:
-                    continue
+                r_okinds = rs < r
 
                 # Include these results for plotting
                 w.append(ws[ind])
                 gal_masses.append(smass)
                 virial_params.append(
                     5 * np.nanstd(
-                        (vels[:r_ind] * u.km / u.s).to(u.Mpc / u.Myr).value)**2
-                    * r / (G * np.sum(masses[:r_ind]))
+                        (vels[r_okinds] * u.km / u.s).to(u.Mpc / u.Myr).value)**2
+                    * r / (G * np.sum(masses[r_okinds]))
                 )
                 prof_rs.append(r)
 
