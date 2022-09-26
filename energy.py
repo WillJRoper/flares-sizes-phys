@@ -676,7 +676,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
     rbin_cents = (r_bins[:-1] + r_bins[1:]) / 2
 
     # Define mass bins
-    m_bins = np.logspace(8, 11.5, 50)
+    m_bins = np.linspace(8, 11.5, 50)
 
     # Loop over snapshots
     for snap in snaps:
@@ -871,10 +871,10 @@ def plot_virial_param_profile(data, snaps, weight_norm):
         for i in range(m_bins.size - 1):
 
             # Get bin edges
-            mlow, mhigh = m_bins[i], m_bins[i + 1]
+            mlow, mhigh = 10 ** m_bins[i], 10 ** m_bins[i + 1]
 
             # Define bin midpoint for color
-            m_cent = (mlow + mhigh) / 2
+            m_cent = 10 ** (mlow + mhigh) / 2
 
             # Define mask for this mass bin_cents
             okinds = np.logical_and(gal_masses >= mlow,
