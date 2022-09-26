@@ -672,7 +672,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
     G = (const.G.to(u.Mpc ** 3 * u.M_sun ** -1 * u.Myr ** -2)).value
 
     # Define radial bins
-    r_bins = np.logspace(-3, np.log10(30), 50)
+    r_bins = np.logspace(-5, np.log10(30), 50)
     rbin_cents = (r_bins[:-1] + r_bins[1:]) / 2
 
     # Define mass bins
