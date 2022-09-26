@@ -831,6 +831,8 @@ def plot_virial_param_profile(data, snaps, weight_norm):
                     masses[low: high] = ms
                     vels[low:  high, :] = v
 
+            com = np.average(coords, weights=masses, axis=0)
+
             # Calculate radius and apply a 30 pkpc aperture
             rs = np.sqrt((coords[:, 0] - cop[0]) ** 2
                          + (coords[:, 1] - cop[1]) ** 2
