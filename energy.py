@@ -860,7 +860,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
 
         # Define the mass normalisation for the colormap
         norm = cm.TwoSlopeNorm(vmin=8, vcenter=9, vmax=11.5)
-        cmap = plt.get_cmap("cmr.tropical")
+        cmap = plt.get_cmap("cmr.guppy")
 
         # Set up plot
         fig = plt.figure(figsize=(3.5, 3.5))
