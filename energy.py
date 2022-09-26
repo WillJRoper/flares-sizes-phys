@@ -831,12 +831,13 @@ def plot_virial_param_profile(data, snaps, weight_norm):
                     masses[low: high] = ms
                     vels[low:  high, :] = v
 
-            com = np.average(coords, weights=masses, axis=0)
-
             # Calculate radius and apply a 30 pkpc aperture
-            rs = np.sqrt((coords[:, 0] - com[0]) ** 2
-                         + (coords[:, 1] - com[1]) ** 2
-                         + (coords[:, 2] - com[2]) ** 2)
+            rs = np.sqrt((coords[:, 0] - cop[0]) ** 2
+                         + (coords[:, 1] - cop[1]) ** 2
+                         + (coords[:, 2] - cop[2]) ** 2)
+            gas_rs = np.sqrt((this_g_pos[:, 0] - cop[0]) ** 2
+                             + (this_g_pos[:, 1] - cop[1]) ** 2
+                             + (this_g_pos[:, 2] - cop[2]) ** 2)
 
             # Sort particles
             sinds = np.argsort(rs)
@@ -848,13 +849,14 @@ def plot_virial_param_profile(data, snaps, weight_norm):
             for r_ind, r in enumerate(rbin_cents):
 
                 r_okinds = rs < r
+                gr_okinds = gas_rs < r
 
                 # Include these results for plotting
                 w.append(ws[ind])
                 gal_masses.append(smass)
                 virial_params.append(
                     5 * np.nanstd(
-                        (vels[r_okinds] * u.km / u.s).to(u.Mpc / u.Myr).value)**2
+                        (this_g_vel[gr_okinds] * u.km / u.s).to(u.Mpc / u.Myr).value)**2
                     * r / (G * np.sum(masses[r_okinds]))
                 )
                 prof_rs.append(r)
