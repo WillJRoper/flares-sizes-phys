@@ -672,14 +672,17 @@ def plot_virial_param_profile(data, snaps, weight_norm):
     G = (const.G.to(u.Mpc ** 3 * u.M_sun ** -1 * u.Myr ** -2)).value
 
     # Define radial bins
-    r_bins = np.logspace(-5, np.log10(30), 50)
+    r_bins = np.logspace(-3, np.log10(30), 50)
     rbin_cents = (r_bins[:-1] + r_bins[1:]) / 2
 
     # Define mass bins
-    m_bins = np.linspace(8, 11.5, 20)
+    m_bins = 10 ** np.linspace(8, 11.5, 20)
 
     # Loop over snapshots
     for snap in snaps:
+
+        if snap != snaps[-1]:
+            continue
 
         # Initialise lists for storing results
         tot_hmrs = []
@@ -871,10 +874,10 @@ def plot_virial_param_profile(data, snaps, weight_norm):
         for i in range(m_bins.size - 1):
 
             # Get bin edges
-            mlow, mhigh = 10. ** m_bins[i], 10. ** m_bins[i + 1]
+            mlow, mhigh = m_bins[i], m_bins[i + 1]
 
             # Define bin midpoint for color
-            m_cent = 10. ** ((mlow + mhigh) / 2)
+            m_cent = (mlow + mhigh) / 2
 
             # Define mask for this mass bin_cents
             okinds = np.logical_and(gal_masses >= mlow,
