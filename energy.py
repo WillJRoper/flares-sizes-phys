@@ -676,7 +676,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
     rbin_cents = (r_bins[:-1] + r_bins[1:]) / 2
 
     # Define mass bins
-    m_bins = np.logspace(8, 11.5, 20)
+    m_bins = np.logspace(8, 11.5, 50)
 
     # Loop over snapshots
     for snap in snaps:
@@ -859,7 +859,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
         prof_rs = np.array(prof_rs) * 1000
 
         # Define the mass normalisation for the colormap
-        norm = cm.LogNorm(vmin=10 ** 8, vmax=10 ** 11.5)
+        norm = cm.TwoSlopeNorm(vmin=8, vcenter=9, vmax=11.5)
         cmap = plt.get_cmap("cmr.tropical")
 
         # Set up plot
@@ -886,7 +886,8 @@ def plot_virial_param_profile(data, snaps, weight_norm):
             # Plot this profile
             plot_meidan_stat(prof_rs[okinds],
                              virial_params[okinds], w[okinds],
-                             ax, lab="", color=cmap(norm(m_cent)), bins=r_bins)
+                             ax, lab="", color=cmap(norm(np.log10(m_cent))),
+                             bins=r_bins)
 
         # Axes labels
         ax.set_xlabel("$R / [\mathrm{pkpc}]$")
