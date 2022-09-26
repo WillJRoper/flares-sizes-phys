@@ -676,7 +676,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
     rbin_cents = (r_bins[:-1] + r_bins[1:]) / 2
 
     # Define mass bins
-    m_bins = 10 ** np.linspace(8, 11.5, 30)
+    m_bins = np.logspace(8, 11.5, 30)
 
     # Loop over snapshots
     for snap in snaps:
@@ -863,7 +863,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
 
         # Define the mass normalisation for the colormap
         norm = cm.TwoSlopeNorm(vmin=8, vcenter=9, vmax=11.5)
-        cmap = plt.get_cmap("cmr.guppy")
+        cmap = plt.get_cmap("coolwarm")
 
         # Set up plot
         fig = plt.figure(figsize=(3.5, 3.5))
