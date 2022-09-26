@@ -676,7 +676,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
     rbin_cents = (r_bins[:-1] + r_bins[1:]) / 2
 
     # Define mass bins
-    m_bins = 10 ** np.linspace(8, 11.5, 20)
+    m_bins = 10 ** np.linspace(8, 11.5, 30)
 
     # Loop over snapshots
     for snap in snaps:
@@ -902,6 +902,49 @@ def plot_virial_param_profile(data, snaps, weight_norm):
         # Save figure
         mkdir("plots/energy/")
         fig.savefig("plots/energy/mass_virparam_profile_%s.png" % snap,
+                    bbox_inches="tight")
+        plt.close(fig)
+
+        # Set up plot
+        fig = plt.figure(figsize=(3.5, 3.5))
+        ax = fig.add_subplot(111)
+        ax.loglog()
+
+        # Loop over mass bins
+        for i in range(m_bins.size - 1):
+
+            # Get bin edges
+            mlow, mhigh = m_bins[i], m_bins[i + 1]
+
+            # Define bin midpoint for color
+            m_cent = (mlow + mhigh) / 2
+
+            # Define mask for this mass bin_cents
+            okinds = np.logical_and(gal_masses >= mlow,
+                                    gal_masses < mhigh)
+
+            if len(w[okinds]) == 0:
+                continue
+
+            # Plot this profile
+            plot_meidan_stat(prof_rs[okinds],
+                             virial_params[okinds], w[okinds],
+                             ax, lab="", color=cmap(norm(np.log10(m_cent))),
+                             bins=r_bins)
+
+        # Plot softening
+        ax.axvline(soft, color="k", linestyle="--")
+
+        # Axes labels
+        ax.set_xlabel("$R / [\mathrm{pkpc}]$")
+        ax.set_ylabel(r"$\alpha(<R)$")
+
+        cbar = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap))
+        cbar.set_label("$M_\star / M_\odot$")
+
+        # Save figure
+        mkdir("plots/energy/")
+        fig.savefig("plots/energy/mass_virparam_profile_with_soft%s.png" % snap,
                     bbox_inches="tight")
         plt.close(fig)
 
