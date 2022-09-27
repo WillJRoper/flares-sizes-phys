@@ -10,6 +10,7 @@ from astropy.cosmology import Planck18 as cosmo
 from astropy.cosmology import z_at_value
 import astropy.units as u
 import eagle_IO.eagle_IO as eagle_io
+from scipy.optimize import curve_fit
 
 
 def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
@@ -530,3 +531,106 @@ def sfr_radial_profile_mass(stellar_data, snap):
                 bbox_inches="tight")
 
     plt.close(fig)
+
+
+def plot_dead_inside(stellar_data, snaps, weight_norm):
+
+    # Define radial bins
+    radial_bins = np.logspace(-2, 1.8, 10)
+    bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
+
+    for snap in snaps:
+
+        # Initialise lists to hold the sfr profiles
+        grads = []
+        star_ms = []
+        all_ws = []
+
+        # Get data
+        ages = stellar_data[snap]["Particle,S_Age"] * 1000
+        ini_ms = stellar_data[snap]["Particle,S_MassInitial"] * 10 ** 10
+        radii = stellar_data[snap]["radii"]
+        begins = stellar_data[snap]["begin"]
+        apps = stellar_data[snap]["Particle/Apertures/Star,30"]
+        lengths = stellar_data[snap]["Galaxy,S_Length"]
+        hmrs = stellar_data[snap]["HMRs"]
+        ms = stellar_data[snap]["Particle,S_Mass"]
+        w = stellar_data[snap]["weights"]
+
+        # Create boolean array identifying stars born in the last 100 Myrs
+        # and are within the 30 pkpc aperture
+        age_okinds = ages < 100
+        okinds = np.logical_and(apps, age_okinds)
+
+        # Define straight line fit
+        def sline(x, m, c): return m * x + c
+
+        # Loop over galaxies normalising by half mass radius
+        for igal in range(begins.size):
+
+            # Extract this galaxies data
+            b = begins[igal]
+            nstar = lengths[igal]
+            hmr = hmrs[igal]
+            app = apps[b: b + nstar]
+            gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
+            ws = w[igal]
+            nstar_100 = ini_ms[b: b + nstar][okinds[b: b + nstar]].size
+
+            # Ignore anomalous galaxies and low mass galaxies
+            if hmr <= 0 or gal_m < 10 ** 9 or nstar_100 == 0:
+                continue
+
+            # Get this galaxy's data
+            rs = radii[b: b + nstar][okinds[b: b + nstar]]
+            this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
+
+            # Derive radial sfr profile
+            binned_stellar_ms, _ = np.histogram(rs,
+                                                bins=radial_bins,
+                                                weights=this_ini_ms)
+            radial_sfr = binned_stellar_ms / 100 / gal_m  # 1 / Myr
+
+            # Fit the radial profile
+            popt, pcov = curve_fit(
+                sline, bin_cents, radial_sfr, p0=[1, 10**-3])
+
+            # Include this galaxy's profile
+            grads.append(popt[0])
+            star_ms.append(bin_cents)
+            all_ws.append(ws)
+
+        # Convert to arrays
+        grads = np.array(grads)
+        star_ms = np.array(star_ms)
+        w = np.array(all_ws)
+
+        # Set up plot
+        fig = plt.figure(figsize=(3.5, 3.5))
+        gs = gridspec.GridSpec(nrows=1, ncols=1 + 1,
+                               width_ratios=[20, ] + [1, ])
+        gs.update(wspace=0.0, hspace=0.0)
+        ax = fig.add_subplot(gs[0, 0])
+        cax = fig.add_subplot(gs[0, 1])
+
+        # Plot stellar_data
+        im = ax.hexbin(star_ms, grads, gridsize=30,
+                       mincnt=np.min(w) - (0.1 * np.min(w)),
+                       C=w,
+                       reduce_C_function=np.sum, xscale='log',
+                       norm=weight_norm, linewidths=0.2, cmap='viridis')
+
+        # Label axes
+        ax.set_xlabel("$M_\star / M_\odot$")
+        ax.set_ylabel("$m$")
+
+        # Create colorbar
+        cb = fig.colorbar(im, cax)
+        cb.set_label("$\sum w_{i}$")
+
+        # Save figure
+        mkdir("plots/spatial_dist/")
+        fig.savefig("plots/spatial_dist/dead_inside_grad_%s.png" % snap,
+                    bbox_inches="tight")
+
+        plt.close(fig)
