@@ -126,7 +126,7 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
 
                 # Create look up dictionary for galaxy values
                 d = {"cop": {}, "hmr": {}, "nstar": {}, "m": {},
-                     "radii": {}, "ini_ms": {}, "ms": {}}
+                     "all_radii": {}, "radii": {}, "ini_ms": {}, "ms": {}}
                 for (ind, grp), subgrp in zip(enumerate(grps), subgrps):
 
                     # Skip particles not in a galaxy
@@ -139,9 +139,11 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                     d["nstar"][(grp, subgrp)] = nstars[ind]
                     d["m"][(grp, subgrp)] = gal_ms[ind]
                     d["radii"][(grp, subgrp)] = []
+                    d["all_radii"][(grp, subgrp)] = []
                     d["ini_ms"][(grp, subgrp)] = []
+                    d["ms"][(grp, subgrp)] = []
 
-                # Loop over particles calculating and normalising radii
+                # Loop over particles born recently
                 for ind in range(aborn.size):
 
                     # Get grp and subgrp
@@ -168,6 +170,33 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                         if r < 30:
                             d["radii"][(grp, subgrp)].append(r)
                             d["ini_ms"][(grp, subgrp)].append(ini_ms[ind])
+
+                # Loop over particles all particles
+                for ind in range(ms.size):
+
+                    # Get grp and subgrp
+                    grp, subgrp = part_grp[ind], part_subgrp[ind]
+
+                    # Get hmr and centre of potential if we are
+                    # in a valid galaxy
+                    if (grp, subgrp) in d["hmr"]:
+                        hmr = d["hmr"][(grp, subgrp)]
+                        cop = d["cop"][(grp, subgrp)]
+                        nstar = d["nstar"][(grp, subgrp)]
+
+                        if hmr == 0 or nstar < 100:
+                            continue
+
+                        # Centre position
+                        this_pos = pos[ind, :] - cop
+
+                        # Compute radius and assign to galaxy entry
+                        r = np.sqrt(this_pos[0] ** 2
+                                    + this_pos[1] ** 2
+                                    + this_pos[2] ** 2)
+
+                        if r < 30:
+                            d["all_radii"][(grp, subgrp)].append(r)
                             d["ms"][(grp, subgrp)].append(ms[ind])
 
                 # Loop over galaxies calculating profiles
@@ -175,6 +204,7 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
 
                     # Get data
                     rs = d["radii"][key]
+                    all_rs = d["all_radii"][key]
                     this_ini_ms = d["ini_ms"][key]
                     this_ms = d["ms"][key]
                     gal_m = d["m"][key]
@@ -186,7 +216,7 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                     binned_stellar_ini_ms, _ = np.histogram(rs,
                                                             bins=radial_bins,
                                                             weights=this_ini_ms)
-                    binned_stellar_ms, _ = np.histogram(rs,
+                    binned_stellar_ms, _ = np.histogram(all_rs,
                                                         bins=radial_bins,
                                                         weights=this_ms)
                     radial_sfr = binned_stellar_ini_ms / 100 / binned_stellar_ms  # 1 / Myr
@@ -254,6 +284,7 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
 
                 # Get this galaxy's data
                 rs = radii[b: b + nstar][okinds[b: b + nstar]]
+                all_rs = radii[b: b + nstar][app]
                 this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
                 this_ms = ms[b: b + nstar][app] * 10 ** 10
 
@@ -261,7 +292,7 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                 binned_stellar_ini_ms, _ = np.histogram(rs,
                                                         bins=radial_bins,
                                                         weights=this_ini_ms)
-                binned_stellar_ms, _ = np.histogram(rs,
+                binned_stellar_ms, _ = np.histogram(all_rs,
                                                     bins=radial_bins,
                                                     weights=this_ms)
                 radial_sfr = binned_stellar_ini_ms / 100 / binned_stellar_ms  # 1 / Myr
@@ -614,8 +645,8 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             binned_stellar_ini_ms, _ = np.histogram(rs,
                                                     bins=radial_bins,
                                                     weights=this_ini_ms)
-            binned_stellar_ms, _ = np.histogram(rs,
-                                                all_bins=radial_bins,
+            binned_stellar_ms, _ = np.histogram(all_rs,
+                                                bins=radial_bins,
                                                 weights=this_ms)
             radial_sfr = binned_stellar_ini_ms / 100 / binned_stellar_ms  # 1 / Myr
 
