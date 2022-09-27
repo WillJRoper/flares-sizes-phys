@@ -621,7 +621,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         im = ax.hexbin(star_ms, grads, gridsize=30,
                        mincnt=np.min(all_ws) - (0.1 * np.min(all_ws)),
                        C=all_ws,
-                       reduce_C_function=np.sum, xscale='log',
+                       reduce_C_function=np.sum, xscale='log', yscale="log",
                        norm=weight_norm, linewidths=0.2, cmap='viridis')
 
         # Label axes
