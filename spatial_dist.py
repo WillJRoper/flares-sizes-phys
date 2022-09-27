@@ -632,9 +632,9 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             this_ms = ms[b: b + nstar][app] * 10 ** 10
 
             # Compute weighted quantiles
-            plow = weighted_quantile(radii[b: b + nstar][app], 0.05,
+            plow = weighted_quantile(radii[b: b + nstar][app], 0.16,
                                      sample_weight=ms[b: b + nstar][app])
-            phigh = weighted_quantile(radii[b: b + nstar][app], 0.95,
+            phigh = weighted_quantile(radii[b: b + nstar][app], 0.84,
                                       sample_weight=ms[b: b + nstar][app])
 
             # Define radial bins
@@ -648,6 +648,8 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             binned_stellar_ms, _ = np.histogram(all_rs,
                                                 bins=radial_bins,
                                                 weights=this_ms)
+            print(binned_stellar_ini_ms)
+            print(binned_stellar_ms)
             radial_sfr = binned_stellar_ini_ms / 100 / binned_stellar_ms  # 1 / Myr
 
             # Fit the radial profile
