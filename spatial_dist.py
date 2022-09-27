@@ -648,8 +648,10 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             binned_stellar_ms, _ = np.histogram(all_rs,
                                                 bins=radial_bins,
                                                 weights=this_ms)
+            print("----")
             print(binned_stellar_ini_ms)
             print(binned_stellar_ms)
+            print(binned_stellar_ini_ms / 100 / binned_stellar_ms)
             radial_sfr = binned_stellar_ini_ms / 100 / binned_stellar_ms  # 1 / Myr
 
             # Fit the radial profile
