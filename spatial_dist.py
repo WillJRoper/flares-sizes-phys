@@ -564,7 +564,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         okinds = np.logical_and(apps, age_okinds)
 
         # Define straight line fit
-        def sline(x, m, c): return m * np.log10(x) + c
+        def sline(x, m, c): return m * x + c
 
         # Loop over galaxies normalising by half mass radius
         for igal in range(begins.size):
@@ -592,7 +592,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
                                     sample_weight=ms[b: b + nstar][app])
 
             # Define radial bins
-            radial_bins = np.logspace(p25, p75, 20)
+            radial_bins = np.logspace(np.log10(p25), np.log10(p75), 20)
             bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
 
             # Derive radial sfr profile
