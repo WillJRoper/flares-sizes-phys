@@ -649,7 +649,8 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         ax.loglog()
 
         # Plot stellar_data
-        im = ax.plot(rads, profs, color="k", alpha=0.3)
+        for rs, prof in zip(rads, profs):
+            ax.plot(rad, prof, color="k", alpha=0.3)
 
         # Label axes
         ax.set_ylabel("$\mathrm{sSFR}_{100} / [\mathrm{Myr}^{-1}]$")
