@@ -596,6 +596,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
 
             # Get this galaxy's data
             rs = radii[b: b + nstar][okinds[b: b + nstar]]
+            all_rs = radii[b: b + nstar][app]
             this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
             this_ms = ms[b: b + nstar][app] * 10 ** 10
 
@@ -614,7 +615,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
                                                     bins=radial_bins,
                                                     weights=this_ini_ms)
             binned_stellar_ms, _ = np.histogram(rs,
-                                                bins=radial_bins,
+                                                all_bins=radial_bins,
                                                 weights=this_ms)
             radial_sfr = binned_stellar_ini_ms / 100 / binned_stellar_ms  # 1 / Myr
 
