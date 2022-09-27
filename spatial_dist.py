@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from flare import plt as flareplt
 from utils import mkdir, plot_meidan_stat, calc_ages, plot_spread_stat_as_eb
+from utils import weighted_quantile
 from astropy.cosmology import Planck18 as cosmo
 from astropy.cosmology import z_at_value
 import astropy.units as u
@@ -535,10 +536,6 @@ def sfr_radial_profile_mass(stellar_data, snap):
 
 def plot_dead_inside(stellar_data, snaps, weight_norm):
 
-    # Define radial bins
-    radial_bins = np.logspace(-1.5, np.log10(30), 20)
-    bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
-
     for snap in snaps:
 
         print(snap)
@@ -587,6 +584,16 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             # Get this galaxy's data
             rs = radii[b: b + nstar][okinds[b: b + nstar]]
             this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
+
+            # Compute weighted quantiles
+            p25 = weighted_quantile(radii[b: b + nstar][app], 25,
+                                    sample_weight=ms[b: b + nstar][app])
+            p75 = weighted_quantile(radii[b: b + nstar][app], 75,
+                                    sample_weight=ms[b: b + nstar][app])
+
+            # Define radial bins
+            radial_bins = np.logspace(p25, p75, 20)
+            bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
 
             # Derive radial sfr profile
             binned_stellar_ms, _ = np.histogram(rs,
