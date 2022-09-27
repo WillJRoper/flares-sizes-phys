@@ -576,7 +576,6 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             hmr = hmrs[igal]
             app = apps[b: b + nstar]
             gal_m = np.sum(ms[b: b + nstar][app]) * 10 ** 10
-            ws = w[igal]
             nstar_100 = ini_ms[b: b + nstar][okinds[b: b + nstar]].size
 
             # Ignore anomalous galaxies and low mass galaxies
@@ -595,16 +594,18 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
 
             # Fit the radial profile
             popt, pcov = curve_fit(
-                sline, bin_cents, radial_sfr, p0=[1, 10**-3])
+                sline, bin_cents, radial_sfr, p0=[1, 10**-3]
+            )
 
             # Include this galaxy's profile
             grads.append(popt[0])
             star_ms.append(star_ms)
-            all_ws.append(ws)
+            all_ws.append(w[igal])
 
             print(igal, "of", begins.size - 1, end="\r")
 
         # Convert to arrays
+        print(star_ms, grads, all_ws)
         grads = np.array(grads)
         star_ms = np.array(star_ms)
         all_ws = np.array(all_ws)
