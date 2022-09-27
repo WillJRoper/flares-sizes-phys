@@ -586,9 +586,9 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
 
             # Compute weighted quantiles
-            p25 = weighted_quantile(radii[b: b + nstar][app], 25,
+            p25 = weighted_quantile(radii[b: b + nstar][app], 0.25,
                                     sample_weight=ms[b: b + nstar][app])
-            p75 = weighted_quantile(radii[b: b + nstar][app], 75,
+            p75 = weighted_quantile(radii[b: b + nstar][app], 0.75,
                                     sample_weight=ms[b: b + nstar][app])
 
             # Define radial bins
