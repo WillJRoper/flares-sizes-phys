@@ -602,7 +602,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             star_ms.append(gal_m)
             all_ws.append(w[igal])
 
-            print(igal, "of", begins.size - 1, end="/r")
+            print(igal, "of", begins.size - 1, end="\r")
 
         # Convert to arrays
         grads = np.array(grads)
@@ -616,8 +616,6 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         gs.update(wspace=0.0, hspace=0.0)
         ax = fig.add_subplot(gs[0, 0])
         cax = fig.add_subplot(gs[0, 1])
-
-        print(star_ms, grads)
 
         # Plot stellar_data
         im = ax.hexbin(star_ms, grads, gridsize=30,
