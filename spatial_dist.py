@@ -630,13 +630,13 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             this_ms = ms[b: b + nstar][app] * 10 ** 10
 
             # Compute weighted quantiles
-            plow = weighted_quantile(radii[b: b + nstar][app], 0.16,
+            plow = weighted_quantile(radii[b: b + nstar][app], 0.05,
                                      sample_weight=ms[b: b + nstar][app])
-            phigh = weighted_quantile(radii[b: b + nstar][app], 0.84,
+            phigh = weighted_quantile(radii[b: b + nstar][app], 0.95,
                                       sample_weight=ms[b: b + nstar][app])
 
             # Define radial bins
-            radial_bins = np.linspace(plow, phigh, 10)
+            radial_bins = np.linspace(plow, phigh, 5)
             bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
 
             # Derive radial sfr profile
