@@ -603,7 +603,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
 
             # Fit the radial profile
             popt, pcov = curve_fit(
-                sline, bin_cents, np.log10(radial_sfr), p0=[1, 10**-3]
+                sline, bin_cents, radial_sfr, p0=[1, 10**-3]
             )
 
             # Include this galaxy's profile
