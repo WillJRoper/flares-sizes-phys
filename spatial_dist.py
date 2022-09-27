@@ -653,6 +653,9 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             # Eliminate nan bins
             nan_okinds = binned_stellar_ini_ms > 0
 
+            if bin_cents[nan_okinds].size < 3:
+                continue
+
             # Fit the radial profile
             popt, pcov = curve_fit(
                 sline,
