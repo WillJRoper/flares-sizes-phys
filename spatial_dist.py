@@ -646,6 +646,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         # Set up plot
         fig = plt.figure(figsize=(3.5, 3.5))
         ax = fig.add_subplot(111)
+        ax.loglog()
 
         # Plot stellar_data
         im = ax.plot(rads, profs, color="k", alpha=0.3)
