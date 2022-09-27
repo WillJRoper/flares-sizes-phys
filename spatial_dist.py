@@ -597,17 +597,14 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
                 sline, bin_cents, radial_sfr, p0=[1, 10**-3]
             )
 
-            print(popt)
-
             # Include this galaxy's profile
             grads.append(popt[0])
-            star_ms.append(star_ms)
+            star_ms.append(gal_m)
             all_ws.append(w[igal])
 
-            print(igal, "of", begins.size - 1)
+            print(igal, "of", begins.size - 1, end="/r")
 
         # Convert to arrays
-        print(star_ms, grads, all_ws)
         grads = np.array(grads)
         star_ms = np.array(star_ms)
         all_ws = np.array(all_ws)
