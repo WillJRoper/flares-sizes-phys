@@ -536,7 +536,7 @@ def sfr_radial_profile_mass(stellar_data, snap):
 def plot_dead_inside(stellar_data, snaps, weight_norm):
 
     # Define radial bins
-    radial_bins = np.logspace(-2, 1.8, 10)
+    radial_bins = np.logspace(-1.5, np.log10(30), 20)
     bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
 
     for snap in snaps:
@@ -621,7 +621,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         im = ax.hexbin(star_ms, grads, gridsize=30,
                        mincnt=np.min(all_ws) - (0.1 * np.min(all_ws)),
                        C=all_ws,
-                       reduce_C_function=np.sum, xscale='log', yscale="log",
+                       reduce_C_function=np.sum, xscale='log',
                        norm=weight_norm, linewidths=0.2, cmap='viridis')
 
         # Label axes
