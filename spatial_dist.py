@@ -121,8 +121,6 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                 pos = pos[ages_okinds, :]
                 ini_ms = ini_ms[ages_okinds]
                 aborn = aborn[ages_okinds]
-                part_subgrp = part_subgrp[ages_okinds]
-                part_grp = part_grp[ages_okinds]
 
                 # Create look up dictionary for galaxy values
                 d = {"cop": {}, "hmr": {}, "nstar": {}, "m": {},
@@ -147,7 +145,7 @@ def sfr_radial_profile(stellar_data, snaps, agndt9_path, flares_snaps):
                 for ind in range(aborn.size):
 
                     # Get grp and subgrp
-                    grp, subgrp = part_grp[ind], part_subgrp[ind]
+                    grp, subgrp = part_grp[ages_okinds][ind], part_subgrp[ages_okinds][ind]
 
                     # Get hmr and centre of potential if we are
                     # in a valid galaxy
