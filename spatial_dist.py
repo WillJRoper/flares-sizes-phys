@@ -648,15 +648,16 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             binned_stellar_ms, _ = np.histogram(all_rs,
                                                 bins=radial_bins,
                                                 weights=this_ms)
-            print("----")
-            print(binned_stellar_ini_ms)
-            print(binned_stellar_ms)
-            print(binned_stellar_ini_ms / 100 / binned_stellar_ms)
             radial_sfr = binned_stellar_ini_ms / 100 / binned_stellar_ms  # 1 / Myr
+
+            # Eliminate nan bins
+            nan_okinds = ~np.isnan(radial_sfr)
 
             # Fit the radial profile
             popt, pcov = curve_fit(
-                sline, bin_cents, radial_sfr, p0=[1, 10**-3]
+                sline,
+                bin_cents[nan_okinds], radial_sfr[nan_okinds],
+                p0=[1, 10**-3]
             )
 
             # Include this galaxy's profile
