@@ -592,7 +592,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
                                     sample_weight=ms[b: b + nstar][app])
 
             # Define radial bins
-            radial_bins = np.linspace(p25, p75, 5)
+            radial_bins = np.linspace(p25, p75, 10)
             bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
 
             # Derive radial sfr profile
