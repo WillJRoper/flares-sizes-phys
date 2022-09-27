@@ -615,7 +615,7 @@ def plot_virial_param(data, snaps, weight_norm):
             disps.append(np.std(this_g_vel))
             okinds = rs < 0.001
             virial_param.append(
-                5 * np.nanstd(
+                3 * np.nanstd(
                     (vels[okinds] * u.km / u.s).to(u.Mpc / u.Myr).value)**2
                 * 2 * hmr / (G * np.sum(masses[okinds]))
             )
@@ -851,7 +851,7 @@ def plot_virial_param_profile(data, snaps, weight_norm):
                 w.append(ws[ind])
                 gal_masses.append(smass)
                 virial_params.append(
-                    5 * np.nanstd(
+                    3 * np.nanstd(
                         (vels[r_okinds] * u.km / u.s).to(u.Mpc / u.Myr).value)**2
                     * r / (G * np.sum(masses[r_okinds]))
                 )
