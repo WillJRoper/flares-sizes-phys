@@ -541,21 +541,23 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
 
     for snap in snaps:
 
+        print(snap)
+
         # Initialise lists to hold the sfr profiles
         grads = []
         star_ms = []
         all_ws = []
 
         # Get data
-        ages = stellar_data[snap]["Particle,S_Age"] * 1000
-        ini_ms = stellar_data[snap]["Particle,S_MassInitial"] * 10 ** 10
-        radii = stellar_data[snap]["radii"]
-        begins = stellar_data[snap]["begin"]
-        apps = stellar_data[snap]["Particle/Apertures/Star,30"]
-        lengths = stellar_data[snap]["Galaxy,S_Length"]
-        hmrs = stellar_data[snap]["HMRs"]
-        ms = stellar_data[snap]["Particle,S_Mass"]
-        w = stellar_data[snap]["weights"]
+        ages = stellar_data[snap]["Particle,S_Age"][...] * 1000
+        ini_ms = stellar_data[snap]["Particle,S_MassInitial"][...] * 10 ** 10
+        radii = stellar_data[snap]["radii"][...]
+        begins = stellar_data[snap]["begin"][...]
+        apps = stellar_data[snap]["Particle/Apertures/Star,30"][...]
+        lengths = stellar_data[snap]["Galaxy,S_Length"][...]
+        hmrs = stellar_data[snap]["HMRs"][...]
+        ms = stellar_data[snap]["Particle,S_Mass"][...]
+        w = stellar_data[snap]["weights"][...]
 
         # Create boolean array identifying stars born in the last 100 Myrs
         # and are within the 30 pkpc aperture
@@ -567,6 +569,8 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
 
         # Loop over galaxies normalising by half mass radius
         for igal in range(begins.size):
+
+            print(igal, "of", begins.size, end="\r")
 
             # Extract this galaxies data
             b = begins[igal]
