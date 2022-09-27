@@ -570,8 +570,6 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         # Loop over galaxies normalising by half mass radius
         for igal in range(begins.size):
 
-            print(igal, "of", begins.size, end="\r")
-
             # Extract this galaxies data
             b = begins[igal]
             nstar = lengths[igal]
@@ -603,6 +601,8 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             grads.append(popt[0])
             star_ms.append(star_ms)
             all_ws.append(ws)
+
+            print(igal, "of", begins.size - 1, end="\r")
 
         # Convert to arrays
         grads = np.array(grads)
