@@ -181,8 +181,8 @@ print("Got all data")
 # # Make plots that require multiple redshifts
 # #sfr_radial_profile_mass(data["stellar"][flares_snaps[-1]], flares_snaps[-1])
 # # sfr_radial_profile_environ(data["stellar"][flares_snaps[-1]], flares_snaps[-1])
-if rank == 0:
-    sfr_radial_profile(hdf["stellar"], com_snaps, agndt9_path, flares_snaps)
+# if rank == 0:
+#     sfr_radial_profile(hdf["stellar"], com_snaps, agndt9_path, flares_snaps)
 
 # print("Plotted SFR profiles")
 
