@@ -547,6 +547,8 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         grads = []
         star_ms = []
         all_ws = []
+        profs = []
+        rads = []
 
         # Get data
         ages = stellar_data[snap]["Particle,S_Age"][...] * 1000
@@ -601,6 +603,8 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             grads.append(popt[0])
             star_ms.append(gal_m)
             all_ws.append(w[igal])
+            profs.append(radial_sfr)
+            rads.append(bin_cents)
 
             print(igal, "of", begins.size - 1, end="\r")
 
@@ -635,6 +639,24 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         # Save figure
         mkdir("plots/spatial_dist/")
         fig.savefig("plots/spatial_dist/dead_inside_grad_%s.png" % snap,
+                    bbox_inches="tight")
+
+        plt.close(fig)
+
+        # Set up plot
+        fig = plt.figure(figsize=(3.5, 3.5))
+        ax = fig.add_subplot(111)
+
+        # Plot stellar_data
+        im = ax.plot(rads, profs, color="k", alpha=0.3)
+
+        # Label axes
+        ax.set_ylabel("$\mathrm{sSFR}_{100} / [\mathrm{Myr}^{-1}]$")
+        ax.set_xlabel("$R / $[pkpc]")
+
+        # Save figure
+        mkdir("plots/spatial_dist/")
+        fig.savefig("plots/spatial_dist/dead_inside_prof_%s.png" % snap,
                     bbox_inches="tight")
 
         plt.close(fig)
