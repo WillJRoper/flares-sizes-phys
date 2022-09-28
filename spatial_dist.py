@@ -630,7 +630,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
             this_ms = ms[b: b + nstar][app] * 10 ** 10
 
-            r_lim = np.median(all_rs) * 2
+            r_lim = 1  # np.median(all_rs) * 2
 
             in_ini_ms = this_ini_ms[rs <= r_lim]
             in_ms = this_ms[all_rs <= r_lim]
