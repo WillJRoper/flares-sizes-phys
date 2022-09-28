@@ -507,6 +507,9 @@ def plot_size_change_comp(stellar_data, gas_data, snaps, weight_norm):
     gas_delta_hmr = gas_tot_hmrs / gas_tot_prog_hmrs
     star_delta_hmr = star_tot_hmrs / star_tot_prog_hmrs
 
+    # Remove zeros
+    okinds = np.logical_and(gas_delta_hmr > 0, star_delta_hmr > 0)
+
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
