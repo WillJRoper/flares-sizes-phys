@@ -702,8 +702,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         im = ax.hexbin(in_ssfrs, out_ssfrs, gridsize=30,
                        mincnt=np.min(all_ws) - (0.1 * np.min(all_ws)),
                        C=star_ms,
-                       reduce_C_function=np.mean,
-                       norm=weight_norm, linewidths=0.2, cmap='viridis')
+                       reduce_C_function=np.mean, linewidths=0.2, cmap='viridis')
 
         ax.plot([ax.get_xlim()[0], ax.get_xlim()[1]],
                 [ax.get_ylim()[0], ax.get_ylim()[1]],
