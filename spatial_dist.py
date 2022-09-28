@@ -629,41 +629,26 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             this_ini_ms = ini_ms[b: b + nstar][okinds[b: b + nstar]]
             this_ms = ms[b: b + nstar][app] * 10 ** 10
 
-            # Compute weighted quantiles
-            plow = weighted_quantile(radii[b: b + nstar][app], 0.05,
-                                     sample_weight=ms[b: b + nstar][app])
-            phigh = weighted_quantile(radii[b: b + nstar][app], 0.95,
-                                      sample_weight=ms[b: b + nstar][app])
+            in_ini_ms = this_ini_ms[rs <= 1]
+            in_ms = this_ms[all_rs <= 1]
+            out_ini_ms = this_ini_ms[rs > 1]
+            out_ms = this_ms[all_rs > 1]
+            in_rs = all_rs[all_rs <= 1]
+            out_rs = all_rs[all_rs > 1]
 
-            # Define radial bins
-            radial_bins = np.linspace(plow, phigh, 100)
-            bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
-
-            # Derive radial sfr profile
-            binned_stellar_ini_ms, _ = np.histogram(rs,
-                                                    bins=radial_bins,
-                                                    weights=this_ini_ms)
-            binned_stellar_ms, _ = np.histogram(all_rs,
-                                                bins=radial_bins,
-                                                weights=this_ms)
-            radial_sfr = binned_stellar_ini_ms / 100 / binned_stellar_ms  # 1 / Myr
-
-            # Eliminate nan bins
-            nan_okinds = binned_stellar_ini_ms > 0
-
-            if bin_cents[nan_okinds].size < 3:
-                continue
+            in_ssfr = np.sum(in_ini_ms) / 100 / np.sum(in_ms)  # 1 / Myr
+            out_ssfr = np.sum(out_ini_ms) / 100 / np.sum(out_ms)  # 1 / Myr
+            in_r = np.median(in_rs)
+            out_r = np.median(out_rs)
 
             # Fit the radial profile
-            grad = (radial_sfr[1] - radial_sfr[0]
-                    ) / (bin_cents[1] - bin_cents[0])
+            grad = (out_ssfr[1] - in_ssfr[0]
+                    ) / (out_r[1] - in_r[0])
 
             # Include this galaxy's profile
             grads.append(grad)
             star_ms.append(gal_m)
             all_ws.append(w[igal])
-            profs.append(radial_sfr)
-            rads.append(bin_cents)
 
             print(igal, "of", begins.size - 1, end="\r")
 
@@ -698,26 +683,6 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         # Save figure
         mkdir("plots/spatial_dist/")
         fig.savefig("plots/spatial_dist/dead_inside_grad_%s.png" % snap,
-                    bbox_inches="tight")
-
-        plt.close(fig)
-
-        # Set up plot
-        fig = plt.figure(figsize=(3.5, 3.5))
-        ax = fig.add_subplot(111)
-        ax.loglog()
-
-        # Plot stellar_data
-        for rs, prof in zip(rads, profs):
-            ax.plot(rs, prof, color="k", alpha=0.3)
-
-        # Label axes
-        ax.set_ylabel("$\mathrm{sSFR}_{100} / [\mathrm{Myr}^{-1}]$")
-        ax.set_xlabel("$R / $[pkpc]")
-
-        # Save figure
-        mkdir("plots/spatial_dist/")
-        fig.savefig("plots/spatial_dist/dead_inside_prof_%s.png" % snap,
                     bbox_inches="tight")
 
         plt.close(fig)
