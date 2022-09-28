@@ -82,7 +82,7 @@ def plot_gas_hmr(data, stellar_data, snap, weight_norm, cut_on="hmr"):
     # Define arrays to store computations
     hmrs = data[snap]["HMRs"][...]
     mass = stellar_data[snap]["mass"][...]
-    subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"][...]
+    subgrps = data[snap]["Galaxy,SubGroupNumber"][...]
     den_hmr = data[snap]["apertures"]["density"][cut_on][...]
     w = data[snap]["weight"][...]
 
@@ -97,10 +97,15 @@ def plot_gas_hmr(data, stellar_data, snap, weight_norm, cut_on="hmr"):
     print("Galaxies after spurious cut: %d" % mass.size)
 
     # Work out central and satellite status
-    com_gas_sat = mass[np.logical_and(hmrs <= 1, subgrps > 0)].size
-    com_gas_cent = mass[np.logical_and(hmrs <= 1, subgrps == 0)].size
-    diff_gas_sat = mass[np.logical_and(hmrs > 1, subgrps > 0)].size
-    diff_gas_cent = mass[np.logical_and(hmrs > 1, subgrps == 0)].size
+    okinds = stellar_data[snap]["HMRs"][...] <= 1
+    com_gas_sat = mass[okinds][np.logical_and(
+        hmrs[okinds] <= 1, subgrps[okinds] > 0)].size
+    com_gas_cent = mass[okinds][np.logical_and(
+        hmrs[okinds] <= 1, subgrps[okinds] == 0)].size
+    diff_gas_sat = mass[okinds][np.logical_and(
+        hmrs[okinds] > 1, subgrps[okinds] > 0)].size
+    diff_gas_cent = mass[okinds][np.logical_and(
+        hmrs[okinds] > 1, subgrps[okinds] == 0)].size
 
     print(com_gas_cent, diff_gas_cent, com_gas_sat, diff_gas_sat)
 
