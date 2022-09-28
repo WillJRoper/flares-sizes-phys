@@ -642,8 +642,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             out_r = np.median(out_rs)
 
             # Fit the radial profile
-            grad = (out_ssfr[1] - in_ssfr[0]
-                    ) / (out_r[1] - in_r[0])
+            grad = (out_ssfr - in_ssfr) / (out_r - in_r)
 
             # Include this galaxy's profile
             grads.append(grad)
