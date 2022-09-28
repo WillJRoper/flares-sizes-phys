@@ -504,8 +504,8 @@ def plot_size_change_comp(stellar_data, gas_data, snaps, weight_norm):
     w = np.array(w)
 
     # Get deltas
-    gas_delta_hmr = gas_tot_hmrs - gas_tot_prog_hmrs
-    star_delta_hmr = star_tot_hmrs - star_tot_prog_hmrs
+    gas_delta_hmr = gas_tot_hmrs / gas_tot_prog_hmrs
+    star_delta_hmr = star_tot_hmrs / star_tot_prog_hmrs
 
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
@@ -519,8 +519,9 @@ def plot_size_change_comp(stellar_data, gas_data, snaps, weight_norm):
                    linewidths=0.2, norm=weight_norm, cmap="plasma")
 
     # Axes labels
-    ax.set_xlabel("$\Delta R_\mathrm{gas} / [\mathrm{pkpc}]$")
-    ax.set_ylabel("$\Delta R_\star / [\mathrm{pkpc}]$")
+    ax.set_xlabel(
+        "$R_\mathrm{1/2, \mathrm{gas}}^{B} / R_\mathrm{1/2, \mathrm{gas}}^{A}$")
+    ax.set_ylabel("$R_\mathrm{1/2, \star}^{B} / R_\mathrm{1/2, \star}^{A}$")
 
     cbar = fig.colorbar(im)
     cbar.set_label("$\sum w_{i}$")
@@ -2258,7 +2259,6 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     # Split snapshots into current and progenitor lists
     current_snaps = snaps[1:]
     prog_snaps = snaps[:-1]
-
     # Initialise lists for storing results
     tot_hmrs = []
     tot_prog_hmrs = []

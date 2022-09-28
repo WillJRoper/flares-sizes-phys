@@ -192,6 +192,8 @@ print("Got all data")
 # plot_size_sfr_evo_grid(data["stellar"], flares_snaps)
 
 if rank == 0:
+    plot_size_change_comp(hdf["stellar"], hdf["gas"],
+                          flares_snaps, weight_norm)
     plot_dead_inside(hdf["stellar"], flares_snaps, weight_norm)
     plot_virial_param_profile(hdf, flares_snaps, weight_norm)
     #plot_birth_denmet_vary(flares_snaps[-1], path)
@@ -208,19 +210,19 @@ if rank == 0:
 #plot_formation_size_environ(hdf["stellar"], flares_snaps)
 # if rank == 0:
 #plot_virial_param(hdf, flares_snaps, weight_norm)
-plot_binding_energy(hdf, flares_snaps, weight_norm, comm, size, rank)
-plot_size_change_binding(
-    hdf["stellar"], flares_snaps, weight_norm, comm, size, rank)
-if rank == 0:
-    plot_size_mass_evo_grid(hdf["stellar"], flares_snaps)
-    plot_size_feedback(hdf["stellar"], hdf["stellar"],
-                       flares_snaps, weight_norm, "stellar")
-    plot_size_feedback(hdf["gas"], hdf["stellar"],
-                       flares_snaps, weight_norm, "gas")
-    plot_size_change_comp(hdf["stellar"], hdf["gas"],
-                          flares_snaps, weight_norm)
-    plot_size_change(hdf["stellar"], flares_snaps, "stellar", weight_norm)
-    plot_size_change(hdf["gas"], flares_snaps, "gas", weight_norm)
+# plot_binding_energy(hdf, flares_snaps, weight_norm, comm, size, rank)
+# plot_size_change_binding(
+#     hdf["stellar"], flares_snaps, weight_norm, comm, size, rank)
+# if rank == 0:
+#     plot_size_mass_evo_grid(hdf["stellar"], flares_snaps)
+#     plot_size_feedback(hdf["stellar"], hdf["stellar"],
+#                        flares_snaps, weight_norm, "stellar")
+#     plot_size_feedback(hdf["gas"], hdf["stellar"],
+#                        flares_snaps, weight_norm, "gas")
+#     plot_size_change_comp(hdf["stellar"], hdf["gas"],
+#                           flares_snaps, weight_norm)
+#     plot_size_change(hdf["stellar"], flares_snaps, "stellar", weight_norm)
+#     plot_size_change(hdf["gas"], flares_snaps, "gas", weight_norm)
 
     # # # Plot the physics variation plots
     # # plot_hmr_phys_comp_grid_1kpc(flares_snaps[-1])
