@@ -740,8 +740,11 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
                        C=star_ms[okinds], norm=cm.LogNorm(), xscale="log", yscale="log",
                        reduce_C_function=np.mean, linewidths=0.2, cmap='viridis')
 
-        ax.plot([ax.get_xlim()[0], ax.get_xlim()[1]],
-                [ax.get_ylim()[0], ax.get_ylim()[1]],
+        # Get the limits for 1-1 reltion
+        low = np.min((ax.get_xlim()[0], ax.get_ylim()[0]))
+        up = np.max((ax.get_xlim()[1], ax.get_ylim()[1]))
+
+        ax.plot([low, up], [low, up],
                 color="k", linestyle="--", alpha=0.8)
 
         # Label axes
