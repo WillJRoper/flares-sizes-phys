@@ -635,23 +635,17 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             in_ms = this_ms[all_rs <= r_lim]
             out_ini_ms = this_ini_ms[rs > r_lim]
             out_ms = this_ms[all_rs > r_lim]
-            in_rs = all_rs[all_rs <= r_lim]
-            out_rs = all_rs[all_rs > r_lim]
 
             in_ssfr = np.sum(in_ini_ms) / 100 / np.sum(in_ms)  # 1 / Myr
             out_ssfr = np.sum(out_ini_ms) / 100 / np.sum(out_ms)  # 1 / Myr
-            in_r = np.median(in_rs)
-            out_r = np.median(out_rs)
 
             # Fit the radial profile
-            grad = (out_ssfr - in_ssfr) / (out_r - in_r)
+            grad = in_ssfr / out_ssfr
 
             # Include this galaxy's profile
             grads.append(grad)
             star_ms.append(gal_m)
             all_ws.append(w[igal])
-
-            print(igal, "of", begins.size - 1, end="\r")
 
         # Convert to arrays
         grads = np.array(grads)
@@ -675,7 +669,8 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
 
         # Label axes
         ax.set_xlabel("$M_\star / M_\odot$")
-        ax.set_ylabel("$m$")
+        ax.set_ylabel(
+            "$\mathrm{sSFR}_{\mathrm{in}} / \mathrm{sSFR}_{\mathrm{out}}$")
 
         # Create colorbar
         cb = fig.colorbar(im, cax)
