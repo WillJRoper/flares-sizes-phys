@@ -655,14 +655,13 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
                 continue
 
             # Fit the radial profile
-            popt, pcov = curve_fit(
-                sline,
-                bin_cents[nan_okinds], radial_sfr[nan_okinds],
-                p0=[1, 10**-3]
-            )
+            ind_min = np.argmin(np.abs(rs - plow))
+            ind_max = np.argmax(np.abs(rs - phigh))
+            grad = (radial_sfr[ind_max] - radial_sfr[ind_min]
+                    ) / (rs[ind_max] - rs[ind_min])
 
             # Include this galaxy's profile
-            grads.append(popt[0])
+            grads.append(grad)
             star_ms.append(gal_m)
             all_ws.append(w[igal])
             profs.append(radial_sfr)
