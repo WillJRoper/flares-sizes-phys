@@ -77,11 +77,13 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     plt.close(fig)
 
 
-def plot_gas_hmr(data, snap, weight_norm, cut_on="hmr"):
+def plot_gas_hmr(data, stellar_data, snap, weight_norm, cut_on="hmr"):
+
+    # Set up counters
 
     # Define arrays to store computations
     hmrs = data[snap]["HMRs"][...]
-    mass = data[snap]["mass"][...]
+    mass = stellar_data[snap]["mass"][...]
     den_hmr = data[snap]["apertures"]["density"][cut_on][...]
     w = data[snap]["weight"][...]
 
