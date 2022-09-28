@@ -586,8 +586,8 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         grads = []
         star_ms = []
         all_ws = []
-        profs = []
-        rads = []
+        in_ssfrs = []
+        out_ssfrs = []
 
         # Get data
         ages = stellar_data[snap]["Particle,S_Age"][...] * 1000
@@ -646,11 +646,15 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             grads.append(grad)
             star_ms.append(gal_m)
             all_ws.append(w[igal])
+            in_ssfrs.append(in_ssfr)
+            out_ssfrs.append(out_ssfr)
 
         # Convert to arrays
         grads = np.array(grads)
         star_ms = np.array(star_ms)
         all_ws = np.array(all_ws)
+        in_ssfrs = np.array(in_ssfrs)
+        out_ssfrs = np.array(out_ssfrs)
 
         # Set up plot
         fig = plt.figure(figsize=(3.5, 3.5))
@@ -682,6 +686,40 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         # Save figure
         mkdir("plots/spatial_dist/")
         fig.savefig("plots/spatial_dist/dead_inside_grad_%s.png" % snap,
+                    bbox_inches="tight")
+
+        plt.close(fig)
+
+        # Set up plot
+        fig = plt.figure(figsize=(3.5, 3.5))
+        gs = gridspec.GridSpec(nrows=1, ncols=1 + 1,
+                               width_ratios=[20, ] + [1, ])
+        gs.update(wspace=0.0, hspace=0.0)
+        ax = fig.add_subplot(gs[0, 0])
+        cax = fig.add_subplot(gs[0, 1])
+
+        # Plot stellar_data
+        im = ax.hexbin(in_ssfrs, out_ssfrs, gridsize=30,
+                       mincnt=np.min(all_ws) - (0.1 * np.min(all_ws)),
+                       C=all_ws,
+                       reduce_C_function=np.sum,
+                       norm=weight_norm, linewidths=0.2, cmap='viridis')
+
+        ax.plot([ax.get_xlim()[0], ax.get_xlim()[1]],
+                [ax.get_ylim()[0], ax.get_ylim()[1]],
+                color="k", linestyle="--", alpha=0.8)
+
+        # Label axes
+        ax.set_xlabel("$\mathrm{sSFR}_{\mathrm{in}}$")
+        ax.set_ylabel("$\mathrm{sSFR}_{\mathrm{out}}$")
+
+        # Create colorbar
+        cb = fig.colorbar(im, cax)
+        cb.set_label("$\sum w_{i}$")
+
+        # Save figure
+        mkdir("plots/spatial_dist/")
+        fig.savefig("plots/spatial_dist/dead_inside_ssfrs_%s.png" % snap,
                     bbox_inches="tight")
 
         plt.close(fig)
