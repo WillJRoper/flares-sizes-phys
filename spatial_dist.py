@@ -701,7 +701,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         # Plot stellar_data
         im = ax.hexbin(in_ssfrs, out_ssfrs, gridsize=30,
                        mincnt=np.min(all_ws) - (0.1 * np.min(all_ws)),
-                       C=star_ms,
+                       C=star_ms, norm=cm.LogNorm(),
                        reduce_C_function=np.mean, linewidths=0.2, cmap='viridis')
 
         ax.plot([ax.get_xlim()[0], ax.get_xlim()[1]],
@@ -709,8 +709,10 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
                 color="k", linestyle="--", alpha=0.8)
 
         # Label axes
-        ax.set_xlabel("$\mathrm{sSFR}_{\mathrm{in}}$")
-        ax.set_ylabel("$\mathrm{sSFR}_{\mathrm{out}}$")
+        ax.set_xlabel(
+            "$\mathrm{sSFR}^{\mathrm{in}}_{100} / [\mathrm{Myr}^{-1}]$")
+        ax.set_ylabel(
+            "$\mathrm{sSFR}^{\mathrm{out}}_{100} / [\mathrm{Myr}^{-1}]$")
 
         # Create colorbar
         cb = fig.colorbar(im, cax)
@@ -719,6 +721,42 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         # Save figure
         mkdir("plots/spatial_dist/")
         fig.savefig("plots/spatial_dist/dead_inside_ssfrs_%s.png" % snap,
+                    bbox_inches="tight")
+
+        plt.close(fig)
+
+        # Set up plot
+        fig = plt.figure(figsize=(3.5, 3.5))
+        gs = gridspec.GridSpec(nrows=1, ncols=1 + 1,
+                               width_ratios=[20, ] + [1, ])
+        gs.update(wspace=0.0, hspace=0.0)
+        ax = fig.add_subplot(gs[0, 0])
+        cax = fig.add_subplot(gs[0, 1])
+
+        # Plot stellar_data
+        okinds = np.logical_and(in_ssfrs > 0, out_ssfrs > 0)
+        im = ax.hexbin(in_ssfrs[okinds], out_ssfrs[okinds], gridsize=30,
+                       mincnt=0,
+                       C=star_ms[okinds], norm=cm.LogNorm(), xscale="log", yscale="log",
+                       reduce_C_function=np.mean, linewidths=0.2, cmap='viridis')
+
+        ax.plot([ax.get_xlim()[0], ax.get_xlim()[1]],
+                [ax.get_ylim()[0], ax.get_ylim()[1]],
+                color="k", linestyle="--", alpha=0.8)
+
+        # Label axes
+        ax.set_xlabel(
+            "$\mathrm{sSFR}^{\mathrm{in}}_{100} / [\mathrm{Myr}^{-1}]$")
+        ax.set_ylabel(
+            "$\mathrm{sSFR}^{\mathrm{out}}_{100} / [\mathrm{Myr}^{-1}]$")
+
+        # Create colorbar
+        cb = fig.colorbar(im, cax)
+        cb.set_label("$M_\star / M_\odot$")
+
+        # Save figure
+        mkdir("plots/spatial_dist/")
+        fig.savefig("plots/spatial_dist/dead_inside_ssfrs_logged%s.png" % snap,
                     bbox_inches="tight")
 
         plt.close(fig)
