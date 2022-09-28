@@ -701,8 +701,8 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         # Plot stellar_data
         im = ax.hexbin(in_ssfrs, out_ssfrs, gridsize=30,
                        mincnt=np.min(all_ws) - (0.1 * np.min(all_ws)),
-                       C=all_ws,
-                       reduce_C_function=np.sum,
+                       C=star_ms,
+                       reduce_C_function=np.mean,
                        norm=weight_norm, linewidths=0.2, cmap='viridis')
 
         ax.plot([ax.get_xlim()[0], ax.get_xlim()[1]],
@@ -715,7 +715,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
 
         # Create colorbar
         cb = fig.colorbar(im, cax)
-        cb.set_label("$\sum w_{i}$")
+        cb.set_label("$M_\star / M_\odot$")
 
         # Save figure
         mkdir("plots/spatial_dist/")
