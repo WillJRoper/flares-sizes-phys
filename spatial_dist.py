@@ -620,7 +620,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             nstar_100 = ini_ms[b: b + nstar][okinds[b: b + nstar]].size
 
             # Ignore anomalous galaxies and low mass galaxies
-            if hmr <= 0 or gal_m < 10 ** 9 or nstar_100 == 0:
+            if hmr <= 0 or nstar_100 == 0:
                 continue
 
             # Get this galaxy's data
