@@ -588,6 +588,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         all_ws = []
         in_ssfrs = []
         out_ssfrs = []
+        sfrs = []
 
         # Get data
         ages = stellar_data[snap]["Particle,S_Age"][...] * 1000
@@ -620,7 +621,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             nstar_100 = ini_ms[b: b + nstar][okinds[b: b + nstar]].size
 
             # Ignore anomalous galaxies and low mass galaxies
-            if hmr <= 0 or nstar_100 == 0:
+            if hmr <= 0 or nstar_100 < 100:
                 continue
 
             # Get this galaxy's data
@@ -638,6 +639,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
 
             in_ssfr = np.sum(in_ini_ms) / 100 / np.sum(in_ms)  # 1 / Myr
             out_ssfr = np.sum(out_ini_ms) / 100 / np.sum(out_ms)  # 1 / Myr
+            ssfr = np.sum(this_ini_ms) / 100 / gal_m
 
             # Fit the radial profile
             grad = in_ssfr / out_ssfr
@@ -648,6 +650,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             all_ws.append(w[igal])
             in_ssfrs.append(in_ssfr)
             out_ssfrs.append(out_ssfr)
+            sfrs.append(ssfr)
 
         # Convert to arrays
         grads = np.array(grads)
@@ -655,6 +658,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         all_ws = np.array(all_ws)
         in_ssfrs = np.array(in_ssfrs)
         out_ssfrs = np.array(out_ssfrs)
+        ssfrs = np.array(ssfrs)
 
         # Set up plot
         fig = plt.figure(figsize=(3.5, 3.5))
@@ -763,6 +767,70 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         # Save figure
         mkdir("plots/spatial_dist/")
         fig.savefig("plots/spatial_dist/dead_inside_ssfrs_logged%s.png" % snap,
+                    bbox_inches="tight")
+
+        plt.close(fig)
+
+        # Set up plot
+        fig = plt.figure(figsize=(3.5, 3.5))
+        gs = gridspec.GridSpec(nrows=1, ncols=1 + 1,
+                               width_ratios=[20, ] + [1, ])
+        gs.update(wspace=0.0, hspace=0.0)
+        ax = fig.add_subplot(gs[0, 0])
+        cax = fig.add_subplot(gs[0, 1])
+
+        # Plot stellar_data
+        okinds = np.logical_and(ssfrs > 0, out_ssfrs > 0)
+        im = ax.hexbin(ssfrs[okinds], out_ssfrs[okinds], gridsize=30,
+                       mincnt=0,
+                       C=star_ms[okinds], norm=cm.LogNorm(), xscale="log", yscale="log",
+                       reduce_C_function=np.mean, linewidths=0.2, cmap='viridis')
+
+        # Label axes
+        ax.set_xlabel(
+            "$\mathrm{sSFR}_{100} / [\mathrm{Myr}^{-1}]$")
+        ax.set_ylabel(
+            "$\mathrm{sSFR}^{\mathrm{out}}_{100} / [\mathrm{Myr}^{-1}]$")
+
+        # Create colorbar
+        cb = fig.colorbar(im, cax)
+        cb.set_label("$M_\star / M_\odot$")
+
+        # Save figure
+        mkdir("plots/spatial_dist/")
+        fig.savefig("plots/spatial_dist/dead_outside_vsssfr%s.png" % snap,
+                    bbox_inches="tight")
+
+        plt.close(fig)
+
+        # Set up plot
+        fig = plt.figure(figsize=(3.5, 3.5))
+        gs = gridspec.GridSpec(nrows=1, ncols=1 + 1,
+                               width_ratios=[20, ] + [1, ])
+        gs.update(wspace=0.0, hspace=0.0)
+        ax = fig.add_subplot(gs[0, 0])
+        cax = fig.add_subplot(gs[0, 1])
+
+        # Plot stellar_data
+        okinds = np.logical_and(ssfrs > 0, out_ssfrs > 0)
+        im = ax.hexbin(ssfrs[okinds], in_ssfrs[okinds], gridsize=30,
+                       mincnt=0,
+                       C=star_ms[okinds], norm=cm.LogNorm(), xscale="log", yscale="log",
+                       reduce_C_function=np.mean, linewidths=0.2, cmap='viridis')
+
+        # Label axes
+        ax.set_xlabel(
+            "$\mathrm{sSFR}_{100} / [\mathrm{Myr}^{-1}]$")
+        ax.set_ylabel(
+            "$\mathrm{sSFR}^{\mathrm{in}}_{100} / [\mathrm{Myr}^{-1}]$")
+
+        # Create colorbar
+        cb = fig.colorbar(im, cax)
+        cb.set_label("$M_\star / M_\odot$")
+
+        # Save figure
+        mkdir("plots/spatial_dist/")
+        fig.savefig("plots/spatial_dist/dead_inside_vsssfr%s.png" % snap,
                     bbox_inches="tight")
 
         plt.close(fig)
