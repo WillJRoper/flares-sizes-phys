@@ -636,7 +636,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
                                       sample_weight=ms[b: b + nstar][app])
 
             # Define radial bins
-            radial_bins = np.linspace(plow, phigh, 5)
+            radial_bins = np.linspace(plow, phigh, 100)
             bin_cents = (radial_bins[:-1] + radial_bins[1:]) / 2
 
             # Derive radial sfr profile
@@ -655,10 +655,8 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
                 continue
 
             # Fit the radial profile
-            ind_min = np.argmin(np.abs(rs - plow))
-            ind_max = np.argmax(np.abs(rs - phigh))
-            grad = (radial_sfr[ind_max] - radial_sfr[ind_min]
-                    ) / (rs[ind_max] - rs[ind_min])
+            grad = (radial_sfr[1] - radial_sfr[0]
+                    ) / (bin_cents[1] - bin_cents[0])
 
             # Include this galaxy's profile
             grads.append(grad)
