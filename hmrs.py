@@ -80,10 +80,10 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
 def plot_gas_hmr(data, snap, weight_norm, cut_on="hmr"):
 
     # Define arrays to store computations
-    hmrs = data["HMRs"]
-    mass = data["mass"]
-    den_hmr = data["apertures"]["density"][cut_on]
-    w = data["weight"]
+    hmrs = data[snap]["HMRs"][...]
+    mass = data[snap]["mass"][...]
+    den_hmr = data[snap]["apertures"]["density"][cut_on][...]
+    w = data[snap]["weight"][...]
 
     # Remove galaxies without stars
     okinds = np.logical_and(mass > 0, hmrs > 0)
