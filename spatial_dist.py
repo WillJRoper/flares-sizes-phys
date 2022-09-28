@@ -812,7 +812,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         cax = fig.add_subplot(gs[0, 1])
 
         # Plot stellar_data
-        okinds = np.logical_and(ssfrs > 0, out_ssfrs > 0)
+        okinds = np.logical_and(ssfrs > 0, in_ssfrs > 0)
         im = ax.hexbin(ssfrs[okinds], in_ssfrs[okinds], gridsize=30,
                        mincnt=0,
                        C=star_ms[okinds], norm=cm.LogNorm(), xscale="log", yscale="log",
