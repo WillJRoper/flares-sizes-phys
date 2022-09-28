@@ -77,6 +77,50 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     plt.close(fig)
 
 
+def plot_gas_hmr(data, snap, weight_norm, cut_on="hmr"):
+
+    # Define arrays to store computations
+    hmrs = data["HMRs"]
+    mass = data["mass"]
+    den_hmr = data["apertures"]["density"][cut_on]
+    w = data["weight"]
+
+    # Remove galaxies without stars
+    okinds = np.logical_and(mass > 0, hmrs > 0)
+    print("Galaxies before spurious cut: %d" % mass.size)
+    mass = mass[okinds]
+    hmrs = hmrs[okinds]
+    den_hmr = den_hmr[okinds]
+    w = w[okinds]
+    print("Galaxies after spurious cut: %d" % mass.size)
+
+    # Set up plot
+    fig = plt.figure(figsize=(3.5, 3.5))
+    ax = fig.add_subplot(111)
+    ax.loglog()
+
+    # Plot stellar_data
+    im = ax.hexbin(mass, hmrs, gridsize=30,
+                   mincnt=np.min(w) - (0.1 * np.min(w)),
+                   C=w, extent=[8, 11.2, -1, 1.3],
+                   reduce_C_function=np.sum, xscale='log', yscale='log',
+                   norm=weight_norm, linewidths=0.2, cmap='viridis')
+
+    # Label axes
+    ax.set_xlabel("$M_\star / M_\odot$")
+    ax.set_ylabel("$R_{1/2} / [\mathrm{pkpc}]$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$\sum w_{i}$")
+
+    # Save figure
+    mkdir("plots/gas_hmr/")
+    fig.savefig("plots/gas_hmr/gas_hmr_%s.png" % snap,
+                bbox_inches="tight")
+
+    plt.close(fig)
+
+
 def plot_eagle_stellar_hmr(snap):
 
     path = "/cosma7/data/Eagle/ScienceRuns/Planck1/L0100N1504/PE/REFERENCE/data"

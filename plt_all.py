@@ -192,6 +192,7 @@ print("Got all data")
 # plot_size_sfr_evo_grid(data["stellar"], flares_snaps)
 
 if rank == 0:
+    plot_gas_hmr(hdf["gas"], flares_snaps[-1], weight_norm)
     plot_size_change_comp(hdf["stellar"], hdf["gas"],
                           flares_snaps, weight_norm)
     plot_dead_inside(hdf["stellar"], flares_snaps, weight_norm)
