@@ -637,9 +637,9 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             out_ini_ms = this_ini_ms[rs > r_lim]
             out_ms = this_ms[all_rs > r_lim]
 
-            in_ssfr = np.sum(in_ini_ms) / 100 / np.sum(in_ms)  # 1 / Myr
-            out_ssfr = np.sum(out_ini_ms) / 100 / np.sum(out_ms)  # 1 / Myr
-            ssfr = np.sum(this_ini_ms) / 100 / gal_m
+            in_ssfr = np.sum(in_ini_ms) / 100   # 1 / Myr
+            out_ssfr = np.sum(out_ini_ms) / 100   # 1 / Myr
+            ssfr = np.sum(this_ini_ms) / 100
 
             # Fit the radial profile
             grad = in_ssfr / out_ssfr
@@ -681,7 +681,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         # Label axes
         ax.set_xlabel("$M_\star / M_\odot$")
         ax.set_ylabel(
-            "$\mathrm{sSFR}_{\mathrm{in}} / \mathrm{sSFR}_{\mathrm{out}}$")
+            "$\mathrm{SFR}_{\mathrm{in}} / \mathrm{SFR}_{\mathrm{out}}$")
 
         # Create colorbar
         cb = fig.colorbar(im, cax)
@@ -717,9 +717,9 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
 
         # Label axes
         ax.set_xlabel(
-            "$\mathrm{sSFR}^{\mathrm{in}}_{100} / [\mathrm{Myr}^{-1}]$")
+            "$\mathrm{SFR}^{\mathrm{in}}_{100} / [M_\odot \mathrm{Myr}^{-1}]$")
         ax.set_ylabel(
-            "$\mathrm{sSFR}^{\mathrm{out}}_{100} / [\mathrm{Myr}^{-1}]$")
+            "$\mathrm{SFR}^{\mathrm{out}}_{100} / [M_\odot \mathrm{Myr}^{-1}]$")
 
         # Create colorbar
         cb = fig.colorbar(im, cax)
@@ -756,9 +756,9 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
 
         # Label axes
         ax.set_xlabel(
-            "$\mathrm{sSFR}^{\mathrm{in}}_{100} / [\mathrm{Myr}^{-1}]$")
+            "$\mathrm{SFR}^{\mathrm{in}}_{100} / [M_\odot \mathrm{Myr}^{-1}]$")
         ax.set_ylabel(
-            "$\mathrm{sSFR}^{\mathrm{out}}_{100} / [\mathrm{Myr}^{-1}]$")
+            "$\mathrm{SFR}^{\mathrm{out}}_{100} / [M_\odot \mathrm{Myr}^{-1}]$")
 
         # Create colorbar
         cb = fig.colorbar(im, cax)
@@ -788,9 +788,9 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
 
         # Label axes
         ax.set_xlabel(
-            "$\mathrm{sSFR}_{100} / [\mathrm{Myr}^{-1}]$")
+            "$\mathrm{SFR}_{100} / [M_\odot \mathrm{Myr}^{-1}]$")
         ax.set_ylabel(
-            "$\mathrm{sSFR}^{\mathrm{out}}_{100} / [\mathrm{Myr}^{-1}]$")
+            "$\mathrm{SFR}^{\mathrm{out}}_{100} / [M_\odot \mathrm{Myr}^{-1}]$")
 
         # Create colorbar
         cb = fig.colorbar(im, cax)
@@ -820,9 +820,9 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
 
         # Label axes
         ax.set_xlabel(
-            "$\mathrm{sSFR}_{100} / [\mathrm{Myr}^{-1}]$")
+            "$\mathrm{SFR}_{100} / [M_\odot \mathrm{Myr}^{-1}]$")
         ax.set_ylabel(
-            "$\mathrm{sSFR}^{\mathrm{in}}_{100} / [\mathrm{Myr}^{-1}]$")
+            "$\mathrm{SFR}^{\mathrm{in}}_{100} / [M_\odot \mathrm{Myr}^{-1}]$")
 
         # Create colorbar
         cb = fig.colorbar(im, cax)
