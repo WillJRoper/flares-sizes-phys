@@ -588,7 +588,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
         all_ws = []
         in_ssfrs = []
         out_ssfrs = []
-        sfrs = []
+        ssfrs = []
 
         # Get data
         ages = stellar_data[snap]["Particle,S_Age"][...] * 1000
@@ -650,7 +650,7 @@ def plot_dead_inside(stellar_data, snaps, weight_norm):
             all_ws.append(w[igal])
             in_ssfrs.append(in_ssfr)
             out_ssfrs.append(out_ssfr)
-            sfrs.append(ssfr)
+            ssfrs.append(ssfr)
 
         # Convert to arrays
         grads = np.array(grads)
