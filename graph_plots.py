@@ -514,7 +514,7 @@ def plot_size_change_comp(stellar_data, gas_data, snaps, weight_norm):
     # Plot the scatter
     im = ax.hexbin(gas_delta_hmr, star_delta_hmr, gridsize=30,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w,
+                   C=w, xscale="log", yscale="log",
                    reduce_C_function=np.sum,
                    linewidths=0.2, norm=weight_norm, cmap="plasma")
 
