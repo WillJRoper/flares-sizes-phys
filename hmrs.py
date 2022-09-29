@@ -9,6 +9,7 @@ from matplotlib.colors import LogNorm
 from scipy.spatial import cKDTree
 import numpy as np
 import pandas as pd
+from utils import mkdir, plot_meidan_stat
 from utils import calc_3drad, calc_light_mass_rad, mkdir, get_pixel_hlr
 import eagle_IO.eagle_IO as eagle_io
 
@@ -110,6 +111,7 @@ def plot_gas_hmr(data, stellar_data, snap, weight_norm, cut_on="hmr"):
         hmrs[okinds] > 1, subgrps[okinds] == 0)].size
 
     print(com_gas_cent, diff_gas_cent, com_gas_sat, diff_gas_sat)
+    # 7 2050 418 403
 
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
@@ -520,3 +522,170 @@ def visualise_gas(stellar_data, gas_data, snap, path):
     mkdir("plots/images/")
     fig.savefig("plots/images/gas_dist_stack_%s.png" % snap,
                 bbox_inches="tight")
+
+
+def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
+
+    # Load weights
+    df = pd.read_csv('../weight_files/weights_grid.txt')
+    weights = np.array(df['weights'])
+
+    # Define redshift
+    z = float(snap.split("z")[-1].replace("p", "."))
+
+    # Define path for the master file
+    master_base = \
+        "/cosma7/data/dp004/dc-payy1/my_files/flares_pipeline/data/flares.hdf5"
+
+    # Open the master file
+    hdf = h5py.File(master_base, "r")
+
+    # Set up array to store sfrs
+    w_hmrs = []
+    s_hmrs = []
+    ms = []
+    ws = []
+
+    for reg in regions:
+
+        print(reg)
+
+        path = ini_path.replace("<reg>", reg)
+
+        gal_grp = hdf[reg][snap]["Galaxy"]
+        part_grp = hdf[reg][snap]["Particle"]
+
+        nstar = gal_grp["S_Length"][...]
+        ngas = gal_grp["G_Length"][...]
+        mass = gal_grp["Mstar_aperture"]["30"][...]
+        hmrs = gal_grp["HalfMassRad"][:, 4] * 10 ** 3
+        cops = gal_grp["COP"][...] * 1000
+        grps = gal_grp["GroupNumber"][...]
+        subgrps = gal_grp["SubGroupNumber"][...]
+        g_mass = part_grp["G_Mass"][...] * 10 ** 10
+        coords = part_grp["G_Coordinates"][...] * 1000
+        master_g_ids = part_grp["G_ID"][...]
+        g_dens = eagle_io.read_array("PARTDATA", path,
+                                     snap,
+                                     "PartType0/Density",
+                                     noH=True, physicalUnits=True,
+                                     numThreads=8)
+        g_IDs = eagle_io.read_array("PARTDATA", path,
+                                    snap,
+                                    "PartType0/ParticleIDs",
+                                    noH=True, physicalUnits=True,
+                                    numThreads=8)
+        g_grps = eagle_io.read_array("PARTDATA", path,
+                                     snap,
+                                     "PartType0/GroupNumber",
+                                     noH=True, physicalUnits=True,
+                                     numThreads=8)
+
+        # Create index pointer for gas
+        gas_begin = np.zeros(len(nstar))
+        gas_begin[1:] = np.cumsum(ngas[:-1])
+
+        # Apply some cuts
+        mokinds = np.logical_and(nstar > 100, ngas > 0)
+        mass = mass[mokinds]
+        cops = cops[mokinds, :]
+        grps = grps[mokinds]
+        subgrps = subgrps[mokinds]
+        hmrs = hmrs[mokinds]
+        nstar = nstar[mokinds]
+        ngas = ngas[mokinds]
+        gas_begin[mokinds]
+
+        # Loop over galaxies
+        for igal in range(mass.size):
+
+            print(igal)
+
+            # Get galaxy data
+            begin = gas_begin[igal]
+            end = begin + ngas[igal]
+            m = mass[igal]
+            cop = cops[igal, :]
+            g = grps[igal]
+            sg = subgrps[igal]
+            hmr = hmrs[igal]
+
+            # Get the master file particle data
+            this_coords = coords[begin: end, :] - cop
+            this_m_gids = master_g_ids[begin: end]
+            this_gmass = g_mass[begin: end]
+
+            # Get only this group from the raw data
+            grp_okinds = g_grps == g
+            sub_g_dens = g_dens[grp_okinds]
+            sub_g_IDS = g_IDs[grp_okinds]
+
+            # Set up array for densities
+            this_den = np.zeros(ngas[igal])
+
+            # Loop over particles getting density
+            for ind, gid in enumerate(this_m_gids):
+
+                this_den[ind] = sub_g_dens[np.where(sub_g_IDS == gid)]
+
+            # Compute stellar radii
+            rs = np.sqrt(this_coords[:, 0] ** 2
+                         + this_coords[:, 1] ** 2
+                         + this_coords[:, 2] ** 2)
+
+            # Get only particles within the aperture
+            rokinds = rs < 30
+            rs = rs[rokinds]
+            this_den = this_den[rokinds]
+            this_gmass = this_gmass[rokinds]
+
+            # Calculate weighted hmr
+            weighted_mass = this_gmass * this_den / np.sum(this_den)
+            tot = np.sum(weighted_mass)
+            half = tot / 2
+            sinds = np.argsort(rs)
+            rs = rs[sinds]
+            weighted_mass = weighted_mass[sinds]
+            summed_mass = np.cumsum(weighted_mass)
+            g_hmr = rs[np.argmin(np.abs(summed_mass - half))]
+
+            # Compute and store ssfr
+            w_hmrs.append(g_hmr)
+            ms.append(m)
+            s_hmrs.append(hmr)
+            ws.append(weights[int(reg)])
+
+    # Convert to arrays
+    w_hmrs = np.array(w_hmrs)
+    ms = np.array(ms)
+    s_hmrs = np.array(s_hmrs)
+    ws = np.array(ws)
+
+    # Define hexbin extent
+    extent = [8, 11.5, -1.5, 1.5]
+
+    # Define bins
+    bin_edges = np.logspace(extent[0], extent[1], 20)
+
+    # Set up figure
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+
+    ax.hexbin(ms, w_hmrs / s_hmrs,
+              mincnt=np.min(ws) - (0.1 * np.min(ws)),
+              C=ws, gridsize=50,
+              xscale="log", yscale="log", linewidth=0.2,
+              cmap="plasma", norm=weight_norm, extent=extent)
+    plot_meidan_stat(ms, w_hmrs / s_hmrs, ws,
+                     ax, "", "r", bin_edges)
+
+    # Label axes
+    ax.set_ylabel(r"$R_{gas,1/2} / R_{\star,1/2}$")
+    ax.set_xlabel(r"$M_\star / M_\odot$")
+
+    # Save figure
+    mkdir("plots/hmrs/")
+    fig.savefig("plots/hmrs/flares_weight_gas_hmr_ratio_mass%s.png" % snap,
+                bbox_inches="tight")
+
+    hdf.close()
