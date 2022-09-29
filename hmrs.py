@@ -582,7 +582,7 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
                                      numThreads=8)
 
         # Create index pointer for gas
-        gas_begin = np.zeros(len(nstar))
+        gas_begin = np.zeros(len(nstar), dtype=int)
         gas_begin[1:] = np.cumsum(ngas[:-1])
 
         # Apply some cuts
