@@ -559,11 +559,11 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
         ngas = gal_grp["G_Length"][...]
         mass = gal_grp["Mstar_aperture"]["30"][...]
         hmrs = gal_grp["HalfMassRad"][:, 4] * 10 ** 3
-        cops = gal_grp["COP"][...] * 1000
+        cops = gal_grp["COP"][...].T * 1000
         grps = gal_grp["GroupNumber"][...]
         subgrps = gal_grp["SubGroupNumber"][...]
         g_mass = part_grp["G_Mass"][...] * 10 ** 10
-        coords = part_grp["G_Coordinates"][...] * 1000
+        coords = part_grp["G_Coordinates"][...].T * 1000
         master_g_ids = part_grp["G_ID"][...]
         g_dens = eagle_io.read_array("PARTDATA", path,
                                      snap,
