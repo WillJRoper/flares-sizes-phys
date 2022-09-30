@@ -656,7 +656,8 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
             this_den = this_den[rokinds]
             this_gmass = this_gmass[rokinds]
 
-            if this_gmass.size
+            if this_gmass.size == 0:
+                continue
 
             # Calculate weighted hmr
             weighted_mass = this_gmass * this_den / np.sum(this_den)
