@@ -627,7 +627,7 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
 
             # If we don't have all the particles we need to search the whole
             # group
-            if sub_g_dens.size != ngas:
+            if sub_g_dens.size != ngas[igal]:
 
                 print("Galaxy (%d, %d) is incomplete, missing %d particles"
                       % (g, sg, ngas - sub_g_dens))
