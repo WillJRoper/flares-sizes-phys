@@ -654,7 +654,14 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
                     if this_den[ind] > 0:
                         continue
 
-                    this_den[ind] = grp_g_dens[np.where(grp_gids == gid)]
+                    ind = np.where(grp_gids == gid)
+
+                    if ind.size > 1:
+                        print("found more than one", ind, gid)
+                    elif ind.size == 0:
+                        print("found none", ind, gid)
+
+                    this_den[ind] = grp_g_dens[ind]
 
             # Compute stellar radii
             rs = np.sqrt(this_coords[:, 0] ** 2
