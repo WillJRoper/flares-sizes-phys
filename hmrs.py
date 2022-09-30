@@ -580,6 +580,11 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
                                      "PartType0/GroupNumber",
                                      noH=True, physicalUnits=True,
                                      numThreads=8)
+        g_subgrps = eagle_io.read_array("PARTDATA", path,
+                                        snap,
+                                        "PartType0/SubGroupNumber",
+                                        noH=True, physicalUnits=True,
+                                        numThreads=8)
 
         # Create index pointer for gas
         gas_begin = np.zeros(len(nstar), dtype=int)
@@ -615,10 +620,22 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
             this_m_gids = master_g_ids[begin: end]
             this_gmass = g_mass[begin: end]
 
-            # Get only this group from the raw data
-            grp_okinds = g_grps == g
-            sub_g_dens = g_dens[grp_okinds]
-            sub_g_IDS = g_IDs[grp_okinds]
+            # Get only this group and subgroup from the raw data
+            grpsub_okinds = np.logical_and(g_grps == g, g_subgrps == sg)
+            sub_g_dens = g_dens[grpsub_okinds]
+            sub_g_IDS = g_IDs[grpsub_okinds]
+
+            # If we don't have all the particles we need to search the whole
+            # group
+            if sub_g_dens.size != ngas:
+
+                print("Galaxy (%d, %d) is incomplete, missing %d particles"
+                      % (g, sg, ngas - sub_g_dens))
+
+                # Get only this group from the raw data
+                grp_okinds = g_grps == g
+                sub_g_dens = g_dens[grp_okinds]
+                sub_g_IDS = g_IDs[grp_okinds]
 
             # Set up array for densities
             this_den = np.zeros(ngas[igal])
@@ -638,6 +655,8 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
             rs = rs[rokinds]
             this_den = this_den[rokinds]
             this_gmass = this_gmass[rokinds]
+
+            if this_gmass.size
 
             # Calculate weighted hmr
             weighted_mass = this_gmass * this_den / np.sum(this_den)
