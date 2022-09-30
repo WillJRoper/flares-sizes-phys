@@ -599,7 +599,10 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
         hmrs = hmrs[mokinds]
         nstar = nstar[mokinds]
         ngas = ngas[mokinds]
-        gas_begin[mokinds]
+        gas_begin = gas_begin[mokinds]
+
+        # Start a set to log combined subgroups
+        spurious = set()
 
         # Loop over galaxies
         for igal in range(mass.size):
@@ -614,6 +617,9 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
             g = grps[igal]
             sg = subgrps[igal]
             hmr = hmrs[igal]
+
+            if (g, sg) in spurious:
+                continue
 
             # Get the master file particle data
             this_coords = coords[begin: end, :] - cop
@@ -634,12 +640,12 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
             # Assign particles in this subgroup
             for ind, gid in enumerate(this_m_gids):
 
-                ind = np.where(grpsub_gids == gid)[0]
+                raw_ind = np.where(grpsub_gids == gid)[0]
 
-                if ind.size == 0:
+                if raw_ind.size == 0:
                     continue
 
-                this_den[ind] = grpsub_g_dens[ind]
+                this_den[ind] = grpsub_g_dens[raw_ind]
 
             # If we don't have all the particles we need to search the whole
             # group
@@ -654,14 +660,19 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
                     if this_den[ind] > 0:
                         continue
 
-                    ind = np.where(grp_gids == gid)
+                    raw_ind = np.where(grp_gids == gid)
 
                     if ind.size > 1:
-                        print("found more than one", ind, gid)
+                        print("found more than one", raw_ind, gid)
                     elif ind.size == 0:
-                        print("found none", ind, gid)
+                        print("found none", raw_ind, gid)
 
-                    this_den[ind] = grp_g_dens[ind]
+                    this_den[ind] = grp_g_dens[raw_ind]
+
+                    # Flag this particles galaxy as spurious
+                    spurious.update({(g_grps[raw_ind], g_subgrps[raw_ind]), })
+
+                print(spurious)
 
             # Compute stellar radii
             rs = np.sqrt(this_coords[:, 0] ** 2
