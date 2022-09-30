@@ -668,7 +668,8 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
                     this_den[ind] = grp_g_dens[raw_ind]
 
                     # Flag this particles galaxy as spurious
-                    spurious.update({(g_grps[raw_ind], g_subgrps[raw_ind]), })
+                    spurious.update(
+                        {(g_grps[raw_ind[0]], g_subgrps[raw_ind[0]]), })
 
                 print(spurious)
 
