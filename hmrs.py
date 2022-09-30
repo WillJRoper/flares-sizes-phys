@@ -622,28 +622,39 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
 
             # Get only this group and subgroup from the raw data
             grpsub_okinds = np.logical_and(g_grps == g, g_subgrps == sg)
-            sub_g_dens = g_dens[grpsub_okinds]
-            sub_g_IDS = g_IDs[grpsub_okinds]
-
-            # If we don't have all the particles we need to search the whole
-            # group
-            if sub_g_dens.size != ngas[igal]:
-
-                print("Galaxy (%d, %d) is incomplete, missing %d particles of %d"
-                      % (g, sg, ngas[igal] - sub_g_dens.size, ngas[igal]))
-
-                # Get only this group from the raw data
-                grp_okinds = g_grps == g
-                sub_g_dens = g_dens[grp_okinds]
-                sub_g_IDS = g_IDs[grp_okinds]
+            grpsub_g_dens = g_dens[grpsub_okinds]
+            grpsub_gids = g_IDs[grpsub_okinds]
+            grp_okinds = g_grps == g
+            grp_g_dens = g_dens[grp_okinds]
+            grp_gids = g_IDs[grp_okinds]
 
             # Set up array for densities
             this_den = np.zeros(ngas[igal])
 
-            # Loop over particles getting density
+            # Assign particles in this subgroup
             for ind, gid in enumerate(this_m_gids):
 
-                this_den[ind] = sub_g_dens[np.where(sub_g_IDS == gid)]
+                ind = np.where(grpsub_gids == gid)[0]
+
+                if ind.size == 0:
+                    continue
+
+                this_den[ind] = grpsub_g_dens[ind]
+
+            # If we don't have all the particles we need to search the whole
+            # group
+            if grpsub_g_dens.size != ngas[igal]:
+
+                print("Galaxy (%d, %d) is incomplete, missing %d particles of %d"
+                      % (g, sg, ngas[igal] - grpsub_g_dens.size, ngas[igal]))
+
+                # Loop over particles getting density
+                for ind, gid in enumerate(this_m_gids):
+
+                    if this_den[ind] > 0:
+                        continue
+
+                    this_den[ind] = grp_g_dens[np.where(grp_gids == gid)]
 
             # Compute stellar radii
             rs = np.sqrt(this_coords[:, 0] ** 2
