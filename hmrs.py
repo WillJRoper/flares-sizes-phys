@@ -723,7 +723,7 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
               mincnt=np.min(ws) - (0.1 * np.min(ws)),
               C=ws, gridsize=50,
               xscale="log", yscale="log", linewidth=0.2,
-              cmap="plasma", norm=weight_norm, extent=extent)
+              cmap="plasma", norm=weight_norm)
     plot_meidan_stat(ms, w_hmrs / s_hmrs, ws,
                      ax, "", "r", bin_edges)
 
