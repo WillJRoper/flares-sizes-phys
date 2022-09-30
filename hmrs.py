@@ -660,7 +660,7 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
                     if this_den[ind] > 0:
                         continue
 
-                    raw_ind = np.where(grp_gids == gid)
+                    raw_ind = np.where(grp_gids == gid)[0]
 
                     if not isinstance(raw_ind, int):
                         print("found more than one", raw_ind, gid)
