@@ -729,17 +729,20 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
-    ax.hexbin(ms, w_hmrs / s_hmrs,
-              mincnt=np.min(ws) - (0.1 * np.min(ws)),
-              C=ws, gridsize=50, reduce_C_function=np.sum,
-              xscale="log", yscale="log", linewidth=0.2,
-              cmap="plasma", norm=weight_norm)
+    im = ax.hexbin(ms, w_hmrs / s_hmrs,
+                   mincnt=np.min(ws) - (0.1 * np.min(ws)),
+                   C=ws, gridsize=50, reduce_C_function=np.sum,
+                   xscale="log", yscale="log", linewidth=0.2,
+                   cmap="plasma", norm=weight_norm)
     plot_meidan_stat(ms, w_hmrs / s_hmrs, ws,
                      ax, "", "r", bin_edges)
 
     # Label axes
     ax.set_ylabel(r"$R_{gas,1/2} / R_{\star,1/2}$")
     ax.set_xlabel(r"$M_\star / M_\odot$")
+
+    cbar = fig.colorbar(im)
+    cbar.set_label("$\sum w_i$")
 
     # Save figure
     mkdir("plots/hmrs/")
