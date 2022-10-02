@@ -689,7 +689,7 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
                          + this_coords[:, 2] ** 2)
 
             # Get only particles within the aperture
-            rokinds = rs < 30
+            rokinds = rs < 0.03
             rs = rs[rokinds]
             this_den = this_den[rokinds]
             this_gmass = this_gmass[rokinds]
