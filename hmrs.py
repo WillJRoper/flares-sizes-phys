@@ -640,7 +640,7 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
                 # Sort by index
                 sinds = np.argsort(this_m_gids)
                 this_coords = this_coords[sinds, :]
-                this_gmass = this_gmass[sinds, :]
+                this_gmass = this_gmass[sinds]
                 sinds = np.argsort(grpsub_gids)
                 this_den = grpsub_g_dens[sinds]
 
