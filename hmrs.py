@@ -557,19 +557,19 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
 
         nstar = gal_grp["S_Length"][...]
         ngas = gal_grp["G_Length"][...]
-        mass = gal_grp["Mstar_aperture"]["30"][...]
-        hmrs = gal_grp["HalfMassRad"][:, 4] * 10 ** 3
-        cops = gal_grp["COP"][...].T * 1000
+        mass = gal_grp["Mstar_aperture"]["30"][...] * 10 ** 10
+        hmrs = gal_grp["HalfMassRad"][:, 4]
+        cops = gal_grp["COP"][...].T
         grps = gal_grp["GroupNumber"][...]
         subgrps = gal_grp["SubGroupNumber"][...]
         g_mass = part_grp["G_Mass"][...] * 10 ** 10
-        coords = part_grp["G_Coordinates"][...].T * 1000
+        coords = part_grp["G_Coordinates"][...].T
         master_g_ids = part_grp["G_ID"][...]
         g_dens = eagle_io.read_array("PARTDATA", path,
                                      snap,
                                      "PartType0/Density",
                                      noH=True, physicalUnits=True,
-                                     numThreads=8)
+                                     numThreads=8) * 10 ** 10
         g_IDs = eagle_io.read_array("PARTDATA", path,
                                     snap,
                                     "PartType0/ParticleIDs",
@@ -634,18 +634,30 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
             grp_g_dens = g_dens[grp_okinds]
             grp_gids = g_IDs[grp_okinds]
 
-            # Set up array for densities
-            this_den = np.zeros(ngas[igal])
+            # Lets do a quick sort if we have all the necesary particles
+            if grpsub_g_dens.size == ngas[igal]:
 
-            # Assign particles in this subgroup
-            for ind, gid in enumerate(this_m_gids):
+                # Sort by index
+                sinds = np.argsort(this_m_gids)
+                this_coords = this_coords[sinds, :]
+                this_gmass = this_gmass[sinds, :]
+                sinds = np.argsort(grpsub_gids)
+                this_den = grpsub_g_dens[sinds]
 
-                raw_ind = np.where(grpsub_gids == gid)[0]
+            else:
 
-                if raw_ind.size == 0:
-                    continue
+                # Set up array for densities
+                this_den = np.zeros(ngas[igal])
 
-                this_den[ind] = grpsub_g_dens[raw_ind]
+                # Assign particles in this subgroup
+                for ind, gid in enumerate(this_m_gids):
+
+                    raw_ind = np.where(grpsub_gids == gid)[0]
+
+                    if raw_ind.size == 0:
+                        continue
+
+                    this_den[ind] = grpsub_g_dens[raw_ind]
 
             # If we don't have all the particles we need to search the whole
             # group
@@ -670,8 +682,6 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
                     # Flag this particles galaxy as spurious
                     spurious.update(
                         {(g_grps[raw_ind[0]], g_subgrps[raw_ind[0]]), })
-
-                print(spurious)
 
             # Compute stellar radii
             rs = np.sqrt(this_coords[:, 0] ** 2
@@ -721,7 +731,7 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
 
     ax.hexbin(ms, w_hmrs / s_hmrs,
               mincnt=np.min(ws) - (0.1 * np.min(ws)),
-              C=ws, gridsize=50,
+              C=ws, gridsize=50, reduce_C_function=np.sum,
               xscale="log", yscale="log", linewidth=0.2,
               cmap="plasma", norm=weight_norm)
     plot_meidan_stat(ms, w_hmrs / s_hmrs, ws,
