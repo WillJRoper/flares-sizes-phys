@@ -550,9 +550,6 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
 
         print(reg)
 
-        if reg != "00":
-            continue
-
         path = ini_path.replace("<reg>", reg)
 
         gal_grp = hdf[reg][snap]["Galaxy"]
