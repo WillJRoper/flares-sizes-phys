@@ -561,7 +561,7 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
         nstar = gal_grp["S_Length"][...]
         ngas = gal_grp["G_Length"][...]
         mass = gal_grp["Mstar_aperture"]["30"][...] * 10 ** 10
-        hmrs = gal_grp["HalfMassRad"][:, 4] / (1 + z)
+        hmrs = gal_grp["HalfMassRad"][:, 4]
         cops = gal_grp["COP"][...].T / (1 + z)
         grps = gal_grp["GroupNumber"][...]
         subgrps = gal_grp["SubGroupNumber"][...]
