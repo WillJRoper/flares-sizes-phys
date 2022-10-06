@@ -677,9 +677,6 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
 
                     raw_ind = np.where(grp_gids == gid)[0]
 
-                    if not isinstance(raw_ind, int):
-                        print("found more than one", raw_ind, gid)
-
                     this_den[ind] = grp_g_dens[raw_ind]
 
                     # Flag this particles galaxy as spurious
