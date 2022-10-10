@@ -609,6 +609,10 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
 
             print(igal)
 
+            # Ensure we also have 100 gas particles
+            if ngas[igal] < 100:
+                continue
+
             # Get galaxy data
             begin = gas_begin[igal]
             end = begin + ngas[igal]
