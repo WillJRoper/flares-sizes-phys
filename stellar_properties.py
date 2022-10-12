@@ -161,7 +161,8 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
         reg_zs, reg_dens = get_nonmaster_evo_data(
             path, snap, y_key="PartType4/BirthDensity")
         zs.extend(reg_zs)
-        dens.extend(reg_dens)
+        dens.extend((reg_dens * 10**10 * Msun / Mpc ** 3
+                     / mh).to(1 / cm ** 3).value)
         ovdens.extend(np.full(reg_zs.size, reg_ovdens[int(reg)], dtype=float))
         w.extend(np.full(reg_zs.size, weights[int(reg)], dtype=float))
 
