@@ -37,6 +37,8 @@ eagle_path = agndt9_path
 # Define regions
 regions = []
 for reg in range(0, 40):
+    if reg == 16:
+        continue
     if reg < 10:
         regions.append('0' + str(reg))
     else:
