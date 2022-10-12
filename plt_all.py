@@ -192,6 +192,8 @@ print("Got all data")
 # plot_size_sfr_evo_grid(data["stellar"], flares_snaps)
 
 if rank == 0:
+    plot_birth_met(hdf["stellar"][snap], flares_snaps[-1], weight_norm, path)
+    plot_birth_den(hdf["stellar"][snap], flares_snaps[-1], weight_norm, path)
     plot_weighted_gas_size_mass(flares_snaps[-1], regions, weight_norm, path)
     plot_gas_hmr(hdf["gas"], hdf["stellar"], flares_snaps[-1], weight_norm)
     plot_size_change_comp(hdf["stellar"], hdf["gas"],
