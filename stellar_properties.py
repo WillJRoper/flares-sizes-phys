@@ -53,6 +53,8 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
     for reg in regions:
         path = ini_path.replace("<reg>", reg)
 
+        print(path)
+
         reg_zs, reg_mets = get_nonmaster_evo_data(
             path, snap, y_key="PartType4/SmoothedMetallicity")
         zs.extend(reg_zs)
