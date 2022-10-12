@@ -176,11 +176,15 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
     agndt9_path = '/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/PE/AGNdT9/data/'
     agndt9_zs, agndt9_dens = get_nonmaster_evo_data(
         agndt9_path, "028_z000p000", y_key="PartType4/BirthDensity")
+    agndt9_dens = (agndt9_dens * 10**10
+                   * Msun / Mpc ** 3 / mh).to(1 / cm ** 3).value
 
     # Get eagle data
     ref_path = "/cosma7/data/Eagle/ScienceRuns/Planck1/L0100N1504/PE/REFERENCE/data"
     eagle_zs, eagle_dens = get_nonmaster_evo_data(
         ref_path, "028_z000p000", y_key="PartType4/BirthDensity")
+    eagle_dens = (eagle_dens * 10**10
+                  * Msun / Mpc ** 3 / mh).to(1 / cm ** 3).value
 
     # Set up the plot
     fig = plt.figure(figsize=(3.5, 3.5))
