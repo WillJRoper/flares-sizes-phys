@@ -18,7 +18,7 @@ import eagle_IO.eagle_IO as eagle_io
 def plot_birth_met(stellar_data, snap, weight_norm, path):
 
     # Define intial FLARES path
-    ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/G-EAGLE_<reg>/data/"
+    ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/flares_<reg>/data/"
 
     # Open region overdensities
     reg_ovdens = np.loadtxt("/cosma7/data/dp004/dc-rope1/FLARES/"
@@ -123,7 +123,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 def plot_birth_den(stellar_data, snap, weight_norm, path):
 
     # Define intial FLARES path
-    ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/G-EAGLE_<reg>/data/"
+    ini_path = "/cosma/home/dp004/dc-rope1/FLARES/FLARES-1/flares_<reg>/data/"
 
     # Open region overdensities
     reg_ovdens = np.loadtxt("/cosma7/data/dp004/dc-rope1/FLARES/"
