@@ -41,7 +41,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
             regions.append(str(reg))
 
     # Define overdensity bins in log(1+delta)
-    ovden_bins = np.arange(-0.3, 0.4, 0.15)
+    ovden_bins = np.arange(-0.3, 0.4, 0.75)
     eagle_z_bins = np.arange(0.0, 16.0, 1.0)
     flares_z_bins = np.arange(4.5, 15.5, 1.0)
 
@@ -100,7 +100,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
         plot_meidan_stat(zs[okinds], mets[okinds],
                          w[okinds], ax,
-                         lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
+                         lab=r"$%.2f \leq \log_{10}(1 + \Delta) < %.2f$"
                          % (ovden_bins[i], ovden_bins[i + 1]),
                          bins=flares_z_bins,
                          color=None)
@@ -146,7 +146,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
             regions.append(str(reg))
 
     # Define overdensity bins in log(1+delta)
-    ovden_bins = np.arange(-0.3, 0.4, 0.15)
+    ovden_bins = np.arange(-0.3, 0.4, 0.75)
     eagle_z_bins = np.arange(0.0, 16.0, 1.0)
     flares_z_bins = np.arange(4.5, 15.5, 1.0)
 
@@ -205,7 +205,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
                                 okinds)
 
         plot_meidan_stat(zs[okinds], dens[okinds], w[okinds], ax,
-                         lab=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
+                         lab=r"$%.2f \leq \log_{10}(1 + \Delta) < %.2f$"
                          % (ovden_bins[i], ovden_bins[i + 1]),
                          bins=flares_z_bins, color=None)
 
