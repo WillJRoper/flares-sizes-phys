@@ -2745,10 +2745,6 @@ def plot_size_feedback(stellar_data, other_data, snaps, weight_norm, plt_type):
         # Loop over galaxies
         for ind in range(len(hmrs)):
 
-            # Skip this galaxy if it is not compact
-            if cuton_hmrs[ind] > 1:
-                continue
-
             # Get the region for this galaxy
             reg_int = regions[ind]
             if reg_int == 18:
