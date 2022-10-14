@@ -2476,7 +2476,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
-    ax2.set_title("$R_{1/2,\star}^{A} \leq 1 \ && \ R_{1/2,\star}^{B} > 1$")
+    ax2.set_title("$R_{1/2,\star}^{A} > 1 \ && \ R_{1/2,\star}^{B} \leq 1$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
     im = ax3.hexbin(delta_hmr[okinds], tot_ssfr[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
@@ -2552,7 +2552,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
-    ax2.set_title("$R_{1/2,\star}^{A} \leq 1 \ && \ R_{1/2,\star}^{B} > 1$")
+    ax2.set_title("$R_{1/2,\star}^{A} > 1 \ && \ R_{1/2,\star}^{B} \leq 1$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
     im = ax3.hexbin(delta_hmr[okinds], tot_ssfr[okinds] * tot_mass[okinds],
                     gridsize=50,
@@ -2627,7 +2627,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
-    ax2.set_title("$R_{1/2,\star}^{A} \leq 1 \ && \ R_{1/2,\star}^{B} > 1$")
+    ax2.set_title("$R_{1/2,\star}^{A} > 1 \ && \ R_{1/2,\star}^{B} \leq 1$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
     im = ax3.hexbin(delta_ghmr[okinds], delta_hmr[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
@@ -4014,7 +4014,7 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
-    ax2.set_title("$R_{1/2,\star}^{A} \leq 1 \ && \ R_{1/2,\star}^{B} > 1$")
+    ax2.set_title("$R_{1/2,\star}^{A} > 1 \ && \ R_{1/2,\star}^{B} \leq 1$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
     im = ax3.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
