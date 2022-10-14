@@ -3889,13 +3889,13 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
     ax3.set_title("$R_{1/2,\star}^{A} \leq 1 && R_{1/2,\star}^{B} \leq 1$")
 
     # Axes labels
+    ax1.set_xlabel(
+        "$R_\mathrm{1/2,\star}^\mathrm{B} / R_\mathrm{1/2,\star}^\mathrm{A}$")
+    ax2.set_xlabel(
+        "$R_\mathrm{1/2,\star}^\mathrm{B} / R_\mathrm{1/2,\star}^\mathrm{A}$")
     ax3.set_xlabel(
         "$R_\mathrm{1/2,\star}^\mathrm{B} / R_\mathrm{1/2,\star}^\mathrm{A}$")
     ax1.set_ylabel(
-        "$M_\mathrm{bh}^\mathrm{B} / M_\mathrm{bh}^\mathrm{A}$")
-    ax2.set_ylabel(
-        "$M_\mathrm{bh}^\mathrm{B} / M_\mathrm{bh}^\mathrm{A}$")
-    ax3.set_ylabel(
         "$M_\mathrm{bh}^\mathrm{B} / M_\mathrm{bh}^\mathrm{A}$")
 
     cbar = fig.colorbar(im, cax)
