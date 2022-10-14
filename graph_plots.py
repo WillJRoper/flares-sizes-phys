@@ -2435,7 +2435,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     delta_ghmr = tot_hmrs_gas / tot_prog_hmrs_gas
 
     # Set up plot
-    extent = [-2, 1.2, -2.5, 1.3]
+    extent = [-1.8, 1, -2.2, 1.1]
     fig = plt.figure(figsize=(3 * 3.5 + 0.15, 3.5))
     gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
     gs.update(wspace=0.0, hspace=0.0)
@@ -2519,7 +2519,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     plt.close(fig)
 
     # Set up plot
-    extent = [-2, 1.2, 4, 11]
+    extent = [-1.8, 1, 7, 13]
     fig = plt.figure(figsize=(3 * 3.5 + 0.15, 3.5))
     gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
     gs.update(wspace=0.0, hspace=0.0)
@@ -2596,7 +2596,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     plt.close(fig)
 
     # Set up plot
-    extent = [-2.5, 1.5, -1.5, 1]
+    extent = [-2.2, 1.3, -1.5, 1]
     fig = plt.figure(figsize=(3 * 3.5 + 0.15, 3.5))
     gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
     gs.update(wspace=0.0, hspace=0.0)
@@ -3976,7 +3976,7 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
     delta_bhms = bh_ms / prog_bh_ms
 
     # Set up plot
-    extent = [-2, 1, -2.5, 2.5]
+    extent = [-1.6, 0.9, -2.2, 2.5]
     fig = plt.figure(figsize=(3 * 3.5 + 0.15, 3.5))
     gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
     gs.update(wspace=0.0, hspace=0.0)
