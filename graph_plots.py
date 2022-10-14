@@ -3872,21 +3872,21 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
                     linewidths=0.2, cmap="plasma")
-    ax1.set_title("$R_{1/2,\star}^{A} > 1 \land R_{1/2,\star}^{B} > 1$")
+    ax1.set_title("$R_{1/2,\star}^{A} > 1 && R_{1/2,\star}^{B} > 1$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs > 1)
     im = ax2.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
                     linewidths=0.2, cmap="plasma")
-    ax2.set_title("$R_{1/2,\star}^{A} \leq 1 \land R_{1/2,\star}^{B} > 1$")
+    ax2.set_title("$R_{1/2,\star}^{A} \leq 1 && R_{1/2,\star}^{B} > 1$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
     im = ax3.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
                     linewidths=0.2, cmap="plasma")
-    ax3.set_title("$R_{1/2,\star}^{A} \leq 1 \land R_{1/2,\star}^{B} \leq 1$")
+    ax3.set_title("$R_{1/2,\star}^{A} \leq 1 && R_{1/2,\star}^{B} \leq 1$")
 
     # Axes labels
     ax3.set_xlabel(
