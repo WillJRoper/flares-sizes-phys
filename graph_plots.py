@@ -3907,6 +3907,7 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
     ymin, ymax = np.inf, 0
     for ax in [ax1, ax2, ax3]:
         xlims = ax.get_xlim()
+        ylims = ax.get_ylim()
         if xlims[0] < xmin:
             xmin = xlims[0]
         if ylims[0] < ymin:
