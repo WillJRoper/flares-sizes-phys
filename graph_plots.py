@@ -3859,7 +3859,7 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
                    mincnt=np.min(w) - (0.1 * np.min(w)),
                    C=w[okinds], xscale="log", yscale="log",
                    reduce_C_function=np.mean, norm=weight_norm,
-                   linewidths=0.2, cmap="coolwarm")
+                   linewidths=0.2, cmap="plasma")
 
     # Axes labels
     ax.set_xlabel(
