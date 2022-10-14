@@ -2326,10 +2326,6 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
         # Loop over galaxies
         for ind in range(len(hmrs)):
 
-            # Skip if the galaxy isn't compact
-            if hmrs[ind] > 1:
-                continue
-
             # Get the region for this galaxy
             reg_int = regions[ind]
             if reg_int == 18:
@@ -2439,33 +2435,75 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     delta_ghmr = tot_hmrs_gas / tot_prog_hmrs_gas
 
     # Set up plot
-    fig = plt.figure(figsize=(3.5, 3.5))
-    ax = fig.add_subplot(111)
-    ax.loglog()
+    fig = plt.figure(figsize=(3 * 3.5 + 0.15, 3.5))
+    gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
+    gs.update(wspace=0.0, hspace=0.0)
+    ax1 = fig.add_subplot(gs[0, 0])
+    ax2 = fig.add_subplot(gs[0, 1])
+    ax3 = fig.add_subplot(gs[0, 2])
+    cax = fig.add_subplot(gs[0, 3])
+    ax1.loglog()
+    ax2.loglog()
+    ax3.loglog()
 
-    okinds = np.logical_and(tot_mass > 0, tot_ssfr > 0)
+    okinds = np.logical_and(tot_ssfr > 0, np.logical_and(delta_hmr > 0,
+                                                         delta_ghmr > 0))
+    delta_hmr = delta_hmr[okinds]
+    delta_ghmr = delta_ghmr[okinds]
+    tot_ssfr = tot_ssfr[okinds]
+    tot_hmrs = tot_hmrs[okinds]
+    tot_prog_hmrs = tot_prog_hmrs[okinds]
+    w = w[okinds]
 
-    # Plot the scatter
-    im = ax.hexbin(delta_hmr[okinds], tot_ssfr[okinds],  gridsize=50,
-                   mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w[okinds], xscale="log", yscale="log",
-                   reduce_C_function=np.sum, norm=weight_norm,
-                   linewidths=0.2, cmap="plasma")
-    # if len(no_prog_ssfr) > 0:
-    #     okinds = np.logical_and(no_prog_mass > 0, no_prog_ssfr > 0)
-    #     ax.scatter(delta_hmr[okinds], tot_ssfr[okinds], s=2,
-    #                marker="s", color="k", label="Recent")
+    # Plot the data
+    okinds = np.logical_and(tot_hmrs > 1, tot_prog_hmrs > 1)
+    im = ax1.hexbin(delta_hmr[okinds], tot_ssfr[okinds],  gridsize=50,
+                    mincnt=np.min(w) - (0.1 * np.min(w)),
+                    C=w[okinds], xscale="log", yscale="log",
+                    reduce_C_function=np.mean, norm=weight_norm,
+                    linewidths=0.2, cmap="plasma")
+    ax1.set_title("$R_{1/2,\star}^{A} > 1 && R_{1/2,\star}^{B} > 1$")
+    okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs > 1)
+    im = ax2.hexbin(delta_hmr[okinds], tot_ssfr[okinds],  gridsize=50,
+                    mincnt=np.min(w) - (0.1 * np.min(w)),
+                    C=w[okinds], xscale="log", yscale="log",
+                    reduce_C_function=np.mean, norm=weight_norm,
+                    linewidths=0.2, cmap="plasma")
+    ax2.set_title("$R_{1/2,\star}^{A} \leq 1 && R_{1/2,\star}^{B} > 1$")
+    okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
+    im = ax3.hexbin(delta_hmr[okinds], tot_ssfr[okinds],  gridsize=50,
+                    mincnt=np.min(w) - (0.1 * np.min(w)),
+                    C=w[okinds], xscale="log", yscale="log",
+                    reduce_C_function=np.mean, norm=weight_norm,
+                    linewidths=0.2, cmap="plasma")
+    ax3.set_title("$R_{1/2,\star}^{A} \leq 1 && R_{1/2,\star}^{B} \leq 1$")
 
     # Axes labels
-    ax.set_xlabel("$R_{1/2}^{B} / R_{1/2}^{A}$")
-    ax.set_ylabel("$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
+    ax1.set_xlabel("$R_{1/2, \star}^{B} / R_{1/2, \star}^{A}$")
+    ax2.set_xlabel("$R_{1/2, \star}^{B} / R_{1/2, \star}^{A}$")
+    ax3.set_xlabel("$R_{1/2, \star}^{B} / R_{1/2, \star}^{A}$")
+    ax1.set_ylabel("$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
 
-    cbar = fig.colorbar(im)
+    cbar = fig.colorbar(im, cax)
     cbar.set_label("$\sum w_i$")
 
-    # # Draw legend
-    # if len(no_prog_ssfr) > 0:
-    #     ax.legend()
+    # Get and set universal axis limits
+    xmin, xmax = np.inf, 0
+    ymin, ymax = np.inf, 0
+    for ax in [ax1, ax2, ax3]:
+        xlims = ax.get_xlim()
+        ylims = ax.get_ylim()
+        if xlims[0] < xmin:
+            xmin = xlims[0]
+        if ylims[0] < ymin:
+            ymin = ylims[0]
+        if xlims[1] > xmax:
+            xmax = xlims[1]
+        if ylims[1] > ymax:
+            ymax = ylims[1]
+    for ax in [ax1, ax2, ax3]:
+        ax.set_xlim(xmin, xmax)
+        ax.set_ylim(ymin, ymax)
 
     # Save figure
     mkdir("plots/graph/")
@@ -2474,33 +2512,66 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     plt.close(fig)
 
     # Set up plot
-    fig = plt.figure(figsize=(3.5, 3.5))
-    ax = fig.add_subplot(111)
-    ax.loglog()
+    fig = plt.figure(figsize=(3 * 3.5 + 0.15, 3.5))
+    gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
+    gs.update(wspace=0.0, hspace=0.0)
+    ax1 = fig.add_subplot(gs[0, 0])
+    ax2 = fig.add_subplot(gs[0, 1])
+    ax3 = fig.add_subplot(gs[0, 2])
+    cax = fig.add_subplot(gs[0, 3])
+    ax1.loglog()
+    ax2.loglog()
+    ax3.loglog()
 
-    okinds = np.logical_and(delta_ghmr > 0, delta_hmr > 0)
-
-    # Plot the scatter
-    im = ax.hexbin(delta_ghmr[okinds], delta_hmr[okinds],  gridsize=50,
-                   mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w[okinds], xscale="log", yscale="log",
-                   reduce_C_function=np.sum, norm=weight_norm,
-                   linewidths=0.2, cmap="plasma")
-    # if len(no_prog_ssfr) > 0:
-    #     okinds = np.logical_and(no_prog_mass > 0, no_prog_ssfr > 0)
-    #     ax.scatter(delta_hmr[okinds], tot_ssfr[okinds], s=2,
-    #                marker="s", color="k", label="Recent")
+    # Plot the data
+    okinds = np.logical_and(tot_hmrs > 1, tot_prog_hmrs > 1)
+    im = ax1.hexbin(delta_ghmr[okinds], delta_hmr[okinds],  gridsize=50,
+                    mincnt=np.min(w) - (0.1 * np.min(w)),
+                    C=w[okinds], xscale="log", yscale="log",
+                    reduce_C_function=np.mean, norm=weight_norm,
+                    linewidths=0.2, cmap="plasma")
+    ax1.set_title("$R_{1/2,\star}^{A} > 1 && R_{1/2,\star}^{B} > 1$")
+    okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs > 1)
+    im = ax2.hexbin(delta_ghmr[okinds], delta_hmr[okinds],  gridsize=50,
+                    mincnt=np.min(w) - (0.1 * np.min(w)),
+                    C=w[okinds], xscale="log", yscale="log",
+                    reduce_C_function=np.mean, norm=weight_norm,
+                    linewidths=0.2, cmap="plasma")
+    ax2.set_title("$R_{1/2,\star}^{A} \leq 1 && R_{1/2,\star}^{B} > 1$")
+    okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
+    im = ax3.hexbin(delta_ghmr[okinds], delta_hmr[okinds],  gridsize=50,
+                    mincnt=np.min(w) - (0.1 * np.min(w)),
+                    C=w[okinds], xscale="log", yscale="log",
+                    reduce_C_function=np.mean, norm=weight_norm,
+                    linewidths=0.2, cmap="plasma")
+    ax3.set_title("$R_{1/2,\star}^{A} \leq 1 && R_{1/2,\star}^{B} \leq 1$")
 
     # Axes labels
-    ax.set_xlabel("$R_{1/2, \mathrm{g}}^{B} / R_{1/2, \mathrm{g}}^{A}$")
+    ax1.set_xlabel("$R_{1/2, \mathrm{gas}}^{B} / R_{1/2, \mathrm{gas}}^{A}$")
+    ax2.set_xlabel("$R_{1/2, \mathrm{gas}}^{B} / R_{1/2, \mathrm{gas}}^{A}$")
+    ax3.set_xlabel("$R_{1/2, \mathrm{gas}}^{B} / R_{1/2, \mathrm{gas}}^{A}$")
     ax.set_ylabel("$R_{1/2, \star}^{B} / R_{1/2, \star}^{A}$")
 
-    cbar = fig.colorbar(im)
-    cbar.set_label("$\sum w_i$")
+    # Get and set universal axis limits
+    xmin, xmax = np.inf, 0
+    ymin, ymax = np.inf, 0
+    for ax in [ax1, ax2, ax3]:
+        xlims = ax.get_xlim()
+        ylims = ax.get_ylim()
+        if xlims[0] < xmin:
+            xmin = xlims[0]
+        if ylims[0] < ymin:
+            ymin = ylims[0]
+        if xlims[1] > xmax:
+            xmax = xlims[1]
+        if ylims[1] > ymax:
+            ymax = ylims[1]
+    for ax in [ax1, ax2, ax3]:
+        ax.set_xlim(xmin, xmax)
+        ax.set_ylim(ymin, ymax)
 
-    # # Draw legend
-    # if len(no_prog_ssfr) > 0:
-    #     ax.legend()
+    cbar = fig.colorbar(im, cax)
+    cbar.set_label("$\sum w_i$")
 
     # Save figure
     mkdir("plots/graph/")
@@ -3868,21 +3939,21 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
 
     # Plot the data
     okinds = np.logical_and(tot_hmrs > 1, tot_prog_hmrs > 1)
-    im = ax1.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
+    im = ax1.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=30,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
                     linewidths=0.2, cmap="plasma")
     ax1.set_title("$R_{1/2,\star}^{A} > 1 && R_{1/2,\star}^{B} > 1$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs > 1)
-    im = ax2.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
+    im = ax2.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=30,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
                     linewidths=0.2, cmap="plasma")
     ax2.set_title("$R_{1/2,\star}^{A} \leq 1 && R_{1/2,\star}^{B} > 1$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
-    im = ax3.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
+    im = ax3.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=30,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
