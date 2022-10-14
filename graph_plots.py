@@ -2545,7 +2545,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
-                    reduce_C_function=np.mean, norm=weight_norm,
+                    reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax1.set_title(
         "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ && \ R_{1/2,\star}^{B} > 1 \ \mathrm{pkpc}$")
@@ -2554,7 +2554,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
-                    reduce_C_function=np.mean, norm=weight_norm,
+                    reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax2.set_title(
         "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ && \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
@@ -2563,7 +2563,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
-                    reduce_C_function=np.mean, norm=weight_norm,
+                    reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax3.set_title(
         "$R_{1/2,\star}^{A} \leq 1 \ \mathrm{pkpc} \ && \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
@@ -2624,7 +2624,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     im = ax1.hexbin(delta_ghmr[okinds], delta_hmr[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
-                    reduce_C_function=np.mean, norm=weight_norm,
+                    reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax1.set_title(
         "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ && \ R_{1/2,\star}^{B} > 1 \ \mathrm{pkpc}$")
@@ -2632,7 +2632,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     im = ax2.hexbin(delta_ghmr[okinds], delta_hmr[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
-                    reduce_C_function=np.mean, norm=weight_norm,
+                    reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax2.set_title(
         "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ && \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
@@ -2640,7 +2640,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     im = ax3.hexbin(delta_ghmr[okinds], delta_hmr[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
-                    reduce_C_function=np.mean, norm=weight_norm,
+                    reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax3.set_title(
         "$R_{1/2,\star}^{A} \leq 1 \ \mathrm{pkpc} \ && \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
@@ -4014,7 +4014,7 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
     im = ax1.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
-                    reduce_C_function=np.mean, norm=weight_norm,
+                    reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax1.set_title(
         "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ && \ R_{1/2,\star}^{B} > 1 \ \mathrm{pkpc}$")
@@ -4022,7 +4022,7 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
     im = ax2.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
-                    reduce_C_function=np.mean, norm=weight_norm,
+                    reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax2.set_title(
         "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ && \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
@@ -4030,7 +4030,7 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
     im = ax3.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
-                    reduce_C_function=np.mean, norm=weight_norm,
+                    reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax3.set_title(
         "$R_{1/2,\star}^{A} \leq 1 \ \mathrm{pkpc} \ && \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
