@@ -3848,26 +3848,55 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
 
     # Set up plot
     fig = plt.figure(figsize=(3.5, 3.5))
-    ax = fig.add_subplot(111)
-    ax.loglog()
+    gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
+    gs.update(wspace=0.0, hspace=0.0)
+    ax1 = fig.add_subplot(gs[0, 0], aspect='equal')
+    ax2 = fig.add_subplot(gs[0, 1], aspect='equal')
+    ax3 = fig.add_subplot(gs[0, 2], aspect='equal')
+    cax = fig.add_subplot(gs[0, 3])
+    ax1.loglog()
+    ax2.loglog()
+    ax3.loglog()
 
     okinds = np.logical_and(delta_bhms > 0, delta_hmr > 0)
+    delta_hmr = delta_hmr[okinds]
+    delta_bhms = delta_bhms[okinds]
+    w = w[okinds]
 
-    # Plot the scatter
-    # Plot the scatter
-    im = ax.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
-                   mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w[okinds], xscale="log", yscale="log",
-                   reduce_C_function=np.mean, norm=weight_norm,
-                   linewidths=0.2, cmap="plasma")
+    # Plot the data
+    okinds = np.logical_and(tot_hmrs > 1, prog_hmrs > 1)
+    im = ax1.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
+                    mincnt=np.min(w) - (0.1 * np.min(w)),
+                    C=w[okinds], xscale="log", yscale="log",
+                    reduce_C_function=np.mean, norm=weight_norm,
+                    linewidths=0.2, cmap="plasma")
+    ax1.set_title("$R_{1/2,\star}^{A} > 1 \land R_{1/2,\star}^{B} > 1$")
+    okinds = np.logical_and(tot_hmrs <= 1, prog_hmrs > 1)
+    im = ax2.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
+                    mincnt=np.min(w) - (0.1 * np.min(w)),
+                    C=w[okinds], xscale="log", yscale="log",
+                    reduce_C_function=np.mean, norm=weight_norm,
+                    linewidths=0.2, cmap="plasma")
+    ax2.set_title("$R_{1/2,\star}^{A} \leq 1 \land R_{1/2,\star}^{B} > 1$")
+    okinds = np.logical_and(tot_hmrs <= 1, prog_hmrs <= 1)
+    im = ax3.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
+                    mincnt=np.min(w) - (0.1 * np.min(w)),
+                    C=w[okinds], xscale="log", yscale="log",
+                    reduce_C_function=np.mean, norm=weight_norm,
+                    linewidths=0.2, cmap="plasma")
+    ax3.set_title("$R_{1/2,\star}^{A} \leq 1 \land R_{1/2,\star}^{B} \leq 1$")
 
     # Axes labels
-    ax.set_xlabel(
+    ax3.set_xlabel(
         "$R_\mathrm{1/2,\star}^\mathrm{B} / R_\mathrm{1/2,\star}^\mathrm{A}$")
-    ax.set_ylabel(
+    ax1.set_ylabel(
+        "$M_\mathrm{bh}^\mathrm{B} / M_\mathrm{bh}^\mathrm{A}$")
+    ax2.set_ylabel(
+        "$M_\mathrm{bh}^\mathrm{B} / M_\mathrm{bh}^\mathrm{A}$")
+    ax3.set_ylabel(
         "$M_\mathrm{bh}^\mathrm{B} / M_\mathrm{bh}^\mathrm{A}$")
 
-    cbar = fig.colorbar(im)
+    cbar = fig.colorbar(im, cax)
     cbar.set_label("$\sum w_{i}$")
 
     # Save figure
