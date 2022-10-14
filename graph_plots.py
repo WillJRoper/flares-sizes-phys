@@ -3847,12 +3847,12 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
     delta_bhms = bh_ms / prog_bh_ms
 
     # Set up plot
-    fig = plt.figure(figsize=(3.5, 3.5))
+    fig = plt.figure(figsize=(3.5, 3 * 3.5))
     gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
     gs.update(wspace=0.0, hspace=0.0)
-    ax1 = fig.add_subplot(gs[0, 0], aspect='equal')
-    ax2 = fig.add_subplot(gs[0, 1], aspect='equal')
-    ax3 = fig.add_subplot(gs[0, 2], aspect='equal')
+    ax1 = fig.add_subplot(gs[0, 0])
+    ax2 = fig.add_subplot(gs[0, 1])
+    ax3 = fig.add_subplot(gs[0, 2])
     cax = fig.add_subplot(gs[0, 3])
     ax1.loglog()
     ax2.loglog()
