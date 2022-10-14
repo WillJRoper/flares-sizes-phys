@@ -2901,6 +2901,8 @@ def plot_size_feedback(stellar_data, other_data, snaps, weight_norm, plt_type):
     okinds = np.logical_and(delta_fb > 0, delta_hmr > 0)
     delta_fb = delta_fb[okinds]
     delta_hmr = delta_hmr[okinds]
+    tot_hmrs = tot_hmrs[okinds]
+    tot_prog_hmrs = tot_prog_hmrs[okinds]
     w = w[okinds]
 
     # Plot the data
