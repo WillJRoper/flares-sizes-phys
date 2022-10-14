@@ -3861,6 +3861,8 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
     okinds = np.logical_and(delta_bhms > 0, delta_hmr > 0)
     delta_hmr = delta_hmr[okinds]
     delta_bhms = delta_bhms[okinds]
+    tot_hmrs = tot_hmrs[okinds]
+    tot_prog_hmrs = tot_prog_hmrs[okinds]
     w = w[okinds]
 
     # Plot the data
