@@ -2458,6 +2458,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     delta_ghmr = delta_ghmr[okinds]
     tot_ssfr = tot_ssfr[okinds]
     tot_hmrs = tot_hmrs[okinds]
+    tot_mass = tot_mass[okinds]
     tot_prog_hmrs = tot_prog_hmrs[okinds]
     w = w[okinds]
 
@@ -2534,16 +2535,6 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     labelleft=False, labelright=False)
     ax3.tick_params(axis='y', left=False, right=False,
                     labelleft=False, labelright=False)
-
-    okinds = np.logical_and(tot_ssfr > 0, np.logical_and(delta_hmr > 0,
-                                                         delta_ghmr > 0))
-    delta_hmr = delta_hmr[okinds]
-    delta_ghmr = delta_ghmr[okinds]
-    tot_ssfr = tot_ssfr[okinds]
-    tot_hmrs = tot_hmrs[okinds]
-    tot_prog_hmrs = tot_prog_hmrs[okinds]
-    tot_mass = tot_mass[okinds]
-    w = w[okinds]
 
     # Plot the data
     okinds = np.logical_and(tot_hmrs > 1, tot_prog_hmrs > 1)
