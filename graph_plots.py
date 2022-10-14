@@ -3868,7 +3868,7 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
         "$M_\mathrm{bh}^\mathrm{B} / M_\mathrm{bh}^\mathrm{A}$")
 
     cbar = fig.colorbar(im)
-    cbar.set_label("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
+    cbar.set_label("$\sum w_{i}$")
 
     # Save figure
     mkdir("plots/graph/")
