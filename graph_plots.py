@@ -2882,26 +2882,88 @@ def plot_size_feedback(stellar_data, other_data, snaps, weight_norm, plt_type):
     delta_fb = feedback_energy / prog_feedback_energy
 
     # Set up plot
-    fig = plt.figure(figsize=(3.5, 3.5))
-    ax = fig.add_subplot(111)
-    ax.loglog()
+    if plt_type == "gas":
+        extent = [-1.8, 1.3, -2.2, 1.2]
+    else:
+        extent = [-1.8, 1.3, -1.9, 0.4]
+    fig = plt.figure(figsize=(3 * 3.5 + 0.15, 3.5))
+    gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
+    gs.update(wspace=0.0, hspace=0.0)
+    ax1 = fig.add_subplot(gs[0, 0])
+    ax2 = fig.add_subplot(gs[0, 1])
+    ax3 = fig.add_subplot(gs[0, 2])
+    cax = fig.add_subplot(gs[0, 3])
+    ax1.loglog()
+    ax2.loglog()
+    ax3.loglog()
+
+    ax2.tick_params(axis='y', left=False, right=False,
+                    labelleft=False, labelright=False)
+    ax3.tick_params(axis='y', left=False, right=False,
+                    labelleft=False, labelright=False)
 
     okinds = np.logical_and(delta_fb > 0, delta_hmr > 0)
+    delta_fb = delta_fb[okinds]
+    delta_hmr = delta_hmr[okinds]
+    w = w[okinds]
 
-    # Plot the scatter
-    im = ax.hexbin(delta_fb[okinds], delta_hmr[okinds], gridsize=50,
-                   mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w[okinds], xscale="log", yscale="log",
-                   reduce_C_function=np.sum, norm=weight_norm,
-                   linewidths=0.2, cmap="plasma")
+    # Plot the data
+    okinds = np.logical_and(tot_hmrs > 1, tot_prog_hmrs > 1)
+    im = ax1.hexbin(delta_fb[okinds], delta_hmr[okinds], gridsize=50,
+                    mincnt=np.min(w) - (0.1 * np.min(w)),
+                    C=w[okinds], xscale="log", yscale="log",
+                    reduce_C_function=np.sum, norm=weight_norm,
+                    linewidths=0.2, cmap="plasma", extent=extent)
+    ax1.set_title(
+        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ && \ R_{1/2,\star}^{B} > 1 \ \mathrm{pkpc}$")
+    okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs > 1)
+    im = ax2.hexbin(delta_fb[okinds], delta_hmr[okinds], gridsize=50,
+                    mincnt=np.min(w) - (0.1 * np.min(w)),
+                    C=w[okinds], xscale="log", yscale="log",
+                    reduce_C_function=np.sum, norm=weight_norm,
+                    linewidths=0.2, cmap="plasma", extent=extent)
+    ax2.set_title(
+        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ && \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
+    okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
+    im = ax3.hexbin(delta_fb[okinds], delta_hmr[okinds], gridsize=50,
+                    mincnt=np.min(w) - (0.1 * np.min(w)),
+                    C=w[okinds], xscale="log", yscale="log",
+                    reduce_C_function=np.sum, norm=weight_norm,
+                    linewidths=0.2, cmap="plasma", extent=extent)
 
     # Axes labels
-    ax.set_xlabel(
+    ax1.set_xlabel(
         "$E_{\star\mathrm{fb}}^\mathrm{B} / E_{\star\mathrm{fb}}^\mathrm{A}$")
-    ax.set_ylabel("$R_{1/2}^{B} / R_{1/2}^{A}$")
+    ax2.set_xlabel(
+        "$E_{\star\mathrm{fb}}^\mathrm{B} / E_{\star\mathrm{fb}}^\mathrm{A}$")
+    ax3.set_xlabel(
+        "$E_{\star\mathrm{fb}}^\mathrm{B} / E_{\star\mathrm{fb}}^\mathrm{A}$")
+    if plt_type == "gas":
+        ax1.set_ylabel(
+            "$R_{1/2, \mathrm{gas}^{B} / R_{1/2, \mathrm{gas}}^{A}$")
+    else:
+        ax1.set_ylabel("$R_{1/2, \star}^{B} / R_{1/2, \star}^{A}$")
 
-    cbar = fig.colorbar(im)
+    cbar = fig.colorbar(im, cax)
     cbar.set_label("$\sum w_i$")
+
+    # Get and set universal axis limits
+    xmin, xmax = np.inf, 0
+    ymin, ymax = np.inf, 0
+    for ax in [ax1, ax2, ax3]:
+        xlims = ax.get_xlim()
+        ylims = ax.get_ylim()
+        if xlims[0] < xmin:
+            xmin = xlims[0]
+        if ylims[0] < ymin:
+            ymin = ylims[0]
+        if xlims[1] > xmax:
+            xmax = xlims[1]
+        if ylims[1] > ymax:
+            ymax = ylims[1]
+    for ax in [ax1, ax2, ax3]:
+        ax.set_xlim(xmin, xmax)
+        ax.set_ylim(ymin, ymax)
 
     # Save figure
     mkdir("plots/graph/")
