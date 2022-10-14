@@ -3872,6 +3872,6 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
 
     # Save figure
     mkdir("plots/graph/")
-    fig.savefig("plots/graph/delta_hmr_bind.png",
+    fig.savefig("plots/graph/delta_hmr_blackhole.png",
                 bbox_inches="tight")
     plt.close(fig)
