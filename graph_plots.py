@@ -2974,7 +2974,7 @@ def plot_size_feedback_stellar(stellar_data, other_data, snaps, weight_norm):
     plt.close(fig)
 
 
-def plot_size_feedback_stellar(stellar_data, other_data, snaps, weight_norm):
+def plot_size_feedback_gas(stellar_data, other_data, snaps, weight_norm):
 
     plt_type = "gas"
 
