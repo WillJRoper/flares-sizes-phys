@@ -3709,10 +3709,6 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
         # Loop over galaxies
         for ind in range(len(hmrs)):
 
-            # Skip this galaxy if it is not compact
-            if hmrs[ind] > 1:
-                continue
-
             # Get the region for this galaxy
             reg_int = regions[ind]
             if reg_int == 18:
