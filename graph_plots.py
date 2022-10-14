@@ -2435,6 +2435,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     delta_ghmr = tot_hmrs_gas / tot_prog_hmrs_gas
 
     # Set up plot
+    extent = [10**-2, 10**1.2, 10**-2.5, 10**1.3]
     fig = plt.figure(figsize=(3 * 3.5 + 0.15, 3.5))
     gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
     gs.update(wspace=0.0, hspace=0.0)
@@ -2445,6 +2446,11 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     ax1.loglog()
     ax2.loglog()
     ax3.loglog()
+
+    ax2.tick_params(axis='y', left=False, right=False,
+                    labelleft=False, labelright=False)
+    ax3.tick_params(axis='y', left=False, right=False,
+                    labelleft=False, labelright=False)
 
     okinds = np.logical_and(tot_ssfr > 0, np.logical_and(delta_hmr > 0,
                                                          delta_ghmr > 0))
@@ -2461,22 +2467,22 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
-                    linewidths=0.2, cmap="plasma")
-    ax1.set_title("$R_{1/2,\star}^{A} > 1 && R_{1/2,\star}^{B} > 1$")
+                    linewidths=0.2, cmap="plasma", extent=extent)
+    ax1.set_title("$R_{1/2,\star}^{A} > 1 \ && \ R_{1/2,\star}^{B} > 1$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs > 1)
     im = ax2.hexbin(delta_hmr[okinds], tot_ssfr[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
-                    linewidths=0.2, cmap="plasma")
-    ax2.set_title("$R_{1/2,\star}^{A} \leq 1 && R_{1/2,\star}^{B} > 1$")
+                    linewidths=0.2, cmap="plasma", extent=extent)
+    ax2.set_title("$R_{1/2,\star}^{A} \leq 1 \ && \ R_{1/2,\star}^{B} > 1$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
     im = ax3.hexbin(delta_hmr[okinds], tot_ssfr[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
-                    linewidths=0.2, cmap="plasma")
-    ax3.set_title("$R_{1/2,\star}^{A} \leq 1 && R_{1/2,\star}^{B} \leq 1$")
+                    linewidths=0.2, cmap="plasma", extent=extent)
+    ax3.set_title("$R_{1/2,\star}^{A} \leq 1 \ && \ R_{1/2,\star}^{B} \leq 1$")
 
     # Axes labels
     ax1.set_xlabel("$R_{1/2, \star}^{B} / R_{1/2, \star}^{A}$")
@@ -2512,6 +2518,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     plt.close(fig)
 
     # Set up plot
+    extent = [10**-2.5, 10**1.5, 10**-1.5, 10**1]
     fig = plt.figure(figsize=(3 * 3.5 + 0.15, 3.5))
     gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
     gs.update(wspace=0.0, hspace=0.0)
@@ -2523,34 +2530,39 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     ax2.loglog()
     ax3.loglog()
 
+    ax2.tick_params(axis='y', left=False, right=False,
+                    labelleft=False, labelright=False)
+    ax3.tick_params(axis='y', left=False, right=False,
+                    labelleft=False, labelright=False)
+
     # Plot the data
     okinds = np.logical_and(tot_hmrs > 1, tot_prog_hmrs > 1)
     im = ax1.hexbin(delta_ghmr[okinds], delta_hmr[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
-                    linewidths=0.2, cmap="plasma")
-    ax1.set_title("$R_{1/2,\star}^{A} > 1 && R_{1/2,\star}^{B} > 1$")
+                    linewidths=0.2, cmap="plasma", extent=extent)
+    ax1.set_title("$R_{1/2,\star}^{A} > 1 \ && \ R_{1/2,\star}^{B} > 1$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs > 1)
     im = ax2.hexbin(delta_ghmr[okinds], delta_hmr[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
-                    linewidths=0.2, cmap="plasma")
-    ax2.set_title("$R_{1/2,\star}^{A} \leq 1 && R_{1/2,\star}^{B} > 1$")
+                    linewidths=0.2, cmap="plasma", extent=extent)
+    ax2.set_title("$R_{1/2,\star}^{A} \leq 1 \ && \ R_{1/2,\star}^{B} > 1$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
     im = ax3.hexbin(delta_ghmr[okinds], delta_hmr[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
-                    linewidths=0.2, cmap="plasma")
-    ax3.set_title("$R_{1/2,\star}^{A} \leq 1 && R_{1/2,\star}^{B} \leq 1$")
+                    linewidths=0.2, cmap="plasma", extent=extent)
+    ax3.set_title("$R_{1/2,\star}^{A} \leq 1 \ && \ R_{1/2,\star}^{B} \leq 1$")
 
     # Axes labels
     ax1.set_xlabel("$R_{1/2, \mathrm{gas}}^{B} / R_{1/2, \mathrm{gas}}^{A}$")
     ax2.set_xlabel("$R_{1/2, \mathrm{gas}}^{B} / R_{1/2, \mathrm{gas}}^{A}$")
     ax3.set_xlabel("$R_{1/2, \mathrm{gas}}^{B} / R_{1/2, \mathrm{gas}}^{A}$")
-    ax.set_ylabel("$R_{1/2, \star}^{B} / R_{1/2, \star}^{A}$")
+    ax1.set_ylabel("$R_{1/2, \star}^{B} / R_{1/2, \star}^{A}$")
 
     # Get and set universal axis limits
     xmin, xmax = np.inf, 0
@@ -3886,6 +3898,7 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
     delta_bhms = bh_ms / prog_bh_ms
 
     # Set up plot
+    extent = [10**-2, 10**1, 10**-2.5, 10**2.5]
     fig = plt.figure(figsize=(3 * 3.5 + 0.15, 3.5))
     gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
     gs.update(wspace=0.0, hspace=0.0)
@@ -3911,26 +3924,26 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
 
     # Plot the data
     okinds = np.logical_and(tot_hmrs > 1, tot_prog_hmrs > 1)
-    im = ax1.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=30,
+    im = ax1.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
-                    linewidths=0.2, cmap="plasma")
-    ax1.set_title("$R_{1/2,\star}^{A} > 1 && R_{1/2,\star}^{B} > 1$")
+                    linewidths=0.2, cmap="plasma", extent=extent)
+    ax1.set_title("$R_{1/2,\star}^{A} > 1 \ && \ R_{1/2,\star}^{B} > 1$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs > 1)
-    im = ax2.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=30,
+    im = ax2.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
-                    linewidths=0.2, cmap="plasma")
-    ax2.set_title("$R_{1/2,\star}^{A} \leq 1 && R_{1/2,\star}^{B} > 1$")
+                    linewidths=0.2, cmap="plasma", extent=extent)
+    ax2.set_title("$R_{1/2,\star}^{A} \leq 1 \ && \ R_{1/2,\star}^{B} > 1$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
-    im = ax3.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=30,
+    im = ax3.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.mean, norm=weight_norm,
-                    linewidths=0.2, cmap="plasma")
-    ax3.set_title("$R_{1/2,\star}^{A} \leq 1 && R_{1/2,\star}^{B} \leq 1$")
+                    linewidths=0.2, cmap="plasma", extent=extent)
+    ax3.set_title("$R_{1/2,\star}^{A} \leq 1 \ && \ R_{1/2,\star}^{B} \leq 1$")
 
     # Axes labels
     ax1.set_xlabel(
