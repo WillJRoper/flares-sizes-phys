@@ -2435,7 +2435,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     delta_ghmr = tot_hmrs_gas / tot_prog_hmrs_gas
 
     # Set up plot
-    extent = [10**-2, 10**1.2, 10**-2.5, 10**1.3]
+    extent = [-2, 1.2, -2.5, 1.3]
     fig = plt.figure(figsize=(3 * 3.5 + 0.15, 3.5))
     gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
     gs.update(wspace=0.0, hspace=0.0)
@@ -2518,7 +2518,94 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     plt.close(fig)
 
     # Set up plot
-    extent = [10**-2.5, 10**1.5, 10**-1.5, 10**1]
+    extent = [-2, 1.2, 4, 11]
+    fig = plt.figure(figsize=(3 * 3.5 + 0.15, 3.5))
+    gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
+    gs.update(wspace=0.0, hspace=0.0)
+    ax1 = fig.add_subplot(gs[0, 0])
+    ax2 = fig.add_subplot(gs[0, 1])
+    ax3 = fig.add_subplot(gs[0, 2])
+    cax = fig.add_subplot(gs[0, 3])
+    ax1.loglog()
+    ax2.loglog()
+    ax3.loglog()
+
+    ax2.tick_params(axis='y', left=False, right=False,
+                    labelleft=False, labelright=False)
+    ax3.tick_params(axis='y', left=False, right=False,
+                    labelleft=False, labelright=False)
+
+    okinds = np.logical_and(tot_ssfr > 0, np.logical_and(delta_hmr > 0,
+                                                         delta_ghmr > 0))
+    delta_hmr = delta_hmr[okinds]
+    delta_ghmr = delta_ghmr[okinds]
+    tot_ssfr = tot_ssfr[okinds]
+    tot_hmrs = tot_hmrs[okinds]
+    tot_prog_hmrs = tot_prog_hmrs[okinds]
+    tot_mass = tot_mass[okinds]
+    w = w[okinds]
+
+    # Plot the data
+    okinds = np.logical_and(tot_hmrs > 1, tot_prog_hmrs > 1)
+    im = ax1.hexbin(delta_hmr[okinds], tot_ssfr[okinds] * tot_mass[okinds],
+                    gridsize=50,
+                    mincnt=np.min(w) - (0.1 * np.min(w)),
+                    C=w[okinds], xscale="log", yscale="log",
+                    reduce_C_function=np.mean, norm=weight_norm,
+                    linewidths=0.2, cmap="plasma", extent=extent)
+    ax1.set_title("$R_{1/2,\star}^{A} > 1 \ && \ R_{1/2,\star}^{B} > 1$")
+    okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs > 1)
+    im = ax2.hexbin(delta_hmr[okinds], tot_ssfr[okinds] * tot_mass[okinds],
+                    gridsize=50,
+                    mincnt=np.min(w) - (0.1 * np.min(w)),
+                    C=w[okinds], xscale="log", yscale="log",
+                    reduce_C_function=np.mean, norm=weight_norm,
+                    linewidths=0.2, cmap="plasma", extent=extent)
+    ax2.set_title("$R_{1/2,\star}^{A} \leq 1 \ && \ R_{1/2,\star}^{B} > 1$")
+    okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
+    im = ax3.hexbin(delta_hmr[okinds], tot_ssfr[okinds] * tot_mass[okinds],
+                    gridsize=50,
+                    mincnt=np.min(w) - (0.1 * np.min(w)),
+                    C=w[okinds], xscale="log", yscale="log",
+                    reduce_C_function=np.mean, norm=weight_norm,
+                    linewidths=0.2, cmap="plasma", extent=extent)
+    ax3.set_title("$R_{1/2,\star}^{A} \leq 1 \ && \ R_{1/2,\star}^{B} \leq 1$")
+
+    # Axes labels
+    ax1.set_xlabel("$R_{1/2, \star}^{B} / R_{1/2, \star}^{A}$")
+    ax2.set_xlabel("$R_{1/2, \star}^{B} / R_{1/2, \star}^{A}$")
+    ax3.set_xlabel("$R_{1/2, \star}^{B} / R_{1/2, \star}^{A}$")
+    ax1.set_ylabel("$\mathrm{SFR} / [\mathrm{M}_\odot \mathrm{Gyr}^{-1}]$")
+
+    cbar = fig.colorbar(im, cax)
+    cbar.set_label("$\sum w_i$")
+
+    # Get and set universal axis limits
+    xmin, xmax = np.inf, 0
+    ymin, ymax = np.inf, 0
+    for ax in [ax1, ax2, ax3]:
+        xlims = ax.get_xlim()
+        ylims = ax.get_ylim()
+        if xlims[0] < xmin:
+            xmin = xlims[0]
+        if ylims[0] < ymin:
+            ymin = ylims[0]
+        if xlims[1] > xmax:
+            xmax = xlims[1]
+        if ylims[1] > ymax:
+            ymax = ylims[1]
+    for ax in [ax1, ax2, ax3]:
+        ax.set_xlim(xmin, xmax)
+        ax.set_ylim(ymin, ymax)
+
+    # Save figure
+    mkdir("plots/graph/")
+    fig.savefig("plots/graph/delta_hmr_sfr_mass.png",
+                bbox_inches="tight")
+    plt.close(fig)
+
+    # Set up plot
+    extent = [-2.5, 1.5, -1.5, 1]
     fig = plt.figure(figsize=(3 * 3.5 + 0.15, 3.5))
     gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
     gs.update(wspace=0.0, hspace=0.0)
@@ -3898,7 +3985,7 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
     delta_bhms = bh_ms / prog_bh_ms
 
     # Set up plot
-    extent = [10**-2, 10**1, 10**-2.5, 10**2.5]
+    extent = [-2, 1, -2.5, 2.5]
     fig = plt.figure(figsize=(3 * 3.5 + 0.15, 3.5))
     gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
     gs.update(wspace=0.0, hspace=0.0)
