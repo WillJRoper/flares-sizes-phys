@@ -3829,8 +3829,8 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
             # Include these results for plotting
             tot_hmrs.append(hmr)
             tot_prog_hmrs.extend(prog_hmr)
-            bh_ms.extend(np.sum(this_bh_mass))
-            prog_bh_ms.extend(np.sum(prog_this_bh_mass))
+            bh_ms.append(np.sum(this_bh_mass))
+            prog_bh_ms.append(np.sum(prog_this_bh_mass))
             w.append(ws[ind])
 
     hdf_master.close()
