@@ -3906,6 +3906,23 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
     cbar = fig.colorbar(im, cax)
     cbar.set_label("$\sum w_{i}$")
 
+    # Get and set universal axis limits
+    xmin, xmax = np.inf, 0
+    ymin, ymax = np.inf, 0
+    for ax in [ax1, ax2, ax3]:
+        xlims = ax.get_xlim()
+        if xlims[0] < xmin:
+            xmin = xlims[0]
+        if ylims[0] < ymin:
+            ymin = ylims[0]
+        if xlims[1] > xmax:
+            xmax = xlims[1]
+        if ylims[1] > ymax:
+            ymax = ylims[1]
+    for ax in [ax1, ax2, ax3]:
+        ax.set_xlim(xmin, xmax)
+        ax.set_ylim(ymin, ymax)
+
     # Save figure
     mkdir("plots/graph/")
     fig.savefig("plots/graph/delta_hmr_blackhole.png",
