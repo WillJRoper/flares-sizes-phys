@@ -2881,7 +2881,7 @@ def plot_size_feedback(stellar_data, other_data, snaps, weight_norm, plt_type):
     if plt_type == "gas":
         extent = [-1.8, 1.3, -2.2, 1.2]
     else:
-        extent = [-1.8, 1.3, -1.9, 0.4]
+        extent = [-1.8, 1.3, -1.9, 1]
     fig = plt.figure(figsize=(3 * 3.5 + 0.15, 3.5))
     gs = gridspec.GridSpec(1, 4, width_ratios=[20, 20, 20, 1])
     gs.update(wspace=0.0, hspace=0.0)
@@ -2928,6 +2928,8 @@ def plot_size_feedback(stellar_data, other_data, snaps, weight_norm, plt_type):
                     C=w[okinds], xscale="log", yscale="log",
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
+    ax3.set_title(
+        "$R_{1/2,\star}^{A} \leq 1 \ \mathrm{pkpc} \ && \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
 
     # Axes labels
     ax1.set_xlabel(
