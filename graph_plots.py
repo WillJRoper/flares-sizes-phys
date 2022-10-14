@@ -2938,7 +2938,7 @@ def plot_size_feedback(stellar_data, other_data, snaps, weight_norm, plt_type):
         "$E_{\star\mathrm{fb}}^\mathrm{B} / E_{\star\mathrm{fb}}^\mathrm{A}$")
     if plt_type == "gas":
         ax1.set_ylabel(
-            "$R_{1/2, \mathrm{gas}^{B} / R_{1/2, \mathrm{gas}}^{A}$")
+            "$R_{1/2, \mathrm{gas}}^{B} / R_{1/2, \mathrm{gas}}^{A}$")
     else:
         ax1.set_ylabel("$R_{1/2, \star}^{B} / R_{1/2, \star}^{A}$")
 
