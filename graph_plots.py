@@ -3163,7 +3163,7 @@ def plot_size_feedback_stellar(stellar_data, other_data, snaps, weight_norm):
             prog_feedback_energy.append(np.sum(1.74 * 10 ** 49 *
                                                prog_this_ini_ms))
             cuton_tot_hmrs.append(cuton_hmrs[ind])
-            cuton_tot_prog_hmrs.append(prog_cuton_hmrs[flares_ind])
+            cuton_tot_prog_hmrs.extend(prog_cuton_hmrs[flares_ind])
             w.append(ws[ind])
 
     hdf_master.close()
