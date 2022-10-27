@@ -3033,7 +3033,7 @@ def plot_size_feedback_gas(stellar_data, other_data, snaps, weight_norm):
         print("There are %d galaxies" % len(hmrs))
         print("There are %d compact galaxies" % len(hmrs[hmrs < 1]))
         prog_hmrs = stellar_data[prog_snap]["HMRs"][...]
-        prog_cuton_hmrs = stellar_data[prog_snap]["HMRs"][...]
+        prog_cuton_hmrs = other_data[prog_snap]["HMRs"][...]
         grps = stellar_data[snap]["Galaxy,GroupNumber"][...]
         subgrps = stellar_data[snap]["Galaxy,SubGroupNumber"][...]
         prog_grps = stellar_data[prog_snap]["Galaxy,GroupNumber"][...]

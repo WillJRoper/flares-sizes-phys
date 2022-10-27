@@ -192,12 +192,12 @@ print("Got all data")
 # plot_size_sfr_evo_grid(data["stellar"], flares_snaps)
 
 if rank == 0:
-    plot_size_feedback_stellar(hdf["stellar"], hdf["stellar"],
-                               flares_snaps, weight_norm)
+    # plot_size_feedback_stellar(hdf["stellar"], hdf["stellar"],
+    #                            flares_snaps, weight_norm)
     plot_size_feedback_gas(hdf["gas"], hdf["stellar"],
                            flares_snaps, weight_norm)
     plot_ssfr_mass_size_change(
-        hdf["stellar"], hdf["gas"], flares_snaps, weight_norm)
+        hdf["gas"], hdf["stellar"], flares_snaps, weight_norm)
     plot_size_change_blackhole(hdf["stellar"], flares_snaps, weight_norm)
     plot_birth_met(hdf["stellar"][flares_snaps[-1]],
                    flares_snaps[-1], weight_norm, path)
