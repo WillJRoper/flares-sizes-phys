@@ -252,7 +252,7 @@ def plot_size_change(stellar_data, snaps, plt_type, weight_norm):
     ax.scatter(tot_mass, delta_hmr, marker=".")
 
     # Axes labels
-    ax.set_xlabel("$M_{\star} / M_\odot$")
+    ax.set_xlabel("$M_{\star} / {\rm M}_\odot$")
     ax.set_ylabel("$\Delta R_{1/2} / [\mathrm{pkpc}]$")
 
     # Save figure
@@ -1269,7 +1269,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                                        labelleft=False, labelright=False)
 
             if i == 0:
-                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / M_\odot) < %.1f$"
+                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / {\rm M}_\odot) < %.1f$"
                                      % (np.log10(mass_bin_edges[j]),
                                         np.log10(mass_bin_edges[j + 1])))
 
@@ -1577,7 +1577,7 @@ def plot_gas_size_mass_evo_grid(stellar_data, gas_data, snaps):
                                        labelleft=False, labelright=False)
 
             if i == 0:
-                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / M_\odot) < %.1f$"
+                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / {\rm M}_\odot) < %.1f$"
                                      % (np.log10(mass_bin_edges[j]),
                                         np.log10(mass_bin_edges[j + 1])))
 
@@ -1885,7 +1885,7 @@ def plot_gas_size_gasmass_evo_grid(stellar_data, gas_data, snaps):
                                        labelleft=False, labelright=False)
 
             if i == 0:
-                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / M_\odot) < %.1f$"
+                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / {\rm M}_\odot) < %.1f$"
                                      % (np.log10(mass_bin_edges[j]),
                                         np.log10(mass_bin_edges[j + 1])))
 
@@ -3511,7 +3511,7 @@ def plot_size_mass_evo_grid_noncompact(stellar_data, snaps):
                                        labelleft=False, labelright=False)
 
             if i == 0:
-                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / M_\odot) < %.1f$"
+                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / {\rm M}_\odot) < %.1f$"
                                      % (np.log10(mass_bin_edges[j]),
                                         np.log10(mass_bin_edges[j + 1])))
 
