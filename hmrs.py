@@ -220,7 +220,7 @@ def plot_eagle_stellar_hmr(snap):
     # Define bins
     bin_edges = np.logspace(extent[0], extent[1], 30)
 
-    plot_meidan_stat(mass, hmrs, w,
+    plot_meidan_stat(mass, hmrs, np.ones(hmrs.size),
                      ax, "", "r", bin_edges)
 
     # Label axes
