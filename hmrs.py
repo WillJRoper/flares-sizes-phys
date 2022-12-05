@@ -248,7 +248,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     g_hmrs = gas_data[snap]["HMRs"][...]
     w = stellar_data[snap]["weight"][...]
     s_den_hmr = stellar_data[snap]["apertures"]["density"]["hmr"][...]
-    col = stellar_data[snap]["apertures"]["age"][30][...]
+    col = stellar_data[snap]["apertures"]["age"]["30"][...]
 
     # Remove galaxies without stars
     okinds = np.logical_and(g_hmrs > 0, s_hmrs > 0)
