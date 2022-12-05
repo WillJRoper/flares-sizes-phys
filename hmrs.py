@@ -350,19 +350,19 @@ def visualise_gas(stellar_data, gas_data, snap, path):
     imgrange = ((-width / 2, width / 2), (-width / 2, width / 2))
 
     # Get galaxy data
-    regions = stellar_data["regions"]
-    sbegin = stellar_data["begin"]
-    nstar = stellar_data["Galaxy,S_Length"]
-    gbegin = gas_data["begin"]
-    ngas = gas_data["Galaxy,G_Length"]
-    s_hmrs = stellar_data["HMRs"]
-    g_hmrs = gas_data["HMRs"]
-    cops = stellar_data["Galaxy,COP"]
-    star_pos = stellar_data["Particle,S_Coordinates"]
-    gas_pos = gas_data["Particle,G_Coordinates"]
-    star_m = stellar_data["Particle,S_Mass"]
-    gas_m = gas_data["Particle,G_Mass"]
-    gas_app = gas_data["Particle/Apertures/Gas,30"]
+    regions = stellar_data[snap]["regions"][...]
+    sbegin = stellar_data[snap]["begin"][...]
+    nstar = stellar_data[snap]["Galaxy,S_Length"][...]
+    gbegin = gas_data[snap]["begin"][...]
+    ngas = gas_data[snap]["Galaxy,G_Length"][...]
+    s_hmrs = stellar_data[snap]["HMRs"][...]
+    g_hmrs = gas_data[snap]["HMRs"][...]
+    cops = stellar_data[snap]["Galaxy,COP"][...]
+    star_pos = stellar_data[snap]["Particle,S_Coordinates"][...]
+    gas_pos = gas_data[snap]["Particle,G_Coordinates"][...]
+    star_m = stellar_data[snap]["Particle,S_Mass"][...]
+    gas_m = gas_data[snap]["Particle,G_Mass"][...]
+    gas_app = gas_data[snap]["Particle/Apertures/Gas,30"][...]
 
     # Load surroundings data for the first region
     prev_reg = 0
