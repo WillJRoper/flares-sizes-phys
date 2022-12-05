@@ -41,9 +41,10 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     mass = stellar_data[snap]["mass"][...]
     den_hmr = stellar_data[snap]["apertures"]["density"][cut_on][...]
     w = stellar_data[snap]["weight"][...]
+    nstar = stellar_data[snap]["Galaxy,S_Length"][...]
 
     # Remove galaxies without stars
-    okinds = np.logical_and(mass > 0, hmrs > 0)
+    okinds = np.logical_and(nstar > 100, hmrs > 0)
     print("Galaxies before spurious cut: %d" % mass.size)
     mass = mass[okinds]
     hmrs = hmrs[okinds]
@@ -103,9 +104,10 @@ def plot_gas_hmr(data, stellar_data, snap, weight_norm, cut_on="hmr"):
     star_hmrs = stellar_data[snap]["HMRs"][...]
     den_hmr = data[snap]["apertures"]["density"][cut_on][...]
     w = data[snap]["weight"][...]
+    nstar = stellar_data[snap]["Galaxy,S_Length"][...]
 
     # Remove galaxies without stars
-    okinds = np.logical_and(mass > 0, hmrs > 0)
+    okinds = np.logical_and(nstar > 100, hmrs > 0)
     print("Galaxies before spurious cut: %d" % mass.size)
     mass = mass[okinds]
     hmrs = hmrs[okinds]
@@ -249,9 +251,13 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     w = stellar_data[snap]["weight"][...]
     s_den_hmr = stellar_data[snap]["apertures"]["density"]["hmr"][...]
     col = stellar_data[snap]["apertures"]["age"]["30"][...]
+    nstar = stellar_data[snap]["Galaxy,S_Length"][...]
 
     # Remove galaxies without stars
-    okinds = np.logical_and(g_hmrs > 0, s_hmrs > 0)
+    okinds = nstar > 100
+
+    # Remove galaxies without stars
+    okinds = np.logical_and(okinds, np.logical_and(g_hmrs > 0, s_hmrs > 0))
     print("Galaxies before spurious cut: %d" % s_hmrs.size)
     s_hmrs = s_hmrs[okinds]
     g_hmrs = g_hmrs[okinds]
