@@ -5,7 +5,6 @@ from matplotlib.colors import LogNorm
 from hmrs import *
 from density import *
 from stellar_properties import *
-from phys_comp import *
 from spatial_dist import *
 from compute_props import get_data
 from graph_plots import *
