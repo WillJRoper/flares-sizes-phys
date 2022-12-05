@@ -312,8 +312,8 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     # Plot powers of 10
     xs = np.linspace(10**-1.1, 10**1.5, 100)
     for t in [1, 10, 100]:
-        ax.plot(xs, mult_ten(xs, t), linestyle="--", color="k", alpha=0.3)
-        ax1.plot(xs, mult_ten(xs, t), linestyle="--", color="k", alpha=0.3)
+        ax.plot(xs, mult_ten(xs, t), linestyle="--", color="k", alpha=0.4)
+        ax1.plot(xs, mult_ten(xs, t), linestyle="--", color="k", alpha=0.4)
 
         ax.text(10**-0.9, mult_ten(10**-0.85, t), f'%d' % t,
                 horizontalalignment='right', fontsize=6)
