@@ -241,7 +241,7 @@ def plot_eagle_stellar_hmr(snap):
 def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
 
     # Define function to plot power of ten
-    mult_ten lambda xs, mult: xs * mult
+    def mult_ten(xs, mult): return xs * mult
 
     # Define arrays to store computations
     s_hmrs = stellar_data["HMRs"]
