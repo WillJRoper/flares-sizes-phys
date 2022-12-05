@@ -70,12 +70,12 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     extent = [8, 11.5, -1.5, 1.5]
 
     # Define bins
-    bin_edges = np.logspace(extent[0], extent[1], 30)
+    bin_edges = np.logspace(extent[0], extent[1], 20)
 
     plot_meidan_stat(mass, hmrs, w,
                      ax, "", "r", bin_edges)
 
-    ax.text(0.95, 0.9, f'FLARES ($z=5$)',
+    ax.text(0.95, 0.9, f'FLARES: $z=5$',
             bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
                       alpha=0.8),
             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
@@ -152,7 +152,7 @@ def plot_gas_hmr(data, stellar_data, snap, weight_norm, cut_on="hmr"):
     extent = [8, 11.5, -1.5, 1.5]
 
     # Define bins
-    bin_edges = np.logspace(extent[0], extent[1], 30)
+    bin_edges = np.logspace(extent[0], extent[1], 20)
 
     plot_meidan_stat(mass, hmrs, w,
                      ax, "", "r", bin_edges)
@@ -211,7 +211,7 @@ def plot_eagle_stellar_hmr(snap):
                    reduce_C_function=np.sum, xscale='log', yscale='log',
                    linewidths=0.2, cmap='viridis')
 
-    ax.text(0.95, 0.1, f'EAGLE ($z=0$)',
+    ax.text(0.95, 0.1, f'EAGLE: $z=0$',
             bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
                       alpha=0.8),
             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
@@ -220,7 +220,7 @@ def plot_eagle_stellar_hmr(snap):
     extent = [8, 11.5, -1.5, 1.5]
 
     # Define bins
-    bin_edges = np.logspace(extent[0], extent[1], 30)
+    bin_edges = np.logspace(extent[0], extent[1], 20)
 
     plot_meidan_stat(mass, hmrs, np.ones(hmrs.size),
                      ax, "", "r", bin_edges)
@@ -808,7 +808,7 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
     extent = [8, 11.5, -1.5, 1.5]
 
     # Define bins
-    bin_edges = np.logspace(extent[0], extent[1], 30)
+    bin_edges = np.logspace(extent[0], extent[1], 20)
 
     # Set up figure
     fig = plt.figure()
