@@ -56,6 +56,8 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     ax = fig.add_subplot(111)
     ax.loglog()
 
+    print("Minimum stellar mass:", np.log10(np.min(mass)))
+
     # Plot stellar_data
     im = ax.hexbin(mass, hmrs, gridsize=30,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
@@ -63,8 +65,22 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
                    reduce_C_function=np.sum, xscale='log', yscale='log',
                    norm=weight_norm, linewidths=0.2, cmap='viridis')
 
+    # Define hexbin extent
+    extent = [8, 11.5, -1.5, 1.5]
+
+    # Define bins
+    bin_edges = np.logspace(extent[0], extent[1], 30)
+
+    plot_meidan_stat(mass, hmrs, w,
+                     ax, "", "r", bin_edges)
+
+    ax.text(0.95, 0.9, f'FLARES ($z=5$)',
+            bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
+                      alpha=0.8),
+            transform=ax.transAxes, horizontalalignment='right', fontsize=8)
+
     # Label axes
-    ax.set_xlabel("$M_\star / M_\odot$")
+    ax.set_xlabel("$M_\star / \mathrm{M}_\odot$")
     ax.set_ylabel("$R_{1/2} / [\mathrm{pkpc}]$")
 
     cbar = fig.colorbar(im)
@@ -125,8 +141,22 @@ def plot_gas_hmr(data, stellar_data, snap, weight_norm, cut_on="hmr"):
                    reduce_C_function=np.sum, xscale='log', yscale='log',
                    norm=weight_norm, linewidths=0.2, cmap='viridis')
 
+    ax.text(0.95, 0.1, f'$z=5$',
+            bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
+                      alpha=0.8),
+            transform=ax.transAxes, horizontalalignment='right', fontsize=8)
+
+    # Define hexbin extent
+    extent = [8, 11.5, -1.5, 1.5]
+
+    # Define bins
+    bin_edges = np.logspace(extent[0], extent[1], 30)
+
+    plot_meidan_stat(mass, hmrs, w,
+                     ax, "", "r", bin_edges)
+
     # Label axes
-    ax.set_xlabel("$M_\star / M_\odot$")
+    ax.set_xlabel("$M_\star / \mathrm{M}_\odot$")
     ax.set_ylabel("$R_{1/2} / [\mathrm{pkpc}]$")
 
     cbar = fig.colorbar(im)
@@ -179,8 +209,22 @@ def plot_eagle_stellar_hmr(snap):
                    reduce_C_function=np.sum, xscale='log', yscale='log',
                    linewidths=0.2, cmap='viridis')
 
+    ax.text(0.95, 0.1, f'EAGLE ($z=0$)',
+            bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
+                      alpha=0.8),
+            transform=ax.transAxes, horizontalalignment='right', fontsize=8)
+
+    # Define hexbin extent
+    extent = [8, 11.5, -1.5, 1.5]
+
+    # Define bins
+    bin_edges = np.logspace(extent[0], extent[1], 30)
+
+    plot_meidan_stat(mass, hmrs, w,
+                     ax, "", "r", bin_edges)
+
     # Label axes
-    ax.set_xlabel("$M_\star / M_\odot$")
+    ax.set_xlabel("$M_\star / \mathrm{M}_\odot$")
     ax.set_ylabel("$R_{1/2} / [\mathrm{pkpc}]$")
 
     cbar = fig.colorbar(im)
@@ -239,11 +283,22 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
                      reduce_C_function=np.mean, xscale='log', yscale='log',
                      linewidths=0.2, cmap='magma')
 
+    ax.text(0.95, 0.1, f'$z=5$',
+            bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
+                      alpha=0.8),
+            transform=ax.transAxes, horizontalalignment='right', fontsize=8)
+
     # Set axes y lims
     ax.set_ylim(10**-1.1, 10**1.5)
     ax.set_xlim(10**-1.1, 10**1.5)
     ax1.set_ylim(10**-1.1, 10**1.5)
     ax1.set_xlim(10**-1.1, 10**1.5)
+
+    # Plot 1-1 relation
+    ax.plot((10**-1.1, 10**-1.1), (10**1.5, 10**1.5), color="k",
+            linestyle="--")
+    ax1.plot((10**-1.1, 10**-1.1), (10**1.5, 10**1.5), color="k",
+             linestyle="--")
 
     # Label axes
     ax.set_ylabel("$R_{\mathrm{gas}} / [\mathrm{pkbpc}]$")
@@ -724,7 +779,7 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
     extent = [8, 11.5, -1.5, 1.5]
 
     # Define bins
-    bin_edges = np.logspace(extent[0], extent[1], 20)
+    bin_edges = np.logspace(extent[0], extent[1], 30)
 
     # Set up figure
     fig = plt.figure()
@@ -740,7 +795,7 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
 
     # Label axes
     ax.set_ylabel(r"$R_{gas,1/2} / R_{\star,1/2}$")
-    ax.set_xlabel(r"$M_\star / M_\odot$")
+    ax.set_xlabel(r"$M_\star / \mathrm{M}_\odot$")
 
     cbar = fig.colorbar(im)
     cbar.set_label("$\sum w_i$")
