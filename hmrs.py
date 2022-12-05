@@ -698,8 +698,6 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
         # Loop over galaxies
         for igal in range(mass.size):
 
-            print(igal)
-
             # Ensure we also have 100 gas particles
             if ngas[igal] < 100:
                 continue
