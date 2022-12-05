@@ -2470,7 +2470,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax1.set_title(
-        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} > 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} > 1 \ \mathrm{pkpc}$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs > 1)
     im = ax2.hexbin(delta_hmr[okinds], tot_ssfr[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
@@ -2478,7 +2478,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax2.set_title(
-        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
     im = ax3.hexbin(delta_hmr[okinds], tot_ssfr[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
@@ -2486,7 +2486,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax3.set_title(
-        "$R_{1/2,\star}^{A} \leq 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} \leq 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
 
     # Axes labels
     ax1.set_xlabel("$R_{1/2, \star}^{B} / R_{1/2, \star}^{A}$")
@@ -2548,7 +2548,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax1.set_title(
-        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} > 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} > 1 \ \mathrm{pkpc}$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs > 1)
     im = ax2.hexbin(delta_hmr[okinds], tot_ssfr[okinds] * tot_mass[okinds],
                     gridsize=50,
@@ -2557,7 +2557,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax2.set_title(
-        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
     im = ax3.hexbin(delta_hmr[okinds], tot_ssfr[okinds] * tot_mass[okinds],
                     gridsize=50,
@@ -2566,7 +2566,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax3.set_title(
-        "$R_{1/2,\star}^{A} \leq 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} \leq 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
 
     # Axes labels
     ax1.set_xlabel("$R_{1/2, \star}^{B} / R_{1/2, \star}^{A}$")
@@ -2627,7 +2627,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax1.set_title(
-        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} > 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} > 1 \ \mathrm{pkpc}$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs > 1)
     im = ax2.hexbin(delta_ghmr[okinds], delta_hmr[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
@@ -2635,7 +2635,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax2.set_title(
-        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
     im = ax3.hexbin(delta_ghmr[okinds], delta_hmr[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
@@ -2643,7 +2643,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax3.set_title(
-        "$R_{1/2,\star}^{A} \leq 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} \leq 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
 
     # Axes labels
     ax1.set_xlabel("$R_{1/2, \mathrm{gas}}^{B} / R_{1/2, \mathrm{gas}}^{A}$")
@@ -2915,7 +2915,7 @@ def plot_size_feedback_stellar(stellar_data, other_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax1.set_title(
-        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} > 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} > 1 \ \mathrm{pkpc}$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs > 1)
     im = ax2.hexbin(delta_fb[okinds], delta_hmr[okinds], gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
@@ -2923,7 +2923,7 @@ def plot_size_feedback_stellar(stellar_data, other_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax2.set_title(
-        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
     im = ax3.hexbin(delta_fb[okinds], delta_hmr[okinds], gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
@@ -2931,7 +2931,7 @@ def plot_size_feedback_stellar(stellar_data, other_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax3.set_title(
-        "$R_{1/2,\star}^{A} \leq 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} \leq 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
 
     # Axes labels
     ax1.set_xlabel(
@@ -3217,7 +3217,7 @@ def plot_size_feedback_gas(stellar_data, other_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax1.set_title(
-        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} > 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} > 1 \ \mathrm{pkpc}$")
     okinds = np.logical_and(cuton_tot_hmrs <= 1, cuton_tot_prog_hmrs > 1)
     im = ax2.hexbin(delta_fb[okinds], delta_hmr[okinds], gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
@@ -3225,7 +3225,7 @@ def plot_size_feedback_gas(stellar_data, other_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax2.set_title(
-        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
     okinds = np.logical_and(cuton_tot_hmrs <= 1, cuton_tot_prog_hmrs <= 1)
     im = ax3.hexbin(delta_fb[okinds], delta_hmr[okinds], gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
@@ -3233,7 +3233,7 @@ def plot_size_feedback_gas(stellar_data, other_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax3.set_title(
-        "$R_{1/2,\star}^{A} \leq 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} \leq 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
 
     # Axes labels
     ax1.set_xlabel(
@@ -4383,7 +4383,7 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax1.set_title(
-        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} > 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} > 1 \ \mathrm{pkpc}$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs > 1)
     im = ax2.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
@@ -4391,7 +4391,7 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax2.set_title(
-        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} > 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
     okinds = np.logical_and(tot_hmrs <= 1, tot_prog_hmrs <= 1)
     im = ax3.hexbin(delta_hmr[okinds], delta_bhms[okinds],  gridsize=50,
                     mincnt=np.min(w) - (0.1 * np.min(w)),
@@ -4399,7 +4399,7 @@ def plot_size_change_blackhole(stellar_data, snaps, weight_norm):
                     reduce_C_function=np.sum, norm=weight_norm,
                     linewidths=0.2, cmap="plasma", extent=extent)
     ax3.set_title(
-        "$R_{1/2,\star}^{A} \leq 1 \ \mathrm{pkpc} \ \land \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
+        "$R_{1/2,\star}^{A} \leq 1 \ \mathrm{pkpc}, \ R_{1/2,\star}^{B} \leq 1 \ \mathrm{pkpc}$")
 
     # Axes labels
     ax1.set_xlabel(
