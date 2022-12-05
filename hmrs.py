@@ -395,6 +395,10 @@ def visualise_gas(stellar_data, gas_data, snap, path):
     exgal_img = np.zeros(ndims)
     comp_img = np.zeros(ndims)
     ex_img = np.zeros(ndims)
+    compgal_n = 0
+    exgal_n = 0
+    comp_n = 0
+    ex_n = 0
 
     # Loop over galaxies in the both compact population
     for (ind, b), l in zip(enumerate(gbegin),
@@ -468,6 +472,8 @@ def visualise_gas(stellar_data, gas_data, snap, path):
         # Stack images
         compgal_img += H_gal
         comp_img += H_s
+        compgal_n += 1
+        comp_n += 1
 
     # Loop over galaxies in the extended gas population
     for (ind, b), l in zip(enumerate(gbegin), ngas):
@@ -540,6 +546,8 @@ def visualise_gas(stellar_data, gas_data, snap, path):
         # Stack images
         exgal_img += H_gal
         ex_img += H_s
+        exgal_n += 1
+        ex_n += 1
 
     # Calculate image "half mass radii"
     pix_area = res * res
@@ -566,16 +574,16 @@ def visualise_gas(stellar_data, gas_data, snap, path):
 
     # Plot the images
     extent = [-width / 2, width / 2, -width / 2, width / 2]
-    im1 = ax1.imshow(compgal_img, cmap="Greys_r",
+    im1 = ax1.imshow(compgal_img / compgal_n, cmap="Greys_r",
                      norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True),
                      extent=extent)
-    im2 = ax2.imshow(exgal_img, cmap="Greys_r",
+    im2 = ax2.imshow(exgal_img / exgal_n, cmap="Greys_r",
                      norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True),
                      extent=extent)
-    im3 = ax3.imshow(comp_img, cmap="Greys_r",
+    im3 = ax3.imshow(comp_img / comp_n, cmap="Greys_r",
                      norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True),
                      extent=extent)
-    im4 = ax4.imshow(ex_img, cmap="Greys_r",
+    im4 = ax4.imshow(ex_img / ex_n, cmap="Greys_r",
                      norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True),
                      extent=extent)
 
@@ -781,6 +789,9 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
             s_hmrs.append(hmr)
             ws.append(weights[int(reg)])
 
+            if g_hmr / s_hmr > 10:
+                print("Large ratio galaxy:", g_hmr, s_hmr, m, g, sg)
+
     # Convert to arrays
     w_hmrs = np.array(w_hmrs)
     ms = np.array(ms)
@@ -804,6 +815,11 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
                    cmap="plasma", norm=weight_norm)
     plot_meidan_stat(ms, w_hmrs / s_hmrs, ws,
                      ax, "", "r", bin_edges)
+
+    ax.text(0.95, 0.1, f'$z=5$',
+            bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
+                      alpha=0.8),
+            transform=ax.transAxes, horizontalalignment='right', fontsize=8)
 
     # Label axes
     ax.set_ylabel(r"$R_{gas,1/2} / R_{\star,1/2}$")

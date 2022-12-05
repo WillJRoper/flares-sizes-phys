@@ -287,6 +287,11 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
                            reduce_C_function=np.sum, norm=weight_norm,
                            linewidths=0.2, cmap="plasma")
 
+            ax.text(0.95, 0.1, f'$z=5$',
+                    bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
+                              alpha=0.8),
+                    transform=ax.transAxes, horizontalalignment='right', fontsize=8)
+
             # Axes labels
             ax.set_xlabel("$M_\star / M_\odot$")
             ax.set_ylabel("$E_\mathrm{bind} / [\mathrm{erg}]$")
@@ -311,6 +316,11 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
                            C=w, xscale="log", yscale="log",
                            reduce_C_function=np.sum, norm=weight_norm,
                            linewidths=0.2, cmap="plasma")
+
+            ax.text(0.95, 0.1, f'$z=5$',
+                    bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
+                              alpha=0.8),
+                    transform=ax.transAxes, horizontalalignment='right', fontsize=8)
 
             # Axes labels
             ax.set_xlabel("$M_\star / M_\odot$")
