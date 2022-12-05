@@ -579,6 +579,14 @@ def visualise_gas(stellar_data, gas_data, snap, path):
         ax.grid(False)
 
     # Plot the images
+    print(np.min(compgal_img / compgal_n))
+    print(np.min(comp_img / comp_n))
+    print(np.min(exgal_img / exgal_n))
+    print(np.min(ex_img / ex_n))
+    print(np.max(compgal_img / compgal_n))
+    print(np.max(comp_img / comp_n))
+    print(np.max(exgal_img / exgal_n))
+    print(np.max(ex_img / ex_n))
     extent = [-width / 2, width / 2, -width / 2, width / 2]
     im1 = ax1.imshow(compgal_img / compgal_n, cmap="Greys_r",
                      norm=LogNorm(vmin=10**-2.5, vmax=10**2, clip=True),
