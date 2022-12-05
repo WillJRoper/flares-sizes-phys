@@ -147,14 +147,14 @@ print("Got all data")
 print(hdf["stellar"][flares_snaps[-1]].keys())
 
 if rank == 0:
-    # plot_stellar_hmr(hdf["stellar"], flares_snaps[-1], weight_norm,
-    #                  cut_on="hmr")
-    # for snap in ['028_z000p000']:
-    #     plot_eagle_stellar_hmr(snap)
-    # plot_gas_hmr(hdf["gas"], hdf["stellar"], flares_snaps[-1], weight_norm)
-    # plot_stellar_gas_hmr_comp(hdf["stellar"], hdf["gas"], flares_snaps[-1],
-    #                           weight_norm)
-    # visualise_gas(hdf["stellar"], hdf["gas"], flares_snaps[-1], path)
+    plot_stellar_hmr(hdf["stellar"], flares_snaps[-1], weight_norm,
+                     cut_on="hmr")
+    for snap in ['028_z000p000']:
+        plot_eagle_stellar_hmr(snap)
+    plot_gas_hmr(hdf["gas"], hdf["stellar"], flares_snaps[-1], weight_norm)
+    plot_stellar_gas_hmr_comp(hdf["stellar"], hdf["gas"], flares_snaps[-1],
+                              weight_norm)
+    visualise_gas(hdf["stellar"], hdf["gas"], flares_snaps[-1], path)
     # plot_size_mass_evo_grid(hdf["stellar"], flares_snaps)
     plot_ssfr_mass_size_change(
         hdf["stellar"], hdf["gas"], flares_snaps, weight_norm)
