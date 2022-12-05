@@ -805,7 +805,7 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
             s_hmrs.append(hmr)
             ws.append(weights[int(reg)])
 
-            if g_hmr / s_hmr > 10:
+            if g_hmr / hmr > 10:
                 print("Large ratio galaxy:", g_hmr, s_hmr, m, g, sg)
 
     # Convert to arrays
