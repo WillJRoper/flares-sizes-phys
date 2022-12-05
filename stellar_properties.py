@@ -100,7 +100,7 @@ def plot_birth_met(stellar_data, snap, weight_norm, path):
 
         plot_meidan_stat(zs[okinds], mets[okinds],
                          w[okinds], ax,
-                         lab=r"$%.2f \leq \log_{10}(1 + \Delta) < %.2f$"
+                         lab=r"$%.2f \leq \log_{10}(1 + \delta) < %.2f$"
                          % (ovden_bins[i], ovden_bins[i + 1]),
                          bins=flares_z_bins,
                          color=None)
@@ -210,7 +210,7 @@ def plot_birth_den(stellar_data, snap, weight_norm, path):
                                 okinds)
 
         plot_meidan_stat(zs[okinds], dens[okinds], w[okinds], ax,
-                         lab=r"$%.2f \leq \log_{10}(1 + \Delta) < %.2f$"
+                         lab=r"$%.2f \leq \log_{10}(1 + \delta) < %.2f$"
                          % (ovden_bins[i], ovden_bins[i + 1]),
                          bins=flares_z_bins, color=None)
 
@@ -344,7 +344,7 @@ def plot_sfr_evo(stellar_data, snap):
             plt_zs.append(z_low)
 
         ax.plot(plt_zs, sfrs,
-                label=r"$%.1f \leq \log_{10}(1 + \Delta) < %.1f$"
+                label=r"$%.1f \leq \log_{10}(1 + \delta) < %.1f$"
                 % (ovden_bins[i], ovden_bins[i + 1]))
 
     # Get SFRs
