@@ -240,6 +240,9 @@ def plot_eagle_stellar_hmr(snap):
 
 def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
 
+    # Define function to plot power of ten
+    mult_ten lambda xs, mult: xs * mult
+
     # Define arrays to store computations
     s_hmrs = stellar_data["HMRs"]
     g_hmrs = gas_data["HMRs"]
@@ -299,6 +302,15 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
             linestyle="--")
     ax1.plot((10**-1.1, 10**-1.1), (10**1.5, 10**1.5), color="k",
              linestyle="--")
+
+    # Plot powers of 10
+    xs = np.linspace(10**-1.1, 10**1.5, 100)
+    for t in [0.1, 10, 100]:
+        ax.plot(xs, mult_ten(xs, t), linestyle="-", color="k", alpha=0.5)
+        ax1.plot(xs, mult_ten(xs, t), linestyle="-", color="k", alpha=0.5)
+
+        ax.text(10**-0.9, mult_ten(10**-0.85, t), f'%d' % t,
+                horizontalalignment='right', fontsize=6)
 
     # Label axes
     ax.set_ylabel("$R_{\mathrm{gas}} / [\mathrm{pkbpc}]$")
