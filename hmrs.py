@@ -37,10 +37,10 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
 
     # Define arrays to store computations
-    hmrs = stellar_data["HMRs"]
-    mass = stellar_data["mass"]
-    den_hmr = stellar_data["apertures"]["density"][cut_on]
-    w = stellar_data["weight"]
+    hmrs = stellar_data[snap]["HMRs"]
+    mass = stellar_data[snap]["mass"]
+    den_hmr = stellar_data[snap]["apertures"]["density"][cut_on]
+    w = stellar_data[snap]["weight"]
 
     # Remove galaxies without stars
     okinds = np.logical_and(mass > 0, hmrs > 0)
@@ -244,11 +244,11 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
     def mult_ten(xs, mult): return xs * mult
 
     # Define arrays to store computations
-    s_hmrs = stellar_data["HMRs"]
-    g_hmrs = gas_data["HMRs"]
-    w = stellar_data["weight"]
-    s_den_hmr = stellar_data["apertures"]["density"]["hmr"]
-    col = stellar_data["apertures"]["age"][30]
+    s_hmrs = stellar_data[snap]["HMRs"]
+    g_hmrs = gas_data[snap]["HMRs"]
+    w = stellar_data[snap]["weight"]
+    s_den_hmr = stellar_data[snap]["apertures"]["density"]["hmr"]
+    col = stellar_data[snap]["apertures"]["age"][30]
 
     # Remove galaxies without stars
     okinds = np.logical_and(g_hmrs > 0, s_hmrs > 0)

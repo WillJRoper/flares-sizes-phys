@@ -145,8 +145,8 @@ except OSError:
 
 print("Got all data")
 print(hdf.keys())
-print(hdf["stellar"].keys())
-print(hdf["gas"].keys())
+print(hdf["stellar"][snap].keys())
+print(hdf["gas"][snap].keys())
 
 if rank == 0:
     plot_stellar_hmr(hdf["stellar"], flares_snaps[-1], weight_norm,
