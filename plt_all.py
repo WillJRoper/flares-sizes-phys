@@ -154,7 +154,7 @@ if size == 1:
     plot_gas_hmr(hdf["gas"], hdf["stellar"], flares_snaps[-1], weight_norm)
     plot_stellar_gas_hmr_comp(hdf["stellar"], hdf["gas"], flares_snaps[-1],
                               weight_norm)
-    visualise_gas(hdf["stellar"], hdf["gas"], flares_snaps[-1], path)
+    # visualise_gas(hdf["stellar"], hdf["gas"], flares_snaps[-1], path)
     plot_size_mass_evo_grid(hdf["stellar"], flares_snaps)
     plot_ssfr_mass_size_change(
         hdf["stellar"], hdf["gas"], flares_snaps, weight_norm)
