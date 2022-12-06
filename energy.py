@@ -287,6 +287,14 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
                            reduce_C_function=np.sum, norm=weight_norm,
                            linewidths=0.2, cmap="plasma")
 
+            # Define hexbin extent
+            extent = [8, 11.5, -1.5, 1.5]
+
+            # Define bins
+            bin_edges = np.logspace(extent[0], extent[1], 20)
+            plot_meidan_stat(gal_masses, binding_energy, w,
+                             ax, "", "r", bin_edges)
+
             ax.text(0.95, 0.1, f'$z=5$',
                     bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
                               alpha=0.8),
@@ -316,6 +324,14 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
                            C=w, xscale="log", yscale="log",
                            reduce_C_function=np.sum, norm=weight_norm,
                            linewidths=0.2, cmap="plasma")
+
+            # Define hexbin extent
+            extent = [8, 11.5, -1.5, 1.5]
+
+            # Define bins
+            bin_edges = np.logspace(extent[0], extent[1], 20)
+            plot_meidan_stat(gal_masses, binding_energy / feedback_energy, w,
+                             ax, "", "r", bin_edges)
 
             ax.text(0.95, 0.1, f'$z=5$',
                     bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
