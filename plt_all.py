@@ -146,7 +146,7 @@ except OSError:
 print("Got all data")
 print(hdf["stellar"][flares_snaps[-1]].keys())
 
-if size == 1:
+if rank == 0:
     plot_stellar_hmr(hdf["stellar"], flares_snaps[-1], weight_norm,
                      cut_on="hmr")
     for snap in ['028_z000p000']:
