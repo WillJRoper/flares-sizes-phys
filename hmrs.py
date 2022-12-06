@@ -836,7 +836,7 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
 
     # Label axes
-    ax.set_ylabel(r"$R_{gas,1/2} / R_{\star,1/2}$")
+    ax.set_ylabel(r"$R_{\mathrm{cool}} / R_{\star}$")
     ax.set_xlabel(r"$M_\star / \mathrm{M}_\odot$")
 
     cbar = fig.colorbar(im)
