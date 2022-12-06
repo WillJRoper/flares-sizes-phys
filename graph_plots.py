@@ -2500,7 +2500,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     ax3.text(0.95, 0.1, f'$z=5$',
              bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
                        alpha=0.8),
-             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
+             transform=ax3.transAxes, horizontalalignment='right', fontsize=8)
 
     # Get and set universal axis limits
     xmin, xmax = np.inf, 0
@@ -2585,7 +2585,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     ax3.text(0.95, 0.1, f'$z=5$',
              bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
                        alpha=0.8),
-             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
+             transform=ax3.transAxes, horizontalalignment='right', fontsize=8)
 
     # Get and set universal axis limits
     xmin, xmax = np.inf, 0
@@ -2664,7 +2664,7 @@ def plot_ssfr_mass_size_change(stellar_data, gas_data, snaps, weight_norm):
     ax3.text(0.95, 0.1, f'$z=5$',
              bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
                        alpha=0.8),
-             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
+             transform=ax3.transAxes, horizontalalignment='right', fontsize=8)
 
     # Get and set universal axis limits
     xmin, xmax = np.inf, 0
@@ -2967,7 +2967,7 @@ def plot_size_feedback_stellar(stellar_data, other_data, snaps, weight_norm):
     ax3.text(0.95, 0.1, f'$z=5$',
              bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
                        alpha=0.8),
-             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
+             transform=ax3.transAxes, horizontalalignment='right', fontsize=8)
 
     # Get and set universal axis limits
     xmin, xmax = np.inf, 0
@@ -3274,7 +3274,7 @@ def plot_size_feedback_gas(stellar_data, other_data, snaps, weight_norm):
     ax3.text(0.95, 0.1, f'$z=5$',
              bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
                        alpha=0.8),
-             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
+             transform=ax3.transAxes, horizontalalignment='right', fontsize=8)
 
     # Get and set universal axis limits
     xmin, xmax = np.inf, 0
