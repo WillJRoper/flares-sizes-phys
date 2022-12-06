@@ -1269,7 +1269,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
                                        labelleft=False, labelright=False)
 
             if i == 0:
-                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / {\rm M}_\odot) < %.1f$"
+                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / \mathrm{M}_\odot) < %.1f$"
                                      % (np.log10(mass_bin_edges[j]),
                                         np.log10(mass_bin_edges[j + 1])))
 
@@ -1324,7 +1324,7 @@ def plot_size_mass_evo_grid(stellar_data, snaps):
     for ax in axes[:, 0]:
         ax.set_ylabel("$R_{1/2\star} / [\mathrm{pkpc}]$")
     for ax in axes[-1, :]:
-        ax.set_xlabel("$M_{\star} / M_{\odot}$")
+        ax.set_xlabel("$M_{\star} / \mathrm{M}_\odot$")
 
     cbar = fig.colorbar(im, cax)
     cbar.set_label("$z$")
@@ -1577,7 +1577,7 @@ def plot_gas_size_mass_evo_grid(stellar_data, gas_data, snaps):
                                        labelleft=False, labelright=False)
 
             if i == 0:
-                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / {\rm M}_\odot) < %.1f$"
+                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / \mathrm{M}_\odot) < %.1f$"
                                      % (np.log10(mass_bin_edges[j]),
                                         np.log10(mass_bin_edges[j + 1])))
 
@@ -1632,7 +1632,7 @@ def plot_gas_size_mass_evo_grid(stellar_data, gas_data, snaps):
     for ax in axes[:, 0]:
         ax.set_ylabel("$R_{1/2}^\mathrm{gas} / [\mathrm{pkpc}]$")
     for ax in axes[-1, :]:
-        ax.set_xlabel("$M_{\star} / M_{\odot}$")
+        ax.set_xlabel("$M_{\star} / \mathrm{M}_\odot$")
 
     cbar = fig.colorbar(im, cax)
     cbar.set_label("$z$")
@@ -1885,7 +1885,7 @@ def plot_gas_size_gasmass_evo_grid(stellar_data, gas_data, snaps):
                                        labelleft=False, labelright=False)
 
             if i == 0:
-                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / {\rm M}_\odot) < %.1f$"
+                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / \mathrm{M}_\odot) < %.1f$"
                                      % (np.log10(mass_bin_edges[j]),
                                         np.log10(mass_bin_edges[j + 1])))
 
@@ -1940,7 +1940,7 @@ def plot_gas_size_gasmass_evo_grid(stellar_data, gas_data, snaps):
     for ax in axes[:, 0]:
         ax.set_ylabel("$R_{1/2}^\mathrm{gas} / [\mathrm{pkpc}]$")
     for ax in axes[-1, :]:
-        ax.set_xlabel("$M_{\mathrm{gas}} / M_{\odot}$")
+        ax.set_xlabel("$M_{\mathrm{gas}} / \mathrm{M}_\odot$")
 
     cbar = fig.colorbar(im, cax)
     cbar.set_label("$z$")
@@ -2240,7 +2240,7 @@ def plot_size_sfr_evo_grid(stellar_data, snaps):
     for ax in axes[:, 0]:
         ax.set_ylabel("$R_{1/2\star} / [\mathrm{pkpc}]$")
     for ax in axes[-1, :]:
-        ax.set_xlabel("$M_{\star} / M_{\odot}$")
+        ax.set_xlabel("$M_{\star} / \mathrm{M}_\odot$")
 
     cbar = fig.colorbar(im, cax)
     cbar.set_label("$\mathrm{sSFR} / [\mathrm{Gyr}^{-1}]$")
@@ -3536,7 +3536,7 @@ def plot_size_mass_evo_grid_noncompact(stellar_data, snaps):
                                        labelleft=False, labelright=False)
 
             if i == 0:
-                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / {\rm M}_\odot) < %.1f$"
+                axes[i, j].set_title("$%.1f \leq \log_{10}(M_\star^{z=5} / \mathrm{M}_\odot) < %.1f$"
                                      % (np.log10(mass_bin_edges[j]),
                                         np.log10(mass_bin_edges[j + 1])))
 
@@ -3591,7 +3591,7 @@ def plot_size_mass_evo_grid_noncompact(stellar_data, snaps):
     for ax in axes[:, 0]:
         ax.set_ylabel("$R_{1/2\star} / [\mathrm{pkpc}]$")
     for ax in axes[-1, :]:
-        ax.set_xlabel("$M_{\star} / M_{\odot}$")
+        ax.set_xlabel("$M_{\star} / \mathrm{M}_\odot$")
 
     cbar = fig.colorbar(im, cax)
     cbar.set_label("$z$")
