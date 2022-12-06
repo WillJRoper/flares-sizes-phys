@@ -319,7 +319,8 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             ax.loglog()
 
             # Plot the scatter
-            im = ax.hexbin(gal_masses, binding_energy / feedback_energy,
+            ratio = binding_energy / feedback_energy
+            im = ax.hexbin(gal_masses, ratio,
                            gridsize=50, mincnt=np.min(w) - (0.1 * np.min(w)),
                            C=w, xscale="log", yscale="log",
                            reduce_C_function=np.sum, norm=weight_norm,
@@ -328,9 +329,14 @@ def plot_binding_energy(data, snaps, weight_norm, comm, nranks, rank):
             # Define hexbin extent
             extent = [8, 11.5, -1.5, 1.5]
 
+            print(ratio[np.logical_and(
+                ratio < 1, gal_masses >= 10 ** 9)].size / ratio.size)
+            print(ratio[np.logical_and(
+                ratio < 1, gal_masses < 10 ** 9)].size / ratio.size)
+
             # Define bins
             bin_edges = np.logspace(extent[0], extent[1], 20)
-            plot_meidan_stat(gal_masses, binding_energy / feedback_energy, w,
+            plot_meidan_stat(gal_masses, ratio, w,
                              ax, "", "r", bin_edges)
 
             ax.text(0.95, 0.1, f'$z=5$',
