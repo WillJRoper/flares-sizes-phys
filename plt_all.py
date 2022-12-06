@@ -162,7 +162,7 @@ if size == 1:
                                flares_snaps, weight_norm)
     plot_size_feedback_gas(hdf["gas"], hdf["stellar"],
                            flares_snaps, weight_norm)
-    # plot_weighted_gas_size_mass(flares_snaps[-1], regions, weight_norm, path)
+    plot_weighted_gas_size_mass(flares_snaps[-1], regions, weight_norm, path)
     # plot_birth_den_vs_met(hdf["stellar"], flares_snaps[-1], weight_norm, path)
     plot_birth_met(hdf["stellar"][evo_flares_snaps[-1]],
                    evo_flares_snaps[-1], weight_norm, path)
