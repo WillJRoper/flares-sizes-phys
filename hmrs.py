@@ -74,7 +74,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     bin_edges = np.logspace(extent[0], extent[1], 20)
 
     plot_meidan_stat(mass, hmrs, w,
-                     ax, "", "r", bin_edges)
+                     ax, "", "g", bin_edges)
 
     ax.text(0.95, 0.9, f'FLARES: $z=5$',
             bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
@@ -156,7 +156,7 @@ def plot_gas_hmr(data, stellar_data, snap, weight_norm, cut_on="hmr"):
     bin_edges = np.logspace(extent[0], extent[1], 20)
 
     plot_meidan_stat(mass, hmrs, w,
-                     ax, "", "r", bin_edges)
+                     ax, "", "g", bin_edges)
 
     # Label axes
     ax.set_xlabel("$M_\star / \mathrm{M}_\odot$")
@@ -224,7 +224,7 @@ def plot_eagle_stellar_hmr(snap):
     bin_edges = np.logspace(extent[0], extent[1], 20)
 
     plot_meidan_stat(mass, hmrs, np.ones(hmrs.size),
-                     ax, "", "r", bin_edges)
+                     ax, "", "g", bin_edges)
 
     # Label axes
     ax.set_xlabel("$M_\star / \mathrm{M}_\odot$")
