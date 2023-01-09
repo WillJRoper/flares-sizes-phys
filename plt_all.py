@@ -154,23 +154,22 @@ if rank == 0:
     plot_gas_hmr(hdf["gas"], hdf["stellar"], flares_snaps[-1], weight_norm)
     plot_stellar_gas_hmr_comp(hdf["stellar"], hdf["gas"], flares_snaps[-1],
                               weight_norm)
-    # visualise_gas(hdf["stellar"], hdf["gas"], flares_snaps[-1], path)
-    plot_size_mass_evo_grid(hdf["stellar"], flares_snaps)
-    plot_ssfr_mass_size_change(
-        hdf["stellar"], hdf["gas"], flares_snaps, weight_norm)
-    plot_size_feedback_stellar(hdf["stellar"], hdf["stellar"],
-                               flares_snaps, weight_norm)
-    plot_size_feedback_gas(hdf["gas"], hdf["stellar"],
-                           flares_snaps, weight_norm)
-    plot_weighted_gas_size_mass(flares_snaps[-1], regions, weight_norm, path)
+    visualise_gas(hdf["stellar"], hdf["gas"], flares_snaps[-1], path)
+    #plot_size_mass_evo_grid(hdf["stellar"], flares_snaps)
+    # plot_ssfr_mass_size_change(
+    #     hdf["stellar"], hdf["gas"], flares_snaps, weight_norm)
+    # plot_size_feedback_stellar(hdf["stellar"], hdf["stellar"],
+    #                            flares_snaps, weight_norm)
+    # plot_size_feedback_gas(hdf["gas"], hdf["stellar"],
+    #                        flares_snaps, weight_norm)
+    # plot_weighted_gas_size_mass(flares_snaps[-1], regions, weight_norm, path)
     # plot_birth_den_vs_met(hdf["stellar"], flares_snaps[-1], weight_norm, path)
-    plot_birth_met(hdf["stellar"][evo_flares_snaps[-1]],
-                   evo_flares_snaps[-1], weight_norm, path)
-    plot_birth_den(hdf["stellar"][evo_flares_snaps[-1]],
-                   evo_flares_snaps[-1], weight_norm, path)
+    # plot_birth_met(hdf["stellar"][evo_flares_snaps[-1]],
+    #                evo_flares_snaps[-1], weight_norm, path)
+    # plot_birth_den(hdf["stellar"][evo_flares_snaps[-1]],
+    #                evo_flares_snaps[-1], weight_norm, path)
     # sfr_radial_profile(hdf["stellar"], com_snaps, agndt9_path, flares_snaps)
-
-    plot_size_change_blackhole(hdf["stellar"], flares_snaps, weight_norm)
+    # plot_size_change_blackhole(hdf["stellar"], flares_snaps, weight_norm)
 
 else:
     plot_binding_energy(hdf, flares_snaps,

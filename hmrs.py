@@ -12,6 +12,7 @@ import pandas as pd
 from utils import mkdir, plot_meidan_stat
 from utils import calc_3drad, calc_light_mass_rad, mkdir, get_pixel_hlr
 import eagle_IO.eagle_IO as eagle_io
+import cmasher as cmr
 
 os.environ['FLARE'] = '/cosma7/data/dp004/dc-wilk2/flare'
 mpl.use('Agg')
@@ -64,7 +65,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
                    mincnt=np.min(w) - (0.1 * np.min(w)),
                    C=w, extent=[8, 11.2, -1, 1.3],
                    reduce_C_function=np.sum, xscale='log', yscale='log',
-                   norm=weight_norm, linewidths=0.2, cmap='viridis')
+                   norm=weight_norm, linewidths=0.2, cmap='plasma')
 
     # Define hexbin extent
     extent = [8, 11.5, -1.5, 1.5]
@@ -141,7 +142,7 @@ def plot_gas_hmr(data, stellar_data, snap, weight_norm, cut_on="hmr"):
                    mincnt=np.min(w) - (0.1 * np.min(w)),
                    C=w, extent=[8, 11.2, -1, 1.3],
                    reduce_C_function=np.sum, xscale='log', yscale='log',
-                   norm=weight_norm, linewidths=0.2, cmap='viridis')
+                   norm=weight_norm, linewidths=0.2, cmap='plasma')
 
     ax.text(0.95, 0.1, f'$z=5$',
             bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
@@ -209,7 +210,7 @@ def plot_eagle_stellar_hmr(snap):
                    mincnt=1, norm=LogNorm(),
                    extent=[8, 12.0, -1, 1.7],
                    reduce_C_function=np.sum, xscale='log', yscale='log',
-                   linewidths=0.2, cmap='viridis')
+                   linewidths=0.2, cmap='cmr.freeze')
 
     ax.text(0.95, 0.1, f'EAGLE: $z=0$',
             bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
@@ -285,7 +286,7 @@ def plot_stellar_gas_hmr_comp(stellar_data, gas_data, snap, weight_norm):
                    mincnt=np.min(w) - (0.1 * np.min(w)),
                    C=w, extent=[-1, 1.3, -1, 1.3],
                    reduce_C_function=np.sum, xscale='log', yscale='log',
-                   linewidths=0.2, cmap='viridis', norm=weight_norm)
+                   linewidths=0.2, cmap='plasma', norm=weight_norm)
     im1 = ax1.hexbin(s_hmrs, g_hmrs, gridsize=30,
                      mincnt=np.min(w) - (0.1 * np.min(w)),
                      C=col, extent=[-1, 1.3, -1, 1.3], vmin=0, vmax=490,
@@ -590,16 +591,16 @@ def visualise_gas(stellar_data, gas_data, snap, path):
     print(np.max(exgal_img / exgal_n))
     print(np.max(ex_img / ex_n))
     extent = [-width / 2, width / 2, -width / 2, width / 2]
-    im1 = ax1.imshow(compgal_img / compgal_n, cmap="Greys_r",
+    im1 = ax1.imshow(compgal_img / compgal_n, cmap="cmr.gothic",
                      norm=LogNorm(vmin=10**-6, vmax=0.15, clip=True),
                      extent=extent)
-    im2 = ax2.imshow(exgal_img / exgal_n, cmap="Greys_r",
+    im2 = ax2.imshow(exgal_img / exgal_n, cmap="cmr.gothic",
                      norm=LogNorm(vmin=10**-6, vmax=0.15, clip=True),
                      extent=extent)
-    im3 = ax3.imshow(comp_img / comp_n, cmap="Greys_r",
+    im3 = ax3.imshow(comp_img / comp_n, cmap="cmr.gothic",
                      norm=LogNorm(vmin=10**-6, vmax=0.15, clip=True),
                      extent=extent)
-    im4 = ax4.imshow(ex_img / ex_n, cmap="Greys_r",
+    im4 = ax4.imshow(ex_img / ex_n, cmap="cmr.gothic",
                      norm=LogNorm(vmin=10**-6, vmax=0.15, clip=True),
                      extent=extent)
 
@@ -678,7 +679,7 @@ def plot_weighted_gas_size_mass(snap, regions, weight_norm, ini_path):
                                         numThreads=8)
 
         # Create index pointer for gas
-        gas_begin = np.zeros(len(nstar), dtype=int)
+        gas_begin = np.zeros(len(ngas), dtype=int)
         gas_begin[1:] = np.cumsum(ngas[:-1])
 
         # Apply some cuts
