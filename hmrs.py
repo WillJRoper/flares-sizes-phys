@@ -82,13 +82,22 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
 
     # Plot Simba data
-    hdf = h5py.File("m100n1024_026.hdf5", "r")
+    hdf = h5py.File("m100n1024_042.hdf5", "r")
     simba_ms = hdf["galaxy_data"]["dicts"]["masses.stellar_30kpc"][:]
     simba_rs = hdf["galaxy_data"]["dicts"]["radii.stellar_half_mass"][:]
     hdf.close()
 
     plot_meidan_stat(simba_ms, simba_rs, np.ones(simba_rs.size),
-                     ax, "SIMBA-100", "r", bin_edges)
+                     ax, "SIMBA 100", "r", bin_edges)
+
+    # Plot Illutris data
+    hdf = h5py.File("Illutris_TNG/300/fof_subhalo_tab_017.0.hdf5", "r")
+    tng_ms = hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10
+    tng_rs = hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4]
+    hdf.close()
+
+    plot_meidan_stat(tng_ms, tng_rs, np.ones(tng_rs.size),
+                     ax, "Illutris-TNG 300", "b", bin_edges)
 
     # Label axes
     ax.set_xlabel("$M_\star / \mathrm{M}_\odot$")
@@ -244,7 +253,16 @@ def plot_eagle_stellar_hmr(snap):
     hdf.close()
 
     plot_meidan_stat(simba_ms, simba_rs, np.ones(simba_rs.size),
-                     ax, "SIMBA-100", "r", bin_edges)
+                     ax, "SIMBA 100", "r", bin_edges)
+
+    # Plot Illutris data
+    hdf = h5py.File("Illutris_TNG/300/fof_subhalo_tab_099.0.hdf5", "r")
+    tng_ms = hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10
+    tng_rs = hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4]
+    hdf.close()
+
+    plot_meidan_stat(tng_ms, tng_rs, np.ones(tng_rs.size),
+                     ax, "Illutris-TNG 300", "b", bin_edges)
 
     # Label axes
     ax.set_xlabel("$M_\star / \mathrm{M}_\odot$")
