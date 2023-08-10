@@ -93,7 +93,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     # Plot Illutris data
     hdf = h5py.File("Illutris_TNG/300/fof_subhalo_tab_017.0.hdf5", "r")
     tng_ms = hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777
-    tng_rs = hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777
+    tng_rs = hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6
     hdf.close()
 
     plot_meidan_stat(tng_ms, tng_rs, np.ones(tng_rs.size),
@@ -258,7 +258,7 @@ def plot_eagle_stellar_hmr(snap):
     # Plot Illutris data
     hdf = h5py.File("Illutris_TNG/300/fof_subhalo_tab_099.0.hdf5", "r")
     tng_ms = hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777
-    tng_rs = hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6
+    tng_rs = hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777
     hdf.close()
 
     plot_meidan_stat(tng_ms, tng_rs, np.ones(tng_rs.size),
