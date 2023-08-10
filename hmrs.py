@@ -84,7 +84,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     # Plot Simba data
     hdf = h5py.File("m100n1024_042.hdf5", "r")
     simba_ms = hdf["galaxy_data"]["dicts"]["masses.stellar_30kpc"][:]
-    simba_rs = hdf["galaxy_data"]["dicts"]["radii.stellar_half_mass"][:]
+    simba_rs = hdf["galaxy_data"]["dicts"]["radii.stellar_half_mass"][:] / 6
     hdf.close()
 
     plot_meidan_stat(simba_ms, simba_rs, np.ones(simba_rs.size),
