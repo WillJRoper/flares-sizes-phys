@@ -87,7 +87,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     simba_rs = hdf["galaxy_data"]["dicts"]["radii.stellar_half_mass"][:]
     hdf.close()
 
-    plot_meidan_stat(mass, hmrs, w,
+    plot_meidan_stat(simba_ms, simba_rs, np.ones(simba_rs.size),
                      ax, "SIMBA-100", "r", bin_edges)
 
     # Label axes
@@ -243,7 +243,7 @@ def plot_eagle_stellar_hmr(snap):
     simba_rs = hdf["galaxy_data"]["dicts"]["radii.stellar_half_mass"][:]
     hdf.close()
 
-    plot_meidan_stat(mass, hmrs, w,
+    plot_meidan_stat(simba_ms, simba_rs, np.ones(simba_rs.size),
                      ax, "SIMBA-100", "r", bin_edges)
 
     # Label axes
