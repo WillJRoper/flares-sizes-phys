@@ -74,12 +74,21 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     bin_edges = np.logspace(extent[0], extent[1], 20)
 
     plot_meidan_stat(mass, hmrs, w,
-                     ax, "", "g", bin_edges)
+                     ax, "FLARES", "g", bin_edges)
 
-    ax.text(0.95, 0.9, f'FLARES: $z=5$',
+    ax.text(0.95, 0.9, f'$z=5$',
             bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
                       alpha=0.8),
             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
+
+    # Plot Simba data
+    hdf = h5py.File("m100n1024_042.hdf5", "r")
+    simba_ms = hdf["galaxy_data"]["dicts"]["masses.stellar_30kpc"][:]
+    simba_rs = hdf["galaxy_data"]["dicts"]["radii.stellar_half_mass"][:]
+    hdf.close()
+
+    plot_meidan_stat(mass, hmrs, w,
+                     ax, "SIMBA-100", "r", bin_edges)
 
     # Label axes
     ax.set_xlabel("$M_\star / \mathrm{M}_\odot$")
@@ -87,6 +96,8 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
 
     cbar = fig.colorbar(im)
     cbar.set_label("$\sum w_{i}$")
+
+    ax.legend()
 
     # Save figure
     mkdir("plots/stellar_hmr/")
@@ -212,7 +223,7 @@ def plot_eagle_stellar_hmr(snap):
                    reduce_C_function=np.sum, xscale='log', yscale='log',
                    linewidths=0.2, cmap='cmr.freeze')
 
-    ax.text(0.95, 0.1, f'EAGLE: $z=0$',
+    ax.text(0.95, 0.1, f'$z=0$',
             bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
                       alpha=0.8),
             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
@@ -224,7 +235,16 @@ def plot_eagle_stellar_hmr(snap):
     bin_edges = np.logspace(extent[0], extent[1], 20)
 
     plot_meidan_stat(mass, hmrs, np.ones(hmrs.size),
-                     ax, "", "g", bin_edges)
+                     ax, "EAGLE", "g", bin_edges)
+
+    # Plot Simba data
+    hdf = h5py.File("m100n1024_151.hdf5", "r")
+    simba_ms = hdf["galaxy_data"]["dicts"]["masses.stellar_30kpc"][:]
+    simba_rs = hdf["galaxy_data"]["dicts"]["radii.stellar_half_mass"][:]
+    hdf.close()
+
+    plot_meidan_stat(mass, hmrs, w,
+                     ax, "SIMBA-100", "r", bin_edges)
 
     # Label axes
     ax.set_xlabel("$M_\star / \mathrm{M}_\odot$")
@@ -232,6 +252,8 @@ def plot_eagle_stellar_hmr(snap):
 
     cbar = fig.colorbar(im)
     cbar.set_label("$N$")
+
+    ax.legend()
 
     # Save figure
     mkdir("plots/stellar_hmr/")
