@@ -57,6 +57,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
     ax.loglog()
+    ax.set_axisbelow(True)
 
     print("Minimum stellar mass:", np.log10(np.min(mass)))
 
@@ -254,6 +255,7 @@ def plot_eagle_stellar_hmr(snap):
     fig = plt.figure(figsize=(3.5, 3.5))
     ax = fig.add_subplot(111)
     ax.loglog()
+    ax.set_axisbelow(True)
 
     # Plot stellar_data
     im = ax.hexbin(mass, hmrs, gridsize=30,
@@ -268,7 +270,7 @@ def plot_eagle_stellar_hmr(snap):
             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
 
     # Define hexbin extent
-    extent = [7.8, 12.0, -1.5, 1.5]
+    extent = [7.8, 12.5, -1.5, 1.5]
 
     # Define bins
     bin_edges = np.logspace(extent[0], extent[1], 20)
