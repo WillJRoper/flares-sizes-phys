@@ -64,12 +64,12 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     # Plot stellar_data
     im = ax.hexbin(mass, hmrs, gridsize=30,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w, extent=[8, 12.5, -1, 1.5],
+                   C=w, extent=[8, 12., -1, 1.5],
                    reduce_C_function=np.sum, xscale='log', yscale='log',
                    norm=weight_norm, linewidths=0.2, cmap='plasma')
 
     # Define hexbin extent
-    extent = [8, 12.5, -1.5, 1.5]
+    extent = [8, 12., -1.5, 1.5]
 
     # Define bins
     bin_edges = np.logspace(extent[0], extent[1], 28)
