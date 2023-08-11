@@ -94,10 +94,13 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     tng_ms = []
     tng_rs = []
     for p  in glob.glob("Illutris_TNG/300/fof_subhalo_tab_017.*.hdf5"):
-        hdf = h5py.File(p, "r")
-        tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777)
-        tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6)
-        hdf.close()
+        try:
+            hdf = h5py.File(p, "r")
+            tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777)
+            tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6)
+            hdf.close()
+        except KeyError as e:
+            print(e)
 
     tng_ms = np.array(tng_ms)
     tng_rs = np.array(tng_rs)
@@ -109,10 +112,13 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     tng_ms = []
     tng_rs = []
     for p  in glob.glob("Illutris_TNG/100/fof_subhalo_tab_017.*.hdf5"):
-        hdf = h5py.File(p, "r")
-        tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777)
-        tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6)
-        hdf.close()
+        try:
+            hdf = h5py.File(p, "r")
+            tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777)
+            tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6)
+            hdf.close()
+        except KeyError as e:
+            print(e)
 
     tng_ms = np.array(tng_ms)
     tng_rs = np.array(tng_rs)
@@ -280,10 +286,13 @@ def plot_eagle_stellar_hmr(snap):
     tng_ms = []
     tng_rs = []
     for p  in glob.glob("Illutris_TNG/300/fof_subhalo_tab_099.*.hdf5"):
-        hdf = h5py.File(p, "r")
-        tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777)
-        tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6)
-        hdf.close()
+        try:
+            hdf = h5py.File(p, "r")
+            tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777)
+            tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6)
+            hdf.close()
+        except KeyError as e:
+            print(e)
 
     tng_ms = np.array(tng_ms)
     tng_rs = np.array(tng_rs)
@@ -295,10 +304,13 @@ def plot_eagle_stellar_hmr(snap):
     tng_ms = []
     tng_rs = []
     for p  in glob.glob("Illutris_TNG/100/fof_subhalo_tab_099.*.hdf5"):
-        hdf = h5py.File(p, "r")
-        tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777)
-        tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6)
-        hdf.close()
+        try:
+            hdf = h5py.File(p, "r")
+            tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777)
+            tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6)
+            hdf.close()
+        except KeyError as e:
+            print(e)
 
     tng_ms = np.array(tng_ms)
     tng_rs = np.array(tng_rs)
