@@ -343,8 +343,8 @@ def plot_eagle_stellar_hmr(snap):
     cbar = fig.colorbar(im)
     cbar.set_label("$N$")
 
-    ax.set_xlim(10**extent[2], 10**extent[3])
-    ax.set_ylim(10**extent[0], 10**extent[1])
+    ax.set_ylim(10**extent[2], 10**extent[3])
+    ax.set_xlim(10**extent[0], 10**extent[1])
 
     ax.legend(fontsize=8, loc="lower left")
 
