@@ -1,6 +1,6 @@
 from flare import plt as flareplt
 import os
-
+import glob
 import h5py
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -91,19 +91,31 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
                      ax, "SIMBA 100", "r", bin_edges)
 
     # Plot Illutris data
-    hdf = h5py.File("Illutris_TNG/300/fof_subhalo_tab_017.0.hdf5", "r")
-    tng_ms = hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777
-    tng_rs = hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6
-    hdf.close()
+    tng_ms = []
+    tng_rs = []
+    for p  in glob.glob("Illutris_TNG/300/fof_subhalo_tab_017.*.hdf5"):
+        hdf = h5py.File(p, "r")
+        tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777)
+        tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6)
+        hdf.close()
+
+    tng_ms = np.array(tng_ms)
+    tng_rs = np.array(tng_rs)
 
     plot_meidan_stat(tng_ms, tng_rs, np.ones(tng_rs.size),
                      ax, "Illutris-TNG 300", "b", bin_edges)
 
-        # Plot Illutris data
-    hdf = h5py.File("Illutris_TNG/100/fof_subhalo_tab_017.0.hdf5", "r")
-    tng_ms = hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777
-    tng_rs = hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6
-    hdf.close()
+    # Plot Illutris data
+    tng_ms = []
+    tng_rs = []
+    for p  in glob.glob("Illutris_TNG/100/fof_subhalo_tab_017.*.hdf5"):
+        hdf = h5py.File(p, "r")
+        tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777)
+        tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6)
+        hdf.close()
+
+    tng_ms = np.array(tng_ms)
+    tng_rs = np.array(tng_rs)
 
     plot_meidan_stat(tng_ms, tng_rs, np.ones(tng_rs.size),
                      ax, "Illutris-TNG 100", "b", bin_edges, ls="--")
@@ -265,19 +277,31 @@ def plot_eagle_stellar_hmr(snap):
                      ax, "SIMBA 100", "r", bin_edges)
 
     # Plot Illutris data
-    hdf = h5py.File("Illutris_TNG/300/fof_subhalo_tab_099.0.hdf5", "r")
-    tng_ms = hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777
-    tng_rs = hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777
-    hdf.close()
+    tng_ms = []
+    tng_rs = []
+    for p  in glob.glob("Illutris_TNG/300/fof_subhalo_tab_099.*.hdf5"):
+        hdf = h5py.File(p, "r")
+        tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777)
+        tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6)
+        hdf.close()
+
+    tng_ms = np.array(tng_ms)
+    tng_rs = np.array(tng_rs)
 
     plot_meidan_stat(tng_ms, tng_rs, np.ones(tng_rs.size),
                      ax, "Illutris-TNG 300", "b", bin_edges)
 
     # Plot Illutris data
-    hdf = h5py.File("Illutris_TNG/100/fof_subhalo_tab_099.0.hdf5", "r")
-    tng_ms = hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777
-    tng_rs = hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777
-    hdf.close()
+    tng_ms = []
+    tng_rs = []
+    for p  in glob.glob("Illutris_TNG/100/fof_subhalo_tab_099.*.hdf5"):
+        hdf = h5py.File(p, "r")
+        tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777)
+        tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6)
+        hdf.close()
+
+    tng_ms = np.array(tng_ms)
+    tng_rs = np.array(tng_rs)
 
     plot_meidan_stat(tng_ms, tng_rs, np.ones(tng_rs.size),
                      ax, "Illutris-TNG 100", "b", bin_edges, ls="--")
