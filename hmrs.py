@@ -64,12 +64,12 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     # Plot stellar_data
     im = ax.hexbin(mass, hmrs, gridsize=30,
                    mincnt=np.min(w) - (0.1 * np.min(w)),
-                   C=w, extent=[8, 11.2, -1, 1.3],
+                   C=w, extent=[8, 12.0, -1, 1.3],
                    reduce_C_function=np.sum, xscale='log', yscale='log',
                    norm=weight_norm, linewidths=0.2, cmap='plasma')
 
     # Define hexbin extent
-    extent = [7.8, 12.0, -1.5, 1.5]
+    extent = [8, 12.0, -1.5, 1.5]
 
     # Define bins
     bin_edges = np.logspace(extent[0], extent[1], 20)
@@ -81,7 +81,8 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
 
     # Plot Simba data
     hdf = h5py.File("m100n1024_042.hdf5", "r")
-    okinds = hdf["galaxy_data"]["nstar"][:] > 100
+    okinds = np.logical_and(hdf["galaxy_data"]["nstar"][:] > 100,
+                            hdf["galaxy_data"]["ngas"][:] > 100)
     simba_ms = hdf["galaxy_data"]["dicts"]["masses.stellar_30kpc"][okinds]
     simba_rs = hdf["galaxy_data"]["dicts"]["radii.stellar_half_mass"][okinds] / 6
     hdf.close()
@@ -97,6 +98,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
             hdf = h5py.File(p, "r")
             okinds = np.logical_and(hdf["Subhalo"]["SubhaloFlag"][:],
                                     hdf["Subhalo"]["SubhaloLenType"][:, 4] > 100)
+            okinds = np.logical_and(okinds,hdf["Subhalo"]["SubhaloLenType"][:, 0] > 100)
             tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][okinds, 4] * 10 ** 10 / 0.6777)
             tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][okinds, 4] / 0.6777 / 6)
             hdf.close()
@@ -117,6 +119,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
             hdf = h5py.File(p, "r")
             okinds = np.logical_and(hdf["Subhalo"]["SubhaloFlag"][:],
                                     hdf["Subhalo"]["SubhaloLenType"][:, 4] > 100)
+            okinds = np.logical_and(okinds,hdf["Subhalo"]["SubhaloLenType"][:, 0] > 100)
             tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][okinds, 4] * 10 ** 10 / 0.6777)
             tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][okinds, 4] / 0.6777 / 6)
             hdf.close()
@@ -260,7 +263,7 @@ def plot_eagle_stellar_hmr(snap):
     # Plot stellar_data
     im = ax.hexbin(mass, hmrs, gridsize=30,
                    mincnt=1, norm=LogNorm(),
-                   extent=[8, 12.0, -1, 1.7],
+                   extent=[8, 13.1, -1, 1.7],
                    reduce_C_function=np.sum, xscale='log', yscale='log',
                    linewidths=0.2, cmap='cmr.freeze')
 
@@ -270,14 +273,15 @@ def plot_eagle_stellar_hmr(snap):
             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
 
     # Define hexbin extent
-    extent = [7.8, 12.5, -1.5, 1.5]
+    extent = [8, 13.1, -1.5, 1.5]
 
     # Define bins
     bin_edges = np.logspace(extent[0], extent[1], 20)
 
     # Plot Simba data
     hdf = h5py.File("m100n1024_151.hdf5", "r")
-    okinds = hdf["galaxy_data"]["nstar"][:] > 100
+    okinds = np.logical_and(hdf["galaxy_data"]["nstar"][:] > 100,
+                            hdf["galaxy_data"]["ngas"][:] > 100)
     simba_ms = hdf["galaxy_data"]["dicts"]["masses.stellar_30kpc"][okinds]
     simba_rs = hdf["galaxy_data"]["dicts"]["radii.stellar_half_mass"][okinds]
     hdf.close()
@@ -293,6 +297,7 @@ def plot_eagle_stellar_hmr(snap):
             hdf = h5py.File(p, "r")
             okinds = np.logical_and(hdf["Subhalo"]["SubhaloFlag"][:],
                                     hdf["Subhalo"]["SubhaloLenType"][:, 4] > 100)
+            okinds = np.logical_and(okinds,hdf["Subhalo"]["SubhaloLenType"][:, 0] > 100)
             tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][okinds, 4] * 10 ** 10 / 0.6777)
             tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][okinds, 4] / 0.6777)
             hdf.close()
@@ -313,6 +318,7 @@ def plot_eagle_stellar_hmr(snap):
             hdf = h5py.File(p, "r")
             okinds = np.logical_and(hdf["Subhalo"]["SubhaloFlag"][:],
                                     hdf["Subhalo"]["SubhaloLenType"][:, 4] > 100)
+            okinds = np.logical_and(okinds,hdf["Subhalo"]["SubhaloLenType"][:, 0] > 100)
             tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][okinds, 4] * 10 ** 10 / 0.6777)
             tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][okinds, 4] / 0.6777)
             hdf.close()
@@ -335,7 +341,7 @@ def plot_eagle_stellar_hmr(snap):
     cbar = fig.colorbar(im)
     cbar.set_label("$N$")
 
-    ax.legend(fontsize=8, loc="lower left")
+    ax.legend(fontsize=6, loc="lower left")
 
     # Save figure
     mkdir("plots/stellar_hmr/")
