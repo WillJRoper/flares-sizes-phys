@@ -323,7 +323,7 @@ def plot_eagle_stellar_hmr(snap):
     cbar = fig.colorbar(im)
     cbar.set_label("$N$")
 
-    ax.legend(fontsize=8, loc="bottom left")
+    ax.legend(fontsize=8, loc="lower left")
 
     # Save figure
     mkdir("plots/stellar_hmr/")
