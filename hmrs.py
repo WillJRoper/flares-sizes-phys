@@ -273,7 +273,7 @@ def plot_eagle_stellar_hmr(snap):
             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
 
     # Define hexbin extent
-    extent = [8, 13., -1.5, 1.5]
+    extent = [8, 13., -1.5, 1.9]
 
     # Define bins
     bin_edges = np.logspace(extent[0], extent[1], 30)
@@ -344,7 +344,7 @@ def plot_eagle_stellar_hmr(snap):
     cbar.set_label("$N$")
 
     ax.set_ylim(10**extent[2], 10**extent[3])
-    ax.set_xlim(10**extent[0], 10**extent[1])
+    ax.set_xlim(10**7.8, 10**extent[1])
 
     ax.legend(fontsize=8, loc="lower left")
 
