@@ -72,7 +72,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     extent = [8, 12.0, -1.5, 1.5]
 
     # Define bins
-    bin_edges = np.logspace(extent[0], extent[1], 30)
+    bin_edges = np.logspace(extent[0], extent[1], 28)
 
     ax.text(0.95, 0.9, f'$z=5$',
             bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
@@ -263,7 +263,7 @@ def plot_eagle_stellar_hmr(snap):
     # Plot stellar_data
     im = ax.hexbin(mass, hmrs, gridsize=30,
                    mincnt=1, norm=LogNorm(),
-                   extent=[8, 13.5, -1.5, 1.7],
+                   extent=[8, 13., -1.5, 1.7],
                    reduce_C_function=np.sum, xscale='log', yscale='log',
                    linewidths=0.2, cmap='cmr.freeze')
 
@@ -273,7 +273,7 @@ def plot_eagle_stellar_hmr(snap):
             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
 
     # Define hexbin extent
-    extent = [8, 13.5, -1.5, 1.5]
+    extent = [8, 13., -1.5, 1.5]
 
     # Define bins
     bin_edges = np.logspace(extent[0], extent[1], 30)
