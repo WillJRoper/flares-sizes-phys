@@ -133,8 +133,6 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     cbar = fig.colorbar(im)
     cbar.set_label("$\sum w_{i}$")
 
-    ax.legend(fontsize=8)
-
     # Save figure
     mkdir("plots/stellar_hmr/")
     fig.savefig("plots/stellar_hmr/stellar_hmr_%s.png" % snap,
@@ -289,7 +287,7 @@ def plot_eagle_stellar_hmr(snap):
         try:
             hdf = h5py.File(p, "r")
             tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777)
-            tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6)
+            tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777)
             hdf.close()
         except KeyError as e:
             print(e)
@@ -298,7 +296,7 @@ def plot_eagle_stellar_hmr(snap):
     tng_rs = np.array(tng_rs)
 
     plot_meidan_stat(tng_ms, tng_rs, np.ones(tng_rs.size),
-                     ax, "Illutris-TNG 300", "b", bin_edges)
+                     ax, "Illutris-TNG 300", "m", bin_edges)
 
     # Plot Illutris data
     tng_ms = []
@@ -307,7 +305,7 @@ def plot_eagle_stellar_hmr(snap):
         try:
             hdf = h5py.File(p, "r")
             tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][:, 4] * 10 ** 10 / 0.6777)
-            tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777 / 6)
+            tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][:, 4] / 0.6777)
             hdf.close()
         except KeyError as e:
             print(e)
@@ -316,7 +314,7 @@ def plot_eagle_stellar_hmr(snap):
     tng_rs = np.array(tng_rs)
 
     plot_meidan_stat(tng_ms, tng_rs, np.ones(tng_rs.size),
-                     ax, "Illutris-TNG 100", "b", bin_edges, ls="--")
+                     ax, "Illutris-TNG 100", "m", bin_edges, ls="--")
 
     # Label axes
     ax.set_xlabel("$M_\star / \mathrm{M}_\odot$")
@@ -325,7 +323,7 @@ def plot_eagle_stellar_hmr(snap):
     cbar = fig.colorbar(im)
     cbar.set_label("$N$")
 
-    ax.legend(fontsize=8)
+    ax.legend(fontsize=8, loc="bottom left")
 
     # Save figure
     mkdir("plots/stellar_hmr/")
