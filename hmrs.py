@@ -109,7 +109,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     tng_rs = np.array(tng_rs)
 
     plot_meidan_stat(tng_ms, tng_rs, np.ones(tng_rs.size),
-                     ax, "Illutris-TNG 300", "deepskyblue", bin_edges)
+                     ax, "Illutris-TNG 300", "gold", bin_edges)
 
     # Plot Illutris data
     tng_ms = []
@@ -130,7 +130,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     tng_rs = np.array(tng_rs)
 
     plot_meidan_stat(tng_ms, tng_rs, np.ones(tng_rs.size),
-                     ax, "Illutris-TNG 100", "deepskyblue", bin_edges, ls="--")
+                     ax, "Illutris-TNG 100", "gold", bin_edges, ls="--")
 
     plot_meidan_stat(mass, hmrs, w,
                      ax, "FLARES", "g", bin_edges)
@@ -308,7 +308,7 @@ def plot_eagle_stellar_hmr(snap):
     tng_rs = np.array(tng_rs)
 
     plot_meidan_stat(tng_ms, tng_rs, np.ones(tng_rs.size),
-                     ax, "Illutris-TNG 300", "deepskyblue", bin_edges)
+                     ax, "Illutris-TNG 300", "gold", bin_edges)
 
     # Plot Illutris data
     tng_ms = []
@@ -329,7 +329,7 @@ def plot_eagle_stellar_hmr(snap):
     tng_rs = np.array(tng_rs)
 
     plot_meidan_stat(tng_ms, tng_rs, np.ones(tng_rs.size),
-                     ax, "Illutris-TNG 100", "deepskyblue", bin_edges, ls="--")
+                     ax, "Illutris-TNG 100", "gold", bin_edges, ls="--")
 
     plot_meidan_stat(mass, hmrs, np.ones(hmrs.size),
                      ax, "EAGLE", "g", bin_edges)
