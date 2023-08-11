@@ -72,7 +72,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     extent = [8, 12.0, -1.5, 1.5]
 
     # Define bins
-    bin_edges = np.logspace(extent[0], extent[1], 20)
+    bin_edges = np.logspace(extent[0], extent[1], 30)
 
     ax.text(0.95, 0.9, f'$z=5$',
             bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
@@ -276,7 +276,7 @@ def plot_eagle_stellar_hmr(snap):
     extent = [8, 13.5, -1.5, 1.5]
 
     # Define bins
-    bin_edges = np.logspace(extent[0], extent[1], 20)
+    bin_edges = np.logspace(extent[0], extent[1], 30)
 
     # Plot Simba data
     hdf = h5py.File("m100n1024_151.hdf5", "r")
@@ -341,7 +341,7 @@ def plot_eagle_stellar_hmr(snap):
     cbar = fig.colorbar(im)
     cbar.set_label("$N$")
 
-    ax.legend(fontsize=6, loc="lower left")
+    ax.legend(fontsize=8, loc="lower left")
 
     # Save figure
     mkdir("plots/stellar_hmr/")
