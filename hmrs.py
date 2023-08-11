@@ -133,7 +133,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     cbar = fig.colorbar(im)
     cbar.set_label("$\sum w_{i}$")
 
-    ax.legend()
+    ax.legend(fontsize=8)
 
     # Save figure
     mkdir("plots/stellar_hmr/")
@@ -325,7 +325,7 @@ def plot_eagle_stellar_hmr(snap):
     cbar = fig.colorbar(im)
     cbar.set_label("$N$")
 
-    ax.legend()
+    ax.legend(fontsize=8)
 
     # Save figure
     mkdir("plots/stellar_hmr/")
