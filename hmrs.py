@@ -93,14 +93,17 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     # Plot Illutris data
     tng_ms = []
     tng_rs = []
-    for p  in glob.glob("Illutris_TNG/300/fof_subhalo_tab_017.*.hdf5"):
+    for p in glob.glob("Illutris_TNG/300/fof_subhalo_tab_017.*.hdf5"):
         try:
             hdf = h5py.File(p, "r")
             okinds = np.logical_and(hdf["Subhalo"]["SubhaloFlag"][:],
                                     hdf["Subhalo"]["SubhaloLenType"][:, 4] > 100)
-            okinds = np.logical_and(okinds,hdf["Subhalo"]["SubhaloLenType"][:, 0] > 100)
-            tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][okinds, 4] * 10 ** 10 / 0.6777)
-            tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][okinds, 4] / 0.6777 / 6)
+            okinds = np.logical_and(
+                okinds, hdf["Subhalo"]["SubhaloLenType"][:, 0] > 100)
+            tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"]
+                          [okinds, 4] * 10 ** 10 / 0.6777)
+            tng_rs.extend(
+                hdf["Subhalo"]["SubhaloHalfmassRadType"][okinds, 4] / 0.6777 / 6)
             hdf.close()
         except KeyError as e:
             print(e)
@@ -114,14 +117,17 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     # Plot Illutris data
     tng_ms = []
     tng_rs = []
-    for p  in glob.glob("Illutris_TNG/100/fof_subhalo_tab_017.*.hdf5"):
+    for p in glob.glob("Illutris_TNG/100/fof_subhalo_tab_017.*.hdf5"):
         try:
             hdf = h5py.File(p, "r")
             okinds = np.logical_and(hdf["Subhalo"]["SubhaloFlag"][:],
                                     hdf["Subhalo"]["SubhaloLenType"][:, 4] > 100)
-            okinds = np.logical_and(okinds,hdf["Subhalo"]["SubhaloLenType"][:, 0] > 100)
-            tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][okinds, 4] * 10 ** 10 / 0.6777)
-            tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][okinds, 4] / 0.6777 / 6)
+            okinds = np.logical_and(
+                okinds, hdf["Subhalo"]["SubhaloLenType"][:, 0] > 100)
+            tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"]
+                          [okinds, 4] * 10 ** 10 / 0.6777)
+            tng_rs.extend(
+                hdf["Subhalo"]["SubhaloHalfmassRadType"][okinds, 4] / 0.6777 / 6)
             hdf.close()
         except KeyError as e:
             print(e)
@@ -292,14 +298,17 @@ def plot_eagle_stellar_hmr(snap):
     # Plot Illutris data
     tng_ms = []
     tng_rs = []
-    for p  in glob.glob("Illutris_TNG/300/fof_subhalo_tab_099.*.hdf5"):
+    for p in glob.glob("Illutris_TNG/300/fof_subhalo_tab_099.*.hdf5"):
         try:
             hdf = h5py.File(p, "r")
             okinds = np.logical_and(hdf["Subhalo"]["SubhaloFlag"][:],
                                     hdf["Subhalo"]["SubhaloLenType"][:, 4] > 100)
-            okinds = np.logical_and(okinds,hdf["Subhalo"]["SubhaloLenType"][:, 0] > 100)
-            tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][okinds, 4] * 10 ** 10 / 0.6777)
-            tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][okinds, 4] / 0.6777)
+            okinds = np.logical_and(
+                okinds, hdf["Subhalo"]["SubhaloLenType"][:, 0] > 100)
+            tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"]
+                          [okinds, 4] * 10 ** 10 / 0.6777)
+            tng_rs.extend(
+                hdf["Subhalo"]["SubhaloHalfmassRadType"][okinds, 4] / 0.6777)
             hdf.close()
         except KeyError as e:
             print(e)
@@ -313,14 +322,17 @@ def plot_eagle_stellar_hmr(snap):
     # Plot Illutris data
     tng_ms = []
     tng_rs = []
-    for p  in glob.glob("Illutris_TNG/100/fof_subhalo_tab_099.*.hdf5"):
+    for p in glob.glob("Illutris_TNG/100/fof_subhalo_tab_099.*.hdf5"):
         try:
             hdf = h5py.File(p, "r")
             okinds = np.logical_and(hdf["Subhalo"]["SubhaloFlag"][:],
                                     hdf["Subhalo"]["SubhaloLenType"][:, 4] > 100)
-            okinds = np.logical_and(okinds,hdf["Subhalo"]["SubhaloLenType"][:, 0] > 100)
-            tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"][okinds, 4] * 10 ** 10 / 0.6777)
-            tng_rs.extend(hdf["Subhalo"]["SubhaloHalfmassRadType"][okinds, 4] / 0.6777)
+            okinds = np.logical_and(
+                okinds, hdf["Subhalo"]["SubhaloLenType"][:, 0] > 100)
+            tng_ms.extend(hdf["Subhalo"]["SubhaloMassType"]
+                          [okinds, 4] * 10 ** 10 / 0.6777)
+            tng_rs.extend(
+                hdf["Subhalo"]["SubhaloHalfmassRadType"][okinds, 4] / 0.6777)
             hdf.close()
         except KeyError as e:
             print(e)
