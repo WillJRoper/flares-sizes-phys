@@ -74,7 +74,7 @@ def plot_stellar_hmr(stellar_data, snap, weight_norm, cut_on="hmr"):
     # Define bins
     bin_edges = np.logspace(extent[0], extent[1], 28)
 
-    ax.text(0.95, 0.9, f'$z=5$',
+    ax.text(0.95, 0.9, f'$FLARES: z=5$',
             bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
                       alpha=0.8),
             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
@@ -267,7 +267,7 @@ def plot_eagle_stellar_hmr(snap):
                    reduce_C_function=np.sum, xscale='log', yscale='log',
                    linewidths=0.2, cmap='cmr.freeze')
 
-    ax.text(0.95, 0.1, f'$z=0$',
+    ax.text(0.95, 0.1, f'$EAGLE: z=0$',
             bbox=dict(boxstyle="round,pad=0.3", fc='w', ec="k", lw=1,
                       alpha=0.8),
             transform=ax.transAxes, horizontalalignment='right', fontsize=8)
@@ -343,8 +343,8 @@ def plot_eagle_stellar_hmr(snap):
     cbar = fig.colorbar(im)
     cbar.set_label("$N$")
 
-    ax.set_xlim(extent[2], extent[3])
-    ax.set_ylim(extent[0], extent[1])
+    ax.set_xlim(10**extent[2], 10**extent[3])
+    ax.set_ylim(10**extent[0], 10**extent[1])
 
     ax.legend(fontsize=8, loc="lower left")
 
